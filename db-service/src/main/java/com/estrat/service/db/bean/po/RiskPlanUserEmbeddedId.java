@@ -1,0 +1,65 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.service.db.bean.po.EmployeeProfilePo
+ *  com.estrat.service.db.bean.po.RiskPlan
+ *  com.estrat.service.db.bean.po.RiskPlanUserEmbeddedId
+ *  javax.persistence.Embeddable
+ *  javax.persistence.FetchType
+ *  javax.persistence.JoinColumn
+ *  javax.persistence.ManyToOne
+ */
+package com.estrat.service.db.bean.po;
+
+import com.estrat.service.db.bean.po.EmployeeProfilePo;
+import com.estrat.service.db.bean.po.RiskPlan;
+import java.io.Serializable;
+import java.util.Objects;
+import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Embeddable
+public class RiskPlanUserEmbeddedId
+implements Serializable {
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="risk_plan_id", nullable=false)
+    private RiskPlan riskPlanId;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="emp_ID")
+    private EmployeeProfilePo empId;
+
+    public EmployeeProfilePo getEmpId() {
+        return this.empId;
+    }
+
+    public void setEmpId(EmployeeProfilePo empId) {
+        this.empId = empId;
+    }
+
+    public RiskPlan getRiskPlanId() {
+        return this.riskPlanId;
+    }
+
+    public void setRiskPlanId(RiskPlan riskPlanId) {
+        this.riskPlanId = riskPlanId;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof RiskPlanUserEmbeddedId)) {
+            return false;
+        }
+        RiskPlanUserEmbeddedId that = (RiskPlanUserEmbeddedId)o;
+        return Objects.equals(this.getRiskPlanId(), that.getRiskPlanId()) && Objects.equals(this.getEmpId(), that.getEmpId());
+    }
+
+    public int hashCode() {
+        return Objects.hash(this.getRiskPlanId(), this.getEmpId());
+    }
+}
+

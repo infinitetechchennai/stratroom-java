@@ -1,0 +1,71 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.web.config.CommonRestTemplate
+ *  com.estrat.web.dto.OrgstructureGroupDTO
+ *  com.estrat.web.service.EmployeeService
+ *  com.estrat.web.service.OrgstructureGroupService
+ *  com.estrat.web.service.OrgstructureGroupService$1
+ *  org.springframework.beans.factory.annotation.Autowired
+ *  org.springframework.beans.factory.annotation.Value
+ *  org.springframework.core.ParameterizedTypeReference
+ *  org.springframework.stereotype.Service
+ *  org.springframework.web.util.UriComponentsBuilder
+ */
+package com.estrat.web.service;
+
+import com.estrat.web.config.CommonRestTemplate;
+import com.estrat.web.dto.OrgstructureGroupDTO;
+import com.estrat.web.service.EmployeeService;
+import com.estrat.web.service.OrgstructureGroupService;
+import java.util.HashMap;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+@Service
+public class OrgstructureGroupService {
+    @Autowired
+    private CommonRestTemplate commonRestTemplate;
+    @Autowired
+    private EmployeeService employeeService;
+    @Value(value="${scorecardservice.pages.url}")
+    private String dbUrl;
+
+    public OrgstructureGroupDTO saveOrgGroup(OrgstructureGroupDTO orgstructureGroupDTO) {
+        String url = this.dbUrl + "/orgGroup";
+        return (OrgstructureGroupDTO)this.commonRestTemplate.postForObject(url, orgstructureGroupDTO, OrgstructureGroupDTO.class);
+    }
+
+    public OrgstructureGroupDTO updateOrgGroup(OrgstructureGroupDTO orgstructureGroupDTO) {
+        String url = this.dbUrl + "/orgGroup";
+        return (OrgstructureGroupDTO)this.commonRestTemplate.putForObject(url, orgstructureGroupDTO, OrgstructureGroupDTO.class);
+    }
+
+    public OrgstructureGroupDTO retrieveOrgGroup(Long id) {
+        String url = this.dbUrl + "/orgGroup";
+        String url1 = String.join((CharSequence)"/", url, String.valueOf(id));
+        HashMap<String, Long> urlVariables = new HashMap<String, Long>();
+        urlVariables.put("id", id);
+        String url2 = UriComponentsBuilder.fromHttpUrl((String)url1).buildAndExpand(urlVariables).toUriString();
+        return (OrgstructureGroupDTO)this.commonRestTemplate.getForObject(url2, OrgstructureGroupDTO.class);
+    }
+
+    public void removeOrgGroup(Long id) {
+        String url = this.dbUrl + "/orgGroup";
+        String url1 = String.join((CharSequence)"/", url, String.valueOf(id));
+        this.commonRestTemplate.deleteForObject(url1);
+    }
+
+    public List<OrgstructureGroupDTO> findAllValue() {
+        String url = this.dbUrl + "/orgGroupList";
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
+    }
+}
+
+

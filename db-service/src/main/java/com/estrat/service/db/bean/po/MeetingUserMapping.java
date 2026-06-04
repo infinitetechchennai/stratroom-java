@@ -1,0 +1,48 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.service.db.bean.po.EmployeeProfilePo
+ *  com.estrat.service.db.bean.po.MeetingManagement
+ *  com.estrat.service.db.bean.po.MeetingUserEmbeddedId
+ *  com.estrat.service.db.bean.po.MeetingUserMapping
+ *  javax.persistence.EmbeddedId
+ *  javax.persistence.Entity
+ *  javax.persistence.Table
+ */
+package com.estrat.service.db.bean.po;
+
+import com.estrat.service.db.bean.po.EmployeeProfilePo;
+import com.estrat.service.db.bean.po.MeetingManagement;
+import com.estrat.service.db.bean.po.MeetingUserEmbeddedId;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="meeting_user_mapping", schema="orgstructure")
+public class MeetingUserMapping {
+    @EmbeddedId
+    private MeetingUserEmbeddedId id;
+
+    public MeetingUserMapping() {
+    }
+
+    public MeetingUserMapping(MeetingManagement meetingManagement, String empId) {
+        MeetingUserEmbeddedId embeddedId = new MeetingUserEmbeddedId();
+        EmployeeProfilePo employeeProfilePo = new EmployeeProfilePo();
+        employeeProfilePo.setEmpId(Long.valueOf(empId).longValue());
+        embeddedId.setEmpId(employeeProfilePo);
+        embeddedId.setMeetingManagementId(meetingManagement);
+        this.id = embeddedId;
+    }
+
+    public MeetingUserEmbeddedId getId() {
+        return this.id;
+    }
+
+    public void setId(MeetingUserEmbeddedId id) {
+        this.id = id;
+    }
+}
+

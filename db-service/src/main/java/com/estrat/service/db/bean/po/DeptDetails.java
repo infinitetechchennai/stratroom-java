@@ -1,0 +1,71 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.service.db.bean.po.DeptDetails
+ *  javax.persistence.Column
+ *  javax.persistence.Entity
+ *  javax.persistence.GeneratedValue
+ *  javax.persistence.GenerationType
+ *  javax.persistence.Id
+ *  javax.persistence.Table
+ *  org.hibernate.annotations.GenericGenerator
+ */
+package com.estrat.service.db.bean.po;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+@Entity
+@Table(name="department_details", schema="orgstructure")
+public class DeptDetails {
+    @Id
+    @GenericGenerator(name="native", strategy="native")
+    @GeneratedValue(generator="native", strategy=GenerationType.AUTO)
+    @Column(name="ID")
+    private long id;
+    @Column(name="department_name")
+    private String name;
+    @Column(name="status")
+    private String status;
+    @Column(name="org_id")
+    private long orgId;
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public long getOrgId() {
+        return this.orgId;
+    }
+
+    public void setOrgId(long orgId) {
+        this.orgId = orgId;
+    }
+}
+

@@ -1,0 +1,80 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.service.db.bean.po.ControlPanelWorkFlowApproverMapping
+ *  com.estrat.service.db.dto.ControlPanelWorkFlowApproverMappingDTO
+ */
+package com.estrat.service.db.dto;
+
+import com.estrat.service.db.bean.po.ControlPanelWorkFlowApproverMapping;
+
+public class ControlPanelWorkFlowApproverMappingDTO {
+    private long id;
+    private String userName;
+    private long workflowId;
+    private long aprovalRoleId;
+    private String status;
+    private Integer approverOrder;
+
+    public ControlPanelWorkFlowApproverMappingDTO() {
+    }
+
+    public ControlPanelWorkFlowApproverMappingDTO(ControlPanelWorkFlowApproverMapping workFlowUsersMapping) {
+        this.id = workFlowUsersMapping.getId();
+        this.userName = workFlowUsersMapping.getUserName();
+        this.workflowId = workFlowUsersMapping.getWorkflow().getId();
+        this.aprovalRoleId = workFlowUsersMapping.getAprovalRoleId();
+        this.status = workFlowUsersMapping.getStatus();
+        this.approverOrder = workFlowUsersMapping.getApproverOrder();
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return this.userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public long getWorkflowId() {
+        return this.workflowId;
+    }
+
+    public void setWorkflowId(long workflowId) {
+        this.workflowId = workflowId;
+    }
+
+    public long getAprovalRoleId() {
+        return this.aprovalRoleId;
+    }
+
+    public void setAprovalRoleId(long aprovalRoleId) {
+        this.aprovalRoleId = aprovalRoleId;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getApproverOrder() {
+        return this.approverOrder;
+    }
+
+    public void setApproverOrder(Integer approverOrder) {
+        this.approverOrder = approverOrder;
+    }
+}
+

@@ -1,0 +1,51 @@
+[
+	{
+	  "pageTitle": "Approval Page",
+	  "userName": "Sajin",
+	  "period": "3/01/2025 - 3/22/2025",
+	  "tab": [
+		{
+		  "title": "Approver List",
+		  "tabledata": [			
+			 
+			  {
+				"approver_id": "AP-1112",
+				"url": "#budgetEventDetailsModal",
+				"event_title": "Budget",	
+				"status": "Pending",
+				"submitted_on": "6/9/2025, 6:21:18 AM",
+				"submitted_By": "josephs",
+				"current_approver": "No",
+				"next_approver": "No next approver",
+				"actions": ""				
+			  },
+			   {
+				"approver_id": "AP-1113",
+				"url": "#riskEventDetailsModal",
+				"event_title": "Risk Event",	
+				"status": "Rejected",
+				"submitted_on": "6/9/2025, 6:21:18 AM",
+				"submitted_By": "josephs",
+				"current_approver": "No",
+				"next_approver": "No next approver",
+				"actions": ""				
+			  },
+			   {
+				"approver_id": "AP-1114",
+				"url": "#riskEventDetailsModal",
+				"event_title": "Risk Event",	
+				"status": "Approved",
+				"submitted_on": "6/9/2025, 6:21:18 AM",
+				"submitted_By": "josephs",
+				"current_approver": "No",
+				"next_approver": "No next approver",
+				"actions": ""				
+			  }
+			 
+
+		  ]
+		}
+	  ]
+	}
+  ]
+  

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="ConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>C:/test/license-service.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>C:/test/license-service.%d{yyyy-MM-dd-HH-mm}.log</fileNamePattern>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com" level="ERROR" additivity="false">
+        <appender-ref ref="RollingFileAppender"/>
+        <appender-ref ref="ConsoleAppender"/>
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="RollingFileAppender"/>
+        <appender-ref ref="ConsoleAppender"/>
+    </root>
+</configuration>

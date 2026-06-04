@@ -1,0 +1,516 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.service.db.bean.Employee
+ *  com.estrat.service.db.bean.OrganizationDetails
+ *  com.estrat.service.db.bean.po.DepartmentChartMapping
+ *  com.estrat.service.db.bean.po.EmployeeProfilePo
+ *  com.estrat.service.db.dto.AuthenticateResponseDTO
+ *  com.estrat.service.db.dto.ChildTrackerDTO
+ *  com.estrat.service.db.dto.DepartmentChartDTO
+ *  com.estrat.service.db.dto.DepartmentResponseDetailsDTO
+ *  com.estrat.service.db.dto.DeptDetails
+ *  com.estrat.service.db.dto.DeptImportDTO
+ *  com.estrat.service.db.dto.EmployeeDTO
+ *  com.estrat.service.db.dto.EmployeeDepartmentMappingDTO
+ *  com.estrat.service.db.dto.EmployeePreferencesDTO
+ *  com.estrat.service.db.dto.EmployeeResponseDTO
+ *  com.estrat.service.db.dto.FindDTO
+ *  com.estrat.service.db.dto.LicenseResponseDTO
+ *  com.estrat.service.db.exception.InputValidationException
+ *  com.estrat.service.db.exception.RequestException
+ *  com.estrat.service.db.resource.DataServiceController
+ *  com.estrat.service.db.resource.util.CacheUtil
+ *  com.estrat.service.db.service.DepartmentDetailsService
+ *  com.estrat.service.db.service.DeptTrackerService
+ *  com.estrat.service.db.service.EmployeeService
+ *  com.estrat.service.db.service.LicenseService
+ *  com.estrat.service.db.service.OrgTrackerService
+ *  javax.persistence.OptimisticLockException
+ *  javax.servlet.http.HttpServletRequest
+ *  org.apache.commons.lang3.StringUtils
+ *  org.apache.log4j.Logger
+ *  org.springframework.beans.factory.annotation.Autowired
+ *  org.springframework.http.HttpStatus
+ *  org.springframework.http.ResponseEntity
+ *  org.springframework.web.bind.annotation.GetMapping
+ *  org.springframework.web.bind.annotation.PathVariable
+ *  org.springframework.web.bind.annotation.RequestBody
+ *  org.springframework.web.bind.annotation.RequestMapping
+ *  org.springframework.web.bind.annotation.RequestMethod
+ *  org.springframework.web.bind.annotation.RequestParam
+ *  org.springframework.web.bind.annotation.ResponseBody
+ *  org.springframework.web.bind.annotation.RestController
+ */
+package com.estrat.service.db.resource;
+
+import com.estrat.service.db.bean.Employee;
+import com.estrat.service.db.bean.OrganizationDetails;
+import com.estrat.service.db.bean.po.DepartmentChartMapping;
+import com.estrat.service.db.bean.po.EmployeeProfilePo;
+import com.estrat.service.db.dto.AuthenticateResponseDTO;
+import com.estrat.service.db.dto.ChildTrackerDTO;
+import com.estrat.service.db.dto.DepartmentChartDTO;
+import com.estrat.service.db.dto.DepartmentResponseDetailsDTO;
+import com.estrat.service.db.dto.DeptDetails;
+import com.estrat.service.db.dto.DeptImportDTO;
+import com.estrat.service.db.dto.EmployeeDTO;
+import com.estrat.service.db.dto.EmployeeDepartmentMappingDTO;
+import com.estrat.service.db.dto.EmployeePreferencesDTO;
+import com.estrat.service.db.dto.EmployeeResponseDTO;
+import com.estrat.service.db.dto.FindDTO;
+import com.estrat.service.db.dto.LicenseResponseDTO;
+import com.estrat.service.db.exception.InputValidationException;
+import com.estrat.service.db.exception.RequestException;
+import com.estrat.service.db.resource.util.CacheUtil;
+import com.estrat.service.db.service.DepartmentDetailsService;
+import com.estrat.service.db.service.DeptTrackerService;
+import com.estrat.service.db.service.EmployeeService;
+import com.estrat.service.db.service.LicenseService;
+import com.estrat.service.db.service.OrgTrackerService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import javax.persistence.OptimisticLockException;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class DataServiceController {
+    @Autowired
+    private EmployeeService employeeService;
+    @Autowired
+    private LicenseService licenseService;
+    @Autowired
+    private DepartmentDetailsService departmentDetailsService;
+    @Autowired
+    private OrgTrackerService orgTrackerService;
+    @Autowired
+    private DeptTrackerService deptTrackerService;
+    @Autowired
+    private CacheUtil cacheUtil;
+    private Logger log = Logger.getLogger(DataServiceController.class);
+
+    @ResponseBody
+    @RequestMapping(value={"/employeeDetails/{empId}"}, method={RequestMethod.GET})
+    public Employee getEmployeeDetails(@PathVariable(value="empId") String empId) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeId(Long.valueOf(empId).longValue());
+        return this.employeeService.getEmployee(employeeDTO);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/employeeDetailsList"}, method={RequestMethod.GET})
+    public List<Employee> getEmployeeDetails(@RequestParam(value="emplist[]") List<Long> empList) {
+        return this.employeeService.getEmployee(empList);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/{empId}/removeEmployee"}, method={RequestMethod.GET})
+    public EmployeeResponseDTO removeEmployee(@PathVariable(value="empId") String empId, HttpServletRequest request) {
+        EmployeeResponseDTO responseDTO = this.employeeService.removeEmployee(empId);
+        if (responseDTO.isUpdateFlag()) {
+            String loggedInEmpId = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+            this.log.debug((Object)("logged in employeeID " + loggedInEmpId));
+            this.cacheUtil.removeEmployeeCache((Object)loggedInEmpId);
+        }
+        return responseDTO;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/{empId}/employeeList"}, method={RequestMethod.GET})
+    public Employee getEmployeeList(@PathVariable(value="empId") long empId, HttpServletRequest request) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeId(empId);
+        return this.employeeService.getEmployeeList(employeeDTO);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/reporteeList/{empId}"}, method={RequestMethod.GET})
+    public List<Employee> reporteeList(@PathVariable(value="empId") long empId) {
+        return this.employeeService.getReporteeList(empId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/immediatereporteeList/{empId}"}, method={RequestMethod.GET})
+    public List<Employee> immediatereporteeList(@PathVariable(value="empId") long empId) {
+        return this.employeeService.getimmediateReporteeList(empId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/allReporteeList/{empId}"}, method={RequestMethod.GET})
+    public List<Employee> allReporteeList(@PathVariable(value="empId") long empId) {
+        return this.employeeService.getAllReporteeList(empId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/validateUser"}, method={RequestMethod.POST})
+    public AuthenticateResponseDTO authenticateUser(@RequestBody EmployeeDTO employeeDTO) {
+        return this.employeeService.authenticateUser(employeeDTO);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/updateParentEmpId"}, method={RequestMethod.POST})
+    public EmployeeResponseDTO updateParentEmpId(@RequestBody Employee employeeDTO) {
+        EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
+        employeeResponseDTO.setUpdateFlag(this.employeeService.updateParentEmpID(employeeDTO));
+        return employeeResponseDTO;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/createEmployee"}, method={RequestMethod.POST})
+    public EmployeeResponseDTO createEmployee(@RequestBody Employee employee, HttpServletRequest request) throws InputValidationException {
+        EmployeeResponseDTO responseDTO = this.employeeService.createEmployee(employee, "create");
+        if (responseDTO.getEmployeeId() != 0L) {
+            String loggedInEmpId = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+            this.log.debug((Object)("logged in employeeID " + loggedInEmpId));
+            this.cacheUtil.removeEmployeeCache((Object)loggedInEmpId);
+        }
+        return responseDTO;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/creatBulkEmployee"}, method={RequestMethod.POST})
+    public boolean creatBulkeEmployee(@RequestBody List<Employee> employees, HttpServletRequest request) throws InputValidationException {
+        HashMap<String, Employee> parentMap = new HashMap<String, Employee>();
+        String loggedInEmpId = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+        for (Employee employee : employees) {
+            Employee employeeObj;
+            if (this.employeeService.checkUserExist(employee.getEmailAddress()) || employee.getOrgDetails() == null && employee.getParentEmpId() == 0L) {
+                this.log.error((Object)("Employee skipped " + employee.getEmailAddress() + "with Org Details " + employee.getOrgDetails()));
+                if (StringUtils.isNotEmpty((CharSequence)employee.getEmailAddress()) && (employeeObj = this.employeeService.getEmployeeIDByEmail(employee.getEmailAddress())) != null) {
+                    employee.setEmpId(employeeObj.getEmpId());
+                    employee.setOrgDetails(employeeObj.getOrgDetails());
+                    employee.setParentEmail(employee.getParentEmployeeName());
+                    parentMap.put(String.valueOf(employeeObj.getEmpId()), employee);
+                    continue;
+                }
+            }
+            if (StringUtils.isNotEmpty((CharSequence)employee.getNewEmailAddress()) && (employeeObj = this.employeeService.getEmployeeIDByEmail(employee.getNewEmailAddress())) != null) {
+                employee.setEmpId(employeeObj.getEmpId());
+                employee.setOrgDetails(employeeObj.getOrgDetails());
+                employee.setParentEmail(employee.getParentEmployeeName());
+                parentMap.put(String.valueOf(employeeObj.getEmpId()), employee);
+                continue;
+            }
+            EmployeeResponseDTO employeeResponseDTO = this.employeeService.createEmployee(employee, "import");
+            employee.setEmpId(employeeResponseDTO.getEmployeeId());
+            employee.setParentEmail(employee.getParentEmployeeName());
+            parentMap.put(String.valueOf(employeeResponseDTO.getEmployeeId()), employee);
+        }
+        if (parentMap != null && !parentMap.isEmpty()) {
+            for (String key : parentMap.keySet()) {
+                Employee updateEmployee = (Employee)parentMap.get(key);
+                OrganizationDetails orgDetails = this.employeeService.getOrgDetails(updateEmployee.getOrgDetails().getName());
+                if (Objects.nonNull(orgDetails)) {
+                    updateEmployee.setOrgDetails(orgDetails);
+                }
+                if (StringUtils.isNotEmpty((CharSequence)updateEmployee.getParentEmail())) {
+                    Employee parentEmployee = this.employeeService.getEmployeeIDByEmail(updateEmployee.getParentEmail());
+                    updateEmployee.setParentEmpId(parentEmployee != null ? parentEmployee.getEmpId() : 0L);
+                } else {
+                    updateEmployee.setParentEmpId(0L);
+                }
+                if (StringUtils.isNotEmpty((CharSequence)updateEmployee.getNewEmailAddress())) {
+                    updateEmployee.setEmailAddress(updateEmployee.getNewEmailAddress());
+                }
+                this.employeeService.updateEmployee(updateEmployee, "import");
+            }
+        }
+        this.log.debug((Object)("logged in employeeID " + loggedInEmpId));
+        this.cacheUtil.removeEmployeeCache((Object)loggedInEmpId);
+        return true;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/updateEmployee"}, method={RequestMethod.POST})
+    public EmployeeResponseDTO updateEmployee(@RequestBody Employee employee, HttpServletRequest request) {
+        EmployeeResponseDTO responseDTO = this.employeeService.updateEmployee(employee, "update");
+        if (responseDTO.isUpdateFlag()) {
+            String loggedInEmpId = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+            this.log.debug((Object)("logged in employeeID " + loggedInEmpId));
+        }
+        return responseDTO;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/resetPassword"}, method={RequestMethod.POST})
+    public EmployeeResponseDTO resetPassword(@RequestBody Employee employee) {
+        return this.employeeService.resetPassword(employee);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/getEmployeeId"}, method={RequestMethod.POST})
+    public Employee getEmployeeId(@RequestBody Employee employee) {
+        if (StringUtils.isNotEmpty((CharSequence)employee.getEmailAddress())) {
+            return this.employeeService.getEmployeeIDByEmail(employee.getEmailAddress());
+        }
+        return this.employeeService.getEmployeeId(employee.getFirstName(), Objects.nonNull(employee.getOrgDetails()) ? employee.getOrgDetails().getOrgId() : 0L);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/getProfileDetails/{empId}"}, method={RequestMethod.GET})
+    public Employee getProfileDetails(@PathVariable(value="empId") String empId) {
+        return this.employeeService.getProfileDetails(Long.valueOf(empId).longValue());
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/checkEmail"}, method={RequestMethod.GET})
+    public Map<String, Object> checkEmail(@RequestParam(value="email") String email, @RequestParam(value="empId", required=false) Long empId, HttpServletRequest request) {
+        HashMap<String, Object> mapvalue = new HashMap<String, Object>();
+        if (empId != null) {
+            EmployeeProfilePo employee1 = this.employeeService.getEmployeeProfileByEmail(email, empId.longValue());
+            if (employee1 != null) {
+                mapvalue.put("failure", "already exist this email");
+            } else {
+                mapvalue.put("success", "noMore email");
+            }
+        } else {
+            EmployeeProfilePo employee = this.employeeService.getEmployeeProfileByEmail1(email);
+            if (employee != null) {
+                mapvalue.put("failure", "already exist this email");
+            } else {
+                mapvalue.put("success", "noMore email");
+            }
+        }
+        return mapvalue;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/employeePreference"}, method={RequestMethod.POST})
+    public EmployeePreferencesDTO employeePreference(@RequestBody EmployeePreferencesDTO preferencesDTO, HttpServletRequest request) throws InputValidationException, OptimisticLockException {
+        return this.employeeService.mergeEmployeePreference(preferencesDTO);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/getPreferences"}, method={RequestMethod.GET})
+    public EmployeePreferencesDTO getPreferences(@RequestParam(value="pageName") String pageName, @RequestParam(value="pageId") Long pageId) {
+        return this.employeeService.getPreferences(pageName, pageId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/departmentList"}, method={RequestMethod.GET})
+    public List<String> departmentList() {
+        return this.employeeService.getDepartmentList();
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/organization/employeeList"}, method={RequestMethod.GET})
+    public List<Employee> getOrgEmployeeList() {
+        return this.employeeService.getOrgEmployeeList();
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/organization/employeeList/{empId}"}, method={RequestMethod.GET})
+    public List<Long> getOrgEmployeeListOf(@PathVariable(value="empId") String empId) {
+        return this.employeeService.getCompleteReporteeList(empId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/getOrgUserCount"}, method={RequestMethod.GET})
+    public Long getOrgUserCount(@RequestParam(value="orgId") long orgId) {
+        return this.employeeService.getOrgUserCount(orgId);
+    }
+
+    @GetMapping(value={"/validateLicense"})
+    public ResponseEntity<LicenseResponseDTO> validateLicense() throws RequestException {
+        return new ResponseEntity((Object)this.licenseService.validateLicense(), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/organizationList"}, method={RequestMethod.GET})
+    public List<OrganizationDetails> organizationList() {
+        return this.employeeService.getOrgList();
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/org/employeeList"}, method={RequestMethod.GET})
+    public List<Employee> getEmployeeList(@RequestParam(value="orgId") long orgId) {
+        return this.employeeService.getEmployeeListbyOrgId(orgId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/orgDepartmentList"}, method={RequestMethod.GET})
+    public List<String> orgDepartmentList(@RequestParam(value="name") String name) {
+        return this.employeeService.getOrgDepartmentList(name);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/departmentByEmployeeList/{deptId}"}, method={RequestMethod.GET})
+    public List<EmployeeDepartmentMappingDTO> departmentByEmployeeList(@PathVariable(value="deptId") String deptId) {
+        return this.employeeService.departmentByEmployeeList(Long.valueOf(deptId));
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/{empId}/departmentByEmployeeList"}, method={RequestMethod.GET})
+    public DepartmentResponseDetailsDTO departmentByEmployeeList(@PathVariable(value="empId") long empId, @RequestParam(value="year", required=false) String year, HttpServletRequest request) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeId(empId);
+        Integer yearval = 0;
+        if (Objects.nonNull(year) && !year.isEmpty() && year.matches("\\d+")) {
+            yearval = Integer.parseInt(year);
+        }
+        return this.employeeService.departmentByEmployeeList(employeeDTO, yearval);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/years"}, method={RequestMethod.GET})
+    public ResponseEntity<List<Integer>> getYearsForDropdown() {
+        List years = this.employeeService.getYearsForDropdown();
+        return ResponseEntity.ok((Object)years);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/addDepartmentMapping"}, method={RequestMethod.POST})
+    public DepartmentChartDTO addDepartmentMapping(@RequestBody DepartmentChartDTO departmentChartDTO, HttpServletRequest request) throws InputValidationException {
+        return this.employeeService.addDepartmentChartDTO(departmentChartDTO);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/getDeptIdwithEmpId/{empId}"}, method={RequestMethod.GET})
+    public Long getDepartmentwithEmpId(@PathVariable(value="empId") String empId, HttpServletRequest request) throws InputValidationException {
+        return this.employeeService.getUserDeptMappingwithempid(empId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/getDepartmentMapping/{deptId}"}, method={RequestMethod.GET})
+    public DepartmentChartDTO getDepartmentMapping(@PathVariable(value="deptId") long deptId, HttpServletRequest request) {
+        return this.employeeService.getDepartmentMapping(Long.valueOf(deptId));
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/addDepartmentMapping"}, method={RequestMethod.PUT})
+    public DepartmentChartDTO updateDepartmentMapping(@RequestBody DepartmentChartDTO departmentChartDTO, HttpServletRequest request) {
+        return this.employeeService.updateDepartmentChartDTO(departmentChartDTO);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/deleteDepartmentMapping/{deptId}"}, method={RequestMethod.GET})
+    public EmployeeResponseDTO updateDepartmentMapping(@PathVariable(value="deptId") long deptId, HttpServletRequest request) {
+        return this.employeeService.deleteDepartmentChartDTO(Long.valueOf(deptId));
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/createBulkDeptMapping"}, method={RequestMethod.POST})
+    public boolean createBulkDeptMapping(@RequestBody List<DeptImportDTO> deptImportDTOList, HttpServletRequest request) throws InputValidationException {
+        String loggedInEmpId = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+        for (DeptImportDTO deptImportDTO : deptImportDTOList) {
+            if (deptImportDTO.getOrgName().isEmpty() || deptImportDTO.getDeptID().isEmpty()) continue;
+            this.employeeService.createBulkDeptMapping(deptImportDTO, loggedInEmpId);
+        }
+        this.log.debug((Object)("logged in employeeID " + loggedInEmpId));
+        this.cacheUtil.removeEmployeeCache((Object)loggedInEmpId);
+        return true;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/findProfileByName"}, method={RequestMethod.GET})
+    public Employee findProfileByName(@RequestBody FindDTO findDTO, HttpServletRequest request) throws InputValidationException {
+        return this.employeeService.findProfileByName(findDTO.getName(), findDTO.getOrgId());
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/checkDept"}, method={RequestMethod.GET})
+    public Map<String, Object> checkDept(@RequestBody FindDTO findDTO, HttpServletRequest request) {
+        HashMap<String, Object> mapvalue = new HashMap<String, Object>();
+        if (findDTO.getOrgId() != null) {
+            DeptDetails deptDetails = this.departmentDetailsService.findByDeptName(findDTO.getOrgId().longValue(), findDTO.getName());
+            if (deptDetails != null && deptDetails.getName() != null) {
+                mapvalue.put("failure", "already exist this department name");
+            } else {
+                mapvalue.put("success", "noMore department name");
+            }
+        }
+        return mapvalue;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/checkDeptEmail"}, method={RequestMethod.GET})
+    public Map<String, Object> checkDeptEmail(@RequestParam(value="email") String email, HttpServletRequest request) {
+        HashMap<String, Object> mapvalue = new HashMap<String, Object>();
+        DepartmentChartMapping employee1 = this.employeeService.getDepartmentChart(email);
+        if (employee1 != null) {
+            mapvalue.put("failure", "already exist this email");
+        } else {
+            mapvalue.put("success", "noMore email");
+        }
+        return mapvalue;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/createUser"}, method={RequestMethod.GET})
+    public Map<String, Object> createUser(@RequestParam(value="email") String email, HttpServletRequest request) {
+        HashMap<String, Object> mapvalue = new HashMap<String, Object>();
+        DepartmentChartMapping employee1 = this.employeeService.getDepartmentChart(email);
+        if (employee1 != null) {
+            mapvalue.put("failure", "already exist this email");
+        } else {
+            mapvalue.put("success", "noMore email");
+        }
+        return mapvalue;
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/designationList"}, method={RequestMethod.GET})
+    public List<Employee> getDesignationList(@RequestParam(value="name", required=false) String name, @RequestParam(value="datePeriod", required=false) String datePeriod) {
+        String date = datePeriod.replace("%20", "");
+        return this.employeeService.getDesignationList(name, date);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/childtrackerlist"}, method={RequestMethod.GET})
+    public List<ChildTrackerDTO> getchildtrackerList(@RequestParam(value="orgid", required=false) Long orgid, @RequestParam(value="orgtype", required=false) Long type, @RequestParam(value="upgrade", required=false) Long upgrade) {
+        return this.deptTrackerService.getChildTrackers(orgid, type, upgrade);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/updateDepartmentParentId/{deptId}"}, method={RequestMethod.PUT})
+    public DepartmentChartDTO updateDepartmentParent(@PathVariable(value="deptId") Long deptId, @RequestParam(value="deptParentId") Long deptParentId, @RequestParam(value="updatedBy") Long updatedBy, HttpServletRequest request) {
+        return this.employeeService.updateDepartmentParent(deptId, deptParentId, updatedBy);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/checkParentEmployee/{orgId}"}, method={RequestMethod.GET})
+    public List<Employee> getEmployeeList(@PathVariable(value="orgId", required=false) String orgId) {
+        return this.employeeService.getEmployeeList(Long.valueOf(orgId));
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/checkDepartmentChart/{orgId}"}, method={RequestMethod.GET})
+    public List<DepartmentChartDTO> getDepartmentList(@PathVariable(value="orgId", required=false) String orgId) {
+        return this.employeeService.getDepartmentList(Long.valueOf(orgId));
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/deleteEmployee/{empId}"}, method={RequestMethod.GET})
+    public EmployeeResponseDTO deleteEmployee(@PathVariable(value="empId") String empId, HttpServletRequest request) {
+        return this.employeeService.deleteEmployee(empId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/deleteOrgDept/{deptId}"}, method={RequestMethod.GET})
+    public EmployeeResponseDTO deleteOrgDept(@PathVariable(value="deptId") String deptId, HttpServletRequest request) {
+        return this.employeeService.deleteOrgDept(deptId);
+    }
+
+    @ResponseBody
+    @RequestMapping(value={"/allDeptReporteeList/{empId}"}, method={RequestMethod.GET})
+    public List<Employee> allDeptReporteeList(@PathVariable(value="empId") long empId) {
+        return this.employeeService.getAllDeptReporteeList(empId);
+    }
+}
+

@@ -1,0 +1,124 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.service.db.dto.LicenseResponseDTO
+ *  com.estrat.service.db.resource.util.EncryptionProvider
+ *  com.estrat.service.db.resource.util.SignatureProvider
+ *  com.estrat.service.db.service.LicenseService
+ *  com.estrat.service.licenseservice.bean.LicenseData
+ *  com.estrat.service.licenseservice.bean.LicenseKey
+ *  org.apache.commons.collections4.CollectionUtils
+ *  org.apache.log4j.Logger
+ *  org.springframework.beans.factory.annotation.Autowired
+ *  org.springframework.beans.factory.annotation.Value
+ *  org.springframework.stereotype.Service
+ *  org.springframework.web.client.RestTemplate
+ */
+package com.estrat.service.db.service;
+
+import com.estrat.service.db.dto.LicenseResponseDTO;
+import com.estrat.service.db.resource.util.EncryptionProvider;
+import com.estrat.service.db.resource.util.SignatureProvider;
+import com.estrat.service.licenseservice.bean.LicenseData;
+import com.estrat.service.licenseservice.bean.LicenseKey;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class LicenseService {
+    private static final Logger log = Logger.getLogger(LicenseService.class);
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private SignatureProvider signatureProvider;
+    @Autowired
+    private EncryptionProvider encryptionProvider;
+    @Value(value="${license.validate.url}")
+    private String licenseUrl;
+    @Value(value="${license.file.path}")
+    private String licenseFilePath;
+
+    public LicenseResponseDTO validateLicense() {
+        HashMap<String, String> licenseMap = new HashMap<String, String>();
+        licenseMap.put("licenseKey", this.readLicenseFile());
+        String licenseString = (String)licenseMap.get("licenseKey");
+        LicenseKey licenseKey = (LicenseKey)this.encryptionProvider.decrypt(licenseString);
+        LicenseData licenseData = (LicenseData)this.encryptionProvider.decrypt(licenseKey.getDataString(), licenseKey.getLicenseSaltKey());
+        LicenseResponseDTO licenseResponseDTO = null;
+        try {
+            boolean expiryCheck;
+            licenseResponseDTO = new LicenseResponseDTO();
+            long allowedUsers = licenseData.getTotalUsers();
+            List moduleList = CollectionUtils.isNotEmpty((Collection)licenseData.getModuleList()) ? licenseData.getModuleList() : Collections.emptyList();
+            List deviceList = CollectionUtils.isNotEmpty((Collection)licenseData.getDeviceList()) ? licenseData.getDeviceList() : Collections.emptyList();
+            Date dbExpiryDate = licenseData.getExpiryDate();
+            boolean bl = expiryCheck = !dbExpiryDate.before(new Date());
+            if (!expiryCheck) {
+                licenseResponseDTO.setValidationSuccess(false);
+                licenseResponseDTO.setValidationMesssage("License has been expired please renew your license");
+                return licenseResponseDTO;
+            }
+            licenseResponseDTO.setExpiryDate(dbExpiryDate);
+            licenseResponseDTO.setModuleList(moduleList);
+            licenseResponseDTO.setOrganization(licenseData.getOrganization());
+            licenseResponseDTO.setValidationSuccess(true);
+            licenseResponseDTO.setTotalAllowedUsers(Long.valueOf(allowedUsers));
+            licenseResponseDTO.setDeviceList(deviceList);
+        }
+        catch (Exception e) {
+            log.error((Object)"Exception while validating license", (Throwable)e);
+            licenseResponseDTO = new LicenseResponseDTO();
+            licenseResponseDTO.setValidationMesssage("Exception occured while validating license " + e.getMessage());
+            licenseResponseDTO.setValidationSuccess(false);
+        }
+        return licenseResponseDTO;
+    }
+
+    public String readLicenseFile() {
+        StringBuffer stringBuffer = new StringBuffer();
+        BufferedReader bufferedReader = null;
+        InputStreamReader fileReader = null;
+        try {
+            fileReader = new FileReader(new File(this.licenseFilePath));
+            bufferedReader = new BufferedReader(fileReader);
+            String data = null;
+            while ((data = bufferedReader.readLine()) != null) {
+                stringBuffer.append(data);
+            }
+        }
+        catch (Exception e) {
+            log.error((Object)"Exception while reading license file ", (Throwable)e);
+            throw new RuntimeException(e);
+        }
+        finally {
+            try {
+                if (fileReader != null) {
+                    fileReader.close();
+                }
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            }
+            catch (Exception e) {
+                log.error((Object)"Exception while reading license file ", (Throwable)e);
+                throw new RuntimeException(e);
+            }
+        }
+        return stringBuffer.toString();
+    }
+}
+

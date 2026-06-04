@@ -1,0 +1,249 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.service.db.bean.po.TaskDetails
+ *  com.estrat.service.db.bean.po.TaskOwnerMapping
+ *  com.estrat.service.db.bean.po.TaskUserMapping
+ *  com.estrat.service.db.dto.TaskDetailsDTO
+ *  com.fasterxml.jackson.annotation.JsonIgnoreProperties
+ *  com.fasterxml.jackson.core.JsonProcessingException
+ *  com.fasterxml.jackson.databind.ObjectMapper
+ *  javax.persistence.CascadeType
+ *  javax.persistence.Column
+ *  javax.persistence.Entity
+ *  javax.persistence.FetchType
+ *  javax.persistence.GeneratedValue
+ *  javax.persistence.GenerationType
+ *  javax.persistence.Id
+ *  javax.persistence.OneToMany
+ *  javax.persistence.Table
+ *  org.apache.commons.lang3.StringUtils
+ *  org.hibernate.annotations.GenericGenerator
+ */
+package com.estrat.service.db.bean.po;
+
+import com.estrat.service.db.bean.po.TaskOwnerMapping;
+import com.estrat.service.db.bean.po.TaskUserMapping;
+import com.estrat.service.db.dto.TaskDetailsDTO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+@Entity
+@Table(name="task_details", schema="orgstructure")
+public class TaskDetails {
+    @Id
+    @GenericGenerator(name="native", strategy="native")
+    @GeneratedValue(generator="native", strategy=GenerationType.AUTO)
+    @Column(name="ID")
+    private long id;
+    @Column(name="task_value")
+    private String taskValue;
+    @Column(name="task_category_id")
+    private long taskCategoryId;
+    @Column(name="active")
+    private int active = 0;
+    @Column(name="owner")
+    private long owner;
+    @Column(name="created_by", updatable=false)
+    private long createdBy;
+    @Column(name="updated_by")
+    private long updatedBy;
+    @Column(name="created_time", updatable=false)
+    private LocalDateTime createdTime;
+    @Column(name="updated_time")
+    private LocalDateTime updatedTime;
+    @Column(name="priority")
+    private String priority;
+    @Column(name="status")
+    private String status;
+    @Column(name="start_date")
+    private Date startDate;
+    @Column(name="end_date")
+    private Date endDate;
+    @OneToMany(mappedBy="id.taskDetailsId", fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
+    private Set<TaskUserMapping> userList;
+    @OneToMany(mappedBy="id.taskDetailsId", fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
+    private Set<TaskOwnerMapping> ownerList;
+
+    public TaskDetails() {
+    }
+
+    public TaskDetails(TaskDetailsDTO taskDTO) {
+        String multipleOwners;
+        String multipleUsers;
+        this.id = taskDTO.getId();
+        this.active = taskDTO.getActive();
+        this.owner = taskDTO.getOwner();
+        this.createdBy = taskDTO.getCreatedBy();
+        this.updatedBy = taskDTO.getUpdatedBy();
+        this.createdTime = taskDTO.getCreatedTime();
+        this.updatedTime = taskDTO.getUpdatedTime();
+        this.taskCategoryId = taskDTO.getTaskCategoryId();
+        this.priority = taskDTO.getPriority();
+        this.status = taskDTO.getStatus();
+        this.startDate = taskDTO.getStartDate();
+        this.endDate = taskDTO.getEndDate();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            this.taskValue = mapper.writeValueAsString((Object)taskDTO.getTaskValue());
+        }
+        catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String string = multipleUsers = taskDTO.getTaskValue().get("multipleUsers") != null ? taskDTO.getTaskValue().get("multipleUsers").toString() : "";
+        if (StringUtils.isNotEmpty((CharSequence)multipleUsers)) {
+            Set userList = Arrays.asList(multipleUsers.split(",")).stream().filter(empId -> !"0".equalsIgnoreCase((String)empId)).map(empId -> new TaskUserMapping(this, empId.toString())).collect(Collectors.toSet());
+            this.setUserList(userList);
+        } else {
+            this.setUserList(Collections.emptySet());
+        }
+        String string2 = multipleOwners = taskDTO.getTaskValue().get("multipleOwners") != null ? taskDTO.getTaskValue().get("multipleOwners").toString() : "";
+        if (StringUtils.isNotEmpty((CharSequence)multipleOwners)) {
+            Set userList = Arrays.asList(multipleOwners.split(",")).stream().filter(empId -> !"0".equalsIgnoreCase((String)empId)).map(empId -> new TaskOwnerMapping(this, empId.toString())).collect(Collectors.toSet());
+            this.setOwnerList(userList);
+        } else {
+            this.setOwnerList(Collections.emptySet());
+        }
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTaskValue() {
+        return this.taskValue;
+    }
+
+    public void setTaskValue(String taskValue) {
+        this.taskValue = taskValue;
+    }
+
+    public long getTaskCategoryId() {
+        return this.taskCategoryId;
+    }
+
+    public void setTaskCategoryId(long taskCategoryId) {
+        this.taskCategoryId = taskCategoryId;
+    }
+
+    public int getActive() {
+        return this.active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public long getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(long owner) {
+        this.owner = owner;
+    }
+
+    public long getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public long getUpdatedBy() {
+        return this.updatedBy;
+    }
+
+    public void setUpdatedBy(long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return this.updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public String getPriority() {
+        return this.priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getStartDate() {
+        return this.startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return this.endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Set<TaskUserMapping> getUserList() {
+        return this.userList;
+    }
+
+    public void setUserList(Set<TaskUserMapping> userList) {
+        this.userList = userList;
+    }
+
+    public Set<TaskOwnerMapping> getOwnerList() {
+        return this.ownerList;
+    }
+
+    public void setOwnerList(Set<TaskOwnerMapping> ownerList) {
+        this.ownerList = ownerList;
+    }
+}
+

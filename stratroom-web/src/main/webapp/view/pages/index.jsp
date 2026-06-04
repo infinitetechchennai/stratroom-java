@@ -1,0 +1,669 @@
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+  <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+    <html>
+
+    <head>
+      <meta charset="UTF-8" />
+      <meta content="width=device-width, initial-scale=1" name="viewport" />
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <title>StratRoom</title>
+
+      <link href="css/bootstrap.min.css" rel="stylesheet" />
+      <link href="css/basic.css?v0.004" rel="stylesheet" />
+
+      <link href="css/theme-07.css" rel="stylesheet" />
+    </head>
+
+    <style>
+      .login-wrap {
+        height: 100dvh;
+      }
+
+      @media (min-width: 992px) {
+        .login-wrap {
+          overflow: hidden;
+        }
+      }
+
+      .login-content {
+        color: var(--stratroom-white);
+      }
+
+      @media (min-width: 992px) {
+        .login-content {
+          overflow: auto;
+        }
+      }
+
+      .login-content .inner {
+        height: 100%;
+        padding: 30px;
+        border-radius: 20px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .login-content .inner:before {
+        content: "";
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 30px;
+      }
+
+      .login-content .content-card {
+        text-align: center;
+        position: relative;
+      }
+
+      .login-content .content-card h4 {
+        font-size: clamp(13px, 5vw, 18px);
+        font-weight: 400;
+      }
+
+      .login-content .content-card h1 {
+        font-size: clamp(32px, 5vw, 48px);
+        line-height: 1;
+      }
+
+      .login-content .content-card h2 {
+        font-size: clamp(48px, 5vw, 72px);
+        font-weight: 500;
+        line-height: 1;
+      }
+
+      .login-box {
+        display: flex;
+      }
+
+      @media (min-width: 992px) {
+        .login-box {
+          overflow: auto;
+        }
+      }
+
+      .login-box .inner {
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+        padding: 30px;
+        display: flex;
+        align-items: start;
+      }
+
+      @media (min-width: 992px) {
+        .login-box .inner {
+          overflow: auto;
+        }
+      }
+
+      .login-card {
+        width: 100%;
+        margin: auto;
+      }
+
+      .login-card .login-card-head {
+        padding-bottom: 20px;
+      }
+
+      .login-card .login-card-head h4 {
+        font-size: clamp(22px, 5vw, 28px);
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .login-card .login-card-head p {
+        font-size: clamp(12px, 5vw, 13px);
+        margin-bottom: 0;
+      }
+
+      .login-card .btn-login {
+        min-height: 42px;
+        text-transform: uppercase;
+      }
+
+      .login-card .btn-link {
+        min-height: 42px;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .login-box .inner h1 span::after {
+        content: "";
+        display: flex;
+        height: 3px;
+        background: rgb(254, 182, 71);
+        /* background: linear-gradient(90deg, rgb(254, 182, 71) 0%, rgb(227, 114, 196) 100%); */
+        background-color: var(--primary-gray);
+        margin-top: 10px;
+      }
+
+      .login-box .form-floating .form-control {
+        border-radius: 0;
+        padding-left: 0;
+        padding-right: 0;
+        border: 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        background: transparent;
+        min-height: auto;
+        height: 48px;
+        font-size: 15px;
+      }
+
+      .login-box .form-floating .form-control:not(:placeholder-shown)~label,
+      .login-box .form-floating>.form-control:focus~label {
+        transform: scale(0.85) translateY(-0.6rem) translateX(0);
+      }
+
+      .login-box .form-floating .form-control:not(:placeholder-shown)~label::after {
+        display: none;
+      }
+
+      .login-box .form-floating .form-control:focus~label::after {
+        display: none;
+      }
+
+      .login-box .form-floating>label {
+        padding-left: 0;
+      }
+
+      .copyright {
+        border-top: 1px dashed rgba(0, 0, 0, 0.1);
+      }
+
+      .copyright p {
+        font-size: 13px;
+      }
+
+      .login-powered-by .logo {
+        width: 165px;
+        margin: 0 auto;
+      }
+
+      .login-powered-by .logo img {
+        width: 100%;
+      }
+
+      p.login-option {
+        text-align: center;
+        margin: 0;
+        padding-top: 16px;
+      }
+
+      .pb-lg-3 {
+        padding: 1rem !important;
+      }
+
+      .btn-color {
+        background-color: #883B71;
+        color: white;
+        border: none;
+        /* optional, if you want no border */
+      }
+
+      .btn-color:hover {
+        background-color: #702f5b;
+        /* slightly darker on hover for effect */
+        color: white;
+        /* ensure text stays white */
+        cursor: pointer;
+        /* optional, improves UX */
+      }
+
+      /*
+.pe-lg-0 {
+  padding-right: 0rem !important;
+} */
+
+
+      @media (min-width: 768px) {
+        .pe-lg-0 {
+          padding-right: 0rem !important;
+        }
+      }
+    </style>
+
+
+
+    <body class="grid gap-0 login-wrap">
+      <div class="g-col-lg-8 g-col-12 login-content pb-lg-3 pb-lg-3 pe-lg-0" style="width: 101%;">
+        <div class="inner" style="background: url(images/login-bg-01.png) center center no-repeat;
+    background-size: cover;">
+          <div class="content-card">
+            <!-- <div class="logo">
+                            <img src="/stratroom/images/logo-w.svg" width="180" height="35" alt="Stratroom">
+                        </div> -->
+            <h4>Welcome to your Integrated</h1>
+              <h1>Multi-Governance</h1>
+              <h2>Gateway</h2>
+              <div class="login-powered-by mt-4">
+                <p class="mb-0">
+                  Powered by
+                </p>
+                <div class="logo">
+                  <img src="/stratroom/images/logo-w.svg" width="180" height="35" alt="Stratroom">
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-col-lg-4 g-col-12 login-box p-3">
+        <div class="inner">
+          <div class="login-card">
+            <div class="login-card-head">
+              <h4>Login</h4>
+              <p>To your command centre for Peak Performance</p>
+            </div>
+            <div class="login-card-body">
+              <form action="login-home" method="post" id="loginForm">
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" id="floatingInput" name="email">
+                  <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="password" class="form-control" id="floatingPassword" name="password">
+                  <label for="floatingPassword">Password</label>
+                </div>
+
+                <div class="form-check pt-3 mb-3">
+                  <input type="checkbox" class="form-check-input" id="remember">
+                  <label class="form-check-label" for="remember">
+                    Save Password
+                  </label>
+                </div>
+
+                <p class="mb-0 text-muted">
+                  Did you
+                  <a href="#" class="fw-semibold link-color">forget your password?</a>
+                </p>
+
+
+                <div class="pt-4">
+                  <button type="button" class="btn btn-color btn-login w-100 login_btn"> Continue</button>
+                  <p class="login-option">OR</p>
+                  <button type="button" class="btn btn-link w-100"> Sign
+                    in with SSO</button>
+                </div>
+
+              </form>
+            </div>
+
+            <div class="login-card-footer text-center py-2 copyright">
+              <p class="mb-0">Copyright &copy;
+                <script>
+                  document.write(new Date().getFullYear());
+                </script>
+                <strong>StratRoom</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--#forgot password Popup -->
+      <div class="modal fade" id="forgot_popup" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+        aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>Forgot Password</h4>
+              <button type="button" class="close recommendationclose pull-right" data-dismiss="modal" style="
+                opacity: 1 !important;
+                color: white !important;
+                font-size: 20px;
+              ">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="forgot_Form" class="form-inline">
+                <div class="col-9 form-group">
+                  <label for="Name">Enter E-mail:</label>
+                  <input type="text" name="forgotemail" id="forgotemail" class="form-control browser-default"
+                    autocomplete="off" />
+                </div>
+                <div class="col-2 form-group">
+                  <button class="initative_save_btn validateemailverify" value="Save">
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--#forgot password Popup -->
+
+      <script src="js/jquery.min.js"></script>
+      <script src="js/jquery-3.7.1.min.js"></script>
+      <script type="text/javascript" src="js/jquery/jquery.validate.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/main.js"></script>
+      <script src="js/notify.js"></script>
+      <script src="js/js.cookie.min.js"></script>
+      <script src="js/aes.js"></script>
+
+      <script type="text/javascript">
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://api.ipify.org?format=jsonp&callback=DisplayIP";
+        //script.src = "http://jsonip.com?callback=DisplayIP";
+        script.crossorigin = "anonymous";
+        document.getElementsByTagName("head")[0].appendChild(script);
+
+        function DisplayIP(response) {
+          localStorage.setItem("systemip", response.ip);
+        }
+      </script>
+      <script>
+        $(document).ready(function () {
+          $(".page-loader-wrapper").show();
+          document.onkeypress = function (event) {
+            event = event || window.event;
+            if (
+              event.keyCode == 123 ||
+              event.keyCode == 18 ||
+              event.ctrlKey == true
+            ) {
+              return false;
+            }
+          };
+          document.onmousedown = function (event) {
+            event = event || window.event;
+            if (
+              event.keyCode == 123 ||
+              event.keyCode == 18 ||
+              event.ctrlKey == true
+            ) {
+              return false;
+            }
+          };
+          document.onkeydown = function (event) {
+            event = event || window.event;
+            if (
+              event.keyCode == 123 ||
+              event.keyCode == 18 ||
+              event.ctrlKey == true
+            ) {
+              return false;
+            }
+          };
+
+          //document.addEventListener('contextmenu', event => event.preventDefault());
+          //var encrypted = CryptoJS.AES.encrypt("Message", "Secret Passphrase");var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase");
+
+          var newURL = window.location.href;
+          newURL = newURL.toLowerCase();
+
+          if (newURL.indexOf("login-home") >= 0) {
+            setTimeout(function () {
+              var systemip = localStorage.getItem("systemip");
+              var userloginid = localStorage.getItem("userloginid");
+              //userloginid	=	(userloginid !=	"" && userloginid !=	null?" of "+userloginid:"");
+              if (systemip != null && systemip != "") {
+                var currentEmp = $("#userPrincipal").val();
+                var data = {
+                  userId: currentEmp,
+                  createdBy: currentEmp,
+                  action: "Failed Login Attempts",
+                  emailAddress: userloginid,
+                  systemIp: systemip,
+                };
+                $.ajax({
+                  url: "/stratroom/preAuditTrail",
+                  type: "post",
+                  async: false,
+                  contentType: "application/JSON",
+                  data: JSON.stringify(data),
+                  success: function (res) { },
+                });
+              }
+            }, 3000);
+          }
+
+          $.notify.addStyle("success", {
+            html: "<div><i class='fa fa-check-circle fa-lg' aria-hidden='true'></i>&nbsp; <span data-notify-text/></div>",
+            classes: {
+              base: {
+                "white-space": "nowrap",
+                "background-color": "grey",
+                padding: "10px",
+                "text-align": "center",
+                "border-radius": "4px",
+                color: "white",
+              },
+              graynotify: {
+                color: "white",
+                "background-color": "grey !important",
+              },
+            },
+          });
+
+          $.notify.addStyle("error", {
+            html: "<div><i class='fa fa-times-circle' aria-hidden='true'></i>&nbsp; <span data-notify-text/></div>",
+            classes: {
+              base: {
+                "white-space": "nowrap",
+                "background-color": "grey",
+                padding: "10px",
+                "text-align": "center",
+                "border-radius": "4px",
+                color: "white",
+              },
+              graynotify: {
+                color: "white",
+                "background-color": "grey",
+              },
+            },
+          });
+
+          $("#forgotemail").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            if (value == "" || value == "0" || value == " ") {
+              return false;
+            }
+          });
+
+          getLoginLogo();
+          var remember = Cookies.get("remember");
+          if (remember == "true") {
+            var email = Cookies.get("email");
+            var password = Cookies.get("password");
+            $("[name='email']").val(email);
+            $("[name='password']").val(password);
+            $("#remember").prop("checked", "checked");
+          }
+
+          $("#loginForm").on("keypress", function (e) {
+
+            if (e.which == 13) {
+              e.preventDefault();
+              $(".login_btn").trigger("click");
+            }
+          });
+
+          $(".login_btn").on("click", function (e) {
+            $(this).attr("disabled", true);
+            var savepassword = $("#remember").is(":checked");
+            if (savepassword == true) {
+              var email = $("[name='email']").val();
+              var password = $("[name='password']").val();
+              console.log(email, password, "emailpassword values");
+              var nowdate = new Date();
+              nowdate.setTime(nowdate.getTime() + 365 * 24 * 60 * 60 * 1000);
+              Cookies.set("email", email, { expires: 365 });
+              Cookies.set("password", password, { expires: 365 });
+              Cookies.set("remember", true, { expires: 365 });
+            } else {
+              Cookies.remove("remember");
+            }
+            var kpichartviewdata = localStorage.getItem("kpichartviewdata");
+            var empkpichartviewdata = localStorage.getItem("empkpichartviewdata");
+            localStorage.clear();
+            if (kpichartviewdata != null && kpichartviewdata != "") {
+              localStorage.setItem("kpichartviewdata", kpichartviewdata);
+            }
+            if (empkpichartviewdata != null && empkpichartviewdata != "") {
+              localStorage.setItem("empkpichartviewdata", empkpichartviewdata);
+            }
+            localStorage.setItem("userloginid", $("input[name='email']").val());
+            localStorage.setItem("sidebar_option", "side-closed submenu-closed");
+            var encryptval = $("input[name='password']").val();
+            // Prevent double encryption if already processed
+            if ($("input[name='password']").attr("type") !== "hidden") {
+                var key = CryptoJS.enc.Latin1.parse("CLAVE00000000000");
+                var iv = CryptoJS.enc.Latin1.parse("VECTOR0000000000");
+                var encrypted = CryptoJS.AES.encrypt(encryptval, key, {
+                  iv: iv,
+                  mode: CryptoJS.mode.CBC,
+                });
+                
+                // Change the visible field name so it isn't submitted
+                $("input[name='password']").attr("name", "clear_password");
+                
+                // Add a hidden field with the encrypted password
+                $("<input>").attr({
+                    type: "hidden",
+                    name: "password",
+                    value: encrypted.toString()
+                }).appendTo("#loginForm");
+            }
+            
+            document.getElementById("loginForm").submit();
+
+            //setTimeout(function(){ }, 1000);
+            //document.getElementById("loginForm").submit();
+            //var decrypted = CryptoJS.AES.decrypt(encrypted, "Stratroom")
+            //$("input[name='password']").val(decrypted);
+          });
+
+          $("#forgot_Form").validate({
+            rules: {
+              forgotemail: {
+                required: true,
+                email: true,
+              },
+            },
+            messages: {
+              required: "Required Fields Missing",
+            },
+            submitHandler: function (form) {
+              forgotlink();
+            },
+          });
+        });
+
+        function getLoginLogo() {
+          $.ajax({
+            url: "/stratroom/loginTheme",
+            type: "GET",
+            contentType: "application/json",
+            success: function (response, status) {
+              if (!jQuery.isEmptyObject(response)) {
+                if (
+                  response["loginLogo"] != undefined &&
+                  response["loginLogo"] != null &&
+                  response["loginLogo"] != ""
+                ) {
+                  if (response["loginLogo"] != "true") {
+                    $(".login-img").css(
+                      "background-image",
+                      "url(" + response["loginLogo"] + ")"
+                    );
+                  }
+                  // if (response["loginLogo"] !== "true") {
+                  //     $(".login-img").css({
+                  //         "background": "url(" + response["loginLogo"] + ") center center no-repeat",
+                  //         "background-size": "cover"  
+                  //     });
+                  // }
+                }
+                if (
+                  response["loginTheme"] != undefined &&
+                  response["loginTheme"] != null &&
+                  response["loginTheme"] != ""
+                ) {
+                  $(".loginindexlogo").attr("src", response["loginTheme"]);
+                }
+              } else {
+                $(".login-img").css(
+                  "background-image",
+                  "url('/stratroom/img/Login-img.png')"
+                );
+              }
+            },
+          });
+
+          setTimeout(function () {
+            $(".page-loader-wrapper").hide();
+          }, 2000);
+        }
+
+        function formvalidationerrorreset() {
+          $("*[id*=-error]").each(function () {
+            $(this).remove();
+          });
+        }
+
+        function removeerror() {
+          $(".validateemailverify").removeAttr("disabled");
+          //$(".validateemailverify").addClass("disabledlink");
+          formvalidationerrorreset();
+          $("#forgot_Form").trigger("reset");
+        }
+
+        function forgotlink() {
+          $(".validateemailverify").attr("disabled", true);
+          var reqdata = { userName: $("#forgotemail").val() };
+          $.ajax({
+            url: "/stratroom/forgotPassword",
+            type: "post",
+            contentType: "application/json",
+            data: JSON.stringify(reqdata),
+            success: function (data, status) {
+              $(".validateemailverify").removeAttr("disabled");
+              if (data.result) {
+                $.notify("Success:" + data.result, {
+                  style: "success",
+                  className: "graynotify",
+                });
+                $(".recommendationclose").click();
+              }
+            },
+            error: readErrorMsg,
+          });
+        }
+
+        function readErrorMsg(msg, status) {
+          $(".validateemailverify").removeAttr("disabled");
+          if (!jQuery.isEmptyObject(msg.responseText)) {
+            $.each(JSON.parse(msg.responseText), function (key, value) {
+              if (key == "exception") {
+                $.notify("Error:" + value, {
+                  style: "error",
+                  className: "graynotify",
+                });
+              }
+              if (key == "error") {
+                $.notify("Error:" + value, {
+                  style: "error",
+                  className: "graynotify",
+                });
+              }
+            });
+          }
+        }
+      </script>
+    </body>
+
+    </html>

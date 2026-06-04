@@ -1,0 +1,103 @@
+﻿
+> scratch_utf8.txt:11827:UserThreadLocal.get().setJwtToken(tokenResponse.getToken());\n118:                     
+  scratch_utf8.txt:11828:UserThreadLocal.get().setDataManagementUrl(String.join((CharSequence)\"?jwtToken=\", 
+this.dataUrl, 
+  scratch_utf8.txt:11829:tokenResponse.getToken()));\n119:                     if (TempUserThreadLocal.get() != null 
+&& 
+  scratch_utf8.txt:11830:TempUserThreadLocal.get().getProfile() != null) {\n120:                         
+  scratch_utf8.txt:11831:request.getSession().setAttribute(\"userPrincipal\", TempUserThreadLocal.get());\n121:        
+             } else 
+  scratch_utf8.txt:11832:{\n122:                         request.getSession().setAttribute(\"userPrincipal\", 
+UserThreadLocal.get());\n123:     
+  scratch_utf8.txt:11833:                    request.getSession().setAttribute(\"principal\", 
+UserThreadLocal.get());\n124:                     
+  scratch_utf8.txt:11834:}\n125:                 }\n126:                 catch (Exception ex) {\n127:                  
+   
+  scratch_utf8.txt:11835:this.logger.error(\"Token Expired session invalidate \");\n128:                     
+  scratch_utf8.txt:11836:request.getSession().invalidate();\n129:                     throw new 
+RequestException(\"Token refresh failed\", 
+  scratch_utf8.txt:11837:(Throwable)ex);\n130:                 }\n131:             }\n132:         }\n133:     }\n134: 
+}\n135: \n136: \nThe 
+  scratch_utf8.txt:11838:above content shows the entire, complete file contents of the requested file.\n"}
+  scratch_utf8.txt:11839:  
+C:\Users\sibi\.gemini\antigravity-ide\brain\1c5c297e-bb8f-4fed-8791-4aab4df4c4f8\.system_generated\logs\transcript.js
+  scratch_utf8.txt:11840:onl:726:{"step_index":605,"source":"SYSTEM","type":"EPHEMERAL_MESSAGE","status":"DONE","create
+d_at":"2026-06-03T02:32:0
+  scratch_utf8.txt:11841:9Z","content":"The following is an <EPHEMERAL_MESSAGE> not actually sent by the user. It is 
+provided by the system as 
+  scratch_utf8.txt:11842:a set of reminders and general important information to pay attention to. Do NOT respond to 
+this message, just act 
+  scratch_utf8.txt:11843:accordingly.\n\n<EPHEMERAL_MESSAGE>\n<planning_mode>\nYou're in planning mode. Exercise 
+judgement on whether the 
+  scratch_utf8.txt:11844:user's last request warrants a plan and take action accordingly.\nIf the user's request 
+warrants a plan then follow 
+  scratch_utf8.txt:11845:this workflow:\n1. Research first before taking actions. Do not use your code editing tools 
+or run modifying commands 
+  scratch_utf8.txt:11846:during this time.\n2. Create an implementation plan artifact with `request_feedback = true` 
+to request approval. 
+  scratch_utf8.txt:11847:Include any open questions for the user directly in the implementation plan. Don't use the 
+ask_question tool to ask 
+> scratch_utf8.txt:14015:UserThreadLocal.get().setJwtToken(jwtToken);\n72:                 TokenResponseDTO 
+tokenResponseDTO = 
+  scratch_utf8.txt:14016:this.employeeService.validateToken();\n73:                 
+  scratch_utf8.txt:14017:UserThreadLocal.get().getCommonHeaders().put(\"PRELOGINAPI\", \"\");\n74:                 if 
+  scratch_utf8.txt:14018:(tokenResponseDTO.isValidationSuccess()) {\n75:                     
+request.getSession().invalidate();\n76:            
+  scratch_utf8.txt:14019:         String userInfo = 
+tokenResponseDTO.getUserInfo().get(\"decryptUserInfo\").toString();\n77:                    
+  scratch_utf8.txt:14020: Map userPermissions = (Map)tokenResponseDTO.getUserInfo().get(\"userPermissions\");\n78:     
+                String 
+  scratch_utf8.txt:14021:userName = userInfo.split(\"#\")[1];\n79:                     String password = 
+userInfo.split(\"#\")[2];\n80:         
+  scratch_utf8.txt:14022:            Employee employeeProfile = new Employee();\n81:                     
+  scratch_utf8.txt:14023:employeeProfile.setEmpId(userInfo.split(\"#\")[0]);\n82:                     
+  scratch_utf8.txt:14024:UserThreadLocal.get().setProfile(employeeProfile);\n83:                     UserPrincipal 
+userPrincipal = null;\n84:   
+  scratch_utf8.txt:14025:                  userPrincipal = request.getSession().getAttribute(\"principal\") != null ? 
+  scratch_utf8.txt:14026:(UserPrincipal)request.getSession().getAttribute(\"principal\") : 
+  scratch_utf8.txt:14027:(UserPrincipal)request.getSession().getAttribute(\"userPrincipal\");\n85:                     
+employeeProfile = 
+  scratch_utf8.txt:14028:userPrincipal != null && userPrincipal.getProfile() != null ? 
+  scratch_utf8.txt:14029:this.employeeService.getProfileDetails(userPrincipal.getProfile().getEmpId()) : 
+  scratch_utf8.txt:14030:this.employeeService.getProfileDetails(UserThreadLoc\n<truncated 616 bytes>\nermissions = 
+  scratch_utf8.txt:14031:RoleUtil.filterPermissionModules((Map)userPermissions, 
+  scratch_utf8.txt:14032:(List)UserThreadLocal.get().getLicenseResponseDTO().getModuleList());\n92:                    
+     
+  scratch_utf8.txt:14033:UserThreadLocal.get().setUserPermissions(permissions);\n93:                         
+  scratch_utf8.txt:14034:UserThreadLocal.get().setAllReporteeIds(userInfo.split(\"#\")[3]);\n94:                       
+  
+  scratch_utf8.txt:14035:UserThreadLocal.get().setProfile(employeeProfile);\n95:                         
+> scratch_utf8.txt:20741:UserThreadLocal.get().setJwtToken(jwtToken);\n72:                 TokenResponseDTO 
+tokenResponseDTO = 
+  scratch_utf8.txt:20742:this.employeeService.validateToken();\n73:                 
+  scratch_utf8.txt:20743:UserThreadLocal.get().getCommonHeaders().put(\"PRELOGINAPI\", \"\");\n74:                 if 
+  scratch_utf8.txt:20744:(tokenResponseDTO.isValidationSuccess()) {\n75:                     
+request.getSession().invalidate();\n76:            
+  scratch_utf8.txt:20745:         String us\n<truncated 878 bytes>\nll && userPrincipal.getProfile() != null ? 
+  scratch_utf8.txt:20746:this.employeeService.getProfileDetails(userPrincipal.getProfile().getEmpId()) : 
+  scratch_utf8.txt:20747:this.employeeService.getProfileDetails(UserThreadLocal.get().getProfile().getEmpId());\n86:   
+                  Long 
+  scratch_utf8.txt:20748:count = 
+this.employeeService.getOrgUserCount(employeeProfile.getOrgDetails().getOrgId());\n87:                     if 
+  scratch_utf8.txt:20749:(count > UserThreadLocal.get().getLicenseResponseDTO().getTotalAllowedUsers()) {\n88:         
+                
+  scratch_utf8.txt:20750:request.setAttribute(\"loginFlag\", \"User count higher than enrolled users in license please 
+remove users to match 
+  scratch_utf8.txt:20751:with license\");\n89:                         
+  scratch_utf8.txt:20752:request.getRequestDispatcher(\"/authfail\").forward((ServletRequest)request, 
+(ServletResponse)response);\n90:          
+  scratch_utf8.txt:20753:           } else {\n91:                         Map permissions = 
+  scratch_utf8.txt:20754:RoleUtil.filterPermissionModules((Map)userPermissions, 
+  scratch_utf8.txt:20755:(List)UserThreadLocal.get().getLicenseResponseDTO().getModuleList());\n92:                    
+     
+  scratch_utf8.txt:20756:UserThreadLocal.get().setUserPermissions(permissions);\n93:                         
+  scratch_utf8.txt:20757:UserThreadLocal.get().setAllReporteeIds(userInfo.split(\"#\")[3]);\n94:                       
+  
+  scratch_utf8.txt:20758:UserThreadLocal.get().setProfile(employeeProfile);\n95:                         
+  scratch_utf8.txt:20759:UserThreadLocal.get().setExpireAt(tokenResponseDTO.getExpireAt());\n96:                       
+  
+  scratch_utf8.txt:20760:UserThreadLocal.get().setUserInfo(userInfo);\n97:                         List authority = 
+  scratch_utf8.txt:20761:(List)tokenResponseDTO.getUserInfo().get(\"authorities\");\n98:                         List 
+grantedAuths = 
+
+
