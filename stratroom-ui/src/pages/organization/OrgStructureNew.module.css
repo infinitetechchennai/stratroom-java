@@ -1,0 +1,372 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.icon {
+  display: inline-flex;
+  color: #85798c;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #6b7280;
+}
+
+.searchBox input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  width: 180px;
+  color: #374151;
+  background: transparent;
+}
+
+.searchBox input::placeholder {
+  color: #9ca3af;
+}
+
+.viewToggle {
+  display: flex;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.viewBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #fff;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.viewBtn:hover {
+  background: #f3f4f6;
+}
+
+.viewBtnActive {
+  background: #85798c;
+  color: #fff;
+}
+
+.viewBtnActive:hover {
+  background: #6e6477;
+}
+
+.content {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  min-height: 400px;
+  padding: 16px;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(133, 121, 140, 0.2);
+  border-top-color: #85798c;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: #9ca3af;
+}
+
+.empty h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.empty p {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Tree view - matches org_structure_new.jsp nested-area structure */
+.treeContainer {
+  padding: 8px 0;
+}
+
+.nestedArea {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-left: 35px;
+}
+
+.nestedArea::before,
+.nestedArea::after {
+  content: "";
+  position: absolute;
+  background-color: #85798c;
+}
+
+.nestedArea::before {
+  width: 1px;
+  height: 100%;
+  top: 0;
+  left: 18px;
+  bottom: 0;
+  min-height: 55px;
+}
+
+.nestedArea::after {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  left: 16px;
+  bottom: 0;
+}
+
+.nested {
+  padding-left: 35px;
+}
+
+.nested::before {
+  left: 18px;
+}
+
+.nestedItem {
+  position: relative;
+  padding-top: 12px;
+}
+
+.nestedItem:first-child {
+  padding-top: 20px;
+}
+
+.nestedItem:first-child::before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #85798c;
+  left: -19px;
+  top: 0;
+}
+
+.orgBox {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.orgBox::before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #85798c;
+  left: -20px;
+  top: 16px;
+}
+
+.orgBox::after {
+  content: "";
+  width: 15px;
+  height: 1px;
+  background-color: #85798c;
+  top: 18px;
+  position: absolute;
+  left: -15px;
+}
+
+.caret {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: -27px;
+  top: 10px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  user-select: none;
+  z-index: 1;
+}
+
+.caret::before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #85798c;
+  transition: transform 0.15s ease-in-out;
+}
+
+.caretDown::before {
+  transform: rotate(180deg);
+}
+
+.orgSection {
+  flex: 1;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  transition: box-shadow 0.15s;
+}
+
+.orgSection:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.orgContent {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  padding: 8px;
+  align-items: center;
+}
+
+.orgAvatar {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: #f0ecf3;
+  color: #85798c;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orgInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.orgLabel {
+  font-size: clamp(12px, 5vw, 13px);
+  margin: 0;
+  line-height: 1.2;
+  color: #1a1a2e;
+  font-weight: 500;
+}
+
+.orgDesc {
+  font-size: 11px;
+  color: #9ca3af;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Grid view */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.orgGridCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  transition: box-shadow 0.15s;
+}
+
+.orgGridCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.orgGridAvatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: #f0ecf3;
+  color: #85798c;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orgGridInfo h5 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 2px;
+}
+
+.orgGridInfo p {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}

@@ -1,0 +1,221 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Hero Section - matches landing_page.jsp hero-section */
+.heroSection {
+  position: relative;
+  padding: 20px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 120px;
+}
+
+.blurOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: url('/stratroom/images/landing-bg.jpg') right top no-repeat;
+  background-size: cover;
+}
+
+.blurOverlay::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-mask-image: linear-gradient(to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 40%,
+    rgba(0, 0, 0, 0.8) 55%,
+    rgba(0, 0, 0, 0.3) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 40%,
+    rgba(0, 0, 0, 0.8) 55%,
+    rgba(0, 0, 0, 0.3) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.heroLeft {
+  display: flex;
+  align-items: center;
+}
+
+.heroCard {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.heroAvatar {
+  position: relative;
+}
+
+.initialsAvatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #0d6efd;
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #fff;
+}
+
+.heroText h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.heroText small {
+  white-space: normal;
+  line-height: 1.2;
+  opacity: 0.85;
+}
+
+.heroRight {
+  display: flex;
+  gap: 8px;
+  margin-top: -10px;
+  flex-wrap: wrap;
+}
+
+.heroSelect {
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #374151;
+  background: #fff;
+  outline: none;
+  min-width: 150px;
+}
+
+/* Priorities Section */
+.prioritiesSection {
+  background: transparent;
+}
+
+.sectionHeader {
+  padding: 0 0 12px;
+}
+
+.sectionHeader h5 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+/* Priority Card - matches text-card-main from JSP */
+.priorityCard {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.15s;
+}
+
+.priorityCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.priorityCardHeader {
+  padding: 8px 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.priorityIcon {
+  color: #85798c;
+}
+
+.priorityCardBody {
+  padding: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.priorityTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 4px;
+}
+
+.priorityAmount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 4px;
+}
+
+.priorityTrend {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: auto;
+}
+
+.smallSpinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(133, 121, 140, 0.2);
+  border-top-color: #85798c;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

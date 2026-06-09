@@ -1,0 +1,9 @@
+Summary for c:\Users\sibi\Desktop\java\deployments\deployments\scorecard-service-classes.jar
+Decompiled with CFR 0.152
+
+
+com.estrat.scorecard.util.KpiFileWirterUtil
+----------------------------
+
+KpiDetailsToExcel(com.estrat.scorecard.dto.KPIDTO )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Started 2 blocks at once
