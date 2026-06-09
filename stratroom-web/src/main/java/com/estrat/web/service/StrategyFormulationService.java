@@ -114,7 +114,7 @@ public class StrategyFormulationService {
     public List<StrategyFormulationDTO> getFormulationList(String status, String pageId) {
         String url = this.scoreCardUrl + "/strategyFormulationList";
         String listUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("status", new Object[]{status}).queryParam("pageId", new Object[]{pageId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List response = (List)this.commonRestTemplate.getForObject(listUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return response;
     }

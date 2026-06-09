@@ -37,13 +37,14 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -53,7 +54,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JWTOAuthTokenFilter
 extends OncePerRequestFilter {
-    private static final Logger LOGGER = Logger.getLogger(JWTOAuthTokenFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JWTOAuthTokenFilter.class);
     private EmployeeService employeeService;
     private AuditTrailService auditTrailService;
     private String contextPath;

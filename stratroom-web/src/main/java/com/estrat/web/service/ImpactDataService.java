@@ -52,7 +52,7 @@ public class ImpactDataService {
 
     public List<ImpactDataDto> findAllImpactdata() {
         String urlbuilt = UriComponentsBuilder.fromHttpUrl((String)this.getAllUrl).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(urlbuilt, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

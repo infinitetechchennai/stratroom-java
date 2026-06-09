@@ -25,7 +25,7 @@ import com.estrat.service.user.dto.ControlPanelResponseDTO;
 import com.estrat.service.user.dto.ControlPanelSecurityDTO;
 import com.estrat.service.user.exception.RequestException;
 import com.estrat.service.user.service.ControlPanelSecurityService;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

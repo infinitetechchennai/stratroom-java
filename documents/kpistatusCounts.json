@@ -1,0 +1,32 @@
+[
+  {
+    "parent": "Governor (BOD)",
+    "children": [
+      {
+        "child": "Internal Audit (Independent Reporting to Board)",
+        "Red": 6, "LightRed": 0, "Amber": 0, "LightGreen": 0, "Green": 0
+      },
+      {
+        "child": "Deputy Governor – Monetary & Financial Stability",
+        "Red": 0, "LightRed": 1, "Amber": 2, "LightGreen": 2, "Green": 0
+      },
+      {
+        "child": "Deputy Governor – Corporate Services & Operations",
+        "Red": 0, "LightRed": 1, "Amber": 2, "LightGreen": 2, "Green": 0
+      }
+    ]
+  },
+  {
+    "parent": "CEO",
+    "children": [
+      {
+        "child": "Operations",
+        "Red": 1, "LightRed": 0, "Amber": 1, "LightGreen": 3, "Green": 2
+      },
+      {
+        "child": "Operations",
+        "Red": 1, "LightRed": 0, "Amber": 1, "LightGreen": 3, "Green": 2
+      }
+    ]
+  }
+]

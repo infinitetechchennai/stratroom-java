@@ -1,0 +1,78 @@
+{
+  "page": {
+    "scorecard": {
+      "title": "بطاقة الأداء",
+      "addPerspective": "إضافة منظور",
+      "addObjective": "إضافة هدف",
+      "addKPI": "إضافة مؤشر قياس الأداء",
+      "addSubKPI": "إضافة مؤشر فرعي",
+      "editSubKPI": "تعديل وصف المؤشر الفرعي",
+      "viewSubKPI": "عرض وصف المؤشر الفرعي",
+      "editPerspective": "تعديل المنظور",
+      "viewPerspective": "عرض المنظور",
+      "editObjective": "تعديل وصف الهدف",
+      "viewObjective": "عرض وصف الهدف",
+      "fileUpload": "رفع ملف",
+      "settings": "الإعدادات",
+      "scorecardItems": {
+        "id": "المعرف",
+        "name": "الاسم",
+        "description": "الوصف",
+        "owner": "المالك",
+        "department": "القسم",
+        "startEndDate": "تاريخ البدء/الانتهاء",
+        "performance": "الأداء",
+        "calculator": "الحاسبة",
+        "kpiCalculator": "حاسبة مؤشر الأداء",
+        "weight": "الوزن (%)",
+        "subWeight": "الوزن الفرعي (%)",
+        "status": "الحالة",
+        "kpiType": "نوع KPI",
+        "threshold": "الحد",
+        "contribution": "المساهمة (%)"
+      },
+      "addPerspectiveStatusOptions": {
+        "choose": "اختر الحالة",
+        "manual": "يدوي",
+        "weighted": "مرجح"
+      },
+      "scorecardList": "قائمة بطاقة الأداء",
+      "scorecardListItems": {
+        "status": "الحالة",
+        "id": "المعرف",
+        "name": "الاسم",
+        "period": "الفترة",
+        "score": "النتيجة",
+        "trend": "الاتجاه",
+        "baseline": "الخط الأساسي",
+        "actual": "القيمة الفعلية",
+        "target": "الهدف",
+        "risk": "المخاطر",
+        "actions": "الإجراءات"
+      },
+      "kpiStoryCard": "بطاقة قصة مؤشر الأداء",
+      "kpiStoryCardItems": {
+        "kpiName": "اسم مؤشر الأداء",
+        "alignmentObjectives": "أهداف التوافق",
+        "owner": "المالك",
+        "targetAudience": "الجمهور المستهدف",
+        "currentActual": "القيمة الحالية",
+        "target": "الهدف",
+        "measurementMethod": "طريقة القياس",
+        "strategicInitiatives": "المبادرات الاستراتيجية",
+        "timelines": "الجداول الزمنية",
+        "reportingFrequency": "تكرار التقارير",
+        "successCriteria": "معايير النجاح",
+        "risks": "المخاطر",
+        "supportNeeded": "الدعم المطلوب",
+        "remarks": "ملاحظات"
+      },
+      "audit": {
+                "createdBy": "أنشئ بواسطة",
+                "createdOn": "تاريخ الإنشاء",
+                "lastModifiedBy": "آخر تعديل بواسطة",
+                "lastModifiedOn": "تاريخ آخر تعديل"
+            }
+    }
+  }
+}

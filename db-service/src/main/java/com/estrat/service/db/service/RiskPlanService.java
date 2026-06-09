@@ -34,8 +34,9 @@ import com.estrat.service.db.dto.RiskResponseDTO;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
-import org.apache.log4j.Logger;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional(rollbackOn={HibernateException.class})
 public class RiskPlanService {
-    private Logger log = Logger.getLogger(RiskPlanService.class);
+    private Logger log = LoggerFactory.getLogger(RiskPlanService.class);
     @Autowired
     protected RiskPlanRepository riskPlanRepository;
     @Autowired

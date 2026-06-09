@@ -20,7 +20,8 @@ import com.estrat.service.etl.dto.InitiativesDTO;
 import com.estrat.service.etl.service.InitiativeService;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -29,7 +30,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class InitiativeService {
-    private Logger logger = Logger.getLogger(InitiativeService.class);
+    private Logger logger = LoggerFactory.getLogger(InitiativeService.class);
     @Autowired
     private CommonRestTemplate commonRestTemplate;
     @Value(value="${dbservice.kpi.initiatives.list.url}")

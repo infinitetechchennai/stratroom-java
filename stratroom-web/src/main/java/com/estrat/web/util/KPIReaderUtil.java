@@ -70,7 +70,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -96,7 +97,7 @@ public class KPIReaderUtil {
     private PageService pageService;
     @Autowired
     private ActivitiesService activitiesService;
-    private Logger logger = Logger.getLogger(KPIReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(KPIReaderUtil.class);
 
     public List<KPIDetailsDTO> readKPIDetails(InputStream inputStream) {
         ArrayList<KPIDetailsDTO> detailsDTOs = new ArrayList<KPIDetailsDTO>();

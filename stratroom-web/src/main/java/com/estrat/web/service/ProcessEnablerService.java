@@ -63,7 +63,7 @@ public class ProcessEnablerService {
     public List<ProcessEnablerDto> findAllProcessEnabler() {
         HashMap urlVariable = new HashMap();
         String urlbuilt = UriComponentsBuilder.fromHttpUrl((String)this.getAllurl).buildAndExpand(urlVariable).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(urlbuilt, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -85,20 +85,20 @@ public class ProcessEnablerService {
         String url = String.join((CharSequence)"/", this.getposByEmpidUrl, String.valueOf(empId));
         HashMap urlVariable = new HashMap();
         String urlbuilt = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVariable).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(urlbuilt, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<ProcessEnablerDto> findByAllPageId(long pageId, String dateRange, String status) {
         String url = UriComponentsBuilder.fromHttpUrl((String)this.getAllByPageIdUrl).queryParam("pageId", new Object[]{pageId}).queryParam("dateRange", new Object[]{dateRange}).queryParam("status", new Object[]{status}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<ProcessEnablerDto> posListWithChild(long empId, String posPageIds, String dateRange) {
         String url = this.dbUrl + "/posListWithChild/" + empId;
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("posPageIds", new Object[]{posPageIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List posDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return posDTOList;
     }
@@ -106,14 +106,14 @@ public class ProcessEnablerService {
     public List<ProcessEnablerDto> posListWithDeptids(String deptIds) {
         String url = this.dbUrl + "/posListWithDeptids";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("deptIds", new Object[]{deptIds}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<PosTradingHoursCountsDto> posTradingHoursCount(String posPageIds, String dateRange) {
         String url = this.dbUrl + "/posTradingHourseCount";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("posPageIds", new Object[]{posPageIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List posHourseCountDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return posHourseCountDTOList;
     }
@@ -121,7 +121,7 @@ public class ProcessEnablerService {
     public List<ProcessEnablerDto> posHistoryList(Long posId, Long version) {
         String url = this.dbUrl + "/poshistorylist";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("posId", new Object[]{posId}).queryParam("version", new Object[]{version}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }

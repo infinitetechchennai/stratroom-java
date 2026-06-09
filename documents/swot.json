@@ -1,0 +1,196 @@
+[{
+	"pageTitle": "SWOT Analysis",
+	"userName": "Sajin",
+	"period": "3/01/2025 - 3/22/2025",
+	"tab": [{
+			"title": "SWOT",			
+			"tabledata": [
+				{
+				"id": "SA-SWOT-01",
+				"name": "Strengths",
+				"analysisType":"Strengths",
+				"icon":"dumbbell",			
+				"actions": "",
+				"children": [
+                    {					
+					"id": "SA-SWOT-01-1",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"type": "Internal",
+					"department": ["department 1", "department 2", "department 3"],				
+					"businessImpact": ["businessImpact 1", "businessImpact 2", "businessImpact 3"],
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+					"actions": ""					
+				   },
+				   {					
+					"id": "SA-SWOT-01-2",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"type": "External",
+					"department": ["department 1", "department 2", "department 3"],				
+					"businessImpact": ["businessImpact 1", "businessImpact 2", "businessImpact 3"],
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "warning",
+					"action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+					"actions": ""					
+				   }
+			
+			]
+			},
+			{
+				"id": "SA-SWOT-02",
+				"name": "Weaknesses",
+				"analysisType":"Weaknesses",
+				"icon":"hand",				
+				"actions": "",
+				"children": [
+                    {					
+					"id": "SA-SWOT-02-1",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"type": "Internal",
+					"department": ["Department 1"],					
+					"businessImpact": ["Lorem ipsum dolor"],
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+					"actions": ""					
+				   },
+				   {					
+					"id": "SA-SWOT-02-2",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"type": "Internal",
+					"department": ["Department 1"],					
+					"businessImpact": ["Lorem ipsum dolor"],
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+					"actions": ""					
+				   }
+			
+			]
+			},
+			{
+				"id": "SA-SWOT-03",
+				"name": "Opportunities",
+				"analysisType":"Opportunities",	
+				"icon":"lightbulb",			
+				"actions": "",
+				"children": [
+                    {					
+					"id": "SA-SWOT-03-1",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"type": "Internal",
+					"department": ["Department 1"],					
+					"businessImpact": ["Lorem ipsum dolor"],
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+					"actions": ""					
+				   },
+				   {					
+					"id": "SA-SWOT-03-2",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"type": "External",
+					"department": ["Department 1"],					
+					"businessImpact": ["Lorem ipsum dolor"],
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+					"actions": ""					
+				   }
+			
+			]
+			},
+			{
+				"id": "SA-SWOT-04",
+				"name": "Threats",
+				"analysisType":"Threats",	
+				"icon":"bomb",			
+				"actions": "",
+				"children": [
+                    {					
+					"id": "SA-SWOT-04-1",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"type": "Internal",
+					"department": ["Department 1"],					
+					"businessImpact": ["Lorem ipsum dolor"],
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+					"actions": ""					
+				   },
+				   {					
+					"id": "SA-SWOT-04-2",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"type": "External",
+					"department": ["Department 1"],					
+					"businessImpact": ["Lorem ipsum dolor"],
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+					"actions": ""					
+				   }
+			
+			]
+			}
+		
+		]
+		}
+	]
+}]

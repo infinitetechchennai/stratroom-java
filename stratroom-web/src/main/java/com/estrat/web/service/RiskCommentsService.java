@@ -67,19 +67,19 @@ public class RiskCommentsService {
 
     public List<RiskCommentsDTO> findAllByRiskId(Long riskId) {
         String url = String.join((CharSequence)"/", this.riskCommentsListByRiskIdUrl, String.valueOf(riskId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<RiskCommentsDTO> findAllByEmpId(Long empId) {
         String url = String.join((CharSequence)"/", this.riskCommentsListByEmpIdUrl, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<RiskCommentsDTO> findAllByEmpIdANDFromPage(Long empId) {
         String url = String.join((CharSequence)"/", this.fromPageCommentsListByEmpIdUrl, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 

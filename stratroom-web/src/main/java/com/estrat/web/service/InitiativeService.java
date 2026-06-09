@@ -135,21 +135,21 @@ public class InitiativeService {
     public List<StatusCountDto> statusCount(long id, String period) {
         String url_val = this.serviceUrl + "/initiativestatuscount/" + id;
         String url = UriComponentsBuilder.fromHttpUrl((String)url_val).queryParam("period", new Object[]{period}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<StatusCountDto> progresscount(long id, String period) {
         String url_val = this.serviceUrl + "/initiativeprogresscount/" + id;
         String url = UriComponentsBuilder.fromHttpUrl((String)url_val).queryParam("period", new Object[]{period}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<StatusCountDto> noprogresscount(long id, String period) {
         String url_val = this.serviceUrl + "/initiativenoprogresscount/" + id;
         String url = UriComponentsBuilder.fromHttpUrl((String)url_val).queryParam("period", new Object[]{period}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -157,7 +157,7 @@ public class InitiativeService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("kpiId", kpiId);
         String url = UriComponentsBuilder.fromHttpUrl((String)this.kpiInitiativeList).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -165,7 +165,7 @@ public class InitiativeService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("empId", empId);
         String url = UriComponentsBuilder.fromHttpUrl((String)this.initiativeList).queryParam("loadFlag", new Object[]{flag}).queryParam("nodate", new Object[]{nodate}).queryParam("pageId", new Object[]{pageId}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List<InitiativesDTO> initiativesDTOList = (List<InitiativesDTO>)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         if (initiativesDTOList == null) {
             initiativesDTOList = Collections.emptyList();
@@ -182,7 +182,7 @@ public class InitiativeService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("empId", empId);
         String url = UriComponentsBuilder.fromHttpUrl((String)this.initiativeList).queryParam("loadFlag", new Object[]{true}).queryParam("nodate", new Object[]{"date"}).queryParam("pageId", new Object[]{""}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         ArrayList subInitiativesDTOS = new ArrayList();
         ArrayList activitiesDTOS = new ArrayList();
         ArrayList milestonesDTOS = new ArrayList();
@@ -230,14 +230,14 @@ public class InitiativeService {
 
     public List<InitiativesDTO> findByEmpId(long empId) {
         String url = this.serviceUrl + "/initiativesListByEmpId/" + empId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List initiativesDTOS = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return initiativesDTOS;
     }
 
     public List<InitiativesDTO> initiativesListByDeptId(long deptId) {
         String url = this.serviceUrl + "/initiativesListByDeptId/" + deptId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List initiativesDTOS = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return initiativesDTOS;
     }
@@ -245,7 +245,7 @@ public class InitiativeService {
     public List<InitiativesDTO> initiativesListByDeptIds(String deptIds) {
         String url = this.serviceUrl + "/initiativesListWithDeptids";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("deptIds", new Object[]{deptIds}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List initiativesDTOS = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return initiativesDTOS;
     }
@@ -253,28 +253,28 @@ public class InitiativeService {
     public List<InitiativesDTO> initiativesListWithChild(String empId, String initiativeIds, String pageIds, String dateRange) {
         String url = this.serviceUrl + "/initiativesListWithChild/" + empId;
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("initiativeIds", new Object[]{initiativeIds}).queryParam("pageIds", new Object[]{pageIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<InitiativesDTO> initiativesListWithBudget(String empId, String initiativeIds) {
         String url = this.serviceUrl + "/initiativesListWithBudget/" + empId;
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("initiativeIds", new Object[]{initiativeIds}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<InitiativesDTO> initiativesListwithChildByempId() {
         String url = String.valueOf(this.serviceUrl + "/initiativesListwithChildByempId/" + UserThreadLocal.get().getProfile().getEmpId());
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<InitiativesDTO> initiativesListwithChildBydeptId() {
         String url = this.serviceUrl + "/initiativesListwithChildByDeptId";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -283,7 +283,7 @@ public class InitiativeService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("empId", empId);
         String url1 = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("loadFlag", new Object[]{flag}).queryParam("nodate", new Object[]{nodate}).queryParam("pageId", new Object[]{pageId}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List<InitiativesDTO> initiativesDTOList = (List<InitiativesDTO>)this.commonRestTemplate.getForObject(url1, (ParameterizedTypeReference)parameterizedTypeReference);
         if (initiativesDTOList == null) {
             initiativesDTOList = Collections.emptyList();
@@ -298,7 +298,7 @@ public class InitiativeService {
     public InitiativeDashBoardResponseDTO initiDashBoardData(long deptId) {
         String url1 = this.serviceUrl + "/initiativeDashBoardData";
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("deptId", new Object[]{deptId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (InitiativeDashBoardResponseDTO)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

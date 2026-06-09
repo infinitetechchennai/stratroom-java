@@ -9,10 +9,11 @@ package com.estrat.service.user.exception;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExceptionLogHelper {
-    private static Logger logger = Logger.getLogger(ExceptionLogHelper.class);
+    private static Logger logger = LoggerFactory.getLogger(ExceptionLogHelper.class);
 
     public static String convertToString(Exception argE) {
         try {
@@ -22,7 +23,7 @@ public class ExceptionLogHelper {
             return pvBAOS.toString();
         }
         catch (Exception e) {
-            logger.error((Object)"Exception while converting exception ", (Throwable)e);
+            logger.error("Exception while converting exception ", e);
             return null;
         }
     }

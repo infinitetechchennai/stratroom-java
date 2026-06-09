@@ -1,0 +1,90 @@
+[
+  {
+    "title": "Python Developers Meetup",
+    "start": "2025-06-02",
+    "end": "2025-06-04",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#1a9a8a"
+  },
+  {
+    "title": "Jollion",
+    "start": "2025-09-09",
+    "end": "2025-09-12",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#2196F3"
+  },
+  {
+    "title": "AWS Summit",
+    "start": "2025-11-15",
+    "end": "2025-11-18",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#4CAF50"
+  },
+  {
+    "title": "Father's Day",
+    "start": "2025-12-20",
+    "end": "2025-12-21",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#FF9800"
+  },
+  {
+    "title": "Client Meeting",
+    "start": "2026-01-10",
+    "end": "2026-01-11",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#E91E63"
+  },
+  {
+    "title": "Project Delivery",
+    "start": "2026-02-15",
+    "end": "2026-02-18",
+    "color": "#f0e6c3",
+    "textColor": "#333",
+    "borderColor": "#d4c68a",
+    "accentColor": "#7C4DFF"
+  },
+  {
+    "title": "Interview",
+    "start": "2026-03-05",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#00BCD4"
+  },
+  {
+    "title": "Birth Day",
+    "start": "2026-04-15",
+    "end": "2026-04-16",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#FF5722"
+  },
+  {
+    "title": "Developer Meetup",
+    "start": "2026-04-20",
+    "end": "2026-04-22",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#9C27B0"
+  },
+  {
+    "title": "Salesforce Meetup",
+    "start": "2026-04-20",
+    "end": "2026-04-22",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#3F51B5"
+  },
+  {
+    "title": "sss",
+    "start": "2026-05-20",
+    "end": "2026-05-22",
+    "color": "#1a9a8a",
+    "textColor": "#fff",
+    "accentColor": "#795548"
+  }
+]

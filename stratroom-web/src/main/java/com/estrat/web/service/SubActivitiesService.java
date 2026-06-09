@@ -20,7 +20,8 @@ import com.estrat.web.config.CommonRestTemplate;
 import com.estrat.web.dto.SubActivitiesDTO;
 import com.estrat.web.service.SubActivitiesService;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -35,7 +36,7 @@ public class SubActivitiesService {
     private RestTemplate restTemplate;
     @Value(value="${scorecard.service.url}")
     private String scorecardUrl;
-    private static Logger log = Logger.getLogger(SubActivitiesService.class);
+    private static Logger log = LoggerFactory.getLogger(SubActivitiesService.class);
 
     public SubActivitiesDTO saveSubActivity(SubActivitiesDTO activitiesAndTasksDTO) {
         String url = this.scorecardUrl + "/subactivities";
@@ -60,14 +61,14 @@ public class SubActivitiesService {
     public List<SubActivitiesDTO> findAllByActivityId(Long activityId) {
         String scorecardUrl1 = this.scorecardUrl + "/subActivitieslist";
         String url = String.join((CharSequence)"/", scorecardUrl1, String.valueOf(activityId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<SubActivitiesDTO> findByEmpId(String empId) {
         String scorecardUrl1 = this.scorecardUrl + "/emp/subActivitiesLists";
         String url = String.join((CharSequence)"/", scorecardUrl1, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

@@ -53,7 +53,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -82,7 +83,7 @@ public class ComplainceReaderUtil {
     protected ControlPanelGeneralService controlPanelGeneralService;
     @Autowired
     protected DepartmentDetailsService departmentDetailsService;
-    private Logger logger = Logger.getLogger(ComplainceReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(ComplainceReaderUtil.class);
 
     private static boolean isRowEmpty(XSSFRow row) {
         boolean isEmpty = true;

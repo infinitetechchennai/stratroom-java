@@ -73,10 +73,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.persistence.OptimisticLockException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,7 +104,7 @@ public class DataServiceController {
     private DeptTrackerService deptTrackerService;
     @Autowired
     private CacheUtil cacheUtil;
-    private Logger log = Logger.getLogger(DataServiceController.class);
+    private Logger log = LoggerFactory.getLogger(DataServiceController.class);
 
     @ResponseBody
     @RequestMapping(value={"/employeeDetails/{empId}"}, method={RequestMethod.GET})

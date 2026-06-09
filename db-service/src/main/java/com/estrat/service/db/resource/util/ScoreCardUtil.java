@@ -70,14 +70,15 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScoreCardUtil {
-    private Logger log = Logger.getLogger(ScoreCardUtil.class);
+    private Logger log = LoggerFactory.getLogger(ScoreCardUtil.class);
     @Autowired
     private ScoreCardService scoreCardService;
     @Autowired

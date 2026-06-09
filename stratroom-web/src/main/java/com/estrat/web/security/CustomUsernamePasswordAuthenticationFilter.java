@@ -21,10 +21,11 @@ package com.estrat.web.security;
 import com.estrat.web.util.PasswordEncoder;
 import com.estrat.web.util.TempUserThreadLocal;
 import com.estrat.web.util.UserThreadLocal;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import org.apache.log4j.Logger;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 public class CustomUsernamePasswordAuthenticationFilter
 extends UsernamePasswordAuthenticationFilter {
-    private static final Logger LOGGER = Logger.getLogger(CustomUsernamePasswordAuthenticationFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomUsernamePasswordAuthenticationFilter.class);
     private boolean postOnly = true;
 
     public boolean isPostOnly() {
@@ -104,7 +105,7 @@ extends UsernamePasswordAuthenticationFilter {
                 }
             }
             catch (Exception e) {
-                LOGGER.error(e);
+                LOGGER.error("Error setting session attributes", e);
             }
         }
         return auth;

@@ -23,12 +23,13 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.SealedObject;
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EncryptionProvider {
-    private static Logger logger = Logger.getLogger(EncryptionProvider.class);
+    private static Logger logger = LoggerFactory.getLogger(EncryptionProvider.class);
     private static final String KEY = "YmOinPa5YQ0ab4TsPylJhg==";
 
     public SecretKeySpec setKey(String myKey) {

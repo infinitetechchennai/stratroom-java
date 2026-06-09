@@ -1,69 +1,21 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  com.estrat.web.exception.RequestException
- *  com.estrat.web.security.CustomAuthenticationSuccessHandler
- *  com.estrat.web.security.CustomSessionManagementFilter
- *  com.estrat.web.security.CustomSimpleUrlAuthenticationFailureHandler
- *  com.estrat.web.security.CustomUsernamePasswordAuthenticationFilter
- *  com.estrat.web.security.JWTOAuthTokenFilter
- *  com.estrat.web.security.SSOLoginFilter
- *  com.estrat.web.security.SecurityConfig
- *  com.estrat.web.service.AuditTrailService
- *  com.estrat.web.service.EmployeeService
- *  com.estrat.web.service.LicenseService
- *  javax.servlet.Filter
- *  org.springframework.beans.factory.annotation.Autowired
- *  org.springframework.beans.factory.annotation.Value
- *  org.springframework.context.annotation.Bean
- *  org.springframework.context.annotation.Configuration
- *  org.springframework.security.authentication.AuthenticationManager
- *  org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
- *  org.springframework.security.config.annotation.web.builders.HttpSecurity
- *  org.springframework.security.config.annotation.web.builders.WebSecurity
- *  org.springframework.security.config.annotation.web.builders.WebSecurity$IgnoredRequestConfigurer
- *  org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
- *  org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
- *  org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer$AuthorizedUrl
- *  org.springframework.security.web.AuthenticationEntryPoint
- *  org.springframework.security.web.access.channel.ChannelProcessingFilter
- *  org.springframework.security.web.authentication.AuthenticationFailureHandler
- *  org.springframework.security.web.authentication.AuthenticationSuccessHandler
- *  org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
- *  org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
- *  org.springframework.security.web.context.HttpSessionSecurityContextRepository
- *  org.springframework.security.web.context.SecurityContextRepository
- *  org.springframework.security.web.firewall.HttpFirewall
- *  org.springframework.security.web.firewall.StrictHttpFirewall
- *  org.springframework.security.web.session.SessionManagementFilter
- */
 package com.estrat.web.security;
 
 import com.estrat.web.exception.RequestException;
-import com.estrat.web.security.CustomAuthenticationSuccessHandler;
-import com.estrat.web.security.CustomSessionManagementFilter;
-import com.estrat.web.security.CustomSimpleUrlAuthenticationFailureHandler;
-import com.estrat.web.security.CustomUsernamePasswordAuthenticationFilter;
-import com.estrat.web.security.JWTOAuthTokenFilter;
-import com.estrat.web.security.SSOLoginFilter;
 import com.estrat.web.service.AuditTrailService;
 import com.estrat.web.service.EmployeeService;
 import com.estrat.web.service.LicenseService;
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -76,43 +28,54 @@ import org.springframework.security.web.session.SessionManagementFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled=true)
-public class SecurityConfig
-extends WebSecurityConfigurerAdapter {
-    @Value(value="${security.saml2.metadata-url}")
+@EnableMethodSecurity(securedEnabled = true)
+public class SecurityConfig {
+
+    @Value("${security.saml2.metadata-url:}")
     String metadataUrl;
-    @Value(value="${server.ssl.key-alias:}")
+
+    @Value("${server.ssl.key-alias:}")
     String keyAlias;
-    @Value(value="${server.ssl.key-store-password:}")
+
+    @Value("${server.ssl.key-store-password:}")
     String password;
-    @Value(value="${server.port}")
+
+    @Value("${server.port}")
     String port;
-    @Value(value="${server.ssl.key-store:}")
+
+    @Value("${server.ssl.key-store:}")
     String keyStoreFilePath;
-    @Value(value="${date.management.url}")
+
+    @Value("${date.management.url}")
     String dataUrl;
-    @Value(value="${saml.sso.auth.host}")
+
+    @Value("${saml.sso.auth.host:}")
     String hostName;
-    private CustomUsernamePasswordAuthenticationFilter authenticationFilter = new CustomUsernamePasswordAuthenticationFilter();
-    private CustomSessionManagementFilter customSessionManagementFilter = new CustomSessionManagementFilter((SecurityContextRepository)new HttpSessionSecurityContextRepository());
-    @Value(value="${security.invalidsessionurl}")
+
+    @Value("${security.invalidsessionurl:/}")
     private String invalidSessionURL;
-    @Value(value="${server.servlet.context-path}")
+
+    @Value("${server.servlet.context-path:}")
     private String contextPath;
+
     @Autowired
     private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+
     @Autowired
     private EmployeeService employeeService;
+
     @Autowired
     private AuditTrailService auditTrailService;
+
     @Autowired
     private LicenseService licenseService;
+
     @Autowired
     private CustomSimpleUrlAuthenticationFailureHandler authenticationFailureHandler;
 
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean
@@ -122,39 +85,79 @@ extends WebSecurityConfigurerAdapter {
         return fireWall;
     }
 
-    protected void configure(HttpSecurity http) throws RequestException {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration authConfig) throws Exception {
         try {
-            this.customSessionManagementFilter.setContextPath(this.contextPath);
-            http.addFilterBefore((Filter)this.customSessionManagementFilter, SessionManagementFilter.class);
-            http.httpBasic().authenticationEntryPoint((AuthenticationEntryPoint)new LoginUrlAuthenticationEntryPoint("/"));
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)http.authorizeRequests().antMatchers(new String[]{"/"})).access("hasAnyRole('ROLE_ANONYMOUS','ROLE_USER')");
-            ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)http.authorizeRequests().antMatchers(new String[]{"/**"})).access("hasRole('ROLE_USER')");
-            this.authenticationFilter.setUsernameParameter("email");
-            this.authenticationFilter.setAuthenticationManager(this.authenticationManagerBean());
-            this.authenticationFilter.setPasswordParameter("password");
-            this.authenticationFilter.setAuthenticationSuccessHandler((AuthenticationSuccessHandler)this.authenticationSuccessHandler);
-            this.authenticationFilter.setAuthenticationFailureHandler((AuthenticationFailureHandler)this.authenticationFailureHandler);
-            http.addFilterBefore((Filter)this.authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-            http.addFilterBefore((Filter)new JWTOAuthTokenFilter(this.employeeService, this.auditTrailService, this.contextPath), ChannelProcessingFilter.class);
-            http.addFilterAfter((Filter)new SSOLoginFilter(this.employeeService, this.dataUrl), UsernamePasswordAuthenticationFilter.class);
-            http.logout().logoutUrl("/logout").deleteCookies(new String[]{"JSESSIONID"}).logoutSuccessUrl("/index");
-            http.sessionManagement().sessionFixation().none();
-            http.sessionManagement().invalidSessionUrl(this.invalidSessionURL);
-            http.csrf().disable();
-        }
-        catch (Exception e) {
-            throw new RequestException((Throwable)e);
+            CustomUsernamePasswordAuthenticationFilter authenticationFilter = new CustomUsernamePasswordAuthenticationFilter();
+            SecurityContextRepository repo = new HttpSessionSecurityContextRepository();
+            CustomSessionManagementFilter customSessionManagementFilter = new CustomSessionManagementFilter(repo);
+            customSessionManagementFilter.setContextPath(contextPath);
+
+            http.addFilterBefore((Filter) customSessionManagementFilter, SessionManagementFilter.class);
+            http.httpBasic(basic -> basic.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")));
+
+            http.authorizeHttpRequests(auth -> auth
+                    // JSP views (spring.mvc.view.prefix=/view/) are reached via internal
+                    // FORWARD dispatches. Spring Security 6 filters forwards (Security 5 did
+                    // not), so these must be permitted or every page render redirect-loops.
+                    .requestMatchers("/view/**").permitAll()
+                    .requestMatchers("/", "/index", "/authfail").permitAll()
+                    .anyRequest().hasRole("USER")
+            );
+
+            authenticationFilter.setUsernameParameter("email");
+            authenticationFilter.setAuthenticationManager(authConfig.getAuthenticationManager());
+            authenticationFilter.setPasswordParameter("password");
+            authenticationFilter.setAuthenticationSuccessHandler((AuthenticationSuccessHandler) authenticationSuccessHandler);
+            authenticationFilter.setAuthenticationFailureHandler((AuthenticationFailureHandler) authenticationFailureHandler);
+            // Spring Security 6 no longer persists the SecurityContext to the HTTP session
+            // automatically after authentication. Without this, a successful login is not
+            // remembered on the next request, causing a /login <-> / redirect loop.
+            authenticationFilter.setSecurityContextRepository(repo);
+            http.securityContext(sc -> sc.securityContextRepository(repo));
+            http.addFilterBefore((Filter) authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            http.addFilterBefore((Filter) new JWTOAuthTokenFilter(employeeService, auditTrailService, contextPath),
+                    org.springframework.security.web.access.channel.ChannelProcessingFilter.class);
+            http.addFilterAfter((Filter) new SSOLoginFilter(employeeService, dataUrl), UsernamePasswordAuthenticationFilter.class);
+
+            http.logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .deleteCookies("JSESSIONID")
+                    .logoutSuccessUrl("/index")
+            );
+            http.sessionManagement(session -> session
+                    .sessionFixation().none()
+                    .invalidSessionUrl(invalidSessionURL)
+            );
+            http.csrf(csrf -> csrf.disable());
+
+            return http.build();
+        } catch (Exception e) {
+            throw new RequestException(e);
         }
     }
 
-    public void configure(WebSecurity http) throws RequestException {
-        try {
-            http.httpFirewall(this.allowUrlEncodedSlashHttpFirewall());
-            ((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)((WebSecurity.IgnoredRequestConfigurer)http.ignoring().antMatchers(new String[]{"/*.jsp"})).antMatchers(new String[]{"/css/**"})).antMatchers(new String[]{"/img/**"})).antMatchers(new String[]{"/js/**"})).antMatchers(new String[]{"/index/**"})).antMatchers(new String[]{"/images/**"})).antMatchers(new String[]{"/fonts/**"})).antMatchers(new String[]{"/generateToken/**", "/refreshToken/**", "/forgotPassword/**", "/resetPassword/**", "/validateLink/**"})).antMatchers(new String[]{"/loginTheme/**", "/preAuditTrail/**"})).antMatchers(new String[]{"/favicon.ico"})).antMatchers(new String[]{"/**/*.map"})).mvcMatchers(new String[]{"/swagger-ui.html/**", "/configuration/**", "/swagger-resources/**", "/v2/api-docs"});
-        }
-        catch (Exception e) {
-            throw new RequestException((Throwable)e);
-        }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> {
+            try {
+                web.httpFirewall(allowUrlEncodedSlashHttpFirewall());
+                web.ignoring()
+                        .requestMatchers("/*.jsp")
+                        .requestMatchers("/css/**")
+                        .requestMatchers("/img/**")
+                        .requestMatchers("/js/**")
+                        .requestMatchers("/index/**")
+                        .requestMatchers("/images/**")
+                        .requestMatchers("/fonts/**")
+                        .requestMatchers("/generateToken/**", "/refreshToken/**", "/forgotPassword/**", "/resetPassword/**", "/validateLink/**")
+                        .requestMatchers("/loginTheme/**", "/preAuditTrail/**")
+                        .requestMatchers("/favicon.ico")
+                        .requestMatchers("/**/*.map")
+                        .requestMatchers("/swagger-ui/**", "/configuration/**", "/swagger-resources/**", "/v3/api-docs");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 }
-

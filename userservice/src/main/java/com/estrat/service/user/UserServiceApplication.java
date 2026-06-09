@@ -39,6 +39,7 @@ public class UserServiceApplication {
     @Bean
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(Environment environment) {
         String configDir = environment.getProperty("config.directory");
+        if (configDir == null) { configDir = System.getProperty("user.dir"); }
         String serviceName = environment.getProperty("service.name");
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
         serviceName = serviceName != null ? serviceName : "user-service";

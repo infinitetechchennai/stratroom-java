@@ -25,16 +25,16 @@ import com.estrat.service.user.resource.util.UserThreadLocal;
 import com.estrat.service.user.service.TokenService;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 public class CommonControllerInterceptor
-extends HandlerInterceptorAdapter {
+implements HandlerInterceptor {
     @Autowired
     private TokenService tokenService;
     @Value(value="${jwt.verification.enabled}")
@@ -79,7 +79,7 @@ extends HandlerInterceptorAdapter {
 
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         UserThreadLocal.set(null);
-        super.postHandle(request, response, handler, modelAndView);
+        
     }
 }
 

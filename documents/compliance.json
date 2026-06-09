@@ -1,0 +1,5303 @@
+[
+	{
+	  "pageTitle": "Compliance Management",
+	  "userName": "Sajin",
+	  "period": "3/01/2025 - 3/22/2025",
+	  "tab": [
+		{
+		  "title": "My Compliance",
+		  "tabledata": [			
+    {
+      "control_id": "ESG-GRI-101",
+      "control_description": "Foundation: Principles for using the GRI Standards",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 101","GRI 101"],
+      "owner": [
+        {
+          "id": "user001",
+          "name": "Sustainability Officer",
+          "image": "usrbig1.jpg"
+        },
+        {
+          "id": "user001",
+          "name": "Sustainability Officer",
+          "image": "usrbig1.jpg"
+        },
+        {
+          "id": "user001",
+          "name": "Sustainability Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Not Started",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user001",
+          "name": "Sustainability Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": "https://morth.nic.in/sites/default/files/dd12-13_0.pdf",
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-102",
+      "control_description": "General Disclosures: Strategy, Ethics, Governance, Stakeholders",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 102"],
+      "owner": [
+        {
+          "id": "user002",
+          "name": "ESG Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user002",
+          "name": "ESG Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-103",
+      "control_description": "Management Approach: Materiality and Impact Management",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 103"],
+      "owner": [
+        {
+          "id": "user003",
+          "name": "Risk & ESG Committee",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Corrective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user004",
+          "name": "ESG Head",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-201",
+      "control_description": "Economic Performance",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 201"],
+      "owner": [
+        {
+          "id": "user005",
+          "name": "CFO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user005",
+          "name": "CFO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-202",
+      "control_description": "Market Presence",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 202"],
+      "owner": [
+        {
+          "id": "user006",
+          "name": "HR Director",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user006",
+          "name": "HR Director",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-203",
+      "control_description": "Indirect Economic Impacts",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 203"],
+      "owner": [
+        {
+          "id": "user007",
+          "name": "Strategy Head",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Not Started",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user007",
+          "name": "Strategy Head",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-204",
+      "control_description": "Procurement Practices",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 204"],
+      "owner": [
+        {
+          "id": "user008",
+          "name": "Procurement Manager",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user008",
+          "name": "Procurement Manager",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-205",
+      "control_description": "Anti-corruption",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 205"],
+      "owner": [
+        {
+          "id": "user009",
+          "name": "Chief Compliance Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user010",
+          "name": "Compliance Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-206",
+      "control_description": "Anti-competitive Behavior",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 206"],
+      "owner": [
+        {
+          "id": "user011",
+          "name": "Legal Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user011",
+          "name": "Legal Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-301",
+      "control_description": "Materials",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 301"],
+      "owner": [
+        {
+          "id": "user012",
+          "name": "Environmental Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Not Started",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user012",
+          "name": "Environmental Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-302",
+      "control_description": "Energy",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 302"],
+      "owner": [
+        {
+          "id": "user013",
+          "name": "Sustainability Team",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user014",
+          "name": "Sustainability Lead",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-303",
+      "control_description": "Water and Effluents",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 303"],
+      "owner": [
+        {
+          "id": "user015",
+          "name": "Environmental Manager",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user016",
+          "name": "Facilities Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-304",
+      "control_description": "Biodiversity",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 304"],
+      "owner": [
+        {
+          "id": "user012",
+          "name": "Environmental Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user013",
+          "name": "Sustainability Team",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-305",
+      "control_description": "Emissions",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 305"],
+      "owner": [
+        {
+          "id": "user017",
+          "name": "ESG Data Analyst",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Critical",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user018",
+          "name": "ESG Data Lead",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-306",
+      "control_description": "Waste",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 306"],
+      "owner": [
+        {
+          "id": "user012",
+          "name": "Environmental Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user019",
+          "name": "Waste Management Lead",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-307",
+      "control_description": "Environmental Compliance",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 307"],
+      "owner": [
+        {
+          "id": "user020",
+          "name": "Legal & Compliance",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user021",
+          "name": "Legal Compliance Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-308",
+      "control_description": "Supplier Environmental Assessment",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 308"],
+      "owner": [
+        {
+          "id": "user022",
+          "name": "Procurement Team",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user023",
+          "name": "ESG Procurement Lead",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-401",
+      "control_description": "Employment",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 401"],
+      "owner": [
+        {
+          "id": "user006",
+          "name": "HR Director",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user024",
+          "name": "HR Lead",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-402",
+      "control_description": "Labor/Management Relations",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 402"],
+      "owner": [
+        {
+          "id": "user025",
+          "name": "HR Department",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user026",
+          "name": "Industrial Relations",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-403",
+      "control_description": "Occupational Health and Safety",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 403"],
+      "owner": [
+        {
+          "id": "user027",
+          "name": "Safety Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user028",
+          "name": "Safety Committee",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-404",
+      "control_description": "Training and Education",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 404"],
+      "owner": [
+        {
+          "id": "user029",
+          "name": "Learning & Dev Manager",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user030",
+          "name": "L&D Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-405",
+      "control_description": "Diversity and Equal Opportunity",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 405"],
+      "owner": [
+        {
+          "id": "user031",
+          "name": "DEI Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user032",
+          "name": "HR & DEI Committee",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-406",
+      "control_description": "Non-discrimination",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 406"],
+      "owner": [
+        {
+          "id": "user033",
+          "name": "HR & Legal",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Corrective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user034",
+          "name": "Ethics Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-407",
+      "control_description": "Freedom of Association and Collective Bargaining",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 407"],
+      "owner": [
+        {
+          "id": "user035",
+          "name": "Labor Relations Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user036",
+          "name": "IR Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-408",
+      "control_description": "Child Labor",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 408"],
+      "owner": [
+        {
+          "id": "user010",
+          "name": "Compliance Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user037",
+          "name": "Compliance Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-409",
+      "control_description": "Forced or Compulsory Labor",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 409"],
+      "owner": [
+        {
+          "id": "user010",
+          "name": "Compliance Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user038",
+          "name": "Legal Compliance",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-410",
+      "control_description": "Security Practices",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 410"],
+      "owner": [
+        {
+          "id": "user039",
+          "name": "Security Manager",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user040",
+          "name": "Security Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-411",
+      "control_description": "Rights of Indigenous Peoples",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 411"],
+      "owner": [
+        {
+          "id": "user041",
+          "name": "Legal & CSR",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Not Started",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user042",
+          "name": "CSR Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-412",
+      "control_description": "Human Rights Assessment",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 412"],
+      "owner": [
+        {
+          "id": "user020",
+          "name": "Legal & Compliance",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user043",
+          "name": "Legal Counsel",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-413",
+      "control_description": "Local Communities",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 413"],
+      "owner": [
+        {
+          "id": "user044",
+          "name": "CSR Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Not Started",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user045",
+          "name": "CSR Manager",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-414",
+      "control_description": "Supplier Social Assessment",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 414"],
+      "owner": [
+        {
+          "id": "user046",
+          "name": "Procurement Compliance",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user047",
+          "name": "Supplier Risk Manager",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-415",
+      "control_description": "Public Policy",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 415"],
+      "owner": [
+        {
+          "id": "user048",
+          "name": "Government Relations",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Low",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Not Started",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user049",
+          "name": "Public Affairs",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-416",
+      "control_description": "Customer Health and Safety",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 416"],
+      "owner": [
+        {
+          "id": "user050",
+          "name": "Product Safety Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user051",
+          "name": "Quality Assurance Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-417",
+      "control_description": "Marketing and Labeling",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 417"],
+      "owner": [
+        {
+          "id": "user052",
+          "name": "Marketing Compliance",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user053",
+          "name": "Marketing Head",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-418",
+      "control_description": "Customer Privacy",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 418"],
+      "owner": [
+        {
+          "id": "user054",
+          "name": "Data Privacy Officer",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user055",
+          "name": "DPO",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+    {
+      "control_id": "ESG-GRI-419",
+      "control_description": "Socioeconomic Compliance",
+      "compliance_area": "ESG",
+      "regulation": ["GRI 419"],
+      "owner": [
+        {
+          "id": "user056",
+          "name": "Legal & Finance",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "user057",
+          "name": "CFO & Legal Counsel",
+          "image": "usrbig6.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": null,
+      "actions": null
+    },
+
+	
+    {
+      "control_id": "GDPR-001",
+      "control_description": "Lawfulness, Fairness, and Transparency",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 5(1)(a)",
+      "owner": [
+        {
+          "id": "dpo",
+          "name": "DPO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "privacy_governance",
+          "name": "Privacy Governance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure processing is lawful, fair, and transparent to data subjects.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-002",
+      "control_description": "Purpose Limitation",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 5(1)(b)",
+      "owner": [
+        {
+          "id": "dpo",
+          "name": "DPO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "privacy_governance",
+          "name": "Privacy Governance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Data collected must be for specified, explicit and legitimate purposes.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-003",
+      "control_description": "Data Minimization",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 5(1)(c)",
+      "owner": [
+        {
+          "id": "data_governance_officer",
+          "name": "Data Governance Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "data_custodian",
+          "name": "Data Custodian",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Collect only data necessary for the stated purpose.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-004",
+      "control_description": "Accuracy of Personal Data",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 5(1)(d)",
+      "owner": [
+        {
+          "id": "data_owner",
+          "name": "Data Owner",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Corrective",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "data_quality_officer",
+          "name": "Data Quality Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Maintain and update accurate personal data.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-005",
+      "control_description": "Storage Limitation",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 5(1)(e)",
+      "owner": [
+        {
+          "id": "it_infrastructure",
+          "name": "IT Infrastructure",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "records_manager",
+          "name": "Records Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Retain data only as long as necessary for processing purposes.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-006",
+      "control_description": "Integrity and Confidentiality",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 5(1)(f)",
+      "owner": [
+        {
+          "id": "ciso",
+          "name": "CISO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Critical",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "ciso",
+          "name": "CISO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Secure personal data against unauthorized or unlawful processing.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-007",
+      "control_description": "Accountability Principle",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 5(2)",
+      "owner": [
+        {
+          "id": "dpo",
+          "name": "DPO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "dpo",
+          "name": "DPO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Demonstrate compliance with GDPR principles at all times.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-008",
+      "control_description": "Right to be Informed",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Articles 12–14",
+      "owner": [
+        {
+          "id": "legal_communications",
+          "name": "Legal & Communications",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "legal_counsel",
+          "name": "Legal Counsel",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Individuals must receive clear and accessible info on data usage.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-009",
+      "control_description": "Right of Access (SAR)",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 15",
+      "owner": [
+        {
+          "id": "customer_service",
+          "name": "Customer Service",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "sar_manager",
+          "name": "SAR Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Must respond to subject access requests within 30 days.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-010",
+      "control_description": "Right to Rectification",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 16",
+      "owner": [
+        {
+          "id": "crm_manager",
+          "name": "CRM Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Corrective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "crm_admin",
+          "name": "CRM Admin",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Data subjects can correct inaccurate or incomplete data.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-011",
+      "control_description": "Right to Erasure (\"Right to be Forgotten\")",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 17",
+      "owner": [
+        {
+          "id": "dpo_legal",
+          "name": "DPO & Legal",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Corrective",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "legal_team",
+          "name": "Legal Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Data must be erased if no legal ground for retention exists.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-012",
+      "control_description": "Right to Restrict Processing",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 18",
+      "owner": [
+        {
+          "id": "data_owner",
+          "name": "Data Owner",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Corrective",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "privacy_team",
+          "name": "Privacy Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Individuals can block or limit processing of their data.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-013",
+      "control_description": "Right to Data Portability",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 20",
+      "owner": [
+        {
+          "id": "it_data_services",
+          "name": "IT/Data Services",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Corrective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "systems_team",
+          "name": "Systems Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Must provide data in a structured, portable format.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-014",
+      "control_description": "Right to Object",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 21",
+      "owner": [
+        {
+          "id": "compliance_officer",
+          "name": "Compliance Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Corrective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "compliance_team",
+          "name": "Compliance Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Individuals can object to processing for direct marketing or profiling.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-015",
+      "control_description": "Rights in Automated Decision-Making",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 22",
+      "owner": [
+        {
+          "id": "ai_ml_product_lead",
+          "name": "AI/ML Product Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "ai_governance_lead",
+          "name": "AI Governance Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Individuals can demand human review of algorithmic decisions.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-016",
+      "control_description": "Security of Processing",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 32",
+      "owner": [
+        {
+          "id": "ciso",
+          "name": "CISO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Critical",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "security_operations",
+          "name": "Security Operations",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Apply measures like encryption, pseudonymization, access control.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-017",
+      "control_description": "Data Protection Impact Assessment (DPIA)",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 35",
+      "owner": [
+        {
+          "id": "risk_officer",
+          "name": "Risk Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "risk_compliance",
+          "name": "Risk & Compliance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Conduct DPIAs for high-risk processing (e.g. biometrics, profiling).",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-018",
+      "control_description": "Records of Processing Activities (ROPA)",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 30",
+      "owner": [
+        {
+          "id": "compliance_officer",
+          "name": "Compliance Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "ropa_coordinator",
+          "name": "ROPA Coordinator",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Maintain internal records of all personal data handling activities.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-019",
+      "control_description": "Data Protection by Design & Default",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 25",
+      "owner": [
+        {
+          "id": "engineering_devops",
+          "name": "Engineering / DevOps",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "application_architect",
+          "name": "Application Architect",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Embed privacy controls at the architecture and system level.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-020",
+      "control_description": "Consent Management",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Articles 6 & 7",
+      "owner": [
+        {
+          "id": "marketing_compliance",
+          "name": "Marketing Compliance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "consent_manager",
+          "name": "Consent Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Capture, manage, and track opt-ins with verifiable consent records.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-021",
+      "control_description": "Third-Party Processor Contracts",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 28",
+      "owner": [
+        {
+          "id": "legal_procurement",
+          "name": "Legal & Procurement",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "vendor_risk_manager",
+          "name": "Vendor Risk Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure all vendors handling personal data have GDPR-aligned contracts.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-022",
+      "control_description": "Joint Controller Agreements",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 26",
+      "owner": [
+        {
+          "id": "legal",
+          "name": "Legal",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "data_partnership_lead",
+          "name": "Data Partnership Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Establish contracts when two or more parties jointly control data.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-023",
+      "control_description": "Data Transfers Outside EEA",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Articles 44–49",
+      "owner": [
+        {
+          "id": "dpo_legal",
+          "name": "DPO & Legal",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "legal_team",
+          "name": "Legal Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Use SCCs, adequacy decisions, or binding corporate rules.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-024",
+      "control_description": "Appointment of a DPO",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 37",
+      "owner": [
+        {
+          "id": "hr_legal",
+          "name": "HR & Legal",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "hr_director",
+          "name": "HR Director",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Mandatory for large-scale monitoring or sensitive data processing.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-025",
+      "control_description": "Supervisory Authority Cooperation",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 31",
+      "owner": [
+        {
+          "id": "dpo",
+          "name": "DPO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "dpo",
+          "name": "DPO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Cooperate with and respond to data protection authorities promptly.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-026",
+      "control_description": "Internal GDPR Audits",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Best Practice",
+      "owner": [
+        {
+          "id": "internal_audit",
+          "name": "Internal Audit",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "audit_lead",
+          "name": "Audit Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Conduct periodic reviews of data protection controls and gaps.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-027",
+      "control_description": "Employee Awareness & Training",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Recital 39",
+      "owner": [
+        {
+          "id": "learning_dev",
+          "name": "Learning & Dev",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "training_lead",
+          "name": "Training Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "All staff must be aware of data protection roles and responsibilities.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-028",
+      "control_description": "Incident Response and Breach Notification",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Articles 33–34",
+      "owner": [
+        {
+          "id": "ciso_dpo",
+          "name": "CISO & DPO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Critical",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "incident_response_head",
+          "name": "Incident Response Head",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Report breaches within 72 hours to the authority; notify individuals if needed.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-029",
+      "control_description": "Privacy Policy Publication",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 12",
+      "owner": [
+        {
+          "id": "legal_communications",
+          "name": "Legal & Communications",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "No",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "corporate_comms",
+          "name": "Corporate Comms",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Privacy policy must be updated, clear, and visible to users.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-030",
+      "control_description": "Data Retention Schedule & Deletion Process",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 5(1)(e)",
+      "owner": [
+        {
+          "id": "records_manager",
+          "name": "Records Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "information_governance",
+          "name": "Information Governance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Clearly define how long data is retained and automate deletion when expired.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-031",
+      "control_description": "Whistleblower Mechanism for Data Breaches",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR + SOX",
+      "owner": [
+        {
+          "id": "ethics_compliance",
+          "name": "Ethics & Compliance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "ethics_officer",
+          "name": "Ethics Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Channel to report internal violations or breaches confidentially.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-032",
+      "control_description": "Legitimate Interest Assessment (LIA)",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Recital 47",
+      "owner": [
+        {
+          "id": "legal_marketing",
+          "name": "Legal & Marketing",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Pending",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "risk_governance",
+          "name": "Risk Governance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Conduct LIA when using \"legitimate interest\" as a basis for data use.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-033",
+      "control_description": "Cookie Consent Compliance",
+      "compliance_area": "GDPR",
+      "regulation": "ePrivacy + GDPR",
+      "owner": [
+        {
+          "id": "digital_marketing",
+          "name": "Digital Marketing",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "web_product_team",
+          "name": "Web Product Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Collect granular cookie consents, offer opt-out, and update banners as needed.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-034",
+      "control_description": "Data Classification and Access Restriction",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR + ISO 27001",
+      "owner": [
+        {
+          "id": "it_security",
+          "name": "IT Security",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "iam_admin",
+          "name": "IAM Admin",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Tag personal data and restrict access using RBAC or attribute-based controls.",
+      "actions": null
+    },
+    {
+      "control_id": "GDPR-035",
+      "control_description": "Pseudonymization and Encryption Standards",
+      "compliance_area": "GDPR",
+      "regulation": "GDPR Article 32",
+      "owner": [
+        {
+          "id": "ciso",
+          "name": "CISO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "infosec_lead",
+          "name": "InfoSec Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Encrypt and anonymize sensitive datasets wherever applicable.",
+      "actions": null
+    },
+
+    
+    {
+      "control_id": "SOX-01",
+      "control_description": "Internal Control Environment",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "cfo_coo",
+          "name": "CFO/COO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "internal_controls_lead",
+          "name": "Internal Controls Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Establish tone at the top",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-02",
+      "control_description": "Risk Assessment Process",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "risk_management",
+          "name": "Risk Management",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "risk_officer",
+          "name": "Risk Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Identify and prioritize financial risks",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-03",
+      "control_description": "Control Activities",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "process_owners",
+          "name": "Process Owners",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "control_owners",
+          "name": "Control Owners",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Define and operate control procedures",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-04",
+      "control_description": "Information & Communication",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "finance_it",
+          "name": "Finance/IT",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "it_compliance_lead",
+          "name": "IT Compliance Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure relevant info flow",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-05",
+      "control_description": "Monitoring Activities",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "internal_audit",
+          "name": "Internal Audit",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "audit_manager",
+          "name": "Audit Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ongoing evaluation of controls",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-06",
+      "control_description": "Entity-Level Controls",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "executive_team",
+          "name": "Executive Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "governance_officer",
+          "name": "Governance Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Governance, ethics, and accountability",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-07",
+      "control_description": "IT General Controls – Access Management",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "it_security",
+          "name": "IT Security",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "iam_admin",
+          "name": "IAM Admin",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Manage access to financial systems",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-08",
+      "control_description": "ITGC – Change Management",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "it_operations",
+          "name": "IT Operations",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "change_manager",
+          "name": "Change Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Control changes to SOX systems",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-09",
+      "control_description": "ITGC – Operations (Backup & Recovery)",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "it_infrastructure",
+          "name": "IT Infrastructure",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "infra_ops_manager",
+          "name": "Infra Ops Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Backup, DR, availability of financial data",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-10",
+      "control_description": "Segregation of Duties",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "hr_finance",
+          "name": "HR/Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "hr_controller",
+          "name": "HR Controller",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Avoid single point control over finances",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-11",
+      "control_description": "Financial Statement Close Process",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302/404",
+      "owner": [
+        {
+          "id": "finance",
+          "name": "Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "financial_controller",
+          "name": "Financial Controller",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Timely, accurate financial reporting",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-12",
+      "control_description": "Journal Entry Controls",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302/404",
+      "owner": [
+        {
+          "id": "finance",
+          "name": "Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "gl_accountant",
+          "name": "GL Accountant",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Review and approval of journal entries",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-13",
+      "control_description": "Account Reconciliation",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302/404",
+      "owner": [
+        {
+          "id": "finance",
+          "name": "Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "finance_team_lead",
+          "name": "Finance Team Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure reconciliations are timely",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-14",
+      "control_description": "Revenue Recognition Controls",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302/404",
+      "owner": [
+        {
+          "id": "finance_sales_ops",
+          "name": "Finance/Sales Ops",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "rev_rec_officer",
+          "name": "Rev Rec Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Compliance with revenue policies",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-15",
+      "control_description": "Expense Authorization",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "procurement_finance",
+          "name": "Procurement/Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "expense_manager",
+          "name": "Expense Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Pre-approval and policy enforcement",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-16",
+      "control_description": "Payroll Processing Controls",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302/404",
+      "owner": [
+        {
+          "id": "hr_payroll",
+          "name": "HR/Payroll",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "payroll_lead",
+          "name": "Payroll Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Authorization and review of payroll",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-17",
+      "control_description": "Treasury & Cash Controls",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302/404",
+      "owner": [
+        {
+          "id": "treasury",
+          "name": "Treasury",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "treasury_controller",
+          "name": "Treasury Controller",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Bank reconciliations and fund movements",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-18",
+      "control_description": "Manual Journal Entry Approval",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "finance",
+          "name": "Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "accounting_supervisor",
+          "name": "Accounting Supervisor",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Require dual approval",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-19",
+      "control_description": "Budgeting and Forecasting Controls",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302",
+      "owner": [
+        {
+          "id": "finance_planning",
+          "name": "Finance Planning",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "fp_a_analyst",
+          "name": "FP&A Analyst",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Review of assumptions and variance tracking",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-20",
+      "control_description": "Third-Party Vendor Controls",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "procurement",
+          "name": "Procurement",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "vendor_risk_manager",
+          "name": "Vendor Risk Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Monitor service provider performance",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-21",
+      "control_description": "Evidence of Control Execution",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "all_departments",
+          "name": "All Departments",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "control_owners",
+          "name": "Control Owners",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Documented proof of control operation",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-22",
+      "control_description": "Control Exception Management",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "internal_audit",
+          "name": "Internal Audit",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Corrective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "control_analyst",
+          "name": "Control Analyst",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Track and remediate control failures",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-23",
+      "control_description": "User Access Review",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "it_security",
+          "name": "IT Security",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "iam_reviewer",
+          "name": "IAM Reviewer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Periodic review of privileged access",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-24",
+      "control_description": "Sensitive Data Access Control",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "it_data_security",
+          "name": "IT/Data Security",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "data_protection_officer",
+          "name": "Data Protection Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Restrict and log access to financial data",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-25",
+      "control_description": "Audit Trail Logging & Monitoring",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "it_security",
+          "name": "IT Security",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "log_monitoring_team",
+          "name": "Log Monitoring Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Maintain audit logs of financial systems",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-26",
+      "control_description": "System Interface Reconciliation",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "it_finance",
+          "name": "IT/Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "interface_admin",
+          "name": "Interface Admin",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Reconcile data transfers between systems",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-27",
+      "control_description": "SDLC for Finance Applications",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "it_development",
+          "name": "IT Development",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "dev_manager",
+          "name": "Dev Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Secure SDLC for SOX-relevant systems",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-28",
+      "control_description": "Spreadsheet & EUC Controls",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "finance",
+          "name": "Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "euc_control_officer",
+          "name": "EUC Control Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Version control, change tracking for EUCs",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-29",
+      "control_description": "Audit Committee Oversight",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302",
+      "owner": [
+        {
+          "id": "board_of_directors",
+          "name": "Board of Directors",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "audit_committee_chair",
+          "name": "Audit Committee Chair",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Board level review of financial controls",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-30",
+      "control_description": "Policy Change Control",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "compliance",
+          "name": "Compliance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "policy_admin",
+          "name": "Policy Admin",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Review and approve changes to key policies",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-31",
+      "control_description": "Fraud Risk Assessment",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "risk_management",
+          "name": "Risk Management",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "fraud_risk_officer",
+          "name": "Fraud Risk Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Periodic assessment of fraud exposures",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-32",
+      "control_description": "BCP for Financial Operations",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "business_continuity",
+          "name": "Business Continuity",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "bcp_officer",
+          "name": "BCP Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure continuity of financial processing",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-33",
+      "control_description": "Key Report Validation",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 404",
+      "owner": [
+        {
+          "id": "finance_it",
+          "name": "Finance/IT",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "reporting_controls_lead",
+          "name": "Reporting Controls Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Validate accuracy of financial reports",
+      "actions": null
+    },
+    {
+      "control_id": "SOX-34",
+      "control_description": "Review of Management Estimates",
+      "compliance_area": "SOX",
+      "regulation": "SOX Section 302/404",
+      "owner": [
+        {
+          "id": "finance",
+          "name": "Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "controller",
+          "name": "Controller",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Validate assumptions in estimates",
+      "actions": null
+    },
+    
+    {
+      "control_id": "COBIT-01",
+      "control_description": "Governance Framework Establishment",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "executive_board",
+          "name": "Executive Board",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "governance_lead",
+          "name": "Governance Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Define and formalize governance processes",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-02",
+      "control_description": "Stakeholder Engagement & Needs Analysis",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "strategy_office",
+          "name": "Strategy Office",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "business_analyst",
+          "name": "Business Analyst",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Align IT goals with enterprise objectives",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-03",
+      "control_description": "Risk Optimization",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "risk_management",
+          "name": "Risk Management",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "risk_manager",
+          "name": "Risk Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Manage enterprise IT and process risks",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-04",
+      "control_description": "Portfolio Management",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "pmo",
+          "name": "PMO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "portfolio_manager",
+          "name": "Portfolio Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Align and manage investments",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-05",
+      "control_description": "Performance Management",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "it_leadership",
+          "name": "IT Leadership",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "performance_lead",
+          "name": "Performance Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Monitor value delivery",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-06",
+      "control_description": "Change Enablement",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "change_manager",
+          "name": "Change Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "it_transformation_head",
+          "name": "IT Transformation Head",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure stakeholder buy-in for changes",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-07",
+      "control_description": "Organizational Structure Optimization",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "hr_leadership",
+          "name": "HR/Leadership",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "org_design_consultant",
+          "name": "Org Design Consultant",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Align IT structure with business needs",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-08",
+      "control_description": "Managed Strategy",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "strategy_office",
+          "name": "Strategy Office",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "strategic_planning_lead",
+          "name": "Strategic Planning Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Enable strategy execution via IT",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-09",
+      "control_description": "Managed Innovation",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "innovation_officer",
+          "name": "Innovation Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "innovation_manager",
+          "name": "Innovation Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Drive IT-led innovation initiatives",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-10",
+      "control_description": "Managed Architecture",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "enterprise_architect",
+          "name": "Enterprise Architect",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "it_architecture_lead",
+          "name": "IT Architecture Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Maintain enterprise IT architecture",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-11",
+      "control_description": "Managed Security Services",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "ciso",
+          "name": "CISO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "security_manager",
+          "name": "Security Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Operational and strategic security coverage",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-12",
+      "control_description": "Managed Risk",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "risk_officer",
+          "name": "Risk Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "enterprise_risk_lead",
+          "name": "Enterprise Risk Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Manage and monitor IT risk across domains",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-13",
+      "control_description": "Managed Compliance",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "compliance_officer",
+          "name": "Compliance Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "legal_compliance",
+          "name": "Legal & Compliance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure adherence to external/internal policies",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-14",
+      "control_description": "Managed Projects",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "pmo",
+          "name": "PMO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "project_manager",
+          "name": "Project Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Deliver IT projects effectively",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-15",
+      "control_description": "Managed Service Agreements",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "vendor_management",
+          "name": "Vendor Management",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "contract_manager",
+          "name": "Contract Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Monitor SLAs and contracts",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-16",
+      "control_description": "Managed Operations",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "it_operations",
+          "name": "IT Operations",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "ops_lead",
+          "name": "Ops Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Daily IT services management",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-17",
+      "control_description": "Managed Service Requests and Incidents",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "itsm",
+          "name": "ITSM",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "service_desk_lead",
+          "name": "Service Desk Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Incident and request resolution",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-18",
+      "control_description": "Managed Continuity",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "business_continuity",
+          "name": "Business Continuity",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "dr_coordinator",
+          "name": "DR Coordinator",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Business and IT resilience planning",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-19",
+      "control_description": "Managed Availability and Capacity",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "infrastructure",
+          "name": "Infrastructure",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "capacity_manager",
+          "name": "Capacity Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Uptime and performance optimization",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-20",
+      "control_description": "Managed Information",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "data_governance",
+          "name": "Data Governance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "information_owner",
+          "name": "Information Owner",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure data integrity and confidentiality",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-21",
+      "control_description": "Managed Assets",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "asset_management",
+          "name": "Asset Management",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "asset_owner",
+          "name": "Asset Owner",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Lifecycle and ownership of IT assets",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-22",
+      "control_description": "Managed Configuration",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "itsm",
+          "name": "ITSM",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "configuration_lead",
+          "name": "Configuration Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Control system and config info",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-23",
+      "control_description": "Managed Problems",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "it_operations",
+          "name": "IT Operations",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "problem_manager",
+          "name": "Problem Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Root cause analysis and resolution",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-24",
+      "control_description": "Managed Quality",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "qa_testing",
+          "name": "QA/Testing",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "qa_manager",
+          "name": "QA Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure quality across IT processes",
+      "actions": null
+    },
+    {
+      "control_id": "COBIT-25",
+      "control_description": "Managed Knowledge",
+      "compliance_area": "COBIT",
+      "regulation": "COBIT 2019",
+      "owner": [
+        {
+          "id": "km_office",
+          "name": "KM Office",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "knowledge_manager",
+          "name": "Knowledge Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Centralize IT knowledge assets",
+      "actions": null
+    },
+    
+    {
+      "control_id": "CSCRF-01",
+      "control_description": "Governance of Cybersecurity",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "board_it_committee",
+          "name": "Board/IT Committee",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "ciso",
+          "name": "CISO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Set overall cybersecurity posture",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-02",
+      "control_description": "Cybersecurity Policy and Framework",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "ciso_compliance",
+          "name": "CISO/Compliance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "cybersecurity_officer",
+          "name": "Cybersecurity Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Create policy aligned with SEBI framework",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-03",
+      "control_description": "Asset Management",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "it_infrastructure",
+          "name": "IT Infrastructure",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "it_asset_manager",
+          "name": "IT Asset Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Identify and maintain information assets",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-04",
+      "control_description": "Access Control Management",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "it_security",
+          "name": "IT Security",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "iam_administrator",
+          "name": "IAM Administrator",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Role-based access and least privilege",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-05",
+      "control_description": "Data Security and Privacy",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "data_protection",
+          "name": "Data Protection",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "dpo",
+          "name": "DPO",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Protect confidentiality of sensitive data",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-06",
+      "control_description": "Network and Perimeter Security",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "network_operations",
+          "name": "Network Operations",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "network_security_lead",
+          "name": "Network Security Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Firewalls, IDS/IPS, segmentation",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-07",
+      "control_description": "Application Security",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "devsecops",
+          "name": "DevSecOps",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "appsec_team",
+          "name": "AppSec Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Secure coding practices and application testing",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-08",
+      "control_description": "Security Operations Center (SOC)",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "soc_team",
+          "name": "SOC Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "soc_manager",
+          "name": "SOC Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "24x7 monitoring and response",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-09",
+      "control_description": "Vulnerability Management",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "it_security",
+          "name": "IT Security",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "vulnerability_analyst",
+          "name": "Vulnerability Analyst",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Timely patching and scanning",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-10",
+      "control_description": "Incident Response Management",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "it_risk",
+          "name": "IT Risk",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Corrective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "ir_manager",
+          "name": "IR Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Defined IR plan, drills, and escalation procedures",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-11",
+      "control_description": "Third-Party Risk Management",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "vendor_management",
+          "name": "Vendor Management",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "vendor_risk_lead",
+          "name": "Vendor Risk Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Due diligence, SLAs, security compliance",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-12",
+      "control_description": "Cybersecurity Awareness and Training",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "hr_training",
+          "name": "HR/Training",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "awareness_officer",
+          "name": "Awareness Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Regular training programs for staff",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-13",
+      "control_description": "Periodic Cybersecurity Assessments",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "internal_audit",
+          "name": "Internal Audit",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "audit_manager",
+          "name": "Audit Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Annual cybersecurity gap assessments",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-14",
+      "control_description": "Cybersecurity Metrics and Reporting",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "it_governance",
+          "name": "IT Governance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "mis_lead",
+          "name": "MIS Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Board reporting and cyber KPIs",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-15",
+      "control_description": "Backup and Disaster Recovery",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "it_continuity",
+          "name": "IT Continuity",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "bcp_manager",
+          "name": "BCP Manager",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "DR drills and offsite backups",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-16",
+      "control_description": "Secure Configuration Management",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "infrastructure_team",
+          "name": "Infrastructure Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "config_lead",
+          "name": "Config Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Harden systems and disable unused ports",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-17",
+      "control_description": "Encryption and Key Management",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "it_security",
+          "name": "IT Security",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "crypto_officer",
+          "name": "Crypto Officer",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Encryption at rest and in transit",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-18",
+      "control_description": "Endpoint Detection & Response",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "endpoint_team",
+          "name": "Endpoint Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "endpoint_security_lead",
+          "name": "Endpoint Security Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Centralized detection for endpoint anomalies",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-19",
+      "control_description": "Penetration Testing & Red Team Exercises",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "cybersecurity_team",
+          "name": "Cybersecurity Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "red_team_lead",
+          "name": "Red Team Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Annual testing of external and internal threats",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-20",
+      "control_description": "Governance of Cybersecurity Budget",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF",
+      "owner": [
+        {
+          "id": "cfo_it_finance",
+          "name": "CFO/IT Finance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "Medium",
+      "control_type": "Preventive",
+      "implementation_status": "Implemented",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Effective",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "finance_controller",
+          "name": "Finance Controller",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Ensure dedicated funding for cybersecurity",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-21",
+      "control_description": "Threat Intelligence Integration",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF (Extended)",
+      "owner": [
+        {
+          "id": "cybersecurity_team",
+          "name": "Cybersecurity Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "In Progress",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Ongoing",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "threat_intel_analyst",
+          "name": "Threat Intel Analyst",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Integrate real-time threat feeds into monitoring",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-22",
+      "control_description": "Secure DevOps Controls",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF (Extended)",
+      "owner": [
+        {
+          "id": "devops_team",
+          "name": "DevOps Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Planned",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "devsecops_lead",
+          "name": "DevSecOps Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Embed security checks into CI/CD pipeline",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-23",
+      "control_description": "Zero Trust Architecture",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF (Best Practice)",
+      "owner": [
+        {
+          "id": "enterprise_architect",
+          "name": "Enterprise Architect",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Planned",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "security_architect",
+          "name": "Security Architect",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Apply zero trust principles across network",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-24",
+      "control_description": "Insider Threat Monitoring",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF (Extended)",
+      "owner": [
+        {
+          "id": "cybersecurity_team",
+          "name": "Cybersecurity Team",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Detective",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Planned",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "soc_lead",
+          "name": "SOC Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Detect and respond to insider risk activities",
+      "actions": null
+    },
+    {
+      "control_id": "CSCRF-25",
+      "control_description": "Privacy by Design Controls",
+      "compliance_area": "CSCRF",
+      "regulation": "SEBI CSCRF (Recommended)",
+      "owner": [
+        {
+          "id": "dpo_it_governance",
+          "name": "DPO/IT Governance",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "risk_level": "High",
+      "control_type": "Preventive",
+      "implementation_status": "Planned",
+      "last_assessment_date": null,
+      "next_review_date": null,
+      "status": "Planned",
+      "audit_required": "Yes",
+      "last_audit_date": null,
+      "audit_findings": null,
+      "corrective_actions": null,
+      "action_due_date": null,
+      "responsible_person": [
+        {
+          "id": "privacy_lead",
+          "name": "Privacy Lead",
+          "image": "usrbig1.jpg"
+        }
+      ],
+      "evidence_file_reference": null,
+      "notes": "Integrate privacy into design and development",
+      "actions": null
+    }
+
+			
+		  ]
+		}
+	  ]
+	}
+  ]
+  

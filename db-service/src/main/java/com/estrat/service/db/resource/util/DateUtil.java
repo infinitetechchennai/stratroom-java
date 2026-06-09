@@ -23,12 +23,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DateUtil {
-    private static Logger log = Logger.getLogger(DateUtil.class);
+    private static Logger log = LoggerFactory.getLogger(DateUtil.class);
 
     public static String mapToString(LocalDateTime localDateTime, String format) {
         String formatteddDate = "";

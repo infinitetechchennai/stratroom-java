@@ -53,7 +53,7 @@ public class AuditManagementAttachmentService {
 
     public List<AuditManagementAttachmentDTO> findAll(Long auditId) {
         String url = this.scoreCardUrl + "auditAttachList/" + auditId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List initDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return initDTOList;
     }

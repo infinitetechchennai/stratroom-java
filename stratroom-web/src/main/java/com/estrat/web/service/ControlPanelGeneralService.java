@@ -66,12 +66,12 @@ public class ControlPanelGeneralService {
     }
 
     public Map<String, Object> findCustomPerformanceByOrgId() {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Map)this.commonRestTemplate.getForObject(this.customPerformanceGetUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public Map<String, Object> findCustomPerformanceriskByOrgId() {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Map)this.commonRestTemplate.getForObject(this.customPerformanceriskGetUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -105,7 +105,7 @@ public class ControlPanelGeneralService {
     public ResponseEntity<List<String>> restorePath(String orgId) {
         String url = this.userServiceUrl + "/restorePath";
         String restoreUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("orgId", new Object[]{orgId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List fileList = (List)this.commonRestTemplate.getForObject(restoreUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(fileList, HttpStatus.OK);
     }

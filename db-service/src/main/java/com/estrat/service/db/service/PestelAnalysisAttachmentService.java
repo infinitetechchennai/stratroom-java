@@ -20,13 +20,14 @@ import com.estrat.service.db.service.SwotAnalysisAttachmentService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PestelAnalysisAttachmentService {
-    private Logger log = Logger.getLogger(SwotAnalysisAttachmentService.class);
+    private Logger log = LoggerFactory.getLogger(SwotAnalysisAttachmentService.class);
     @Autowired
     protected PestelAnalysisAttachmentRepository attachmentRepository;
 

@@ -66,7 +66,7 @@ public class TaskDetailsService {
         String url = this.dbUrl + "/retrieveTaskList";
         String url1 = String.join((CharSequence)"/", url, String.valueOf(empId));
         String urlVariabe = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("dateRange", new Object[]{dateRange}).queryParam("type", new Object[]{type}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(urlVariabe, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -102,7 +102,7 @@ public class TaskDetailsService {
         String url = this.dbUrl + "/retrieveTaskStatusCount";
         String url1 = String.join((CharSequence)"/", url, String.valueOf(empId));
         String urlVariabe = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (TaskStatusResponseDTO)this.commonRestTemplate.getForObject(urlVariabe, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

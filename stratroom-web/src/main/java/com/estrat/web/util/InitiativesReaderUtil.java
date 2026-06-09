@@ -117,7 +117,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -176,7 +177,7 @@ public class InitiativesReaderUtil {
     protected SubActivitiesService subActivitiesService;
     public static final String S3_ASSET_PATHS_INITIATIVE = "/InitiativeImportDataFile";
     private static final String SUFFIX = "/";
-    private Logger logger = Logger.getLogger(InitiativesReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(InitiativesReaderUtil.class);
 
     private static boolean isRowEmpty(XSSFRow row) {
         boolean isEmpty = true;

@@ -77,7 +77,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -106,7 +107,7 @@ import org.springframework.util.MultiValueMap;
  */
 @Component
 public class RiskEventReaderUtil {
-    private Logger logger = Logger.getLogger(RiskEventReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(RiskEventReaderUtil.class);
     @Autowired
     protected RepositoryServices repositoryServices;
     @Autowired
@@ -379,8 +380,8 @@ public class RiskEventReaderUtil {
                         --i;
                         e.printStackTrace();
                     }
-                    HttpStatus statuscode = this.riskDetailService.riskeventadd(riskEvent).getStatusCode();
-                    if (statuscode == null || !statuscode.equals(HttpStatus.OK)) continue;
+                    var statuscode = this.riskDetailService.riskeventadd(riskEvent).getStatusCode();
+                    if (statuscode == null || !statuscode.isSameCodeAs(HttpStatus.OK)) continue;
                     ++processedrows;
                 }
             }

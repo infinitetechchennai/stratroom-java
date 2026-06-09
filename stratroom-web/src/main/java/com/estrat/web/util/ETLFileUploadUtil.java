@@ -15,14 +15,15 @@ import com.estrat.web.util.UserThreadLocal;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class ETLFileUploadUtil {
-    private Logger logger = Logger.getLogger(ETLFileUploadUtil.class);
+    private Logger logger = LoggerFactory.getLogger(ETLFileUploadUtil.class);
     @Value(value="${etl.upload.file.path}")
     private String etlFilePath;
 

@@ -1,0 +1,2810 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Planning</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v-0.002" rel="stylesheet">
+    <link href="assets/css/main.css?v-0.002" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+
+
+    <!-- Font Awsome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+</head>
+
+
+<body data-bs-theme="light">
+  <div class="page-loader">
+    <div class="d-flex flex-column justify-content-center gap-1">
+    <div class="circle-loader">
+        <img class="centre-logo" src="assets/images/logo-icon.svg" alt="startroom" width="62" height="62">
+    </div>
+    <h5 class="loader-title">“While we load, grab your espresso and stay caffeinated.” <i class="fas fa-coffee text-primary"></i></h5>
+    <p class="loader-description"> “it takes 42 beans for a single shot. StratRoom uses countless data points to deliver powerful insights!”</p>
+    <p class="loader-text">Loading <span id="percent">0%</span></p>
+</div>
+</div>
+    <header id="header" class="header shadow-sm sticky-top">
+        <div class="navbar-topbar">
+            <div class="container-lg d-flex flex-wrap justify-content-between">
+                <div class="menu-controls d-flex">
+                    <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="Org-Structure">
+                        <span class="icon">
+                            <img src="assets/images/icons/org-structure-i.svg" width="18" height="18"
+                                alt="Org-Structure" title="Org-Structure">
+                        </span>
+                    </a>
+                    <a class="control-link" href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Templates">
+                            <img src="assets/images/icons/template-i.svg" width="18" height="18" alt="" title="">
+                        </span>
+                    </a>
+
+                    <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="ETL">
+                        <span class="icon">
+                            <img src="assets/images/icons/other-i.svg" width="18" height="18" alt="ETL" title="ETL">
+                        </span>
+                    </a>
+                    <div class="nav-item dropdown dropdown-top-header">
+                        <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Masters
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="masters.html">Products/Services</a></li>
+                            <li><a class="dropdown-item" href="masters.html">Process (POS)</a></li>
+                            <li><a class="dropdown-item" href="masters.html">Vital Records</a></li>
+                            <li><a class="dropdown-item" href="masters.html">Technology & IT</a></li>
+                            <li><a class="dropdown-item" href="masters.html">Facilities & Utilities</a></li>
+                            <li><a class="dropdown-item" href="masters.html">Personal (HR)</a></li>
+                            <li><a class="dropdown-item" href="masters.html">ISO</a></li>
+                            <li><a class="dropdown-item" href="masters.html">Budget</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap ms-auto">
+                    <div class="top-date-picker">
+                        <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap">
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <img src="assets/images/icons/global-i.svg" width="14" height="14" alt="organization">
+                            </span>
+                            <span id="currentLanguage">EN</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="#" data-lang="en" data-dir="ltr">English</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="ar" data-dir="rtl">Arabic</a></li>
+                            <!-- <li><a class="dropdown-item" href="#" data-lang="ta" data-dir="ltr">Tamil</a></li> -->
+                        </ul>
+
+                    </div>
+                    <div id="google_translate_element" class="d-none"></div>
+                </div>
+
+
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md navbar-light">
+            <div class="container-lg gap-2 gap-md-3">
+                <div class="position-relative logo me-auto">
+                    <a href="landing.html" class="logo-preview" id="logoPreview">
+                        <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                    </a>
+
+                </div>
+
+                <!-- <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button> -->
+
+                <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                    aria-labelledby="mobileMenuLabel">
+                    <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="navbar-collapse">
+
+
+                            <ul class="navbar-nav ms-auto">
+
+                                <!-- 1) Plan -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Plan
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" data-menu="plan"
+                                        aria-labelledby="planningDropdown">
+                                        <li data-id="strategy-planner"><a class="dropdown-item"
+                                                href="strategy-planner.html">Strategy Planner</a></li>
+                                        <li data-id="swot"><a class="dropdown-item" href="swot.html">SWOT</a></li>
+                                        <li data-id="pestel"><a class="dropdown-item" href="pestel.html">PESTEL</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- 2) Measure -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="measureDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Measure
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="measureDropdown">
+                                        <li data-id="scorecard"><a class="dropdown-item"
+                                                href="scorecard.html">Scorecard</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- 3) Execute -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="executeDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Execute
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="executeDropdown">
+                                        <li data-id="initiatives"><a class="dropdown-item"
+                                                href="initiatives-projects.html">Risks & Risks</a></li>
+                                        <li data-id="tasks"><a class="dropdown-item" href="tasks.html">Tasks</a></li>
+                                        <li data-id="budget-approval"><a class="dropdown-item"
+                                                href="budget-approval.html">Budget Approval</a></li>
+                                        <li data-id="budgets"><a class="dropdown-item" href="budgets.html">Budgets</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 4) Govern -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="governDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Govern
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="governDropdown">
+                                        <li data-id="risk-register"><a class="dropdown-item"
+                                                href="risk-register.html">Risk Register</a></li>
+                                        <li data-id="risk-approval"><a class="dropdown-item"
+                                                href="risk-approval.html">Risk Approval</a></li>
+                                        <li data-id="compliance"><a class="dropdown-item"
+                                                href="compliance.html">Compliance</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- 5) Meet -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="meetDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Meet
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="meetDropdown">
+                                        <li data-id="meetings"><a class="dropdown-item"
+                                                href="meetings.html">Meetings</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- 6) Report -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Report
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="reportDropdown">
+                                        <li data-id="my-cockpit"><a class="dropdown-item" href="my-cockpit.html">My
+                                                Cockpit</a></li>
+                                        <li data-id="my-performance"><a class="dropdown-item"
+                                                href="my-performance.html">My Performance</a></li>
+                                        <li data-id="whiteboard"><a class="dropdown-item"
+                                                href="whiteboard.html">Whiteboard</a></li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-controls global-control  d-flex flex-wrap">
+
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="notificationDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="bottom"
+                            data-bs-title="Notification">
+                            <span class="icon">
+                                <img src="assets/images/icons/notification-i.svg" width="18" height="18"
+                                    alt="notification">
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon border-0 shadow-sm"
+                            aria-labelledby="notificationDropdown" data-bs-auto-close="outside"
+                            style="width: 350px; max-width: calc(100vw - 2rem); max-height: 400px; overflow-y: auto;">
+                            <!-- <style>
+                                @media (max-width: 576px) {
+                                    .dropdown-menu[aria-labelledby="notificationDropdown"] {
+                                        width: calc(100vw - 2rem) !important;
+                                        left: 1rem !important;
+                                        right: 1rem !important;
+                                        transform: none !important;
+                                        margin-left: 0 !important;
+                                        margin-right: 0 !important;
+                                    }
+                                    .dropdown-menu[aria-labelledby="notificationDropdown"] .dropdown-item {
+                                        padding: 0.75rem 1rem !important;
+                                    }
+                                    .dropdown-menu[aria-labelledby="notificationDropdown"] .icon {
+                                        width: 28px !important;
+                                        height: 28px !important;
+                                        margin-right: 0.75rem !important;
+                                    }
+                                    .dropdown-menu[aria-labelledby="notificationDropdown"] .fw-medium {
+                                        font-size: 0.9rem !important;
+                                    }
+                                    .dropdown-menu[aria-labelledby="notificationDropdown"] small {
+                                        font-size: 0.75rem !important;
+                                    }
+                                }
+                                @media (max-width: 768px) {
+                                    .dropdown-menu[aria-labelledby="notificationDropdown"] {
+                                        width: 320px !important;
+                                    }
+                                }
+                                @media (min-width: 992px) {
+                                    .dropdown-menu[aria-labelledby="notificationDropdown"] {
+                                        width: 380px !important;
+                                    }
+                                }
+                                /* Ensure dropdown doesn't overflow viewport */
+                                .dropdown-menu[aria-labelledby="notificationDropdown"] {
+                                    max-height: min(400px, calc(100vh - 120px));
+                                }
+                            </style> -->
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">New message from John Smith</div>
+                                        <small class="text-muted">Risk approval required for Phase 2</small>
+                                        <div class="text-muted small">2 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">System maintenance scheduled</div>
+                                        <small class="text-muted">Server will be down for 30 minutes</small>
+                                        <div class="text-muted small">1 day ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Template review deadline</div>
+                                        <small class="text-muted">Document template needs approval by EOD</small>
+                                        <div class="text-muted small">3 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Audit report generated</div>
+                                        <small class="text-muted">Monthly compliance report is ready</small>
+                                        <div class="small" class="text-muted small">5 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Meeting reminder</div>
+                                        <small class="text-muted">Weekly team standup in 30 minutes</small>
+                                        <div class="text-muted small">30 min ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Task completed</div>
+                                        <small class="text-muted">Database backup completed successfully</small>
+                                        <div class="text-muted small">1 hour ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">New user registered</div>
+                                        <small class="text-muted">Sarah Johnson joined the platform</small>
+                                        <div class="text-muted small">6 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Security update</div>
+                                        <small class="text-muted">Password policy has been updated</small>
+                                        <div class="text-muted small">2 days ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Download ready</div>
+                                        <small class="text-muted">Export file generation completed</small>
+                                        <div class="text-muted small">3 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Audit report generated</div>
+                                        <small class="text-muted">Monthly compliance report is ready</small>
+                                        <div class="small" class="text-muted small">5 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-center py-2" href="#">
+                                    <small class="text-primary fw-medium">View all notifications</small>
+                                </a></li>
+                        </ul>
+                    </div>
+                    <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Logout">
+            <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+          </a> -->
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="controlPanelDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="icon">
+                                <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="controlPanelDropdown">
+                            <li><a class="dropdown-item" href="control-panel.html"> <span class="icon">
+                                        <img src="assets/images/icons/control-panel-i.svg" width="18" height="18"
+                                            alt="">
+                                    </span>Control Panel</a></li>
+                            <li><a class="dropdown-item" href="audit-trail.html"> <span class="icon">
+                                        <img src="assets/images/icons/audit-trail-i.svg" width="18" height="18" alt="">
+                                    </span>Audit Trail</a></li>
+                            <li><a class="dropdown-item" href="user-role.html"> <span class="icon">
+                                        <img src="assets/images/icons/user-role-i.svg" width="18" height="18" alt="">
+                                    </span>User Role</a></li>
+
+
+                        </ul>
+                    </div>
+
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item profile-card" href="#">
+
+                                    <span class="icon">
+                                        <img src="assets/images/icons/user-i.svg" width="32" height="32" alt="">
+                                    </span>
+
+                                    <div class="">
+                                        <h4>Hi John </h4>
+                                        <small>welcome to your Multi-Governance Portal</small>
+                                    </div>
+                                </a></li>
+
+
+                            <li><a class="dropdown-item" href="manual.html">
+
+                                    <span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                                            height="18" alt="" title=""></span>My Forms</a></li>
+                            <li>
+                                <a class="dropdown-item" href="performance-contract.html">
+
+                                    <span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                                            height="18" alt="" title=""></span>Performance Contract</a>
+                            </li>
+                            <li><a class="dropdown-item" href="audit-trail.html">
+
+                                    <span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                                            height="18" alt="" title=""></span>Adit Trail</a></li>
+
+                            <li><a class="dropdown-item" href="user-role.html"><span class="icon"><img
+                                            src="assets/images/icons/logout-i.svg" width="18" height="18" alt=""></span>
+                                    Logout</a></li>
+
+
+                        </ul>
+
+                    </div>
+                    <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+                </div>
+                <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                    aria-controls="mobileMenu">
+                    <div class="hamburger-icon">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </div>
+                </div>
+
+
+        </nav>
+    </header>
+
+    <main class="pt-2 pb-2">
+        <div class="container-lg">
+            <div class="page-header grid gap-2 pb-1">
+                <div class="g-col-8 d-flex align-items-center">
+                    <h4 class="title">
+                        <span class="icon">
+                            <img src="assets/images/icons/meetings-i.svg" alt="meetings" title="meetings">
+                        </span>
+                        Risk Planning
+                    </h4>
+                </div>
+
+            </div>
+        </div>
+        <div class="container-lg py-2">
+            <div class="card custom-card">
+                <div class="card-header">
+                    <div class="c-header-left">
+                        <h5 class="card-title me-auto">
+                            <strong editable="true" contenteditable="true"
+                                onkeypress="return (this.innerText.length <= 36)">
+                                Risk Planning List</strong>
+                        </h5>
+                    </div>
+                    <div class="card-actions">
+                        <div id="popoverFilterRiskPlanningCategory">
+                            <span type="button" class="btn btn-sm btn-icon" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom" title="Risk Planning Category">
+                                <i class="fas fa-filter title_edit_icon"></i>
+                            </span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-icon" data-bs-toggle="modal"
+                            data-bs-target="#project-planning-add-modal">
+                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Create Meeting">
+                                <i class="fas fa-plus title_edit_icon"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <div class="meetingList">
+<!-- card 1 -->
+                        <div class="card meeting-card">
+                            <div class="card-header flex-wrap flex-sm-nowrap">
+                                <div class="c-header-left">
+                                    <span class="meeting-label badge status-bg-blue projectCategory">Strategic
+                                        Risk</span>
+                                </div>
+                                <div class="meeting-action">
+                                    <ul class="list-unstyled action-list mb-0">
+                                        <li>
+                                            <a href="#notes-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Notes">
+                                                    <i class="fas fa-file-alt title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#action-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Action">
+                                                    <i class="fas fa-cog title_edit_icon"></i>
+
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#attachment-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Attchment">
+                                                    <i class="fas fa-paperclip title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li class="dropdown">
+                                            <a class="btn btn-link p-0 show" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="true" contenteditable="false" style="cursor: pointer;">
+
+                                                <span class="icon">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </span>
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                                <li>
+                                                    <a class="dropdown-item" href="#project-planning-add-modal"
+                                                        data-bs-toggle="modal" contenteditable="false"
+                                                        style="cursor: pointer;">Edit</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item" href="#delete-modal" data-bs-toggle="modal"
+                                                        contenteditable="false" style="cursor: pointer;">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body meeting-details d-flex flex-column">
+                                <div class="form-group">
+                                    <label class="form-label">Title</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">
+                                            Implement Energy Efficiency Measures Implement Energy Efficiency Measures
+                                            Implement Energy Efficiency Measures Implement Energy Efficiency Measures
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">
+                                            Implement Energy Efficiency Measures
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge label-bg-blue rounded-pill">Mitigated</span>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Priority</label>
+                                        <div class="d-flex justify-content-end flex-wrap gap-1">
+                                            <span class="badge status-bg-red rounded-pill">High</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+
+
+                                    <div class="form-group text-center">
+                                        <label class="form-label">Risk impact</label>
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+                                            <span class="badge label-bg-yellow rounded-pill">Negligible  </span>
+                                        </div>
+                                    </div>
+
+                                  <div class="form-group text-end">
+                                        <label class="form-label">Risk Likelihood</label>
+                                        <div class="d-flex flex-wrap justify-content-end gap-1">
+                                            <span class="badge label-bg-green rounded-pill">Rare </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                 <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Date Identified</label>
+                                        <p class="form-control-plaintext">Oct 12, 2025</p>
+
+                                    </div>
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Responsible</label>
+
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig6.jpg" class="rounded-circle"
+                                                    width="24" height="24">
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                    
+                                </div>
+                               
+                            </div>
+                        </div>
+
+<!-- card 2 -->
+                        <div class="card meeting-card">
+                            <div class="card-header flex-wrap flex-sm-nowrap">
+                                <div class="c-header-left">
+                                    <span class="meeting-label badge status-bg-orange projectCategory">Operational
+                                        Risk</span>
+                                </div>
+                                <div class="meeting-action">
+                                    <ul class="list-unstyled action-list mb-0">
+                                        <li>
+                                            <a href="#notes-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Notes">
+                                                    <i class="fas fa-file-alt title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#action-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Action">
+                                                    <i class="fas fa-cog title_edit_icon"></i>
+
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#attachment-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Attchment">
+                                                    <i class="fas fa-paperclip title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li class="dropdown">
+                                            <a class="btn btn-link p-0 show" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="true" contenteditable="false" style="cursor: pointer;">
+
+                                                <span class="icon">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </span>
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                                <li>
+                                                    <a class="dropdown-item" href="#project-planning-add-modal"
+                                                        data-bs-toggle="modal" contenteditable="false"
+                                                        style="cursor: pointer;">Edit</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item" href="#delete-modal" data-bs-toggle="modal"
+                                                        contenteditable="false" style="cursor: pointer;">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body meeting-details d-flex flex-column">
+                                <div class="form-group">
+                                    <label class="form-label">Title</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">
+                                            Supply Chain Disruption Management
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">
+                                            Develop contingency plans for potential supply chain disruptions
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge label-bg-yellow rounded-pill">In Progress</span>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Priority</label>
+                                        <div class="d-flex justify-content-end flex-wrap gap-1">
+                                            <span class="badge status-bg-yellow rounded-pill">Medium</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+
+
+                                    <div class="form-group text-center">
+                                        <label class="form-label">Risk impact</label>
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+                                            <span class="badge label-bg-red rounded-pill">Major</span>
+                                        </div>
+                                    </div>
+
+                                  <div class="form-group text-end">
+                                        <label class="form-label">Risk Likelihood</label>
+                                        <div class="d-flex flex-wrap justify-content-end gap-1">
+                                            <span class="badge label-bg-yellow rounded-pill">Possible</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                 <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Date Identified</label>
+                                        <p class="form-control-plaintext">Nov 05, 2025</p>
+
+                                    </div>
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Responsible</label>
+
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig6.jpg" class="rounded-circle"
+                                                    width="24" height="24">
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                               
+                            </div>
+                        </div>
+
+<!-- card 3 -->
+                        <div class="card meeting-card">
+                            <div class="card-header flex-wrap flex-sm-nowrap">
+                                <div class="c-header-left">
+                                    <span class="meeting-label badge status-bg-red projectCategory">Financial
+                                        Risk</span>
+                                </div>
+                                <div class="meeting-action">
+                                    <ul class="list-unstyled action-list mb-0">
+                                        <li>
+                                            <a href="#notes-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Notes">
+                                                    <i class="fas fa-file-alt title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#action-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Action">
+                                                    <i class="fas fa-cog title_edit_icon"></i>
+
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#attachment-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Attchment">
+                                                    <i class="fas fa-paperclip title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li class="dropdown">
+                                            <a class="btn btn-link p-0 show" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="true" contenteditable="false" style="cursor: pointer;">
+
+                                                <span class="icon">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </span>
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                                <li>
+                                                    <a class="dropdown-item" href="#project-planning-add-modal"
+                                                        data-bs-toggle="modal" contenteditable="false"
+                                                        style="cursor: pointer;">Edit</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item" href="#delete-modal" data-bs-toggle="modal"
+                                                        contenteditable="false" style="cursor: pointer;">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body meeting-details d-flex flex-column">
+                                <div class="form-group">
+                                    <label class="form-label">Title</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">
+                                            Market Volatility Risk Assessment
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">
+                                            Monitor and assess risks from market volatility on investment portfolio
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge label-bg-red rounded-pill">Open</span>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Priority</label>
+                                        <div class="d-flex justify-content-end flex-wrap gap-1">
+                                            <span class="badge status-bg-red rounded-pill">High</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+
+
+                                    <div class="form-group text-center">
+                                        <label class="form-label">Risk impact</label>
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+                                            <span class="badge label-bg-red rounded-pill">Critical</span>
+                                        </div>
+                                    </div>
+
+                                  <div class="form-group text-end">
+                                        <label class="form-label">Risk Likelihood</label>
+                                        <div class="d-flex flex-wrap justify-content-end gap-1">
+                                            <span class="badge label-bg-red rounded-pill">Likely</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                 <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Date Identified</label>
+                                        <p class="form-control-plaintext">Dec 01, 2025</p>
+
+                                    </div>
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Responsible</label>
+
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig1.jpg" class="rounded-circle"
+                                                    width="24" height="24">
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                               
+                            </div>
+                        </div>
+
+<!-- card 4 -->
+                        <div class="card meeting-card">
+                            <div class="card-header flex-wrap flex-sm-nowrap">
+                                <div class="c-header-left">
+                                    <span class="meeting-label badge status-bg-green projectCategory">Technology
+                                        Risk</span>
+                                </div>
+                                <div class="meeting-action">
+                                    <ul class="list-unstyled action-list mb-0">
+                                        <li>
+                                            <a href="#notes-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Notes">
+                                                    <i class="fas fa-file-alt title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#action-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Action">
+                                                    <i class="fas fa-cog title_edit_icon"></i>
+
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#attachment-modal" data-bs-toggle="modal" contenteditable="false"
+                                                style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                    data-bs-title="Attchment">
+                                                    <i class="fas fa-paperclip title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a class="btn btn-link p-0 show" type="button" data-bs-toggle="dropdown"
+                                                aria-expanded="true" contenteditable="false" style="cursor: pointer;">
+
+                                                <span class="icon">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </span>
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                                <li>
+                                                    <a class="dropdown-item" href="#project-planning-add-modal"
+                                                        data-bs-toggle="modal" contenteditable="false"
+                                                        style="cursor: pointer;">Edit</a>
+                                                </li>
+
+                                                <li>
+                                                    <a class="dropdown-item" href="#delete-modal" data-bs-toggle="modal"
+                                                        contenteditable="false" style="cursor: pointer;">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body meeting-details d-flex flex-column">
+                                <div class="form-group">
+                                    <label class="form-label">Title</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">
+                                            Cybersecurity Infrastructure Review
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">
+                                            Comprehensive review of cybersecurity infrastructure and protocols
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge label-bg-green rounded-pill">Completed</span>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Priority</label>
+                                        <div class="d-flex justify-content-end flex-wrap gap-1">
+                                            <span class="badge status-bg-red rounded-pill">High</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+
+
+                                    <div class="form-group text-center">
+                                        <label class="form-label">Risk impact</label>
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+                                            <span class="badge label-bg-red rounded-pill">Critical</span>
+                                        </div>
+                                    </div>
+
+                                  <div class="form-group text-end">
+                                        <label class="form-label">Risk Likelihood</label>
+                                        <div class="d-flex flex-wrap justify-content-end gap-1">
+                                            <span class="badge label-bg-green rounded-pill">Unlikely</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                 <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Date Identified</label>
+                                        <p class="form-control-plaintext">Sep 15, 2025</p>
+
+                                    </div>
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Responsible</label>
+
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig1.jpg" class="rounded-circle"
+                                                    width="24" height="24">
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+<!-- card 5 -->
+                        <div class="card meeting-card">
+                            <div class="card-header flex-wrap flex-sm-nowrap">
+                                <div class="c-header-left">
+                                    <span class="meeting-label badge status-bg-cyan projectCategory">Compliance & Legal Risk</span>
+                                </div>
+                                <div class="meeting-action">
+                                    <ul class="list-unstyled action-list mb-0">
+                                        <li>
+                                            <a href="#notes-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Notes">
+                                                    <i class="fas fa-file-alt title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#action-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Action">
+                                                    <i class="fas fa-cog title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#attachment-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Attchment">
+                                                    <i class="fas fa-paperclip title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a class="btn btn-link p-0 show" type="button" data-bs-toggle="dropdown" aria-expanded="true" contenteditable="false" style="cursor: pointer;">
+                                                <span class="icon">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </span>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                                <li>
+                                                    <a class="dropdown-item" href="#project-planning-add-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#delete-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body meeting-details d-flex flex-column">
+                                <div class="form-group">
+                                    <label class="form-label">Title</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">GDPR Compliance Audit</p>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">Annual audit to ensure GDPR compliance across all data processing activities</p>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge label-bg-yellow rounded-pill">In Review</span>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Priority</label>
+                                        <div class="d-flex justify-content-end flex-wrap gap-1">
+                                            <span class="badge status-bg-red rounded-pill">High</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+
+
+                                    <div class="form-group text-center">
+                                        <label class="form-label">Risk impact</label>
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+                                            <span class="badge label-bg-yellow rounded-pill">Moderate</span>
+                                        </div>
+                                    </div>
+
+                                  <div class="form-group text-end">
+                                        <label class="form-label">Risk Likelihood</label>
+                                        <div class="d-flex flex-wrap justify-content-end gap-1">
+                                            <span class="badge label-bg-red rounded-pill">Almost Certain</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                 <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Date Identified</label>
+                                        <p class="form-control-plaintext">Jan 08, 2025</p>
+
+                                    </div>
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Responsible</label>
+
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig1.jpg" class="rounded-circle" width="24" height="24">
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+<!-- card 6 -->
+                        <div class="card meeting-card">
+                            <div class="card-header flex-wrap flex-sm-nowrap">
+                                <div class="c-header-left">
+                                    <span class="meeting-label badge status-bg-cyan projectCategory">Compliance & Legal Risk</span>
+                                </div>
+                                <div class="meeting-action">
+                                    <ul class="list-unstyled action-list mb-0">
+                                        <li>
+                                            <a href="#notes-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Notes">
+                                                    <i class="fas fa-file-alt title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#action-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Action">
+                                                    <i class="fas fa-cog title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#attachment-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">
+                                                <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Attchment">
+                                                    <i class="fas fa-paperclip title_edit_icon"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a class="btn btn-link p-0 show" type="button" data-bs-toggle="dropdown" aria-expanded="true" contenteditable="false" style="cursor: pointer;">
+                                                <span class="icon">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </span>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                                <li>
+                                                    <a class="dropdown-item" href="#project-planning-add-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#delete-modal" data-bs-toggle="modal" contenteditable="false" style="cursor: pointer;">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body meeting-details d-flex flex-column">
+                                <div class="form-group">
+                                    <label class="form-label">Title</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">GDPR Compliance Audit</p>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <p class="form-control-plaintext line-clamp-2">Annual audit to ensure GDPR compliance across all data processing activities</p>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Status</label>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge label-bg-yellow rounded-pill">In Review</span>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Priority</label>
+                                        <div class="d-flex justify-content-end flex-wrap gap-1">
+                                            <span class="badge status-bg-green rounded-pill">Low</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+
+
+                                    <div class="form-group text-center">
+                                        <label class="form-label">Risk impact</label>
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+                                            <span class="badge label-bg-yellow rounded-pill">minor</span>
+                                        </div>
+                                    </div>
+
+                                  <div class="form-group text-end">
+                                        <label class="form-label">Risk Likelihood</label>
+                                        <div class="d-flex flex-wrap justify-content-end gap-1">
+                                            <span class="badge label-bg-yellow rounded-pill"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                 <div class="d-flex justify-content-between">
+                                    <div class="form-group">
+                                        <label class="form-label">Date Identified</label>
+                                        <p class="form-control-plaintext">Jan 08, 2025</p>
+
+                                    </div>
+
+                                    <div class="form-group text-end">
+                                        <label class="form-label">Responsible</label>
+
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig1.jpg" class="rounded-circle" width="24" height="24">
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+    </main>
+    <footer class="col-12 text-center py-2 copyright">
+        <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+
+    </footer>
+
+    <!-- project-planning-add-modal Start-->
+
+    <div class="modal custom-modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        id="project-planning-add-modal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div
+            class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Risk Planning</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card custom-card border-0">
+                        <div class="card-body">
+                            <div class="grid gap-3">
+                                <!-- <div class="g-col-12 g-col-md-2">
+                    <div class="form-group">
+                      <label for="Risk_id" class="form-label">ID</label>
+                      <input type="text" class="form-control" name="Risk_show_id" id="Risk_show_id" disabled
+                        placeholder="ID">
+                    </div>
+                  </div> -->
+                                <div class="g-col-12">
+                                    <div class="form-group">
+                                        <label for="Risk_title" class="form-label">Title</label>
+                                        <input type="text" class="form-control" id="Risk_title" name="Risk_title"
+                                            placeholder="Title" />
+                                    </div>
+
+                                </div>
+                                <div class="g-col-12">
+                                    <div class="form-group">
+                                        <label for="Risk_description" class="form-label">Risk Description</label>
+                                        <textarea class="form-control modal-custom-textarea" id="Risk_description"
+                                            name="Risk_description" placeholder="Risk Description" rows="3"></textarea>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="g-col-12 g-col-md-6">
+                                    <div class="form-group">
+                                        <label for="Risk_Department" class="form-label">Department</label>
+                                        <select id="Risk_Department" name="" class="form-select modal-custom-select"
+                                            data-placeholder="Select a Department">
+                                            <option value="" disabled selected>Select a Department</option>
+                                            <option value="1049" data-select2-id="4">CEO OFFICE</option>
+                                            <option value="1050" data-select2-id="11">Internal Audit</option>
+                                            <option value="1051" data-select2-id="12">Risk Management</option>
+                                            <option value="1052" data-select2-id="13">Human Resource</option>
+                                            <option value="1053" data-select2-id="14">Public Affairs</option>
+                                            <option value="1054" data-select2-id="15">Board Secretary</option>
+                                            <option value="1055" data-select2-id="16">Technical Division (CTO)</option>
+                                            <option value="1056" data-select2-id="17">Spectrum Planning and Assignment
+                                            </option>
+                                            <option value="1057" data-select2-id="18">Spectrum Monitoring, Standards and
+                                                Technology</option>
+                                            <option value="1058" data-select2-id="19">Information and Communications
+                                                Technology (ICT)</option>
+                                            <option value="1059" data-select2-id="20">Telecom Services(CRO)</option>
+                                            <option value="1060" data-select2-id="21">Postal Servicess</option>
+                                            <option value="1061" data-select2-id="22">Licensing andCompliance</option>
+                                            <option value="1062" data-select2-id="23">Economic Affairs(CEAO)</option>
+                                            <option value="1063" data-select2-id="24">Economics and Tarriff Regulation
+                                            </option>
+                                            <option value="1064" data-select2-id="25">Competition and Research</option>
+                                            <option value="1065" data-select2-id="26">Corporate Services(CFO)</option>
+                                            <option value="1066" data-select2-id="27">Finance</option>
+                                            <option value="1067" data-select2-id="28">Procurement and Administration
+                                            </option>
+                                            <option value="1068" data-select2-id="29">Executive Secretary </option>
+                                            <option value="1069" data-select2-id="30">Internal Audit - Intern</option>
+                                            <option value="1070" data-select2-id="31">Admistrative Assistant TD/HR
+                                            </option>
+                                            <option value="1071" data-select2-id="32">IT Engineer</option>
+                                            <option value="1072" data-select2-id="33">IT Service Desk Engineer</option>
+                                            <option value="1073" data-select2-id="34">Engineer Networks and Systems
+                                            </option>
+                                            <option value="1074" data-select2-id="35">IT - Intern</option>
+                                            <option value="1075" data-select2-id="36">Administrative Assistant</option>
+                                            <option value="1076" data-select2-id="37">Accountant Revenue</option>
+                                            <option value="1077" data-select2-id="38">Accountant - Payments</option>
+                                            <option value="1078" data-select2-id="39">Procurement Officer</option>
+                                            <option value="1079" data-select2-id="40">Operations &amp; Facilities
+                                                Officer</option>
+                                            <option value="1083" data-select2-id="41">Cleaner</option>
+                                            <option value="1084" data-select2-id="42">Administrative Assistant</option>
+                                            <option value="1085" data-select2-id="43">Postal Services Intern</option>
+                                            <option value="1086" data-select2-id="44">Licencing Officer</option>
+                                            <option value="1087" data-select2-id="45">Broadcasting Officer</option>
+                                            <option value="1088" data-select2-id="46">Compliance Officer </option>
+                                            <option value="1089" data-select2-id="47">Administrative Assistant - ESD
+                                            </option>
+                                            <option value="1090" data-select2-id="48">Research Officer</option>
+                                            <option value="1091" data-select2-id="49">Data Analyst </option>
+                                            <option value="1092" data-select2-id="50">ESD30 - Intern</option>
+                                            <option value="1093" data-select2-id="51">Economist</option>
+                                            <option value="1094" data-select2-id="52">ESD20 - Intern</option>
+                                            <option value="1095" data-select2-id="53">Engineer Spectrum Planning and
+                                                Assigment</option>
+                                            <option value="1096" data-select2-id="54">Engineer Sepctrum Monitoring
+                                            </option>
+                                            <option value="1097" data-select2-id="55">Engineer Technology Standards and
+                                                Numbering</option>
+                                            <option value="1098" data-select2-id="56">Messenger/Driver 1</option>
+                                            <option value="1099" data-select2-id="57">Messenger/Driver 2</option>
+                                            <option value="1100" data-select2-id="58">Receptionist</option>
+                                            <option value="1115" data-select2-id="59">test department </option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="g-col-12 g-col-md-6">
+                                    <div class="form-group">
+                                        <label for="category" class="form-label">Category</label>
+                                        <select id="category" name="category" class="form-select modal-custom-select"
+                                            data-placeholder="Select Category" multiple>
+                                            <option>Strategic Risk</option>
+                                            <option>Operational Risk</option>
+                                            <option>Financial Risk</option>
+                                            <option>Compliance & Legal Risk</option>
+                                            <option>Technology Risk</option>
+                                            <option>Reputational Risk</option>
+                                            <option>Human Capital Risk</option>
+                                            <option>Environmental, Social & Governance (ESG) Risk</option>
+                                            <option>Political Risk</option>
+                                            <option>Regulatory Risk</option>
+                                            <option>Market Risk</option>
+                                            <option>Cybersecurity Risk</option>
+                                            <option>Supply Chain Risk</option>
+                                            <option>Project & Program Risk</option>
+                                            <option>Third-Party/Vendor Risk</option>
+                                            <option>Innovation & R&D Risk</option>
+                                            <option>Health & Safety Risk</option>
+                                            <option>Business Continuity & Resilience Risk</option>
+                                            <option>Ethical/Conduct Risk</option>
+                                            <option>Investment Risk</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="g-col-12 g-col-md-6">
+                                    <div class="form-group">
+                                        <label for="Risk_DateIdentified" class="form-label">Date Identified</label>
+                                        <input type="text" class="form-control date-range-picker" data-language="en"
+                                            name="Risk_DateIdentified" id="Risk_DateIdentified"
+                                            placeholder="Date Identified" />
+                                    </div>
+
+                                </div>
+
+                                <div class="g-col-12 g-col-md-6">
+                                    <div class="form-group">
+                                        <label for="Risk_Likelihood" class="form-label">Risk Likelihood</label>
+                                        <select id="Risk_Likelihood" name="Risk_Likelihood"
+                                            class="form-select modal-custom-select"
+                                            data-placeholder="Select Risk Likelihood">
+                                            <option value="Rare">Rare</option>
+                                            <option value="Unlikely">Unlikely</option>
+                                            <option value="Possible">Possible</option>
+                                            <option value="Almost Certain">Almost Certain</option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                                <div class="g-col-12 g-col-md-6">
+                                    <div class="form-group">
+                                        <label for="Risk_Impact" class="form-label">Risk Impact</label>
+                                        <select id="Risk_Impact" name="Risk_Impact"
+                                            class="form-select modal-custom-select"
+                                            data-placeholder="Select Risk Impact">
+                                            <option value="Negligible">Negligible</option>
+                                            <option value="Minor">Minor</option>
+                                            <option value="Moderate">Moderate</option>
+                                            <option value="Major">Major</option>
+                                            <option value="Critical">Critical</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                                <div class="g-col-12 g-col-md-6">
+                                    <div class="form-group">
+                                        <label for="kpi_fields" class="form-label">Priority</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input green" type="radio" name="status"
+                                                    id="statusGreen" value="green">
+                                                <label class="form-check-label" for="statusGreen">High</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input orange" type="radio" name="status"
+                                                    id="statusOrange" value="orange">
+                                                <label class="form-check-label" for="statusOrange">Medium</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input red" type="radio" name="status"
+                                                    id="statusRed" value="red">
+                                                <label class="form-check-label" for="statusRed">Low</label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="g-col-12">
+                                    <div class="form-group">
+                                        <label for="Risk_Mitigation_Strategy" class="form-label">Mitigation
+                                            Strategy</label>
+                                        <input type="text" class="form-control" id="Risk_Mitigation_Strategy"
+                                            name="Risk_Mitigation_Strategy" placeholder="Mitigation Strategy" />
+                                    </div>
+
+                                </div>
+                                <div class="g-col-12">
+                                    <div class="form-group">
+                                        <label for="Risk_Contingency_Plan" class="form-label">Contingency Plan</label>
+                                        <input type="text" class="form-control" id="Risk_Contingency_Plan"
+                                            name="Risk_Contingency_Plan" placeholder="Contingency Plan" />
+                                    </div>
+
+                                </div>
+                                <div class="g-col-12 g-col-md-6">
+                                    <div class="form-group">
+                                        <label for="Risk_owner" class="form-label">Owner/Responsible Person</label>
+                                        <select id="Risk_owner" name="Risk_owner"
+                                            class="form-select modal-custom-select"
+                                            data-placeholder="Select Owner/Responsible Person">
+                                            <option value="" disabled selected>Select Owner/Responsible Person</option>
+                                            <option value="2241">Nizam Goolam</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="g-col-12 g-col-md-6">
+                                    <div class="form-group">
+                                        <label for="statusTypeobjective" class="form-label">Status</label>
+                                        <select id="statusTypeobjective" name="statusTypeobjective"
+                                            class="form-select modal-custom-select" aria-invalid="false">
+                                            <option value="" selected disabled>Select Status</option>
+                                            <option value="identified">Identified</option>
+                                            <option value="in_progress">In Progress</option>
+                                            <option value="mitigated">Mitigated</option>
+                                            <option value="closed">Closed</option>
+
+
+                                        </select>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" value="Save">Save</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- project-planning-add-modal End-->
+    <!-- delete-modal start-->
+    <div class="modal custom-modal custom-delete-modal fade" id="delete-modal" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="--stratroom-modal-width:320px">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="card custom-card delete-card border-0">
+                        <div class="card-body">
+
+                            <div class="delete-box">
+                                <h4 class="title">Do you really want to delete?</h4>
+                                <div class="btn-wrap">
+                                    <button type="button" class="btn btn-sm btn-label-secondary rounded-pill"
+                                        data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                    <button class="btn btn-sm btn-danger rounded-pill">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- delete-modal end-->
+
+
+    <!--  Notes modal :::::::::::::::::::::::::::::::::::::::: -->
+    <div class="modal custom-modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="notes-modal"
+        tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div
+            class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Notes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table tab-sm table-bordered align-center" id="kpidrilldownTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Recommendation</th>
+                                <th class="text-center">Responsible</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea class="form-control" placeholder="Notes" rows="3"></textarea>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-start justify-content-center">
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Kim Karlos">
+                                                <img src="assets/images/user/user9.jpg" class="rounded-circle"
+                                                    alt="Kim Karlos" width="24" height="24">
+                                            </li>
+
+                                            <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="John Doe">
+                                                <img src="assets/images/user/user9.jpg" class="rounded-circle"
+                                                    alt="John Doe" width="24" height="24">
+                                            </li>
+
+
+                                            <li class="avatar avatar-xs pull-up" href="#attendess-list"
+                                                data-bs-toggle="modal">
+                                                <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="3 more">+3</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td class="text-end align-middle">
+                                    <div class="table-actions justify-content-center">
+                                        <a class="btn btn-sm btn-icon">
+                                            <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                data-bs-title="Delete">
+                                                <img src="assets/images/icons/delete-i.svg" width="12" height="12" />
+                                            </span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea class="form-control" placeholder="Notes" rows="3"></textarea>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-start justify-content-center">
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Kim Karlos">
+                                                <img src="assets/images/user/user9.jpg" class="rounded-circle"
+                                                    alt="Kim Karlos" width="24" height="24">
+                                            </li>
+
+                                            <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="John Doe">
+                                                <img src="assets/images/user/user9.jpg" class="rounded-circle"
+                                                    alt="John Doe" width="24" height="24">
+                                            </li>
+
+
+                                            <li class="avatar avatar-xs pull-up" href="#attendess-list"
+                                                data-bs-toggle="modal">
+                                                <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="3 more">+3</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td class="text-end align-middle">
+
+
+                                    <div class="table-actions justify-content-center">
+                                        <a class="btn btn-sm btn-icon">
+                                            <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                data-bs-title="Add">
+                                                <i class="fas fa-plus title_edit_icon"></i>
+                                            </span>
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-icon">
+                                            <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                data-bs-title="Delete">
+                                                <img src="assets/images/icons/delete-i.svg" width="12" height="12" />
+                                            </span>
+                                        </a>
+                                    </div>
+
+
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" value="Save">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  action modal :::::::::::::::::::::::::::::::::::::::: -->
+    <div class="modal custom-modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="action-modal"
+        tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-bordered align-center">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Recommendation</th>
+                                <th class="text-center">By Date</th>
+                                <th class="text-center">Responsible</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea class="form-control" placeholder="Notes" rows="3"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="date" class="form-control" id="" placeholder="">
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-start justify-content-center">
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Kim Karlos">
+                                                <img src="assets/images/user/user9.jpg" class="rounded-circle"
+                                                    alt="Kim Karlos" width="24" height="24">
+                                            </li>
+
+                                            <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="John Doe">
+                                                <img src="assets/images/user/user9.jpg" class="rounded-circle"
+                                                    alt="John Doe" width="24" height="24">
+                                            </li>
+
+
+                                            <li class="avatar avatar-xs pull-up" href="#attendess-list"
+                                                data-bs-toggle="modal">
+                                                <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="3 more">+3</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+
+
+                                    <select id="action-status-01" name="action-status"
+                                        class="form-select select-dropdown-action" data-placeholder="Select Status">
+                                        <option value="" selected disabled>Select Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+
+                                </td>
+                                <td class="text-end align-middle">
+                                    <div class="table-actions justify-content-center">
+                                        <a class="btn btn-sm btn-icon">
+                                            <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                data-bs-title="Delete">
+                                                <img src="assets/images/icons/delete-i.svg" width="12" height="12" />
+                                            </span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <textarea class="form-control" placeholder="Notes" rows="3"></textarea>
+
+                                </td>
+                                <td>
+
+                                    <input type="date" class="form-control" id="" placeholder="">
+
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-start justify-content-center">
+                                        <ul class="list-unstyled d-inline-flex align-items-end  avatar-group mb-0">
+
+                                            <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Kim Karlos">
+                                                <img src="assets/images/user/user9.jpg" class="rounded-circle"
+                                                    alt="Kim Karlos" width="24" height="24">
+                                            </li>
+
+                                            <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="John Doe">
+                                                <img src="assets/images/user/user9.jpg" class="rounded-circle"
+                                                    alt="John Doe" width="24" height="24">
+                                            </li>
+
+
+                                            <li class="avatar avatar-xs pull-up" href="#attendess-list"
+                                                data-bs-toggle="modal">
+                                                <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="3 more">+3</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+
+                                    <select id="action-status-02" name="action-status"
+                                        class="form-select select-dropdown-action" data-placeholder="Select Status">
+                                        <option value="" selected disabled>Select Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+
+
+                                </td>
+                                <td>
+
+
+                                    <div class="table-actions justify-content-center">
+                                        <a class="btn btn-sm btn-icon">
+                                            <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                data-bs-title="Add">
+                                                <i class="fas fa-plus title_edit_icon"></i>
+                                            </span>
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-icon">
+                                            <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                data-bs-title="Delete">
+                                                <img src="assets/images/icons/delete-i.svg" width="12" height="12" />
+                                            </span>
+                                        </a>
+                                    </div>
+
+
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" value="Save">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  attachment modal :::::::::::::::::::::::::::::::::::::::: -->
+    <div class="modal custom-modal fade" id="attachment-modal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div
+            class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Attachments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="attachment-upload">
+                                <div class="input-group mb-1">
+                                    <input type="file" class="form-control" id="inputGroupFile02"
+                                        accept=".pdf,.ppt,.jpeg,.xlsx,.doc,.docx">
+                                    <!-- <label class="input-group-text" for="inputGroupFile02">Upload</label> -->
+                                </div>
+                                <div class="mb-3 form-text">Supported file type (jpeg,pdf,pptx,xlsx,docx)</div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered align-center" id="">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Sr. No.</th>
+                                            <th class="text-center">File Name</th>
+                                            <th class="text-center">Uploaded On</th>
+                                            <th class="text-center">Size</th>
+                                            <th class="text-center">Type</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">1</td>
+                                            <td class="text-center">File Name</td>
+                                            <td class="text-center">23, Nov 2024</td>
+                                            <td class="text-center">100kb</td>
+                                            <td class="text-center">Jpeg</td>
+                                            <td class="text-center align-middle">
+                                                <div class="table-actions justify-content-center ">
+                                                    <a href="" class="btn btn-sm btn-icon">
+                                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                            data-bs-title="Delete">
+                                                            <img src="assets/images/icons/delete-i.svg" width="12"
+                                                                height="12" />
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center">2</td>
+                                            <td class="text-center">File Name</td>
+                                            <td class="text-center">23, Nov 2024</td>
+                                            <td class="text-center">100kb</td>
+                                            <td class="text-center">Jpeg</td>
+                                            <td class="text-center align-middle">
+                                                <div class="table-actions justify-content-center ">
+                                                    <a href="" class="btn btn-sm btn-icon">
+                                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                            data-bs-title="Delete">
+                                                            <img src="assets/images/icons/delete-i.svg" width="12"
+                                                                height="12" />
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" value="Save">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal custom-modal fade" id="attendess-list" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Users</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body d-grid gap-3">
+                    <div class="attendees-search">
+                        <div>
+                            <div class="form-check cusom-check">
+                                <input class="form-check-input" type="checkbox" value="" id="allusers">
+                                <label class="form-check-label" for="allusers">
+                                    All Users
+                                </label>
+                            </div>
+                        </div>
+                        <div class="search">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Recipient's username"
+                                    aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                    <i class="fas fa-search" data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Files"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group add-attendees">
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees1">
+                                <label class="form-check-label" for="attendees1">
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker-1.svg" alt="Chris" width="18" height="18">
+                                    </span>
+                                    <span class="name">Chris</span>
+
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees2">
+                                <label class="form-check-label" for="attendees2">
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="Kevin" width="18" height="18">
+                                    </span>
+                                    <span class="name">Kevin</span>
+
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees3">
+                                <label class="form-check-label" for="attendees3">
+
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Richard</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees4">
+                                <label class="form-check-label" for="attendees4">
+
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Stark</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees5">
+                                <label class="form-check-label" for="attendees5">
+
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Warner</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees6">
+                                <label class="form-check-label" for="attendees6">
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Williamson</span>
+
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees7">
+                                <label class="form-check-label" for="attendees7">
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Zara</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- attendess edit modal :::::::::::::::::::::::::::::::::::::::: -->
+    <div class="modal custom-modal fade" id="user_edit_popup" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div
+            class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Users</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="d-grid gap-3">
+                        <div class="attendees-search">
+                            <div>
+                                <div class="form-check cusom-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="allusers">
+                                    <label class="form-check-label" for="allusers">
+                                        All Users
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="search">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" placeholder="Recipient's username"
+                                        aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                        <i class="fas fa-search" data-toggle="tooltip" data-placement="bottom" title=""
+                                            data-original-title="Files"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group add-attendees">
+                            <div class="list-group-item attendee">
+                                <div class="form-check cusom-check form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" name="attendees" id="attendees1">
+                                    <label class="form-check-label" for="attendees1">
+                                        <span class="image">
+                                            <img src="assets/images/icons/speaker-1.svg" alt="Chris" width="18"
+                                                height="18">
+                                        </span>
+                                        <span class="name">Chris</span>
+
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item attendee">
+                                <div class="form-check cusom-check form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" name="attendees" id="attendees2">
+                                    <label class="form-check-label" for="attendees2">
+                                        <span class="image">
+                                            <img src="assets/images/icons/speaker.svg" alt="Kevin" width="18"
+                                                height="18">
+                                        </span>
+                                        <span class="name">Kevin</span>
+
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item attendee">
+                                <div class="form-check cusom-check form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" name="attendees" id="attendees3">
+                                    <label class="form-check-label" for="attendees3">
+
+                                        <span class="image">
+                                            <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                        </span>
+                                        <span class="name">Richard</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item attendee">
+                                <div class="form-check cusom-check form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" name="attendees" id="attendees4">
+                                    <label class="form-check-label" for="attendees4">
+
+                                        <span class="image">
+                                            <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                        </span>
+                                        <span class="name">Stark</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item attendee">
+                                <div class="form-check cusom-check form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" name="attendees" id="attendees5">
+                                    <label class="form-check-label" for="attendees5">
+
+                                        <span class="image">
+                                            <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                        </span>
+                                        <span class="name">Warner</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item attendee">
+                                <div class="form-check cusom-check form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" name="attendees" id="attendees6">
+                                    <label class="form-check-label" for="attendees6">
+                                        <span class="image">
+                                            <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                        </span>
+                                        <span class="name">Williamson</span>
+
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="list-group-item attendee">
+                                <div class="form-check cusom-check form-check-reverse">
+                                    <input class="form-check-input" type="checkbox" name="attendees" id="attendees7">
+                                    <label class="form-check-label" for="attendees7">
+                                        <span class="image">
+                                            <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                        </span>
+                                        <span class="name">Zara</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- attendess edit END -->
+
+    <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+    <div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Templates</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card custom-card border-0">
+                        <div class="card-body">
+                            <form id="menuForm">
+                                <div class="grid gap-3">
+                                    <div class="g-col-12">
+                                        <div class="form-group">
+                                            <label for="menuName" class="form-label">Name</label>
+
+                                            <input type="text" class="form-control" id="menuName"
+                                                placeholder="Enter Name" required>
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12 g-col-md-6">
+                                        <div class="form-group">
+                                            <label for="pageType" class="form-label">Page Type</label>
+
+                                            <select id="pageType" class="form-select" required>
+                                                <option value="">Select Page Type</option>
+                                                <option value="Plan">Plan</option>
+                                                <option value="Measure">Measure</option>
+                                                <option value="Execute">Execute</option>
+                                                <option value="Govern">Govern</option>
+                                                <option value="Meet">Meet</option>
+                                                <option value="Report">Report</option>
+                                                <option value="Masters">Masters</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12 g-col-md-6">
+                                        <div class="form-group">
+                                            <label for="boardType" class="form-label">Board Type</label>
+                                            <select id="boardType" class="form-select" required>
+                                                <option value="">Select Board Type</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" id="saveMenuBtn">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- create-template END -->
+
+    <!-- Notification Offcanvas for Mobile -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvas"
+        aria-labelledby="notificationOffcanvasLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="notificationOffcanvasLabel">Notifications</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">New message from John Smith</div>
+                            <small class="text-muted">Risk approval required for Phase 2</small>
+                            <div class="text-muted small mt-1">2 minutes ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">System Maintenance Alert</div>
+                            <small class="text-muted">Scheduled maintenance on Sunday at 2:00 AM</small>
+                            <div class="text-muted small mt-1">1 hour ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">Task Completed</div>
+                            <small class="text-muted">Data backup process finished successfully</small>
+                            <div class="text-muted small mt-1">3 hours ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">New Team Member</div>
+                            <small class="text-muted">Sarah Johnson joined the Marketing team</small>
+                            <div class="text-muted small mt-1">1 day ago</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="p-3 border-top text-center">
+                <a href="#" class="btn btn-sm btn-outline-primary">View All Notifications</a>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Menu Text</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editInput" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Context Menu -->
+    <div id="contextMenu" class="custom-context-menu">
+        <button id="editItem">Edit</button>
+        <button id="deleteItem">Delete</button>
+        <button id="moveUpItem">Move Up</button>
+        <button id="moveDownItem">Move Down</button>
+    </div>
+
+
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+
+    <link href="assets/css/jquery-ui.min.css" rel="stylesheet">
+    <script src="assets/js/jquery-ui.min.js"></script>
+
+
+    <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+    <script src="assets/js/moment.js"></script>
+    <script src="assets/js/knockout-3.5.0.js"></script>
+    <script src="assets/js/daterangepicker.min.js"></script>
+
+    <link href="assets/css/select2.min.css" rel="stylesheet" />
+    <script src="assets/js/select2.min.js"></script>
+
+
+    <script src="assets/js/paging.js"></script>
+
+    <link href="assets/css/pickr.min.css" rel="stylesheet">
+    <script src="assets/js/pickr.es5.min.js"></script>
+    <script src="assets/js/widgets.js"></script>
+
+    <script src="assets/js/main.js"></script>
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="assets/flatpickr/flatpickr.min.css">
+    <script src="assets/flatpickr/flatpickr.js"></script>
+    <script>
+        $('.modal-custom-select').each(function () {
+            let $this = $(this);
+            $this.select2({
+                width: "100%",
+                dropdownParent: $this.closest('.modal')
+            });
+        });
+        document.querySelectorAll('.date-range-picker').forEach(function (el) {
+            const pickerId = el.getAttribute('id'); // Find the element's ID
+            flatpickr(`#${pickerId}`, {
+                mode: "range",
+                dateFormat: "M j, Y",
+                // defaultDate: ["2025-08-12", "2025-08-13"],
+                onClose: function (selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2) {
+                        const start = instance.formatDate(selectedDates[0], "M j, Y");
+                        const end = instance.formatDate(selectedDates[1], "M j, Y");
+                        el.value = `${start} to ${end}`; // Set formatted value in input
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+
+        const RiskCategories = [
+            "Strategic Risk", "Operational Risk", "Financial Risk", "Compliance & Legal Risk",
+            "Technology Risk", "Reputational Risk", "Human Capital Risk", "Environmental, Social & Governance (ESG) Risk",
+            "Political Risk", "Regulatory Risk", "Market Risk", "Cybersecurity Risk", "Supply Chain Risk",
+            "Project & Program Risk", "Third-Party/Vendor Risk", "Innovation & R&D Risk",
+            "Health & Safety Risk", "Business Continuity & Resilience Risk", "Ethical/Conduct Risk", "Investment Risk"
+        ];
+
+        const initiativeCategoryPopoverTrigger = document.getElementById('popoverFilterRiskPlanningCategory');
+
+        let initiativeCategoryPopover;
+
+        const createRiskCategoryContent = () => {
+            const content = document.createElement('div');
+            content.innerHTML = `
+      <div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="h6 mb-0">
+           <i class="fas fa-filter me-1 text-primary"></i> Filter Risk Category
+          </h5>
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <button class="btn btn-sm btn-light select-all-risk">Select All</button>
+          <button class="btn btn-sm btn-light deselect-all-risk">Deselect All</button>
+        </div>
+        <div class="d-flex flex-column gap-2 pageViewOption" style="max-height: 300px; overflow-y: auto;">
+          ${RiskCategories.map(category => `
+            <div class="form-check">
+              <input class="form-check-input filter-risk" id="rc-${category.replace(/\s+/g, '')}" type="checkbox" value="${category}" checked>
+              <label class="form-check-label" for="rc-${category.replace(/\s+/g, '')}">${category}</label>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+            return content;
+        };
+
+        initiativeCategoryPopover = new bootstrap.Popover(initiativeCategoryPopoverTrigger, {
+            html: true,
+            placement: 'bottom',
+            content: createRiskCategoryContent,
+            sanitize: false,
+            container: 'body',
+            trigger: 'manual'
+        });
+
+        // Open popover on button click
+        initiativeCategoryPopoverTrigger.addEventListener('click', () => {
+            initiativeCategoryPopover.toggle();
+        });
+
+        function filterKpiCardsByInitiative() {
+            const checked = Array.from(document.querySelectorAll('.filter-risk:checked')).map(cb => cb.value);
+            const allChecked = checked.length === RiskCategories.length;
+            const cards = document.querySelectorAll('.card.meeting-card');
+
+            cards.forEach(card => {
+                const riskText = card.querySelector('.projectCategory')?.textContent.trim();
+                card.style.display = (allChecked || checked.includes(riskText)) ? '' : 'none';
+            });
+        }
+        // Bind events
+
+        // filterKpiCardsByInitiative();
+        // Delegate interactions
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.btn-close')) {
+                initiativeCategoryPopover.hide();
+            }
+            document.querySelectorAll('.filter-risk').forEach(cb => {
+                cb.addEventListener('change', filterKpiCardsByInitiative);
+            });
+            if (e.target.classList.contains('select-all-risk')) {
+                document.querySelectorAll('.filter-risk').forEach(cb => cb.checked = true);
+                filterKpiCardsByInitiative();
+            }
+            if (e.target.classList.contains('deselect-all-risk')) {
+                document.querySelectorAll('.filter-risk').forEach(cb => cb.checked = false);
+                filterKpiCardsByInitiative();
+            }
+        });
+    </script>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Auto position notification dropdown or show offcanvas on mobile
+        document.addEventListener('DOMContentLoaded', function () {
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            const dropdownMenu = document.querySelector('[aria-labelledby="notificationDropdown"]');
+            const notificationOffcanvas = document.getElementById('notificationOffcanvas');
+
+            if (notificationDropdown && dropdownMenu && notificationOffcanvas) {
+                // Override dropdown behavior on mobile
+                notificationDropdown.addEventListener('click', function (e) {
+                    const viewportWidth = window.innerWidth;
+
+                    if (viewportWidth <= 576) {
+                        // Mobile: prevent dropdown and show offcanvas instead
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        // Remove dropdown attributes temporarily
+                        const originalToggle = this.getAttribute('data-bs-toggle');
+                        this.removeAttribute('data-bs-toggle');
+
+                        // Show offcanvas
+                        const offcanvasInstance = new bootstrap.Offcanvas(notificationOffcanvas);
+                        offcanvasInstance.show();
+
+                        // Restore dropdown attribute after a delay
+                        setTimeout(() => {
+                            this.setAttribute('data-bs-toggle', originalToggle);
+                        }, 100);
+
+                        return false;
+                    }
+                });
+
+                notificationDropdown.addEventListener('show.bs.dropdown', function (e) {
+                    const viewportWidth = window.innerWidth;
+
+                    // Prevent dropdown on mobile
+                    if (viewportWidth <= 576) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // Reset classes for desktop
+                    dropdownMenu.classList.remove('dropdown-menu-end', 'dropdown-menu-start');
+
+                    // Get dropdown trigger position
+                    const triggerRect = notificationDropdown.getBoundingClientRect();
+                    const dropdownWidth = 350; // Default dropdown width
+                    const scrollbarWidth = 15; // Approximate scrollbar width
+
+                    // Calculate available space on right and left
+                    const spaceRight = viewportWidth - triggerRect.right - scrollbarWidth;
+                    const spaceLeft = triggerRect.left;
+
+                    // Auto position based on available space
+                    if (spaceRight >= dropdownWidth) {
+                        // Enough space on right, align to start (left)
+                        dropdownMenu.classList.add('dropdown-menu-start');
+                    } else if (spaceLeft >= dropdownWidth) {
+                        // Not enough space on right but enough on left, align to end (right)
+                        dropdownMenu.classList.add('dropdown-menu-end');
+                    } else {
+                        // Try to center or use the side with more space
+                        if (spaceRight > spaceLeft) {
+                            dropdownMenu.classList.add('dropdown-menu-start');
+                        } else {
+                            dropdownMenu.classList.add('dropdown-menu-end');
+                        }
+                    }
+                });
+
+                // Reset positioning on window resize
+                window.addEventListener('resize', function () {
+                    const viewportWidth = window.innerWidth;
+
+                    // Close dropdown if switching to mobile
+                    if (viewportWidth <= 576 && dropdownMenu.classList.contains('show')) {
+                        const dropdownInstance = bootstrap.Dropdown.getInstance(notificationDropdown);
+                        if (dropdownInstance) {
+                            dropdownInstance.hide();
+                        }
+                    }
+
+                    // Trigger repositioning if dropdown is open on desktop
+                    if (viewportWidth > 576 && dropdownMenu.classList.contains('show')) {
+                        notificationDropdown.dispatchEvent(new Event('show.bs.dropdown'));
+                    }
+                });
+            }
+        });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        let contextMenu = document.getElementById('contextMenu');
+        let targetLi = null;
+
+        // Right-click setup
+        document.querySelectorAll('.submenu>li').forEach(item => {
+            item.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                targetLi = e.currentTarget;
+                contextMenu.style.top = `${e.pageY}px`;
+                contextMenu.style.left = `${e.pageX}px`;
+                contextMenu.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', () => {
+            contextMenu.style.display = 'none';
+        });
+
+        // Edit
+        document.getElementById('editItem').onclick = () => {
+            if (!targetLi) return;
+            const aTag = targetLi.querySelector('a');
+            document.getElementById('editInput').value = aTag ? aTag.textContent.trim() : '';
+            new bootstrap.Modal('#editModal').show();
+        };
+
+        document.getElementById('editForm').onsubmit = (e) => {
+            e.preventDefault();
+            const newText = document.getElementById('editInput').value;
+            const aTag = targetLi.querySelector('a');
+            if (aTag) aTag.textContent = newText;
+            bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+        };
+
+        // Delete
+        document.getElementById('deleteItem').onclick = () => {
+            if (targetLi && confirm('Are you sure you want to delete this item?')) {
+                targetLi.remove();
+                contextMenu.style.display = 'none';
+            }
+        };
+
+        // Move Up
+        document.getElementById('moveUpItem').onclick = () => {
+            if (targetLi && targetLi.previousElementSibling) {
+                targetLi.parentNode.insertBefore(targetLi, targetLi.previousElementSibling);
+            }
+        };
+
+        // Move Down
+        document.getElementById('moveDownItem').onclick = () => {
+            if (targetLi && targetLi.nextElementSibling) {
+                targetLi.parentNode.insertBefore(targetLi.nextElementSibling, targetLi);
+            }
+        };
+
+        // Drag-and-drop for all submenus
+        document.querySelectorAll('.submenu').forEach(menu => {
+            new Sortable(menu, {
+                animation: 150,
+                ghostClass: 'bg-light'
+            });
+        });
+    </script>
+
+    <script>
+        const boardTypes = [
+            "Strategy Planner", "SWOT", "PESTEL", "Scorecard", "Risks & Risks", "Tasks",
+            "Budget Approval", "Budgets", "Risk Register", "Risk Approval", "Compliance",
+            "Meetings", "My Cockpit", "My Performance", "Whiteboard", "Products/Services", "Process (POS)", "Vital Records", "Technology & IT", "Facilities & Utilities", "Personal (HR)", "ISO", "Budget"
+        ];
+
+        const pageBoardMap = {
+            Plan: ["Strategy Planner", "SWOT", "PESTEL"],
+            Measure: ["Scorecard"],
+            Execute: ["Risks & Risks", "Tasks", "Budget Approval", "Budgets"],
+            Govern: ["Risk Register", "Risk Approval", "Compliance"],
+            Meet: ["Meetings"],
+            Report: ["Whiteboard", "My Cockpit"],
+            Masters: ["Products/Services", "Process (POS)", "Vital Records", "Technology & IT", "Facilities & Utilities", "Personal (HR)", "ISO", "Budget"]
+        };
+
+        const pageSelect = document.getElementById("pageType");
+        const boardSelect = document.getElementById("boardType");
+        const menuList = document.getElementById("menuList");
+
+        pageSelect.addEventListener("change", () => {
+            const selected = pageSelect.value;
+            boardSelect.innerHTML = '<option value="">Select Board Type</option>';
+            if (pageBoardMap[selected]) {
+                pageBoardMap[selected].forEach(board => {
+                    const option = document.createElement("option");
+                    option.value = board;
+                    option.textContent = board;
+                    boardSelect.appendChild(option);
+                });
+            }
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>

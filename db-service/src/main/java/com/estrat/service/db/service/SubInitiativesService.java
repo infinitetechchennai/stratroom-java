@@ -46,9 +46,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,7 +69,7 @@ public class SubInitiativesService {
     protected SubInitiativesMapService subInitiativesMapService;
     @Autowired
     private DBCache dbCache;
-    private Logger log = Logger.getLogger(SubInitiativesService.class);
+    private Logger log = LoggerFactory.getLogger(SubInitiativesService.class);
 
     public Optional<SubInitiatives> findById(long id) {
         return this.subInitiativesRepository.findById(id);

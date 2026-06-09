@@ -76,13 +76,13 @@ public class RiskCauseAndConsequenceService {
 
     public List<RiskCauseAndConsequenceDTO> findAllByRiskId(Long riskId) {
         String url = String.join((CharSequence)"/", this.riskCauseListByRiskIdUrl, String.valueOf(riskId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<RiskCauseAndConsequenceDTO> findAllByEmpId(Long empId) {
         String url = String.join((CharSequence)"/", this.riskCauseListByEmpIdUrl, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -109,18 +109,18 @@ public class RiskCauseAndConsequenceService {
 
     public List<RiskConsequenceDTO> findAllByConqId(Long conqId) {
         String url = String.join((CharSequence)"/", this.riskConsequenceListUrl, String.valueOf(conqId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Map<String, Object>> findAllRiskCause() {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(this.allRiskCauseListUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Map<String, Object>> findAllRiskCause(long riskId) {
         String url = String.join((CharSequence)"/", this.riskCauseNameListUrl, String.valueOf(riskId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

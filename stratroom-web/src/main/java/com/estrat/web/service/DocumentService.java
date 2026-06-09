@@ -52,7 +52,7 @@ public class DocumentService {
 
     public List<EmployeeDocumentsDTO> findAll(long empId) {
         String url = this.documentsList + "/" + empId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

@@ -21,13 +21,14 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * Exception performing whole class analysis ignored.
  */
 public class DateUtil {
-    private static Logger log = Logger.getLogger(DateUtil.class);
+    private static Logger log = LoggerFactory.getLogger(DateUtil.class);
 
     public static String mapToString(LocalDateTime localDateTime) {
         String formatteddDate = "";

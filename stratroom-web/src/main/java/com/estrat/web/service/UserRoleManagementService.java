@@ -54,14 +54,14 @@ public class UserRoleManagementService {
 
     public List<UserDTO> findByUser(FindDTO findDTO) {
         String url = this.userUrl + "/findByUser";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List userDTOList = (List)this.commonRestTemplate.getForObject(url, findDTO, (ParameterizedTypeReference)parameterizedTypeReference);
         return userDTOList;
     }
 
     public List<UserDTO> getUserList(FindDTO findDTO) {
         String url = this.userUrl + "/userList";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List userDTOList = (List)this.commonRestTemplate.getForObject(url, findDTO, (ParameterizedTypeReference)parameterizedTypeReference);
         return userDTOList;
     }

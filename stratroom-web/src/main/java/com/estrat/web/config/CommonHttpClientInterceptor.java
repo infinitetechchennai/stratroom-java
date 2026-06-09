@@ -15,7 +15,8 @@ package com.estrat.web.config;
 
 import com.estrat.web.util.UserThreadLocal;
 import java.io.IOException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -24,7 +25,7 @@ import org.springframework.http.client.ClientHttpResponse;
 
 public class CommonHttpClientInterceptor
 implements ClientHttpRequestInterceptor {
-    private Logger logger = Logger.getLogger(CommonHttpClientInterceptor.class);
+    private Logger logger = LoggerFactory.getLogger(CommonHttpClientInterceptor.class);
     @Value(value="${jwt.generation.enabled}")
     private boolean jwtGeneration;
 

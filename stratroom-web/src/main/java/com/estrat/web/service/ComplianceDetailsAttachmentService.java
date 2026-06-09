@@ -50,7 +50,7 @@ public class ComplianceDetailsAttachmentService {
 
     public List<ComplianceDetailsAttachmentDTO> findAll(Long complainId) {
         String url = this.scoreCardUrl + "ComplianceAttachList/" + complainId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }

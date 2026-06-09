@@ -17,9 +17,10 @@ package com.estrat.service.db.dao;
 
 import com.estrat.service.db.bean.po.OrgTracker;
 import com.estrat.service.db.dao.EmployeeDAO;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.apache.log4j.Logger;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,7 +28,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrgTrackDAO {
-    private Logger log = Logger.getLogger(EmployeeDAO.class);
+    private Logger log = LoggerFactory.getLogger(EmployeeDAO.class);
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired

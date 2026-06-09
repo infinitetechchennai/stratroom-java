@@ -10,8 +10,8 @@ package com.estrat.service.db.bean.po;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class KpiTargetEmbeddedId

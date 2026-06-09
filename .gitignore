@@ -1,3 +1,8 @@
 *.log
 logs/
 stratroom-web/logs/
+/.metadata/
+
+
+orgstructurev2.sql
+stratroomlicense.sql

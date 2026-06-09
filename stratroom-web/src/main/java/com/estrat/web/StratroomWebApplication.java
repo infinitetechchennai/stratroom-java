@@ -51,7 +51,7 @@ import com.estrat.web.valve.EmbeddedValveCollection;
 import com.estrat.web.valve.LicenseVerificationValve;
 import java.util.Collection;
 import java.util.Properties;
-import javax.servlet.Servlet;
+import jakarta.servlet.Servlet;
 import org.apache.catalina.Valve;
 import org.springframework.aop.Advisor;
 import org.springframework.boot.SpringApplication;
@@ -71,7 +71,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.util.unit.DataSize;
+import jakarta.servlet.MultipartConfigElement;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -150,10 +152,11 @@ public class StratroomWebApplication {
     }
 
     @Bean
-    public CommonsMultipartResolver commonsMultipartResolver() {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        commonsMultipartResolver.setMaxUploadSize(500000000L);
-        return commonsMultipartResolver;
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxFileSize(DataSize.ofBytes(500000000L));
+        factory.setMaxRequestSize(DataSize.ofBytes(500000000L));
+        return factory.createMultipartConfig();
     }
 
     @Bean(value={"privilegeAdvisor"})

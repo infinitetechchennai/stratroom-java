@@ -32,7 +32,7 @@ import com.estrat.service.etl.util.KPIThreadLocal;
 import com.estrat.service.etl.util.KPIUtil;
 import com.estrat.service.etl.util.NotificationUtil;
 import com.estrat.service.etl.util.UserThreadLocal;
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,13 +47,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataUtil {
-    private Logger log = Logger.getLogger(DataUtil.class);
+    private Logger log = LoggerFactory.getLogger(DataUtil.class);
     private KPIUtil kpiUtil;
     @Autowired
     protected NotificationUtil notificationUtil;
@@ -98,7 +99,7 @@ public class DataUtil {
                 }
                 catch (Exception ex) {
                     result = new BigDecimal(0);
-                    this.log.error((Object)"Exception while processing custom performance", (Throwable)ex);
+                    this.log.error("Exception while processing custom performance", ex);
                 }
                 if (customPerformance.isWeightEnbled()) {
                     String weight = Objects.nonNull(scoreCardDTO.getScoreCardValue().get("weight")) && StringUtils.isNotEmpty((CharSequence)scoreCardDTO.getScoreCardValue().get("weight").toString()) ? scoreCardDTO.getScoreCardValue().get("weight").toString() : "0";
@@ -243,7 +244,7 @@ public class DataUtil {
                 }
                 catch (Exception ex) {
                     result = new BigDecimal(0);
-                    this.log.error((Object)"Exception while processing custom performance", (Throwable)ex);
+                    this.log.error("Exception while processing custom performance", ex);
                 }
                 if (customPerformance.isWeightEnbled()) {
                     String weight = Objects.nonNull(objectivesDTO.getObjectivesValue().get("weight")) && StringUtils.isNotEmpty((CharSequence)objectivesDTO.getObjectivesValue().get("weight").toString()) ? objectivesDTO.getObjectivesValue().get("weight").toString() : "0";
@@ -272,13 +273,13 @@ public class DataUtil {
             String statusLight = (String)statusMap.keySet().stream().findFirst().get();
             return StringUtils.isNotEmpty((CharSequence)statusLight) ? statusLight : "yellow fas fa-flag";
         }
-        com.google.common.base.Predicate<java.util.Map.Entry<String, Double>> maxWeightPredicate = e -> e.getValue() >= 100.0;
-        String maxWeightStatus = statusMap.entrySet().stream().filter(e -> maxWeightPredicate.apply(e)).map(Map.Entry::getKey).findFirst().orElse("");
+        java.util.function.Predicate<java.util.Map.Entry<String, Double>> maxWeightPredicate = e -> e.getValue() >= 100.0;
+        String maxWeightStatus = statusMap.entrySet().stream().filter(e -> maxWeightPredicate.test(e)).map(Map.Entry::getKey).findFirst().orElse("");
         if (StringUtils.isNotEmpty((CharSequence)maxWeightStatus)) {
             return maxWeightStatus;
         }
-        com.google.common.base.Predicate<java.util.Map.Entry<String, Double>> statusPredicate = e -> e.getKey().contains("red") && e.getValue() >= 50.0;
-        String statusLight = statusMap.entrySet().stream().filter(e -> statusPredicate.apply(e)).map(Map.Entry::getKey).findFirst().orElse("");
+        java.util.function.Predicate<java.util.Map.Entry<String, Double>> statusPredicate = e -> e.getKey().contains("red") && e.getValue() >= 50.0;
+        String statusLight = statusMap.entrySet().stream().filter(e -> statusPredicate.test(e)).map(Map.Entry::getKey).findFirst().orElse("");
         return StringUtils.isNotEmpty((CharSequence)statusLight) ? statusLight : "yellow fas fa-flag";
     }
 
@@ -297,13 +298,13 @@ public class DataUtil {
             String statusLight = (String)statusMap.keySet().stream().findFirst().get();
             return StringUtils.isNotEmpty((CharSequence)statusLight) ? statusLight : "yellow fas fa-flag";
         }
-        com.google.common.base.Predicate<java.util.Map.Entry<String, Double>> maxWeightPredicate = e -> e.getValue() >= 100.0;
-        String maxWeightStatus = statusMap.entrySet().stream().filter(e -> maxWeightPredicate.apply(e)).map(Map.Entry::getKey).findFirst().orElse("");
+        java.util.function.Predicate<java.util.Map.Entry<String, Double>> maxWeightPredicate = e -> e.getValue() >= 100.0;
+        String maxWeightStatus = statusMap.entrySet().stream().filter(e -> maxWeightPredicate.test(e)).map(Map.Entry::getKey).findFirst().orElse("");
         if (StringUtils.isNotEmpty((CharSequence)maxWeightStatus)) {
             return maxWeightStatus;
         }
-        com.google.common.base.Predicate<java.util.Map.Entry<String, Double>> statusPredicate = e -> e.getKey().contains("red") && e.getValue() >= 50.0;
-        String statusLight = statusMap.entrySet().stream().filter(e -> statusPredicate.apply(e)).map(Map.Entry::getKey).findFirst().orElse("");
+        java.util.function.Predicate<java.util.Map.Entry<String, Double>> statusPredicate = e -> e.getKey().contains("red") && e.getValue() >= 50.0;
+        String statusLight = statusMap.entrySet().stream().filter(e -> statusPredicate.test(e)).map(Map.Entry::getKey).findFirst().orElse("");
         return StringUtils.isNotEmpty((CharSequence)statusLight) ? statusLight : "yellow fas fa-flag";
     }
 
@@ -321,13 +322,13 @@ public class DataUtil {
         if (oneKey) {
             return (String)statusMap.keySet().stream().findFirst().get();
         }
-        com.google.common.base.Predicate<java.util.Map.Entry<String, Double>> maxWeightPredicate = e -> e.getValue() >= 100.0;
-        String maxWeightStatus = statusMap.entrySet().stream().filter(e -> maxWeightPredicate.apply(e)).map(Map.Entry::getKey).findFirst().orElse("");
+        java.util.function.Predicate<java.util.Map.Entry<String, Double>> maxWeightPredicate = e -> e.getValue() >= 100.0;
+        String maxWeightStatus = statusMap.entrySet().stream().filter(e -> maxWeightPredicate.test(e)).map(Map.Entry::getKey).findFirst().orElse("");
         if (StringUtils.isNotEmpty((CharSequence)maxWeightStatus)) {
             return maxWeightStatus;
         }
-        com.google.common.base.Predicate<java.util.Map.Entry<String, Double>> statusPredicate = e -> e.getKey().contains("red") && e.getValue() >= 50.0;
-        String statusLight = statusMap.entrySet().stream().filter(e -> statusPredicate.apply(e)).map(Map.Entry::getKey).findFirst().orElse("");
+        java.util.function.Predicate<java.util.Map.Entry<String, Double>> statusPredicate = e -> e.getKey().contains("red") && e.getValue() >= 50.0;
+        String statusLight = statusMap.entrySet().stream().filter(e -> statusPredicate.test(e)).map(Map.Entry::getKey).findFirst().orElse("");
         return StringUtils.isNotEmpty((CharSequence)statusLight) ? (String)this.kpiUtil.getStatusKeyMap().get(statusLight) : (String)this.kpiUtil.getStatusKeyMap().get("yellow fas fa-flag");
     }
 

@@ -23,7 +23,8 @@ import com.estrat.service.etl.exception.RestServiceException;
 import com.estrat.service.etl.util.UserThreadLocal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +35,7 @@ import org.springframework.util.MultiValueMap;
 
 public class CommonRestTemplate
 extends AbstractRestTemplate {
-    private static Logger log = Logger.getLogger(CommonRestTemplate.class);
+    private static Logger log = LoggerFactory.getLogger(CommonRestTemplate.class);
 
     public Object getForObject(String url, Class<?> cls) {
         HttpEntity requestEntity = new HttpEntity((MultiValueMap)this.getCommonHeaders());
@@ -108,7 +109,7 @@ extends AbstractRestTemplate {
 
     private HttpEntity<Object> getHeaderWithBody(Object obj) {
         HttpEntity headerEntity = new HttpEntity(obj, (MultiValueMap)this.getCommonHeaders());
-        log.debug((Object)this.getJSONString((Object)headerEntity));
+        log.debug(this.getJSONString((Object)headerEntity));
         return headerEntity;
     }
 
@@ -119,10 +120,10 @@ extends AbstractRestTemplate {
             json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(response);
         }
         catch (Exception e) {
-            log.error((Object)"Exception in getJSONString", (Throwable)e);
+            log.error("Exception in getJSONString", e);
             throw new RestServiceException("Object mapper error", (Throwable)e);
         }
-        log.debug((Object)("  xml string " + json));
+        log.debug("  xml string " + json);
         return json;
     }
 

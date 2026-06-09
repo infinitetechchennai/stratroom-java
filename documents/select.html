@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>DataTables Editable with Select2</title>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+  <!-- DataTables -->
+  <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" />
+  <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+
+  <!-- Select2 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+  <style>
+    .select2-container {
+      width: 100% !important;
+    }
+
+    td.editable {
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+
+<body data-bs-theme="light">
+  <div class="container">
+    <button id="addRowBtn" class="btn btn-success" style="margin-bottom: 10px;">➕ Add New Row</button>
+    <table id="budgetTable" class="display nowrap" style="width:100%">
+      <thead>
+        <tr class="text-center">
+          <th rowspan="2" class="align-middle">SI.No</th>
+          <th width="80" style="min-width: 80px;">Year</th>
+          <th width="120" style="min-width: 120px;">Month</th>
+          <th width="80" style="min-width: 80px;">Version</th>
+          <th width="100" style="min-width: 100px;">GL Account</th>
+          <th width="200" style="min-width: 200px;">GL Name</th>
+          <th width="200" style="min-width: 200px;">Budget Type</th>
+          <th width="300" style="min-width: 300px;">Project / Initiative</th>
+          <th width="200" style="min-width: 200px;">Outcome</th>
+          <th width="200" style="min-width: 200px;">Objective</th>
+          <th width="300" style="min-width: 300px;">Sub Initiative</th>
+          <th width="300" style="min-width: 300px;">Activity</th>
+          <th width="300" style="min-width: 300px;">Sub Activity</th>
+          <th width="80" style="min-width: 80px;">Currency</th>
+          <th width="100" style="min-width: 100px;">Amount</th>
+          <th width="300" style="min-width: 300px;">Department</th>
+          <th width="300" style="min-width: 300px;">Employee</th>
+          <th width="300" style="min-width: 300px;">Notes</th>
+          <th rowspan="2" class="align-middle">Action</th>
+        </tr>
+        <tr>
+          <th width="80" style="min-width: 80px;">Year</th>
+          <th width="120" style="min-width: 120px;">Month</th>
+          <th width="80" style="min-width: 80px;">Version</th>
+          <th width="100" style="min-width: 100px;">GL Account</th>
+          <th width="200" style="min-width: 200px;">GL Name</th>
+          <th width="200" style="min-width: 200px;">Budget Type</th>
+          <th width="300" style="min-width: 300px;">Project / Initiative</th>
+          <th width="200" style="min-width: 200px;">Outcome</th>
+          <th width="200" style="min-width: 200px;">Objective</th>
+          <th width="300" style="min-width: 300px;">Sub Initiative</th>
+          <th width="300" style="min-width: 300px;">Activity</th>
+          <th width="300" style="min-width: 300px;">Sub Activity</th>
+          <th width="80" style="min-width: 80px;">Currency</th>
+          <th width="100" style="min-width: 100px;">Amount</th>
+          <th width="300" style="min-width: 300px;">Department</th>
+          <th width="300" style="min-width: 300px;">Employee</th>
+          <th width="300" style="min-width: 300px;">Notes</th>
+
+
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamic rows will be loaded here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      var table;
+      var newRowAdded = false; // Track if new row is added
+      var yearDropDownOptions = [];
+      var monthDropDownOptions = [];
+
+
+      // Initialize the DataTable
+      if (!$.fn.DataTable.isDataTable('#budgetTable')) {
+        table = $('#budgetTable').DataTable({
+          paging: true,
+          pageLength: 20,
+          ordering: false,
+          info: false,
+          responsive: true,
+          scrollX: true,
+          scrollY: "400px",
+          processing: true,
+          deferRender: true,
+          ajax: {
+            url: "budgets-list.json", // Your JSON file path
+            method: "GET",
+            dataType: "json",
+            dataSrc: function (json) {
+              // Build year dropdown options from data
+              json.data.forEach(function (item) {
+                const year = item.budgetValues.year || "";
+                const month = item.budgetValues.month || "";
+                if (year && !yearDropDownOptions.find(opt => opt.id === year)) {
+                  yearDropDownOptions.push({ id: year, text: year });
+                }
+
+                if (month && !monthDropDownOptions.find(opt => opt.id === month)) {
+                  monthDropDownOptions.push({ id: month, text: month });
+                }
+              });
+              return json.data;
+            }
+          },
+          columns: [
+            {
+              data: null,
+              render: function (data, type, row, meta) {
+                return meta.row + 1; // SI.NO
+              }
+            },
+            { data: 'budgetValues.year', defaultContent: 'N/A' },
+            { data: 'budgetValues.month', defaultContent: 'N/A' },
+            { data: 'budgetValues.version', defaultContent: 'N/A' },
+            { data: 'budgetValues.glAccount', defaultContent: 'N/A' },
+            { data: 'budgetValues.glname', defaultContent: 'N/A' },
+            { data: 'budgetValues.budgetType', defaultContent: 'N/A' },
+            { data: 'budgetValues.initiativeDesc', defaultContent: 'N/A' },
+            { data: 'budgetValues.outcome', defaultContent: 'N/A' },
+            { data: 'budgetValues.objective', defaultContent: 'N/A' },
+            { data: 'budgetValues.subInitiativeDesc', defaultContent: 'N/A' },
+            { data: 'budgetValues.activityDesc', defaultContent: 'N/A' },
+            { data: 'budgetValues.subActivityDes', defaultContent: 'N/A' },
+            { data: 'budgetValues.currency', defaultContent: 'N/A' },
+            { data: 'budgetValues.amount', defaultContent: 'N/A' },
+            { data: 'budgetValues.division', defaultContent: 'N/A' },
+            { data: 'budgetValues.ownerName', defaultContent: 'N/A' },
+            { data: 'budgetValues.notes', defaultContent: 'N/A' },
+            {
+              data: null,
+              render: function (data, type, row, meta) {
+                return '<button class="btn btn-sm btn-primary">Edit</button>';
+              }
+            }
+          ],
+          initComplete: function (settings, json) {
+            console.log('Table Loaded');
+            // let select2Columns = [1, 4, 6, 15];
+            this.api().columns().every(function () {
+              var title = this.header();
+              title = $(title).html().replace(/[\W]/g, '-');  // Sanitize title for use
+              var column = this;
+              if (column.index() === 0 || column.index() === 18) return; // Skip first column
+
+              var select = $('<select class="select2" style="width: 100%"></select>')
+                .appendTo($(column.header()).empty())
+                .on('change', function () {
+                  var data = $.map($(this).select2('data'), function (value) {
+                    return value.text ? '^' + $.fn.dataTable.util.escapeRegex(value.text) + '$' : null;
+                  });
+                  var val = data.length ? data.join('|') : "";
+                  column.search(val, true, false).draw();
+                });
+
+
+              column.data().unique().sort().each(function (d) {
+                if (d) {
+                  select.append('<option value="' + d + '">' + d + '</option>');
+                }
+              });
+
+              select.select2({
+                multiple: true,
+                closeOnSelect: false,
+                placeholder: "Select " + title,
+                allowClear: true
+              });
+
+              select.val(null).trigger('change');
+
+
+            })
+          }
+        });
+      }
+
+      // Add editable class after draw
+      $('#budgetTable').on('draw.dt', function () {
+        $('#budgetTable tbody tr td').addClass('editable'); // Only Year column editable
+      });
+
+      // Handle cell click to edit
+      $('#budgetTable tbody').on('click', 'td.editable', function () {
+        var $cell = $(this);
+
+        if ($cell.find('select').length === 0) { // If no select already
+          var currentText = $cell.text().trim();
+          var select = $('<select class="editor-select2" style="width:100%;"></select>');
+
+          var colIndex = $cell.index(); // get clicked column index
+          var optionsList = [];
+
+          if (colIndex === 1 || colIndex === 2) {
+            // Name or Position columns → dropdown
+            var select = $('<select class="editor-select2" style="width:100%;"></select>');
+            // var optionsList = (colIndex === 1) ? nameDownOptions : positionDownOptions;
+
+            var optionsList = (
+              colIndex === 1) ? yearDropDownOptions :
+              (colIndex === 2) ? monthDropDownOptions :
+                (colIndex === 3) ? officeDownOptions : startDateDownOptions;
+
+
+
+
+            optionsList.forEach(function (opt) {
+              select.append('<option value="' + opt.id + '">' + opt.text + '</option>');
+            });
+
+            $cell.empty().append(select);
+
+            select.select2({
+              placeholder: "Select Name/Position",
+              tags: true
+            }).val(currentText).trigger('change');
+            select.select2("open");
+
+            select.on('select2:close', function () {
+              var newVal = select.val();
+              $cell.html(newVal);
+              table.columns.adjust().draw(false);
+            });
+          }
+        }
+      });
+
+      $('#addRowBtn').on('click', function () {
+
+
+        // Add a new empty row
+        var newRowData = {
+          budgetValues: {
+            year: '',
+            month: '',
+            version: '',
+            glAccount: '',
+            glname: '',
+            budgetType: '',
+            initiativeDesc: '',
+            outcome: '',
+            objective: '',
+            subInitiativeDesc: '',
+            activityDesc: '',
+            subActivityDes: '',
+            currency: '',
+            amount: '',
+            division: '',
+            ownerName: '',
+            notes: ''
+          }
+        };
+
+        // Add the new row to the table
+        table.row.add(newRowData).draw(false);
+
+        // Move to last page
+        var lastPage = table.page.info().pages - 1;
+        table.page(lastPage).draw(false);
+
+        // Apply select2 to the new row's columns
+        setTimeout(function () {
+          table.columns().every(function () {
+            var column = this;
+
+
+
+            // Skip first and last columns (or any columns you want to skip)
+            if (column.index() === 0 || column.index() === 18) return;
+
+            // Find the cell in the new row for this column
+            var $cell = $(table.cell(table.rows().count() - 1, column.index()).node());
+
+            // Append select2 dropdown to this cell
+            var select = $('<select class="select2" style="width: 100%"></select>')
+              .appendTo($cell.empty()) // Clear any existing content and add the select2
+              .on('change', function () {
+                var data = $.map($(this).select2('data'), function (value) {
+                  // return value.text ? '^' + $.fn.dataTable.util.escapeRegex(value.text) + '$' : null;
+                });
+              });
+
+            // Populate select2 with unique values from the column
+            column.data().unique().sort().each(function (d) {
+              if (d) {
+                select.append('<option value="' + d + '">' + d + '</option>');
+              }
+            });
+
+            select.select2({
+              placeholder: "Select ",
+            });
+
+            select.val(null).trigger('change'); // Reset Select2 value
+
+            select.on('select2:close', function () {
+              var newVal = select.val();
+              $cell.html(newVal);  // Update the cell with the selected value
+              table.columns.adjust().draw(false);  // Redraw the table to adjust columns
+            });
+
+          });
+
+          // Optionally, focus on the last row and trigger a click on the editable cell
+          var $lastRow = $('#budgetTable tbody tr:last');
+          $lastRow.find('td:first').trigger('click'); // Trigger click on the first editable cell (adjust as needed)
+        }, 100); // Delay to ensure table redraws
+      });
+
+    });
+  </script>
+</body>
+
+</html>

@@ -40,7 +40,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,7 @@ public class DashboardPreferenceService {
     private DBCache dbCache;
     @Autowired
     private AuditDetailsService auditDetailsService;
-    private Logger log = Logger.getLogger(InitiativesService.class);
+    private Logger log = LoggerFactory.getLogger(InitiativesService.class);
 
     public Optional<DashBoardPreferences> findById(long id) {
         return this.dashboardPreferenceRepository.findById(id);

@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projections, Assumptions & Guidelines</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v0.004" rel="stylesheet">
+    <link href="assets/css/main.css?v0.004" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+    <link href="assets/css/login.css" rel="stylesheet">
+
+    <!-- Font Awsome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+
+
+</head>
+
+<body data-bs-theme="light" data-page="lca">
+
+    <!-- <div class="page-loader">
+        <div class="d-flex flex-column justify-content-center gap-1">
+            <div class="circle-loader">
+                <img class="centre-logo" src="assets/images/logo-icon.svg" alt="startroom" width="62" height="62">
+            </div>
+            <h5 class="loader-title" data-translate="loaderTitle">“While we load, grab your espresso and stay
+                caffeinated.” <i class="fas fa-coffee text-primary"></i></h5>
+            <p class="loader-description" data-translate="loaderDescription"> “it takes 42 beans for a single shot.
+                StratRoom
+                uses countless data points to deliver powerful insights!”</p>
+            <p class="loader-text"><span data-translate="pageloading">Loading</span> <span id="percent">0%</span></p>
+        </div>
+    </div> -->
+    <header id="header" class="header shadow-sm sticky-top">
+        <div class="navbar-topbar">
+            <div class="container-lg d-flex flex-wrap justify-content-between">
+                <div class="menu-controls d-flex">
+                    <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="Org Structure" data-translate="topbar.orgStructure">
+                        <span class="icon network">
+                            <i data-lucide="network" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+                    <a class="control-link " href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                        <span class="icon layout-template" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Templates" data-translate="topbar.templates">
+                            <i data-lucide="layout-template" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+
+                    <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="ETL" data-translate="topbar.etl">
+                        <span class="icon layout-grid">
+                            <i data-lucide="layout-grid" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+                    <div class="nav-item dropdown dropdown-top-header">
+                        <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-translate="topbar.masters"></a>
+                        <ul class="dropdown-menu dropdown-menu-start border-0 shadow-sm"
+                            aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.products"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.process"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.vitalRecords"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.technology"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.facilities"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.personal"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.iso"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.budget"></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap ms-auto">
+                    <div class="top-date-picker">
+                        <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap">
+
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                            </span>
+                            <span id="currentLanguage">EN</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="ar">Arabic</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md navbar-light">
+            <div class="container-lg gap-2 gap-md-3">
+                <div class="position-relative logo me-auto">
+                    <a href="landing.html" class="logo-preview" id="logoPreview">
+                        <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                    </a>
+
+                </div>
+
+
+
+                <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                    aria-labelledby="mobileMenuLabel">
+                    <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="navbar-collapse">
+
+
+                            <ul class="navbar-nav p-0 ms-md-auto">
+
+                                <!-- 1) Plan -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.plan"></a>
+
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" data-menu="plan"
+                                        aria-labelledby="planningDropdown">
+                                        <li data-id="strategy-planner">
+                                            <a class="dropdown-item" href="strategy-planner.html"
+                                                data-translate="menu.planItems.strategyPlanner"></a>
+                                        </li>
+                                        <li data-id="swot">
+                                            <a class="dropdown-item" href="swot.html"
+                                                data-translate="menu.planItems.swot"></a>
+                                        </li>
+                                        <li data-id="pestel">
+                                            <a class="dropdown-item" href="pestel.html"
+                                                data-translate="menu.planItems.pestel"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 2) Measure -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="measureDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.measure"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="measureDropdown">
+                                        <li data-id="scorecard">
+                                            <a class="dropdown-item" href="scorecard.html"
+                                                data-translate="menu.measureItems.scorecard"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 3) Execute -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="executeDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.execute"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="executeDropdown">
+                                        <li data-id="initiatives">
+                                            <a class="dropdown-item" href="initiatives-projects.html"
+                                                data-translate="menu.executeItems.initiatives"></a>
+                                        </li>
+                                        <li data-id="tasks">
+                                            <a class="dropdown-item" href="tasks.html"
+                                                data-translate="menu.executeItems.tasks"></a>
+                                        </li>
+                                        <li data-id="budget-approval">
+                                            <a class="dropdown-item" href="budget-approval.html"
+                                                data-translate="menu.executeItems.budgetApproval"></a>
+                                        </li>
+                                        <li data-id="budgets">
+                                            <a class="dropdown-item" href="budgets.html"
+                                                data-translate="menu.executeItems.budgets"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 4) Govern -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="governDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.govern"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="governDropdown">
+                                        <li data-id="risk-register">
+                                            <a class="dropdown-item" href="risk-register.html"
+                                                data-translate="menu.governItems.riskRegister"></a>
+                                        </li>
+                                        <li data-id="risk-approval">
+                                            <a class="dropdown-item" href="risk-approval.html"
+                                                data-translate="menu.governItems.riskApproval"></a>
+                                        </li>
+                                        <li data-id="compliance">
+                                            <a class="dropdown-item" href="compliance.html"
+                                                data-translate="menu.governItems.compliance"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 5) Meet -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="meetDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.meet"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="meetDropdown">
+                                        <li data-id="meetings">
+                                            <a class="dropdown-item" href="meetings.html"
+                                                data-translate="menu.meetItems.meetings"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 6) Report -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.report"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="reportDropdown">
+                                        <li data-id="my-cockpit">
+                                            <a class="dropdown-item" href="my-cockpit.html"
+                                                data-translate="menu.reportItems.myCockpit"></a>
+                                        </li>
+                                        <li data-id="my-performance">
+                                            <a class="dropdown-item" href="my-performance.html"
+                                                data-translate="menu.reportItems.myPerformance"></a>
+                                        </li>
+                                        <li data-id="whiteboard">
+                                            <a class="dropdown-item" href="whiteboard.html"
+                                                data-translate="menu.reportItems.whiteboard"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-controls global-control  d-flex flex-wrap">
+
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="notificationDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="bottom"
+                            data-bs-title="Notification">
+                            <span class="icon">
+                                <i data-lucide="bell-dot" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-notification-menu dropdown-menu-icon border-0 shadow-sm"
+                            aria-labelledby="notificationDropdown" data-bs-auto-close="outside"
+                            style="width: 350px; max-width: calc(100vw - 2rem); max-height: 400px; overflow-y: auto;">
+
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">New message from John Smith</div>
+                                        <small class="text-muted">Risk approval required for Phase 2</small>
+                                        <div class="text-muted small">2 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">System maintenance scheduled</div>
+                                        <small class="text-muted">Server will be down for 30 minutes</small>
+                                        <div class="text-muted small">1 day ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Template review deadline</div>
+                                        <small class="text-muted">Document template needs approval by EOD</small>
+                                        <div class="text-muted small">3 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Audit report generated</div>
+                                        <small class="text-muted">Monthly compliance report is ready</small>
+                                        <div class="small" class="text-muted small">5 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Meeting reminder</div>
+                                        <small class="text-muted">Weekly team standup in 30 minutes</small>
+                                        <div class="text-muted small">30 min ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Task completed</div>
+                                        <small class="text-muted">Database backup completed successfully</small>
+                                        <div class="text-muted small">1 hour ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">New user registered</div>
+                                        <small class="text-muted">Sarah Johnson joined the platform</small>
+                                        <div class="text-muted small">6 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Security update</div>
+                                        <small class="text-muted">Password policy has been updated</small>
+                                        <div class="text-muted small">2 days ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Download ready</div>
+                                        <small class="text-muted">Export file generation completed</small>
+                                        <div class="text-muted small">3 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Audit report generated</div>
+                                        <small class="text-muted">Monthly compliance report is ready</small>
+                                        <div class="small" class="text-muted small">5 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-center py-2" href="#">
+                                    <small class="text-primary fw-medium">View all notifications</small>
+                                </a></li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="controlPanelDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="controlPanelDropdown">
+                            <li><a class="dropdown-item" href="control-panel.html"
+                                    data-translate="topbar.settingsItems.controlPanel"></a></li>
+                            <li><a class="dropdown-item" href="audit-trail.html"
+                                    data-translate="topbar.settingsItems.auditTrail"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="user-role.html"
+                                    data-translate="topbar.settingsItems.userRoles"></a>
+                            </li>
+                        </ul>
+
+
+                        </ul>
+                    </div>
+
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item profile-card" href="#">
+
+                                    <span class="icon circle-user-round">
+                                        <i data-lucide="circle-user-round" style="width: 32px; height: 32px;"></i>
+                                    </span>
+
+
+                                    <div class="">
+                                        <h4><span data-translate="topbar.hi">Hi</span> John </h4>
+                                        <small data-translate="topbar.welcomeToPortal"></small>
+                                    </div>
+                                </a></li>
+
+
+                            <li><a class="dropdown-item profile-card" href="#"
+                                    data-translate="topbar.profileItems.myProfile"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="manual.html"
+                                    data-translate="topbar.profileItems.myForms"></a></li>
+                            <li><a class="dropdown-item" href="performance-contract.html"
+                                    data-translate="topbar.profileItems.performanceContract"></a></li>
+                            <li>
+                                <a class="dropdown-item" href="performance-improvement-plan.html"
+                                    data-translate="topbar.profileItems.performanceImprovementPlan"
+                                    style="cursor: pointer;">
+
+                                    Performance improvement Plan</a>
+                            </li>
+                            <li><a class="dropdown-item" href="audit-trail.html"
+                                    data-translate="topbar.profileItems.auditTrail"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="user-role.html"
+                                    data-translate="topbar.profileItems.logout"></a></li>
+
+
+                        </ul>
+
+                    </div>
+                    <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+                </div>
+                <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                    aria-controls="mobileMenu">
+                    <div class="hamburger-icon">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </div>
+                </div>
+
+
+        </nav>
+    </header>
+
+    <main class="pt-2 pb-2">
+        <!-- <div class="container-lg">
+            <div class="page-header grid gap-2 pb-1">
+                <div class="g-col-8 d-flex align-items-center">
+                    <h4 class="title">
+                        <span class="icon">
+                            <img src="assets/images/icons/audit-trail-i.svg" alt="control-panel" title="control-panel"
+                                width="18" height="18">
+                        </span>
+                        Budget Projections, Assumptions & Guidelines
+                    </h4>
+                </div>
+
+            </div>
+
+        </div> -->
+        <div class="container-lg py-4">
+            <div class="card custom-card mx-auto mb-4" style="max-width: 700px;">
+                <!-- <div class="card-header">
+                    <div class="c-header-left">
+                        <h5 class="card-title">
+                            <strong editable="true" contenteditable="true"
+                                onkeypress="return (this.innerText.length <= 36)">Budget Projections, Assumptions &
+                                Guidelines</strong>
+                        </h5>
+                    </div>
+                    <div class="card-actions">
+                        <div class="heat-map">
+                         <input type="text" class="form-control form-control-sm  date-range-picker" name="" id="pipStartDate" placeholder="Period">
+                         </div>
+                        <button class="btn btn-sm btn-icon" data-bs-toggle="modal" data-bs-target="#subinitative-add-modal">
+                  <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add">
+                    <i data-lucide="file-up" style="width: 14px; height: 14px;"></i>
+                  </span>
+                </button>
+                    </div>
+
+                </div> -->
+                <div class="card-body p-3">
+
+
+                    <div class="card-header text-center p-3 bg-primary rounded mb-4">
+                        <h5 class="card-title h4 mb-3" style="color: var(--stratroom-card-title-color);">Budget
+                            Projections, Assumptions & Guidelines</h5>
+                        <div class="card-actions d-flex justify-content-center gap-1">
+                            <div class="heat-map">
+                                <input type="text" class="form-control form-control-sm  date-range-picker" name=""
+                                    id="pipStartDate" placeholder="Period">
+                            </div>
+                            <button class="btn btn-sm btn-icon border-0" data-bs-toggle="modal"
+                                data-bs-target="#subinitative-add-modal">
+                                <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add">
+                                    <i data-lucide="file-up" style="width: 14px; height: 14px;"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-3">
+
+                        <div class="g-col-12 grid gap-3">
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Inflation projections</label>
+
+                                    </div>
+                                    <table id="inflationProjectionsTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th width="50%"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">The inflation is projected to</td>
+                                                <td width="50%">
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control" placeholder="0"
+                                                            min="0" step="0.1">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+
+
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Exchange Rate projections</label>
+
+                                    </div>
+                                    <table id="exchangeRateProjectionsTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th width="50%"></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tr>
+                                            <td width="50%">The exchage rates are expected to increase by</td>
+                                            <td width="50%">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" placeholder="0" min="0"
+                                                        step="0.1">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                    </table>
+
+
+
+                                </div>
+                            </div>
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+
+
+                                    <table id="performanceTable" class="table table-bordered w-100 tableScrollTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Foreign Currency</th>
+                                                <th>Exchange Rates</th>
+                                                <th>Inflationary Adjustment</th>
+                                                <th>Projected</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>USD</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>CHF</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>GBP</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Euro</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Catering Charges</label>
+                                    </div>
+
+
+
+                                    <table id="CateringChargesTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%">Inhouse catering takes a minimum of 10 People
+                                                </th>
+                                                <th>CURRENT</th>
+                                                <th>PROJECTED</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">Food, drinks & water</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">finger lunch, drink & water</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Tea</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Hall Hire</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                    <div class="text-end">
+                                        <button id="addPerformanceRowBtn" class="btn btn-sm btn-success mt-2">
+                                            <i class="fas fa-plus"></i>Add More</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Accommodation & Local subsistance
+                                            allowance</label>
+                                    </div>
+
+
+
+                                    <table id="AccommodationTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">Local accomodation outside Maseru</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Subsistance while sleeping over</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Subsistance while a day trip</td>
+                                                <td><input type="text" class="form-control"></td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                    <div class="text-end">
+                                        <button id="addPerformanceRowBtn" class="btn btn-sm btn-success mt-2">
+                                            <i class="fas fa-plus"></i>Add More</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Deperection Policy</label>
+                                        <p>Assets are depreciated on a straight line basis from the first day of
+                                            use</p>
+                                    </div>
+
+
+
+                                    <table id="DeperectionPolicyTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th></th>
+                                            </tr>
+
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">Fixtures & Fittings</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Office Equipment</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Computer Equipment</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Monitoring Equipment</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Motor Vehicles</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Office Furniture</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Office Building</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Mobile Communication device</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                    <div class="text-end">
+                                        <button id="addPerformanceRowBtn" class="btn btn-sm btn-success mt-2">
+                                            <i class="fas fa-plus"></i>Add More</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+
+
+
+
+                                    <table id="performanceTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">Assumptions</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+
+
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Revenue</label>
+
+                                    </div>
+
+
+
+                                    <table id="RevenueTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">Increase/uptake in data consumption</th>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Annual License fees</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">New application fees</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">unified licenses</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">content broadcasting</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Radio allocation</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">LISNIC Revenue</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Rent increase of 5 months</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Increased spectrum uptake for point to point
+                                                    links
+                                                    (600KHz)</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+
+                                    <table id="performanceTable" class="table align-middle table-bordered w-100">
+
+
+                                        <tr>
+                                            <th width="50%">Target effeciency ratio ( OPEX to Income Ratio)</th>
+                                            <td><input type="text" class="form-control"></td>
+                                        </tr>
+
+
+                                    </table>
+
+
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Expenditure</label>
+
+                                    </div>
+
+
+
+                                    <table id="expenditureTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">Staff salaries - Inflationary increase
+                                                </td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Staff compliment & staff airtime adjustments
+                                                </td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Training (both online and onsite)</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="50%">Insurance</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+
+
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Limit/Threshhold for personal costs</label>
+
+                                    </div>
+
+
+
+                                    <table id="limitTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">Personnel costs should not exceed 60% of the
+                                                    projected revenue
+                                                </td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+
+
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+                                    <div class="form-group">
+                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                            class="form-label">Capital expenditure(CAPEX)</label>
+
+                                    </div>
+
+
+
+                                    <table id="capexTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">CAPEX should atleast be 10% of total expenditure
+                                                </td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+
+
+                                </div>
+                            </div>
+
+                            <div class="g-col-12">
+                                <div class="questionnaire-block">
+
+
+
+
+                                    <table id="performanceTable"
+                                        class="table align-middle table-bordered w-100 tableScrollTable">
+
+                                        <thead class="d-none">
+                                            <tr>
+                                                <th width="50%"></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td width="50%">Contingency (% of Total Cost)</td>
+                                                <td><input type="text" class="form-control"></td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="button" class="btn btn-label-secondary">
+                        Edit
+                    </button>
+                    <button class="btn btn-primary" value="Save">Save</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="col-12 text-center py-2 copyright">
+        <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+
+        </script>
+
+    </footer>
+
+
+    <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+    <div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Templates</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card custom-card border-0">
+                        <div class="card-body">
+                            <form id="menuForm">
+                                <div class="grid gap-3">
+                                    <div class="g-col-12">
+                                        <div class="form-group">
+                                            <label for="menuName" class="form-label">Name</label>
+
+                                            <input type="text" class="form-control" id="menuName"
+                                                placeholder="Enter Name" required>
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12 g-col-md-6">
+                                        <div class="form-group">
+                                            <label for="pageType" class="form-label">Page Type</label>
+
+                                            <select id="pageType" class="form-select" required>
+                                                <option value="">Select Page Type</option>
+                                                <option value="Plan">Plan</option>
+                                                <option value="Measure">Measure</option>
+                                                <option value="Execute">Execute</option>
+                                                <option value="Govern">Govern</option>
+                                                <option value="Meet">Meet</option>
+                                                <option value="Report">Report</option>
+                                                <option value="Masters">Masters</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12 g-col-md-6">
+                                        <div class="form-group">
+                                            <label for="boardType" class="form-label">Board Type</label>
+                                            <select id="boardType" class="form-select" required>
+                                                <option value="">Select Board Type</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" id="saveMenuBtn">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- create-template END -->
+
+    <!-- Notification Offcanvas for Mobile -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvas"
+        aria-labelledby="notificationOffcanvasLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="notificationOffcanvasLabel">Notifications</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">New message from John Smith</div>
+                            <small class="text-muted">Project approval required for Phase 2</small>
+                            <div class="text-muted small mt-1">2 minutes ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">System Maintenance Alert</div>
+                            <small class="text-muted">Scheduled maintenance on Sunday at 2:00 AM</small>
+                            <div class="text-muted small mt-1">1 hour ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">Task Completed</div>
+                            <small class="text-muted">Data backup process finished successfully</small>
+                            <div class="text-muted small mt-1">3 hours ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">New Team Member</div>
+                            <small class="text-muted">Sarah Johnson joined the Marketing team</small>
+                            <div class="text-muted small mt-1">1 day ago</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="p-3 border-top text-center">
+                <a href="#" class="btn btn-sm btn-outline-primary">View All Notifications</a>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Menu Text</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editInput" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Context Menu -->
+    <div id="contextMenu" class="custom-context-menu">
+        <button id="editItem">Edit</button>
+        <button id="deleteItem">Delete</button>
+        <button id="moveUpItem">Move Up</button>
+        <button id="moveDownItem">Move Down</button>
+    </div>
+
+
+
+
+    <!-- Bootstrap Toast container -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+        <div id="rowToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Please fill all fields in existing rows before adding a new row!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sortablejs/1.15.0/sortable.min.js"></script>
+    <script src="assets/js/lucide.js"></script>
+
+
+    <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+    <script src="assets/js/moment.js"></script>
+    <script src="assets/js/knockout-3.5.0.js"></script>
+    <script src="assets/js/daterangepicker.min.js"></script>
+
+
+
+
+    <link href="assets/css/select2.min.css" rel="stylesheet" />
+    <script src="assets/js/select2.min.js"></script>
+    <script src="assets/datatables/1.13.6/jquery.dataTables.min.js"></script>
+    <script src="assets/datatables/1.13.6/dataTables.bootstrap5.min.js"></script>
+
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="assets/flatpickr/flatpickr.min.css">
+    <script src="assets/flatpickr/flatpickr.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+
+
+        document.querySelectorAll('.date-range-picker').forEach(function (el) {
+            const pickerId = el.getAttribute('id'); // Find the element's ID
+            flatpickr(`#${pickerId}`, {
+                mode: "range",
+                dateFormat: "M j, Y",
+                // defaultDate: ["2025-08-12", "2025-08-13"],
+                onClose: function (selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2) {
+                        const start = instance.formatDate(selectedDates[0], "M j, Y");
+                        const end = instance.formatDate(selectedDates[1], "M j, Y");
+                        el.value = `${start} to ${end}`; // Set formatted value in input
+                    }
+                }
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            var tableScrollTable = $('.tableScrollTable').DataTable({
+                scrollX: true,
+                ordering: false,
+                paging: false,
+                info: false,
+                searching: false
+            });
+        });
+
+    </script>
+</body>
+
+</html>

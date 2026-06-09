@@ -117,7 +117,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
@@ -130,7 +130,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional(rollbackOn={HibernateException.class})
 public class KPIService {
-    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(KPIService.class);
+    private org.apache.log4j.Logger logger = org.apache.log4j.LoggerFactory.getLogger(KPIService.class);
     private Logger log = LoggerFactory.getLogger(KPIService.class);
     private final ConcurrentHashMap<String, ControlPanelGeneral> cpanelLocalCache = new ConcurrentHashMap();
     private final ConcurrentHashMap<String, Map<String, Object>> customPerfLocalCache = new ConcurrentHashMap();

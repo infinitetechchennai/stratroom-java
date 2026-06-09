@@ -32,10 +32,11 @@ import com.estrat.web.util.UserThreadLocal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +49,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(value=-2147483648)
 public class CommonHandlerInterceptor
 implements HandlerInterceptor {
-    private Logger logger = Logger.getLogger(CommonHandlerInterceptor.class);
+    private Logger logger = LoggerFactory.getLogger(CommonHandlerInterceptor.class);
     @Value(value="${authservice.url}")
     private String authUrl;
     @Value(value="${jwt.generation.enabled}")

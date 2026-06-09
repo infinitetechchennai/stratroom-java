@@ -46,7 +46,7 @@ public class MenuService {
     }
 
     public List<MenuDTO> findAll(long empID) {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(this.menuUrl + "menuLists/" + empID, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

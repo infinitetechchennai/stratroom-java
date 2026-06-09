@@ -55,8 +55,8 @@ public class NotificationService {
     public List<NotificationDTO> findAll(long empId, String notificationType, String targetValue, String meetingIntervalCheck, String readFlag) {
         String url = this.notificationList + "/" + empId;
         String notificationUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("notificationType", new Object[]{notificationType}).queryParam("targetValue", new Object[]{targetValue}).queryParam("meetingIntervalCheck", new Object[]{meetingIntervalCheck}).queryParam("readFlag", new Object[]{readFlag}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
-        List notificationDTOList = (List)this.commonRestTemplate.getForObject(notificationUrl, (ParameterizedTypeReference)parameterizedTypeReference);
+        org.springframework.core.ParameterizedTypeReference<List<NotificationDTO>> parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<List<NotificationDTO>>() {};
+        List<NotificationDTO> notificationDTOList = (List<NotificationDTO>)this.commonRestTemplate.getForObject(notificationUrl, parameterizedTypeReference);
         return notificationDTOList;
     }
 }

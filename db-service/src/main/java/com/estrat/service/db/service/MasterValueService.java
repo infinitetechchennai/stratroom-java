@@ -25,7 +25,7 @@ import com.estrat.service.db.repository.DepartmentDetailsRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

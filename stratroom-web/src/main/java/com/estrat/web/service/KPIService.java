@@ -91,7 +91,7 @@ public class KPIService {
     public ResponseEntity<List<KPIDTO>> getKpiList(boolean employeeView) {
         String url = this.scoreCardUrl + "/kpiList";
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("employeeView", new Object[]{employeeView}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpi1 = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(kpi1, HttpStatus.OK);
     }
@@ -120,14 +120,14 @@ public class KPIService {
 
     public ResponseEntity<List<KPIDTO>> getKpiListWithObjId(long objId) {
         String url = this.scoreCardUrl + "/v2/kpiList/" + objId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpi1 = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(kpi1, HttpStatus.OK);
     }
 
     public ResponseEntity<List<KPIDetailsDTO>> retrieveNodeKeyList() {
         String url = this.scoreCardUrl + "/retrieveNodeKeyList";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpi1 = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(kpi1, HttpStatus.OK);
     }
@@ -143,7 +143,7 @@ public class KPIService {
     public ResponseEntity<List<Map>> kpiDetailsListFromEmployerId(KPICriteriaDTO kpiCriteriaDTO, long kpiID, String tableFrequency, String flagtype) {
         String url = this.scoreCardUrl + "/kpiDetailList/" + kpiID;
         String kpiUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("tableFrequency", new Object[]{tableFrequency}).queryParam("flagtype", new Object[]{flagtype}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List mapList = (List)this.commonRestTemplate.getForObject(kpiUrl, kpiCriteriaDTO, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(mapList, HttpStatus.OK);
     }
@@ -151,7 +151,7 @@ public class KPIService {
     public ResponseEntity<List<Map>> kpiDetailsdrillListFromEmployerId(KPICriteriaDTO kpiCriteriaDTO, long kpiID, String tableFrequency) {
         String url = this.scoreCardUrl + "/kpiDrillDetailList/" + kpiID;
         String kpiUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("tableFrequency", new Object[]{tableFrequency}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List mapList = (List)this.commonRestTemplate.getForObject(kpiUrl, kpiCriteriaDTO, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(mapList, HttpStatus.OK);
     }
@@ -159,21 +159,21 @@ public class KPIService {
     public List<KPIDTO> kpilistbasedonscorecard(Long scorecardId) {
         String url = this.scoreCardUrl + "/kpilistbasedonscorecard/" + scorecardId;
         String kpiUrl = UriComponentsBuilder.fromHttpUrl((String)url).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List mapList = (List)this.commonRestTemplate.getForObject(kpiUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return mapList;
     }
 
     public ResponseEntity<List<Map>> kpiViewDetailsList(long kpiID) {
         String url = this.scoreCardUrl + "/kpiViewDetailList/" + kpiID;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List mapList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(mapList, HttpStatus.OK);
     }
 
     public List<KPIDTO> getImportKpiListWithObjId(long objId) {
         String url = this.scoreCardUrl + "/kpiViewList/" + objId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpi1 = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return kpi1;
     }
@@ -198,14 +198,14 @@ public class KPIService {
     public ResponseEntity<List<Map>> getKpiListByFormula(KPIFormula kpiFormula, String tableFrequency, String responseGrouping) {
         String url = this.scoreCardUrl + "/formula/kpiList";
         String kpiUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("tableFrequency", new Object[]{tableFrequency}).queryParam("responseGrouping", new Object[]{responseGrouping}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List mapList = (List)this.commonRestTemplate.postForObject(kpiUrl, kpiFormula, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(mapList, HttpStatus.OK);
     }
 
     public Map getKpiMeasureNameDetails(long id) {
         String url = this.scoreCardUrl + "/kpi/formula/measureNames/" + id;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Map)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -213,7 +213,7 @@ public class KPIService {
         HashMap<String, Long> urlVaiables = new HashMap<String, Long>();
         urlVaiables.put("nodeKey", nodekey);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)this.kpiTargetUrl).queryParam("dateRange", new Object[]{daterange}).buildAndExpand(urlVaiables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         TargetDTO tgtDTO = (TargetDTO)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(tgtDTO, HttpStatus.OK);
     }
@@ -223,7 +223,7 @@ public class KPIService {
         HashMap<String, Long> urlVaiables = new HashMap<String, Long>();
         urlVaiables.put("objectiveId", objId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("dateRange", new Object[]{dateRange}).buildAndExpand(urlVaiables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpidtoList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return kpidtoList;
     }
@@ -233,7 +233,7 @@ public class KPIService {
         HashMap<String, Long> urlVaiables = new HashMap<String, Long>();
         urlVaiables.put("empId", empId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVaiables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpidtoList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return kpidtoList;
     }
@@ -243,7 +243,7 @@ public class KPIService {
         HashMap<String, Long> urlVaiables = new HashMap<String, Long>();
         urlVaiables.put("deptId", deptId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVaiables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpidtoList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return kpidtoList;
     }
@@ -260,7 +260,7 @@ public class KPIService {
     public ResponseEntity<List<Map>> getSubMeasureNodeKeyList(String nodeKey, String dateRange) {
         String url = this.scoreCardUrl + "/subMeasureNodeKeyList/" + nodeKey;
         String kpiUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List mapList = (List)this.commonRestTemplate.getForObject(kpiUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(mapList, HttpStatus.OK);
     }
@@ -268,7 +268,7 @@ public class KPIService {
     public Map subNodeKeyData(String nodekey, String measureKey, String dateRange) {
         String url = this.scoreCardUrl + "/subNodeKeyData/" + nodekey;
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("dateRange", new Object[]{dateRange}).queryParam("measureKey", new Object[]{measureKey}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         Map outList = (Map)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return outList;
     }
@@ -278,7 +278,7 @@ public class KPIService {
         HashMap<String, Long> urlVaiables = new HashMap<String, Long>();
         urlVaiables.put("deptId", deptId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVaiables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpidtoList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return kpidtoList;
     }
@@ -288,7 +288,7 @@ public class KPIService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("empId", UserThreadLocal.get().getProfile().getEmpId());
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -298,14 +298,14 @@ public class KPIService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("deptId", "");
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
 
     public List<KpiDetailsAttachmentsDTO> retriveAttachmentByKpiId(Long kpiId) {
         String url = this.scoreCardUrl + "/kpiAttachmentList/" + kpiId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

@@ -22,7 +22,8 @@ import com.estrat.service.db.service.EmployeeService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class ActivitiesMapService {
     protected ActivitiesMapRepository activitiesMapRepository;
     @Autowired
     protected EmployeeService employeeService;
-    private Logger log = Logger.getLogger(ActivitiesMapService.class);
+    private Logger log = LoggerFactory.getLogger(ActivitiesMapService.class);
 
     public Optional<ActivitiesMap> findById(long id) {
         return this.activitiesMapRepository.findById(id);

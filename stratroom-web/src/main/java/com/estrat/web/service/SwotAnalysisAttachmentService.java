@@ -51,7 +51,7 @@ public class SwotAnalysisAttachmentService {
 
     public List<SWOTAnalysisAttachmentDTO> findAll(Long swotId) {
         String url = this.scoreCardUrl + "/swotAttachList/" + swotId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List SWOTAnalysisAttachmentDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return SWOTAnalysisAttachmentDTOList;
     }

@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stratroom - Initatives</title>
+   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v0.004" rel="stylesheet">
+    <link href="assets/css/main.css?v0.004" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+    <link href="assets/css/login.css" rel="stylesheet">
+
+     <!-- Font Awsome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+  <!-- <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  -->
+    <style>
+        .initiative-gantt-color {
+            fill: #ff6f61;
+        }
+
+        .subinitiative-gantt-color {
+            fill: #6c63ff;
+        }
+
+        .activity-gantt-color {
+            fill: #ffd700;
+        }
+    </style>
+</head>
+
+<body data-bs-theme="light">
+  
+ <header id="header" class="header shadow-sm sticky-top">
+    <div class="navbar-topbar">
+        <div class="container-lg d-flex flex-wrap justify-content-between">
+            <div class="menu-controls d-flex">
+                <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Org-Structure">
+                    <span class="icon">
+                        <img src="assets/images/icons/org-structure-i.svg" width="18" height="18" alt="Org-Structure"
+                            title="Org-Structure">
+                    </span>
+                </a>
+                <a class="control-link" href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Templates">
+                        <img src="assets/images/icons/template-i.svg" width="18" height="18" alt="" title="">
+                    </span>
+                </a>
+                <!-- <a class="control-link" href="control-panel.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Control Panel">
+                    <span class="icon">
+                        <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                    </span>
+                </a> -->
+
+
+                <!-- <div class="nav-item dropdown">
+
+
+                    <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="control-panel.html">Control Panel</a></li>
+                        <li><a class="dropdown-item" href="audit-trail.html">Audit Trail</a></li>
+                        <li><a class="dropdown-item" href="user-role.html">User Role</a></li>
+
+
+                    </ul>
+                </div> -->
+                <!-- <a class="control-link" href="audit-trail.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Audit Trail">
+                    <span class="icon">
+                        <img src="assets/images/icons/audit-trail-i.svg" width="18" height="18" alt="" title="">
+                    </span>
+                </a>
+                <a class="control-link" href="user-role.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User Role">
+                    <span class="icon">
+                        <img src="assets/images/icons/user-role-i.svg" width="18" height="18">
+                    </span>
+                </a> -->
+                <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="ETL">
+                    <span class="icon">
+                        <img src="assets/images/icons/other-i.svg" width="18" height="18" alt="ETL" title="ETL">
+                    </span>
+                </a>
+            </div>
+            <div class="menu-controls d-flex flex-wrap ms-auto">
+                <div class="top-date-picker">
+                    <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+                </div>
+            </div>
+            <div class="menu-controls d-flex flex-wrap">
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/global-i.svg" width="18" height="18" alt="organization"> EN
+                </a> -->
+
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/global-i.svg" width="14" height="14" alt="organization">
+                        </span>
+                        EN
+                    </a>
+
+                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="languageDropdown">
+  <li><a class="dropdown-item" href="#" data-lang="en" data-dir="ltr">English</a></li>
+  <li><a class="dropdown-item" href="#" data-lang="ar" data-dir="rtl">Arabic</a></li>
+</ul>
+                </div>
+
+            </div>
+            <!-- <div class="menu-controls d-flex flex-wrap">
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/notification-i.svg" width="18" height="18" alt="organization">
+                </a>
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Logout">
+                    <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+                </a>
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a>
+            </div> -->
+
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-light">
+        <div class="container-lg gap-2 gap-md-3">
+
+
+            <form class="position-relative logo me-auto">
+                <a href="landing.html" class="logo-preview" id="logoPreview">
+                    <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                </a>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;"
+                    onchange="previewImage(event)">
+                <label for="fileInput" class="upload-btn">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Logo">
+                        <img src="assets/images/icons/edit-i.svg" width="12" height="12" alt="">
+                    </span>
+                </label>
+            </form>
+
+            <!-- <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button> -->
+
+            <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                aria-labelledby="mobileMenuLabel">
+                <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="navbar-collapse">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Planning
+                                </a>
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="planningDropdown">
+                                    <li><a class="dropdown-item" href="strategy-planner.html">Strategy Formulation</a></li>
+                                    <li><a class="dropdown-item" href="#">Project Formulation</a></li>
+                                    <li><a class="dropdown-item" href="#">Risk Formulation</a></li>
+
+                                    <li><a class="dropdown-item" href="#">Strategy Map</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="mastersDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Masters
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="mastersDropdown">
+                                    <li><a class="dropdown-item" href="#">Process to Enabler</a></li>
+                                    <li><a class="dropdown-item" href="rpo.html">RPO</a></li>
+                                    <li><a class="dropdown-item" href="#">Impact Survey</a></li>
+                                    <li><a class="dropdown-item" href="k-approval.html">Approval Page</a></li>
+                                    <li><a class="dropdown-item" href="risk-event-database.html">Risk Event</a></li>
+                                    <li><a class="dropdown-item" href="budgets.html">Budgets</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="myWorkSpaceDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Work Space
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="myWorkSpaceDropdown">
+
+                                    <li><a class="dropdown-item" href="my-work-space.html">My Work Space</a></li>
+                                    <li><a class="dropdown-item" href="initatives.html">Initiatives &amp;
+                                            Projects</a></li>
+                                    <li><a class="dropdown-item" href="meetings.html">Meetings</a></li>
+                                    <li><a class="dropdown-item" href="myspace.html">My Space</a></li>
+                                     <li><a class="dropdown-item" href="pestel.html">PESTEL Analysis</a></li>
+
+                                    <li><a class="dropdown-item" href="risk.html">Risk</a></li>
+                                        <li><a class="dropdown-item" href="task.html">Task</a></li>
+
+                                  <li><a class="dropdown-item" href="swot.html">SWOT Analysis</a></li>
+                                    <li><a class="dropdown-item" href="scorecard-standard.html">Scorecard</a></li>
+
+                                    <li><a class="dropdown-item" href="#">Scorecard View</a></li>
+                                    <li><a class="dropdown-item" href="#">Initiative View</a></li>
+
+
+                                </ul>
+                            </li>
+
+                            <!-- <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="my-work-space.html">My Work
+                                        Space</a>
+                                </li> -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="whiteBoardDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    White Board
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="whiteBoardDropdown">
+                                    <li><a class="dropdown-item" href="landing.html">Landing</a></li>
+                                    <li><a class="dropdown-item" href="cockpit.html">Cockpit</a></li>
+                                    <!-- <li><a class="dropdown-item" href="charts.html">Charts</a></li> -->
+                                    <li><a class="dropdown-item" href="multi-governance.html">Multi-Governance</a></li>
+
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="myFormDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Forms
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="myFormDropdown">
+                                    <li><a class="dropdown-item" href="manual.html">Manual</a></li>
+                                    <!-- <li><a class="dropdown-item" href="excel.html">Excel</a></li> -->
+                                </ul>
+                            </li>
+
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-controls global-control  d-flex flex-wrap">
+
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/notification-i.svg" width="18" height="18" alt="organization">
+                </a>
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Logout">
+            <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+          </a> -->
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="controlPanelDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                        aria-labelledby="controlPanelDropdown">
+                        <li><a class="dropdown-item" href="control-panel.html"> <span class="icon">
+                                    <img src="assets/images/icons/control-panel-i.svg" width="18" height="18" alt="">
+                                </span>Control Panel</a></li>
+                        <li><a class="dropdown-item" href="audit-trail.html"> <span class="icon">
+                                    <img src="assets/images/icons/audit-trail-i.svg" width="18" height="18" alt="">
+                                </span>Audit Trail</a></li>
+                        <li><a class="dropdown-item" href="user-role.html"> <span class="icon">
+                                    <img src="assets/images/icons/user-role-i.svg" width="18" height="18" alt="">
+                                </span>User Role</a></li>
+
+
+                    </ul>
+                </div>
+
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                        aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item profile-card" href="#">
+
+                                <span class="icon">
+                                    <img src="assets/images/icons/user-i.svg" width="32" height="32" alt="">
+                                </span>
+
+                                <div class="">
+                                    <h4>Hi John </h4>
+                                    <small>welcome to your Multi-Governance Portal</small>
+                                </div>
+                            </a></li>
+
+
+                        <li><a class="dropdown-item" href="#create-template" data-bs-toggle="modal">
+
+                                <span class="icon"><img src="assets/images/icons/template-i.svg" width="18" height="18"
+                                        alt="" title=""></span>Create Templates</a></li>
+
+                        <li><a class="dropdown-item" href="user-role.html"><span class="icon"><img
+                                        src="assets/images/icons/logout-i.svg" width="18" height="18" alt=""></span>
+                                Logout</a></li>
+
+
+                    </ul>
+                </div>
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+            </div>
+            <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                aria-controls="mobileMenu">
+                <div class="hamburger-icon">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </div>
+            </div>
+
+
+    </nav>
+</header>
+
+    <main class="pt-2 pb-2">
+        <div class="container-lg">
+            <div class="page-header grid gap-2 pb-1">
+                <div class="g-col-8 d-flex align-items-center">
+                    <h4 class="title">
+                        <span class="icon">
+                            <img src="assets/images/icons/governance-i.svg" alt="governance" title="governance">
+                        </span>
+                        Gantt
+                    </h4>
+                </div>
+            </div>
+        </div>
+            <div class="container-lg py-2">
+            <div class="row g-4">
+                <div class="col-12 sub_initiatives select-toggle chart">
+                    <div class="card table-card border border table-container">
+                        <div class="card-header bg-transparent d-flex justify-content-between gap-3">
+                            <button onclick="menuToggle()" class="btn gantt-collopse" data-bs-toggle="tooltip"
+                                data-bs-placement="right" title="Collapse Table">
+                                <i id="toggleIcon" class="fa fa-angle-double-left"></i>
+                            </button>
+
+                            <div class="btn-group" id="control-view" role="group">
+                                <button type="button" href="#" class="btn btn-primary" data-value="Day">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Day">D</span>
+                                </button>
+                                <button type="button" href="#" class="btn btn-primary" data-value="Week">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Week">W
+                                </button>
+                                <button type="button" href="#" class="btn btn-primary active"
+                                    data-value="Month">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Month">M</span>
+                                </button>
+                                <button type="button" href="#" class="btn btn-primary active" data-bs-toggle="modal"
+                                    data-bs-target="#sub_initative_edit_popup">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add">
+                                        <i class="fas fa-plus"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-5" id="TreeTable">
+                                    <div class="table-responsive">
+                                        <table id="example-basic" class="table table-bordered treetable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Task Name</th>
+                                                    <th class="text-nowrap">Start Date</th>
+                                                    <th class="text-nowrap">End Date</th>
+                                                    <th>Owner</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr>
+                                                    <td>Implement Energy Efficiency Measures</td>
+                                                    <td class="text-nowrap">Sep 3, 2024</td>
+                                                    <td class="text-nowrap">Sep 20, 2024</td>
+                                                    <td class="text-center">
+                                                        <div class="avatar avatar-sm" data-bs-toggle="modal"
+                                                            data-bs-target="#user_edit_popup">
+                                                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit User">
+                                                            <img class="rounded-circle sub_init_img"
+                                                                src="assets/images/user/user9.jpg" alt="user" width="24"
+                                                                height="24">
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Upgrade Lighting Systems to LED</td>
+                                                    <td class="text-nowrap">Sep 14, 2024</td>
+                                                    <td class="text-nowrap">Sep 17, 2024</td>
+                                                    <td class="text-center">
+                                                        <div class="avatar avatar-sm" data-bs-toggle="modal"
+                                                            data-bs-target="#user_edit_popup">
+                                                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit User">
+                                                                <img class="rounded-circle sub_init_img"
+                                                                    src="assets/images/user/user9.jpg" alt="user" width="24"
+                                                                    height="24">
+                                                                </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Install Smart HVAC Systems</td>
+                                                    <td class="text-nowrap">Sep 15, 2024</td>
+                                                    <td class="text-nowrap">Sep 25, 2024</td>
+                                                    <td class="text-center">
+                                                        <div class="avatar avatar-sm" data-bs-toggle="modal"
+                                                            data-bs-target="#user_edit_popup">
+                                                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit User">
+                                                                <img class="rounded-circle sub_init_img"
+                                                                    src="assets/images/user/user9.jpg" alt="user" width="24"
+                                                                    height="24">
+                                                                </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Complete the lighting audit across all major venues</td>
+                                                    <td class="text-nowrap">Sep 25, 2024</td>
+                                                    <td class="text-nowrap">Sep 25, 2024</td>
+                                                    <td class="text-center">
+                                                        <div class="avatar avatar-sm" data-bs-toggle="modal"
+                                                            data-bs-target="#user_edit_popup">
+                                                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit User">
+                                                                <img class="rounded-circle sub_init_img"
+                                                                    src="assets/images/user/user9.jpg" alt="user" width="24"
+                                                                    height="24">
+                                                                </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Finalize selection of LED suppliers and negotiate contracts</td>
+                                                    <td class="text-nowrap">Sep 25, 2024</td>
+                                                    <td class="text-nowrap">Sep 25, 2024</td>
+                                                    <td class="text-center">
+                                                        <div class="avatar avatar-sm" data-bs-toggle="modal"
+                                                            data-bs-target="#user_edit_popup">
+                                                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit User">
+                                                                <img class="rounded-circle sub_init_img"
+                                                                    src="assets/images/user/user9.jpg" alt="user" width="24"
+                                                                    height="24">
+                                                                </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Conduct a comprehensive audit of all existing lighting systems
+                                                        across facilities to
+                                                        identify areas where upgrades are needed</td>
+                                                    <td class="text-nowrap">Sep 23, 2024</td>
+                                                    <td class="text-nowrap">Sep 25, 2024</td>
+                                                    <td class="text-center">
+                                                        <div class="avatar avatar-sm" data-bs-toggle="modal"
+                                                            data-bs-target="#user_edit_popup">
+                                                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit User">
+                                                                <img class="rounded-circle sub_init_img"
+                                                                    src="assets/images/user/user9.jpg" alt="user" width="24"
+                                                                    height="24">
+                                                                </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div id="gantt" style="width: 100%; height: 360px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="col-12 text-center py-2 copyright">
+    <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</footer>
+
+<div class="floating-box shadow-sm">
+        <a class="control-link" href="#"><span class="icon"><img src="assets/images/icons/organization-i.svg" width="18"
+                    height="18" alt="organization"></span></a>
+        <a class="control-link" href="#"><span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                    height="18" alt="organization"></span></a>
+    </div>
+
+
+    <!-- END File Validate Form -->
+    <!--#START Sub Initiatives Edit -->
+    <div id="sub_initative_edit_popup" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-5" id="myLargeModalLabel_1">
+                        Add New Task
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sub_initative_Form">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="sub_Initiative_id" class="form-label">ID</label>
+                                    <input type="text" class="form-control browser-default" name="sub_Initiative_id"
+                                        id="sub_Initiative_id">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="sub_Initiative_id" class="form-label">Task Name</label>
+                                    <input type="text" class="form-control browser-default" name="sub_Initiative_id"
+                                        id="sub_Initiative_id">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="sub_initative_desc" class="form-label">Task Description</label>
+                                    <textarea class="form-control browser-default" autocomplete="off"
+                                        name="subinitiative_desc" id="subinitiative_desc" cols="" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Impact</label>
+                                    <select class="form-control form-select">
+                                        <option>Choose</option>
+                                        <option>Option - 1</option>
+                                        <option>Option - 2</option>
+                                        <option>Option - 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sub_Initiative_id" class="form-label">Budget</label>
+                                    <input type="text" class="form-control browser-default">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sub_Initiative_id" class="form-label">Planned Start Date/End
+                                        Date</label>
+                                    <input type="date" class="form-control browser-default" name="sub_Initiative_id"
+                                        id="sub_Initiative_id">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sub_initative_progress" class="form-label">Actual Start Date/End
+                                        Date</label>
+                                    <input type="date" class="form-control browser-default"
+                                        name="sub_initative_progress" id="sub_initative_progress" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="kpi_fields" class="form-label">Manual Status</label>
+                                    <div class="text-start">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="dfActual">
+                                            <label class="form-check-label" for="dfActual"></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="dfTarget">
+                                            <label class="form-check-label" for="dfTarget"></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" id="Budget">
+                                            <label class="form-check-label" for="Budget"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-control form-select">
+                                        <option>Choose</option>
+                                        <option>Option - 1</option>
+                                        <option>Option - 2</option>
+                                        <option>Option - 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sub_initative_progress" class="form-label">Progress (%)</label>
+                                    <input type="text" class="form-control browser-default" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="sub_initative_progress" class="form-label">Amount</label>
+                                    <div class="d-flex gap-2 pageViewOption">
+                                        <div class="form-check form-check-inline mt-1">
+                                            <input class="form-check-input" type="checkbox" id="subInitiativeView"
+                                                name="" value="">
+                                            <label class="form-check-label" for="subInitiativeView">Budget</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mt-1">
+                                            <input class="form-check-input" type="checkbox" id="chartView" name=""
+                                                value="">
+                                            <label class="form-check-label" for="chartView">Utilised</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mt-1">
+                                            <input class="form-check-input" type="checkbox" id="activitiesView" name=""
+                                                value="">
+                                            <label class="form-check-label" for="activitiesView">Balance</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+                    <div class="modal-audit">
+                        <h5 class="title">
+                            Audit
+                        </h5>
+                        <div class="audit-listing">
+                            <div class="audit-box">
+                                <div class="title">Created By :</div>
+                                <div class="text">Arun</div>
+                            </div>
+                            <div class="audit-box">
+                                <div class="title">Modified By :</div>
+                                <div class="text">Karthik</div>
+                            </div>
+                            <div class="audit-box">
+                                <div class="title">Created Date :</div>
+                                <div class="text">Oct 02, 2019</div>
+                            </div>
+                            <div class="audit-box">
+                                <div class="title">Modified Date :</div>
+                                <div class="text">Oct 02, 2019</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#END Sub Initiatives Edit -->
+
+    <div class="modal fade" id="user_edit_popup" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+        aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title fs-5">Edit Users</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group add-attendees">
+                        <div class="list-group-item attendee">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees1">
+                                <label class="form-check-label" for="attendees1">
+                                    <div class="name">Chris</div>
+                                    <div class="image">
+                                        <img src="assets/images/icons/speaker-1.svg" alt="" class="">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees2">
+                                <label class="form-check-label" for="attendees2">
+                                    <div class="name">Kevin</div>
+                                    <div class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" class="">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees3">
+                                <label class="form-check-label" for="attendees3">
+                                    <div class="name">Richard</div>
+                                    <div class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" class="">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees4">
+                                <label class="form-check-label" for="attendees4">
+                                    <div class="name">Stark</div>
+                                    <div class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" class="">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees5">
+                                <label class="form-check-label" for="attendees5">
+                                    <div class="name">Warner</div>
+                                    <div class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" class="">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees6">
+                                <label class="form-check-label" for="attendees6">
+                                    <div class="name">Williamson</div>
+                                    <div class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" class="">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees7">
+                                <label class="form-check-label" for="attendees7">
+                                    <div class="name">Zara</div>
+                                    <div class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" class="">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <link href="assets/css/jquery-ui.min.css" rel="stylesheet">
+    <script src="assets/js/jquery-ui.min.js"></script>
+
+
+    <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+    <script src="assets/js/moment.js"></script>
+    <script src="assets/js/knockout-3.5.0.js"></script>
+    <script src="assets/js/daterangepicker.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+
+    <link href="assets/css/file-upload.css" rel="stylesheet">
+    <script src="assets/js/file-upload.js"></script>
+
+    <script src="assets/js/paging.js"></script>
+
+
+    <!-- Frappe Gantt Chart -->
+    <script src="assets/js/frappe-gantt.min.js"></script>
+    <link rel="stylesheet" href="assets/css/frappe-gantt.css" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.umd.js"></script> -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt/dist/frappe-gantt.css"> -->
+
+    <script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="assets/js/gantt.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            initCardChart();
+        });
+
+        function initCardChart() {
+            //Chart Pie
+            $(".chart_yellow.chart-pie").sparkline([50, 50], {
+                type: "pie",
+                height: "30px",
+                borderWidth: 1,
+                borderColor: "#ddd",
+                sliceColors: ["#ffd500", "#ffffff"]
+            });
+
+            $(".chart_green.chart-pie").sparkline([80, 15], {
+                type: "pie",
+                height: "30px",
+                borderWidth: 1,
+                borderColor: "#ddd",
+                sliceColors: ["#1aa243", "#ffffff"]
+            });
+
+            $(".chart_orange.chart-pie").sparkline([70, 30], {
+                type: "pie",
+                height: "30px",
+                borderWidth: 1,
+                borderColor: "#ddd",
+                sliceColors: ["#e84343", "#ffffff"]
+            });
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            function toggleElements() {
+                $('.pageViewOption input[type="checkbox"]').each(function () {
+                    $("." + $(this).val()).toggle($(this).is(':checked'));
+                    console.log($("." + $(this).val()).toggle($(this).is(':checked')))
+                });
+            }
+
+            toggleElements(); // Initialize on page load
+            $(document).on('click', '.pageViewOption input[type="checkbox"]', toggleElements); // Handle clicks
+        });
+
+
+        // Initialize the popover with sanitized disabled
+        const popoverTrigger = document.getElementById('popoverFilter');
+        new bootstrap.Popover(popoverTrigger, {
+            html: true,
+            content: `
+        <div>
+
+  <div class="d-flex justify-content-between gap-3 mb-3 align-items-center">
+            <h5 class="h6 mb-0">View</h5>
+            <button type="button" class="btn-close" aria-label="Close"></button>
+          </div>
+
+          
+          <div class="d-flex flex-column gap-2 pageViewOption">
+
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" checked id="subInitiativeView" name="subInitiative" value="subInitiative">
+    <label class="form-check-label" for="subInitiativeView">Sub Initiative</label>
+  </div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" checked id="chartView" name="chart" value="chart">
+    <label class="form-check-label" for="chartView">Chart</label>
+  </div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" checked id="activitiesView" name="activities" value="activities">
+    <label class="form-check-label" for="activitiesView">Activities</label>
+  </div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" checked id="milestonesView" name="milestones" value="milestones">
+    <label class="form-check-label" for="milestonesView">Milestones</label>
+  </div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" checked id="commentsView" name="comments" value="comments">
+    <label class="form-check-label" for="commentsView">Comments</label>
+  </div>
+
+
+    
+            </div>
+        </div>
+      `,
+            sanitize: false // Disable sanitization
+        });
+
+        // Handle close button click
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('btn-close')) {
+                const popover = bootstrap.Popover.getInstance(popoverTrigger);
+                popover.hide();
+            }
+        });
+    </script>
+
+
+
+
+
+
+    <!-- comment box ::::::::::::::::::::::::::::::::::::::::::::::: -->
+    <script>
+        $("#objective_owner").on("change", function () {
+            var optionValue = $(this).val(); // Get the selected value directly
+            $(".box").hide(); // Hide all boxes
+            if (optionValue) $("." + optionValue).show(); // Show the matched box
+        });
+
+        $("body").on("click", ".reply", function () {
+            $(this).parent().parent().parent().next().find("div.comment_send").toggle();
+        });
+
+        $(document).on("click", ".countclick", function () {
+            $(this).toggleClass("text-success");
+            var counter = $(this).closest('li').next('li').find('span.counter').text();
+            if ($(this).text() == "Like") {
+                $(this).text("Unlike");
+            } else {
+                $(this).text("Like");
+            }
+            if ($(this).hasClass("text-success")) {
+                $(this).closest('li').next('li').find('span.counter').text(parseInt(parseInt(counter) + 1))
+            } else {
+                $(this).closest('li').next('li').find('span.counter').text(parseInt(parseInt(counter) - 1))
+            }
+        });
+
+
+
+        $("body").on("click", ".reply-btn", function () {
+            var parent = $(this).parent().parent().parent().parent();
+            var value = $(this).parent().find("input.comment").val();
+            var timeNow = formatDate(new Date());
+            var data =
+                '<ul class="list-unstyled d-flex flex-column gap-2"><li><div class="d-flex gap-2"><div class="flex-column comment_image"><img src="assets/images/user/usrbig6.jpg" class="rounded-circle" alt="User" width="40"></div><div class="d-flex flex-column gap-3 comment_details"><ul class="list-unstyled"><li><span class="message-data-name"><strong>Elmer Roberts, CEO </strong></span></li><li>' +
+                value +
+                '</li><li><ul class="list-unstyled d-flex gap-2 mt-2"><li class="reply">Reply</li><li>Like</li><li>' +
+                timeNow +
+                ', Today</li></ul></li></ul><ul class="list-unstyled d-flex flex-column gap-3"><li><div class="comment_send" style=display:none><div class="input-group"><input aria-describedby="replySendBtn" aria-label="Type a comment..."class="comment form-control form-control-sm" placeholder="Type a comment..."> <button class="btn btn-sm btn-outline-secondary reply-btn send_btn" id="replySendBtn" type="button"><i class="fa-arrow-right fas"></i></button></div></div></ul></div><div class="flex-column"><div class="dropdown"><button class="btn btn-link p-0" type="button" aria-expanded="false" data-bs-toggle="dropdown"><img height="18" src="assets/images/icons/menu-dot-vertical-i.svg" width="18"></button><ul class="border-0 dropdown-menu dropdown-menu-end shadow"><li><a class="dropdown-item" href="#sub_activitie_popup" data-bs-toggle="modal">Edit</a><li><a class="dropdown-item" href="#" onclick="return!1">Delete</a></ul></div></div></div></li><ul>';
+            parent.append(data);
+            $(this).parent().parent().toggle();
+        });
+    </script>
+    <!-- comment box ::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+    <!-- language-translation :::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+    </script>
+
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- language-translation-end :::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+</body>
+
+</html>

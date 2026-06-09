@@ -43,14 +43,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScoreCardUtil {
-    private Logger log = Logger.getLogger(ScoreCardUtil.class);
+    private Logger log = LoggerFactory.getLogger(ScoreCardUtil.class);
     @Autowired
     private ScoreCardService scoreCardService;
     @Autowired
@@ -64,7 +65,7 @@ public class ScoreCardUtil {
 
     @Async
     public void sendStatusLightNotifications(String orgId) {
-        this.log.error((Object)("Status Light batch started :: " + new Date(System.currentTimeMillis())));
+        this.log.error("Status Light batch started :: " + new Date(System.currentTimeMillis()));
         HashMap<String, String> commonHeaders = new HashMap<String, String>();
         commonHeaders.put("USER_ORG_ID", orgId);
         UserThreadLocal.set(commonHeaders);
@@ -79,13 +80,13 @@ public class ScoreCardUtil {
         this.dataUtil.calculateStatusLight(scoreCardList);
         UserThreadLocal.set(null);
         KPIThreadLocal.set(null);
-        this.log.error((Object)("Status Light batch ended :: " + new Date(System.currentTimeMillis())));
+        this.log.error("Status Light batch ended :: " + new Date(System.currentTimeMillis()));
     }
 
     public void kpiStatusNotification() {
         List<com.estrat.service.etl.dto.OrganizationDetails> orgList = this.dbService.getOrgList();
         for (com.estrat.service.etl.dto.OrganizationDetails org : orgList) {
-            this.log.error((Object)("Status Light batch started :: " + new Date(System.currentTimeMillis())));
+            this.log.error("Status Light batch started :: " + new Date(System.currentTimeMillis()));
             HashMap<String, String> commonHeaders = new HashMap<String, String>();
             commonHeaders.put("USER_ORG_ID", String.valueOf(org.getOrgId()));
             UserThreadLocal.set(commonHeaders);
@@ -105,7 +106,7 @@ public class ScoreCardUtil {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
             String formattedDate = currentDate.format(formatter);
             for (com.estrat.service.etl.dto.ScoreCardDetailsDTO scorecardDetails : scoreCardList) {
-                this.log.error((Object)(" Department ID :: " + scorecardDetails.getDepartmentId() + " Name ::: " + scorecardDetails.getScorecardName()));
+                this.log.error(" Department ID :: " + scorecardDetails.getDepartmentId() + " Name ::: " + scorecardDetails.getScorecardName());
                 try {
                     ScoreCardResponseDTO scoreCardResponseDTO = this.scoreCardService.scoreCardResponse(scorecardDetails.getPageId(), Long.valueOf(scorecardDetails.getOwner()), (String)periodMap.get("Monthly"), String.valueOf(org.getOrgId()));
                     if (scoreCardResponseDTO == null || scoreCardResponseDTO.getCardDetailsDTO() == null) continue;
@@ -119,7 +120,7 @@ public class ScoreCardUtil {
                                     boolean shouldProcess = this.kpiUtil.shouldProcessFrequency(kpi.getKpiValue().get("kpi_measurement").toString(), LocalDate.now());
                                     if (!shouldProcess) continue;
                                     String color = (String)kpi.getKpiValue().get("statusLight");
-                                    this.log.error((Object)("KPI ID :::: " + kpi.getKpiId() + " KPI Name  :: " + kpi.getKpiName() + " frequency ::: " + kpi.getKpiValue().get("kpi_measurement").toString()));
+                                    this.log.error("KPI ID :::: " + kpi.getKpiId() + " KPI Name  :: " + kpi.getKpiName() + " frequency ::: " + kpi.getKpiValue().get("kpi_measurement").toString());
                                     Long deptId = scorecardDetails.getDepartmentId();
                                     if (color.equals("red fas fa-flag")) {
                                         KpiStatusNotification kpiStatusNotification = new KpiStatusNotification();
@@ -132,7 +133,7 @@ public class ScoreCardUtil {
                                         kpiStatusNotification.setDepartmentId(deptId);
                                         kpiStatusNotification.setFrequency(kpi.getKpiValue().get("kpi_measurement").toString());
                                         kpiStatusNotification.setNotificationType(Integer.valueOf(1));
-                                        this.log.error((Object)("Sending Noticiation PSM  ::: " + kpiStatusNotification.getActualValue() + " Target Value ::: " + kpiStatusNotification.getTargetValue()));
+                                        this.log.error("Sending Noticiation PSM  ::: " + kpiStatusNotification.getActualValue() + " Target Value ::: " + kpiStatusNotification.getTargetValue());
                                         if (!this.areValuesEqual(kpiStatusNotification.getActualValue(), kpiStatusNotification.getTargetValue())) {
                                             this.scoreCardService.sendnotification(kpiStatusNotification, deptId);
                                         }
@@ -150,7 +151,7 @@ public class ScoreCardUtil {
                     ex.printStackTrace();
                 }
             }
-            this.log.error((Object)("Status Light batch ended :: " + new Date(System.currentTimeMillis())));
+            this.log.error("Status Light batch ended :: " + new Date(System.currentTimeMillis()));
         }
     }
 

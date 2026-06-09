@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<!-- <html lang="ar" dir="rtl"> -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A digital gateway for strategy execution serves as a centralized</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v0.005" rel="stylesheet">
+    <link href="assets/css/main.css?v0.005" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+
+
+    <!-- Font Awsome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+        .theme-option {
+            border-width: 2px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .theme-option.active {
+            border-color: var(--stratroom-primary);
+            box-shadow: 0 0 10px rgba(var(--stratroom-primary-rgb), 0.5);
+        }
+    </style>
+
+
+</head>
+
+<body data-bs-theme="light">
+    <!-- <div class="page-loader">
+    <div class="d-flex flex-column justify-content-center gap-1">
+      <div class="circle-loader">
+        <img class="centre-logo" src="assets/images/logo-icon.svg" alt="startroom" width="62" height="62">
+      </div>
+      <h5 class="loader-title" data-translate="loaderTitle">“While we load, grab your espresso and stay caffeinated.” <i
+          class="fas fa-coffee text-primary"></i></h5>
+      <p class="loader-description" data-translate="loaderDescription"> “it takes 42 beans for a single shot. StratRoom
+        uses countless data points to deliver powerful insights!”</p>
+      <p class="loader-text"><span data-translate="pageloading">Loading</span> <span id="percent">0%</span></p>
+    </div>
+  </div> -->
+    <header id="header" class="header shadow-sm sticky-top">
+        <div class="navbar-topbar">
+            <div class="container-lg d-flex flex-wrap justify-content-between">
+                <div class="menu-controls d-flex">
+                    <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="Org Structure" data-translate="topbar.orgStructure">
+                        <span class="icon network">
+                            <i data-lucide="network" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+                    <a class="control-link " href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                        <span class="icon layout-template" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Templates" data-translate="topbar.templates">
+                            <i data-lucide="layout-template" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+
+                    <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="ETL" data-translate="topbar.etl">
+                        <span class="icon layout-grid">
+                            <i data-lucide="layout-grid" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+                    <div class="nav-item dropdown dropdown-top-header">
+                        <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-translate="topbar.masters"></a>
+                        <ul class="dropdown-menu dropdown-menu-start border-0 shadow-sm"
+                            aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.products"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.process"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.vitalRecords"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.technology"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.facilities"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.personal"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.iso"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.budget"></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap ms-auto">
+                    <div class="top-date-picker">
+                        <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap">
+
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                            </span>
+                            <span id="currentLanguage">EN</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="ar">Arabic</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md navbar-light">
+            <div class="container-lg gap-2 gap-md-3">
+                <div class="position-relative logo me-auto">
+                    <a href="landing.html" class="logo-preview" id="logoPreview">
+                        <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                    </a>
+
+                </div>
+
+
+
+                <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                    aria-labelledby="mobileMenuLabel">
+                    <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="navbar-collapse">
+
+
+                            <ul class="navbar-nav p-0 ms-md-auto">
+
+                                <!-- 1) Plan -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.plan"></a>
+
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" data-menu="plan"
+                                        aria-labelledby="planningDropdown">
+                                        <li data-id="strategy-planner">
+                                            <a class="dropdown-item" href="strategy-planner.html"
+                                                data-translate="menu.planItems.strategyPlanner"></a>
+                                        </li>
+                                        <li data-id="swot">
+                                            <a class="dropdown-item" href="swot.html"
+                                                data-translate="menu.planItems.swot"></a>
+                                        </li>
+                                        <li data-id="pestel">
+                                            <a class="dropdown-item" href="pestel.html"
+                                                data-translate="menu.planItems.pestel"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 2) Measure -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="measureDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.measure"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="measureDropdown">
+                                        <li data-id="scorecard">
+                                            <a class="dropdown-item" href="scorecard.html"
+                                                data-translate="menu.measureItems.scorecard"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 3) Execute -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="executeDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.execute"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="executeDropdown">
+                                        <li data-id="initiatives">
+                                            <a class="dropdown-item" href="initiatives-projects.html"
+                                                data-translate="menu.executeItems.initiatives"></a>
+                                        </li>
+                                        <li data-id="tasks">
+                                            <a class="dropdown-item" href="tasks.html"
+                                                data-translate="menu.executeItems.tasks"></a>
+                                        </li>
+                                        <li data-id="budget-approval">
+                                            <a class="dropdown-item" href="budget-approval.html"
+                                                data-translate="menu.executeItems.budgetApproval"></a>
+                                        </li>
+                                        <li data-id="budgets">
+                                            <a class="dropdown-item" href="budgets.html"
+                                                data-translate="menu.executeItems.budgets"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 4) Govern -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="governDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.govern"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="governDropdown">
+                                        <li data-id="risk-register">
+                                            <a class="dropdown-item" href="risk-register.html"
+                                                data-translate="menu.governItems.riskRegister"></a>
+                                        </li>
+                                        <li data-id="risk-approval">
+                                            <a class="dropdown-item" href="risk-approval.html"
+                                                data-translate="menu.governItems.riskApproval"></a>
+                                        </li>
+                                        <li data-id="compliance">
+                                            <a class="dropdown-item" href="compliance.html"
+                                                data-translate="menu.governItems.compliance"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 5) Meet -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="meetDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.meet"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="meetDropdown">
+                                        <li data-id="meetings">
+                                            <a class="dropdown-item" href="meetings.html"
+                                                data-translate="menu.meetItems.meetings"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 6) Report -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.report"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="reportDropdown">
+                                        <li data-id="my-cockpit">
+                                            <a class="dropdown-item" href="my-cockpit.html"
+                                                data-translate="menu.reportItems.myCockpit"></a>
+                                        </li>
+                                        <li data-id="my-performance">
+                                            <a class="dropdown-item" href="my-performance.html"
+                                                data-translate="menu.reportItems.myPerformance"></a>
+                                        </li>
+                                        <li data-id="whiteboard">
+                                            <a class="dropdown-item" href="whiteboard.html"
+                                                data-translate="menu.reportItems.whiteboard"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-controls global-control  d-flex flex-wrap">
+
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="notificationDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="bottom"
+                            data-bs-title="Notification">
+                            <span class="icon">
+                                <i data-lucide="bell-dot" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-notification-menu dropdown-menu-icon border-0 shadow-sm"
+                            aria-labelledby="notificationDropdown" data-bs-auto-close="outside"
+                            style="width: 350px; max-width: calc(100vw - 2rem); max-height: 400px; overflow-y: auto;">
+
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">New message from John Smith</div>
+                                        <small class="text-muted">Risk approval required for Phase 2</small>
+                                        <div class="text-muted small">2 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">System maintenance scheduled</div>
+                                        <small class="text-muted">Server will be down for 30 minutes</small>
+                                        <div class="text-muted small">1 day ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Template review deadline</div>
+                                        <small class="text-muted">Document template needs approval by EOD</small>
+                                        <div class="text-muted small">3 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Audit report generated</div>
+                                        <small class="text-muted">Monthly compliance report is ready</small>
+                                        <div class="small" class="text-muted small">5 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Meeting reminder</div>
+                                        <small class="text-muted">Weekly team standup in 30 minutes</small>
+                                        <div class="text-muted small">30 min ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Task completed</div>
+                                        <small class="text-muted">Database backup completed successfully</small>
+                                        <div class="text-muted small">1 hour ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">New user registered</div>
+                                        <small class="text-muted">Sarah Johnson joined the platform</small>
+                                        <div class="text-muted small">6 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Security update</div>
+                                        <small class="text-muted">Password policy has been updated</small>
+                                        <div class="text-muted small">2 days ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Download ready</div>
+                                        <small class="text-muted">Export file generation completed</small>
+                                        <div class="text-muted small">3 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Audit report generated</div>
+                                        <small class="text-muted">Monthly compliance report is ready</small>
+                                        <div class="small" class="text-muted small">5 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-center py-2" href="#">
+                                    <small class="text-primary fw-medium">View all notifications</small>
+                                </a></li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="controlPanelDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="controlPanelDropdown">
+                            <li><a class="dropdown-item" href="control-panel.html"
+                                    data-translate="topbar.settingsItems.controlPanel"></a></li>
+                            <li><a class="dropdown-item" href="audit-trail.html"
+                                    data-translate="topbar.settingsItems.auditTrail"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="user-role.html"
+                                    data-translate="topbar.settingsItems.userRoles"></a>
+                            </li>
+                        </ul>
+
+
+                        </ul>
+                    </div>
+
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item profile-card" href="#">
+
+                                    <span class="icon circle-user-round">
+                                        <i data-lucide="circle-user-round" style="width: 32px; height: 32px;"></i>
+                                    </span>
+
+
+                                    <div class="">
+                                        <h4><span data-translate="topbar.hi">Hi</span> John </h4>
+                                        <small data-translate="topbar.welcomeToPortal"></small>
+                                    </div>
+                                </a></li>
+
+
+                            <li><a class="dropdown-item profile-card" href="#"
+                                    data-translate="topbar.profileItems.myProfile"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="manual.html"
+                                    data-translate="topbar.profileItems.myForms"></a></li>
+                            <li><a class="dropdown-item" href="performance-contract.html"
+                                    data-translate="topbar.profileItems.performanceContract"></a></li>
+                            <li>
+                                <a class="dropdown-item" href="performance-improvement-plan.html"
+                                    data-translate="topbar.profileItems.performanceImprovementPlan"
+                                    style="cursor: pointer;">
+
+                                    Performance improvement Plan</a>
+                            </li>
+                            <li><a class="dropdown-item" href="audit-trail.html"
+                                    data-translate="topbar.profileItems.auditTrail"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="user-role.html"
+                                    data-translate="topbar.profileItems.logout"></a></li>
+
+
+                        </ul>
+
+                    </div>
+                    <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+                </div>
+                <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                    aria-controls="mobileMenu">
+                    <div class="hamburger-icon">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </div>
+                </div>
+
+
+        </nav>
+    </header>
+
+
+    <main>
+        <section id="heroSection1" class="py-3 hero-section theme-default"
+            style="background: url(./assets/images/landing-theme/strategy-map-02.jpg) right top no-repeat;background-size: cover;">
+            <div class="blur-overlay"></div>
+            <div class="container-lg">
+                <div class="page-header grid gap-2 pb-1">
+                    <div class="g-col-8 d-flex align-items-center">
+                        <h4 class="title text-white">
+                            <span class="icon">
+                                <img src="assets/images/icons/meetings-i.svg" alt="meetings" title="meetings">
+                            </span>
+                            Strategy Initiatives
+                        </h4>
+                    </div>
+                    <div class="load-page page-actions g-col-4">
+                        <div class="page-icons">
+                            <ul>
+
+
+                                <li>
+                                    <a href="javascript:;" id="popoverFilterComplianceCategory"
+                                        class="btn btn-sm btn-icon">
+                                        <span data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                            title="Compliance Category">
+                                            <img src="assets/images/icons/filter-i.svg" width="12" height="12"
+                                                alt="Filter">
+                                        </span>
+
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <div class="form-group">
+                            <select id="strategyMapSelect" class="form-select form-select-sm">
+                                <option value="Chairman Board of Directors">Chairman Board of Directors</option>
+                                <option value="Chief Executive Officer">Chief Executive Officer</option>
+                                <option value="Chief Sales Officer">Chief Sales Officer</option>
+                                <option value="Americas">Americas</option>
+                                <option value="Asia Pacific">Asia Pacific</option>
+                                <option value="United Kingdom">United Kingdom</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="strategyMapPageSelect" class="form-select form-select-sm">
+                                <option value="Page 1">Page 1</option>
+                                <option value="Page 2">Page 2</option>
+                                <option value="Page 3">Page 3</option>
+                                <option value="Page 4">Page 4</option>
+                                <option value="Page 5">Page 5</option>
+                                <option value="Page 6">Page 6</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-lg py-2 grid gap-4">
+
+                <div class="grid gap-2 g-col-12 strategyRow">
+                    <!-- Customer Perspective -->
+                    <div class="g-col-md-3 g-col-12">
+                        <div class="card border-0 h-100 c1">
+                            <div class="card-header bg-transprant border-0 pb-0">
+                                <h6 class="card-title fs-6 font-weight-medium mb-0">Perspectives</h6>
+                                <p class="small text-muted mb-0">What are our key focus areas?</p>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+
+                                <div class="gauge-wrapper" data-id="g1">
+                                    <div class="gauge" data-chart></div>
+                                    <div class="needle" data-needle></div>
+                                    <div class="needle-circle"></div>
+                                    <input hidden type="range" class="speedSlider" min="0" max="100" value="50">
+                                    <div class="gauge-labels"></div>
+                                </div>
+
+
+
+                                <div
+                                    class="d-flex gap-2 align-items-center justify-content-between bg-primary rounded-pill text-white px-4 ps-1 py-1 mt-3">
+                                    <img src="./assets/images/icons/finance-w.svg" width="42" height="42" alt="Finance">
+                                    <h6 class="fs-6 mb-0 text-uppercase riCategory">Finance</h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Strategic Initiatives -->
+                    <div class="g-col-md-9 g-col-12">
+
+
+                        <div class="card border-0">
+                            <div class="card-header bg-transprant border-0 pb-0">
+                                <h6 class="card-title fs-6 font-weight-medium mb-0">Strategic Initiatives</h6>
+                                <p class="small text-muted mb-0">What are our strategic initiatives?</p>
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-sm table-striped table-bordered w-100 text-nowrap small">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th class="text-center">Start - End Date</th>
+                                            <th class="text-center">Progress</th>
+                                            <th class="text-center">Days Remaining</th>
+                                            <th class="text-center">Status</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Improve Clarity of Offering</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+
+                                        </tr>
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Overall Sales</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-yellow-i.svg"
+                                                    width="12" height="12"></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Customer Satisfaction</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Partner Satisfaction</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+                <div class="grid gap-2 g-col-12 strategyRow">
+                    <!-- Customer Perspective -->
+                    <div class="g-col-md-3 g-col-12">
+                        <div class="card border-0 h-100 c1">
+                            <div class="card-header bg-transprant border-0 pb-0">
+                                <h6 class="card-title fs-6 font-weight-medium mb-0">Perspectives</h6>
+                                <p class="small text-muted mb-0">What are our key focus areas?</p>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+
+                                <div class="gauge-wrapper" data-id="g2">
+                                    <div class="gauge" data-chart></div>
+                                    <div class="needle" data-needle></div>
+                                    <div class="needle-circle"></div>
+                                    <input hidden type="range" class="speedSlider" min="0" max="100" value="25">
+                                    <div class="gauge-labels"></div>
+                                </div>
+
+
+                                <div
+                                    class="d-flex gap-2 align-items-center justify-content-between bg-primary rounded-pill text-white px-4 ps-1 py-1 mt-3">
+                                    <img src="./assets/images/icons/customer-w.svg" width="42" height="42"
+                                        alt="Customer">
+
+                                    <h6 class="fs-6 mb-0 text-uppercase riCategory">Customer</h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Strategic Initiatives -->
+                    <div class="g-col-md-9 g-col-12">
+
+
+                        <div class="card border-0">
+                            <div class="card-header bg-transprant border-0 pb-0">
+                                <h6 class="card-title fs-6 font-weight-medium mb-0">Strategic Initiatives</h6>
+                                <p class="small text-muted mb-0">What are our strategic initiatives?</p>
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-sm table-striped table-bordered w-100 text-nowrap small">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th class="text-center">Start - End Date</th>
+                                            <th class="text-center">Progress</th>
+                                            <th class="text-center">Days Remaining</th>
+                                            <th class="text-center">Status</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Improve Clarity of Offering</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+
+                                        </tr>
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Overall Sales</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-yellow-i.svg"
+                                                    width="12" height="12"></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Customer Satisfaction</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Partner Satisfaction</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="grid gap-2 g-col-12 strategyRow">
+                    <!-- Customer Perspective -->
+                    <div class="g-col-md-3 g-col-12">
+                        <div class="card border-0 h-100 c1">
+                            <div class="card-header bg-transprant border-0 pb-0">
+                                <h6 class="card-title fs-6 font-weight-medium mb-0">Perspectives</h6>
+                                <p class="small text-muted mb-0">What are our key focus areas?</p>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+
+
+                                <div class="gauge-wrapper" data-id="g3">
+                                    <div class="gauge" data-chart></div>
+                                    <div class="needle" data-needle></div>
+                                    <div class="needle-circle"></div>
+                                    <input hidden type="range" class="speedSlider" min="0" max="100" value="80">
+                                    <div class="gauge-labels"></div>
+                                </div>
+
+                                <div
+                                    class="d-flex gap-2 align-items-center justify-content-between bg-primary rounded-pill text-white px-4 ps-1 py-1 mt-3">
+                                    <img src="./assets/images/icons/internal-process-w.svg" width="42" height="42"
+                                        alt="Internal Process">
+
+                                    <h6 class="fs-6 mb-0 text-uppercase riCategory">Internal Process</h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Strategic Initiatives -->
+                    <div class="g-col-md-9 g-col-12">
+
+
+                        <div class="card border-0">
+                            <div class="card-header bg-transprant border-0 pb-0">
+                                <h6 class="card-title fs-6 font-weight-medium mb-0">Strategic Initiatives</h6>
+                                <p class="small text-muted mb-0">What are our strategic initiatives?</p>
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-sm table-striped table-bordered w-100 text-nowrap small">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th class="text-center">Start - End Date</th>
+                                            <th class="text-center">Progress</th>
+                                            <th class="text-center">Days Remaining</th>
+                                            <th class="text-center">Status</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Improve Clarity of Offering</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+
+                                        </tr>
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Overall Sales</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-yellow-i.svg"
+                                                    width="12" height="12"></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Customer Satisfaction</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Partner Satisfaction</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="grid gap-2 g-col-12 strategyRow">
+                    <!-- Customer Perspective -->
+                    <div class="g-col-md-3 g-col-12">
+                        <div class="card border-0 h-100 c1">
+                            <div class="card-header bg-transprant border-0 pb-0">
+                                <h6 class="card-title fs-6 font-weight-medium mb-0">Perspectives</h6>
+                                <p class="small text-muted mb-0">What are our key focus areas?</p>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+
+
+                                <div class="gauge-wrapper" data-id="g4">
+                                    <div class="gauge" data-chart></div>
+                                    <div class="needle" data-needle></div>
+                                    <div class="needle-circle"></div>
+                                    <input hidden type="range" class="speedSlider" min="0" max="100" value="0">
+                                    <div class="gauge-labels"></div>
+                                </div>
+
+                                <div
+                                    class="d-flex gap-2 align-items-center justify-content-between bg-primary rounded-pill text-white px-4 ps-1 py-1 mt-3">
+                                    <img src="./assets/images/icons/learning-growth-w.svg" width="42" height="42"
+                                        alt="Learning and Growth">
+
+                                    <h6 class="fs-6 mb-0 text-uppercase riCategory">Learning and Growth</h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Strategic Initiatives -->
+                    <div class="g-col-md-9 g-col-12">
+
+
+                        <div class="card border-0">
+                            <div class="card-header bg-transprant border-0 pb-0">
+                                <h6 class="card-title fs-6 font-weight-medium mb-0">Strategic Initiatives</h6>
+                                <p class="small text-muted mb-0">What are our strategic initiatives?</p>
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-sm table-striped table-bordered w-100 text-nowrap small">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th class="text-center">Start - End Date</th>
+                                            <th class="text-center">Progress</th>
+                                            <th class="text-center">Days Remaining</th>
+                                            <th class="text-center">Status</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Improve Clarity of Offering</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+
+                                        </tr>
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Overall Sales</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-yellow-i.svg"
+                                                    width="12" height="12"></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Customer Satisfaction</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Improve Partner Satisfaction</td>
+                                            <td class="text-center">18 Mar 2025 - 31 Mar 2025</td>
+                                            <td class="text-center">
+                                                <div class="pt-1 bar-chart">
+                                                    <div class="progress-wrap red">
+                                                        <div class="progress flex-grow-1">
+                                                            <div class="progress-bar bg-danger progress-bar-striped rounded-pill"
+                                                                role="progressbar" style="width: 9%;" aria-valuenow="9"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <span class="badge">9%</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">0 days</td>
+                                            <td class="text-center"><img
+                                                    src="https://stratroom.io/projects/mg-portal-html/assets/images/icons/buzzer-green-i.svg"
+                                                    width="12" height="12"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+    <footer class="col-12 text-center py-2 copyright">
+        <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+
+    </footer>
+    <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+    <div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Templates</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card custom-card border-0">
+                        <div class="card-body">
+                            <form id="menuForm">
+                                <div class="grid gap-3">
+                                    <div class="g-col-12">
+                                        <div class="form-group">
+                                            <label for="menuName" class="form-label">Name</label>
+
+                                            <input type="text" class="form-control" id="menuName"
+                                                placeholder="Enter Name" required>
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12 g-col-md-6">
+                                        <div class="form-group">
+                                            <label for="pageType" class="form-label">Page Type</label>
+
+                                            <select id="pageType" class="form-select" required>
+                                                <option value="">Select Page Type</option>
+                                                <option value="Plan">Plan</option>
+                                                <option value="Measure">Measure</option>
+                                                <option value="Execute">Execute</option>
+                                                <option value="Govern">Govern</option>
+                                                <option value="Meet">Meet</option>
+                                                <option value="Report">Report</option>
+                                                <option value="Masters">Masters</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12 g-col-md-6">
+                                        <div class="form-group">
+                                            <label for="boardType" class="form-label">Board Type</label>
+                                            <select id="boardType" class="form-select" required>
+                                                <option value="">Select Board Type</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" id="saveMenuBtn">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- create-template END -->
+
+    <!-- Notification Offcanvas for Mobile -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvas"
+        aria-labelledby="notificationOffcanvasLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="notificationOffcanvasLabel">Notifications</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">New message from John Smith</div>
+                            <small class="text-muted">Project approval required for Phase 2</small>
+                            <div class="text-muted small mt-1">2 minutes ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">System Maintenance Alert</div>
+                            <small class="text-muted">Scheduled maintenance on Sunday at 2:00 AM</small>
+                            <div class="text-muted small mt-1">1 hour ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">Task Completed</div>
+                            <small class="text-muted">Data backup process finished successfully</small>
+                            <div class="text-muted small mt-1">3 hours ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">New Team Member</div>
+                            <small class="text-muted">Sarah Johnson joined the Marketing team</small>
+                            <div class="text-muted small mt-1">1 day ago</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="p-3 border-top text-center">
+                <a href="#" class="btn btn-sm btn-outline-primary">View All Notifications</a>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Menu Text</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editInput" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Context Menu -->
+    <div id="contextMenu" class="custom-context-menu">
+        <button id="editItem">Edit</button>
+        <button id="deleteItem">Delete</button>
+        <button id="moveUpItem">Move Up</button>
+        <button id="moveDownItem">Move Down</button>
+    </div>
+
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sortablejs/1.15.0/sortable.min.js"></script>
+    <script src="assets/js/lucide.js"></script>
+
+    <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+    <script src="assets/js/moment.js"></script>
+    <script src="assets/js/knockout-3.5.0.js"></script>
+    <script src="assets/js/daterangepicker.min.js"></script>
+    <link href="assets/css/select2.min.css" rel="stylesheet" />
+    <script src="assets/js/select2.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+
+
+
+    <script>
+        $("#strategyMapSelect").select2({
+            selectionCssClass: "select2-custom-input",
+            width: "100px",
+        });
+        $("#strategyMapPageSelect").select2({
+            selectionCssClass: "select2-custom-input",
+            width: "80px",
+        });
+    </script>
+
+
+    <script>
+        const initiativeCategories = [
+            "Strategy & Leadership", "Operations", "Finance", "Sales", "Marketing", "Customer",
+            "Human Resources (HR)", "Information Technology (IT)", "Risk Management", "Compliance",
+            "Legal", "Procurement & Supply Chain", "Product Development & Innovation", "Sustainability & ESG"
+        ];
+
+        const complianceCategoryPopoverTrigger = document.getElementById('popoverFilterComplianceCategory');
+
+        let complianceCategoryPopover;
+
+        const createComplianceCategoryContent = () => {
+            const content = document.createElement('div');
+            content.innerHTML = `
+      <div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="h6 mb-0">
+           <i class="fas fa-filter me-1 text-primary"></i> Filter Initiatives Category
+          </h5>
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <button class="btn btn-sm btn-light select-all-compliance">Select All</button>
+          <button class="btn btn-sm btn-light deselect-all-compliance">Deselect All</button>
+        </div>
+        <div class="d-flex flex-column gap-2 pageViewOption" style="max-height: 300px; overflow-y: auto;">
+          ${initiativeCategories.map(category => `
+            <div class="form-check">
+              <input class="form-check-input filter-compliance" id="rc-${category.replace(/\s+/g, '')}" type="checkbox" value="${category}" checked>
+              <label class="form-check-label" for="rc-${category.replace(/\s+/g, '')}">${category}</label>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+            return content;
+        };
+
+        complianceCategoryPopover = new bootstrap.Popover(complianceCategoryPopoverTrigger, {
+            html: true,
+            placement: 'bottom',
+            content: createComplianceCategoryContent,
+            sanitize: false,
+            container: 'body',
+            trigger: 'manual'
+        });
+
+        // Open popover on button click
+        complianceCategoryPopoverTrigger.addEventListener('click', () => {
+            complianceCategoryPopover.toggle();
+        });
+
+        function filterKpiCardsByCompliance() {
+            const checked = Array.from(document.querySelectorAll('.filter-compliance:checked')).map(cb => cb.value);
+            const allChecked = checked.length === initiativeCategories.length;
+            const cards = document.querySelectorAll('.strategyRow');
+
+            cards.forEach(card => {
+                const complianceText = card.querySelector('.riCategory')?.textContent.trim();
+                card.style.display = (allChecked || checked.includes(complianceText)) ? '' : 'none';
+            });
+        }
+        // Bind events
+
+        // filterKpiCardsByCompliance();
+        // Delegate interactions
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.btn-close')) {
+                complianceCategoryPopover.hide();
+            }
+            document.querySelectorAll('.filter-compliance').forEach(cb => {
+                cb.addEventListener('change', filterKpiCardsByCompliance);
+            });
+            if (e.target.classList.contains('select-all-compliance')) {
+                document.querySelectorAll('.filter-compliance').forEach(cb => cb.checked = true);
+                filterKpiCardsByCompliance();
+            }
+            if (e.target.classList.contains('deselect-all-compliance')) {
+                document.querySelectorAll('.filter-compliance').forEach(cb => cb.checked = false);
+                filterKpiCardsByCompliance();
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable({
+                pageLength: 4,
+                lengthChange: false,
+                paging: true,
+                searching: false,
+                ordering: false,
+                info: false,
+                responsive: true,
+                scrollX: true,
+                scrollY: '108px',
+                language: {
+                    paginate: {
+                        previous: "<i class='fa fa-chevron-left'></i>",
+                        next: "<i class='fa fa-chevron-right'></i>"
+                    }
+                },
+                drawCallback: function () {
+                    $('.dataTables_paginate').addClass('d-flex justify-content-end dataTables_paginate_sm');
+                    $('.dataTables_paginate ul.pagination').addClass('pagination-sm');
+                },
+            });
+        });
+    </script>
+
+
+    <script>
+        document.querySelectorAll(".gauge-wrapper").forEach((wrapper, index) => {
+            const chartEl = wrapper.querySelector("[data-chart]");
+            const needleEl = wrapper.querySelector("[data-needle]");
+            const slider = wrapper.querySelector(".speedSlider");
+            const defaultValue = parseInt(slider.value);
+            const gaugeLabels = wrapper.querySelector(".gauge-labels");
+            gaugeLabels && (gaugeLabels.innerHTML = `
+  <span class="label poor">Poor</span>
+  <span class="label average">Average</span>
+  <span class="label good">Good</span>
+  <span class="label excellent">Excellent</span>
+`);
+
+            const options = {
+                chart: {
+                    type: 'radialBar',
+                    height: 120,
+                    width: 120,
+                    sparkline: { enabled: true },
+                    offsetY: 0,
+                },
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -90,
+                        endAngle: 90,
+                        track: {
+                            background: "rgba(238, 238, 238, 0.8)",
+                            strokeWidth: '100%',
+                        },
+                        dataLabels: {
+                            show: false
+                        },
+                        hollow: {
+                            size: '60%',
+                        }
+                    }
+                },
+                series: [100], // Always full to show background
+                labels: ['Risk'],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shade: 'light',
+                        type: "horizontal",
+                        gradientToColors: ['#00FF00'],
+                        stops: [0, 50, 100],
+                        colorStops: [
+                            { offset: 0, color: "#FF0000", opacity: 0.9 },
+                            { offset: 33, color: "#FFFF00", opacity: 0.9 },
+                            { offset: 66, color: "#00DD44", opacity: 0.9 },
+                            { offset: 100, color: "#008000", opacity: 0.9 },
+                            // { offset: 100, color: "#00DD44", opacity: 0.9 }
+                        ]
+                    }
+                },
+                stroke: {
+                    lineCap: "round",
+                    width: 8
+                }
+            };
+
+            const chart = new ApexCharts(chartEl, options);
+            chart.render();
+
+            const updateGauge = (val) => {
+                const value = parseInt(val);
+                slider.value = value;
+                const angle = -90 + (value * 180 / 100);
+                needleEl.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+            };
+
+            // Init with default
+            updateGauge(defaultValue);
+
+            // Event listener
+            slider.addEventListener('input', (e) => {
+                updateGauge(e.target.value);
+            });
+
+            // Optional: expose for external trigger
+            wrapper.updateGauge = updateGauge;
+        });
+    </script>
+
+    <script>
+        $("#widget_type").change(function () {
+            var value = $(this).val();
+            $(".widget").hide();
+            if (value) $("." + value).show();
+        }).change();
+    </script>
+
+
+</body>
+
+</html>

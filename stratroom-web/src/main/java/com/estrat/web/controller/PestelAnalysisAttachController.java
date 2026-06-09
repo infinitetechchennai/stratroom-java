@@ -29,8 +29,9 @@ import com.estrat.web.exception.RequestException;
 import com.estrat.web.service.PestelAnalysisAttachmentService;
 import com.estrat.web.util.RequestSessionUtil;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PestelAnalysisAttachController {
-    private Logger log = Logger.getLogger(PestelAnalysisController.class);
+    private Logger log = LoggerFactory.getLogger(PestelAnalysisController.class);
     @Autowired
     protected PestelAnalysisAttachmentService pestelAnalysisAttachmentService;
     @Autowired

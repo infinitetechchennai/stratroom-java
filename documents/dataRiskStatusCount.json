@@ -1,0 +1,16 @@
+[
+  {
+    "department": "Kale BOD Scorecard",
+    "low": 1,
+    "medium": 2,
+    "high": 3,
+    "extreme": 3
+  },
+  {
+    "department": "OTI",
+    "low": 1,
+    "medium": 2,
+    "high": 3,
+    "extreme": 3
+  }
+]

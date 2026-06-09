@@ -27,10 +27,11 @@ import com.estrat.web.util.HeaderThreadLocal;
 import com.estrat.web.util.TempUserThreadLocal;
 import com.estrat.web.util.UserThreadLocal;
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +46,7 @@ import org.springframework.util.StringUtils;
 @Repository
 public class CustomAuthenticationSuccessHandler
 extends SimpleUrlAuthenticationSuccessHandler {
-    private static final Logger logger = Logger.getLogger(CustomAuthenticationSuccessHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
     private RequestCache requestCache = null;
     @Value(value="${server.servlet.session.timeout}")
     public String sessionExpiry;

@@ -30,15 +30,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RiskCommentsService {
-    private Logger log = Logger.getLogger(RiskCommentsService.class);
+    private Logger log = LoggerFactory.getLogger(RiskCommentsService.class);
     @Autowired
     protected RiskCommentsRepository riskCommentsRepository;
     @Autowired

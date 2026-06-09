@@ -1,0 +1,67 @@
+[
+  {
+    "department_name": "Finance",
+    "scorecard": "Financial Performance Q1",
+    "perspective": "Financial",
+    "objective": "Increase profitability",
+    "kpi_name": "Net Profit Margin",
+    "status": "On Track",
+    "actual": 18.2,
+    "target": 15.0,
+    "ytd": 17.5,
+    "gap": 3.2,
+    "index": 121.3
+  },
+  {
+    "department_name": "Operations",
+    "scorecard": "Operational Efficiency Q1",
+    "perspective": "Internal Processes",
+    "objective": "Reduce production downtime",
+    "kpi_name": "Machine Uptime",
+    "status": "Needs Attention",
+    "actual": 85.0,
+    "target": 95.0,
+    "ytd": 88.0,
+    "gap": -10.0,
+    "index": 89.5
+  },
+  {
+    "department_name": "HR",
+    "scorecard": "Talent Management Q1",
+    "perspective": "Learning & Growth",
+    "objective": "Improve employee retention",
+    "kpi_name": "Employee Retention Rate",
+    "status": "Exceeding Target",
+    "actual": 92.0,
+    "target": 85.0,
+    "ytd": 90.5,
+    "gap": 7.0,
+    "index": 108.2
+  },
+  {
+    "department_name": "Marketing",
+    "scorecard": "Market Expansion Q1",
+    "perspective": "Customer",
+    "objective": "Increase market share",
+    "kpi_name": "Market Share %",
+    "status": "On Track",
+    "actual": 22.5,
+    "target": 20.0,
+    "ytd": 21.0,
+    "gap": 2.5,
+    "index": 112.5
+  },
+  {
+    "department_name": "IT",
+    "scorecard": "Digital Transformation Q1",
+    "perspective": "Innovation",
+    "objective": "System uptime improvement",
+    "kpi_name": "System Availability",
+    "status": "At Risk",
+    "actual": 99.2,
+    "target": 99.9,
+    "ytd": 99.0,
+    "gap": -0.7,
+    "index": 99.3
+  }
+]

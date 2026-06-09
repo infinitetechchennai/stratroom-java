@@ -1,0 +1,2786 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Contract</title>
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v0.004" rel="stylesheet">
+    <link href="assets/css/main.css?v0.004" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+    <link href="assets/css/login.css" rel="stylesheet">
+
+     <!-- Font Awsome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+  
+ <style>
+        /* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+    </style>
+</head>
+
+<body data-bs-theme="light" data-page="performance-contract">
+
+<header id="header" class="header shadow-sm sticky-top">
+        <div class="navbar-topbar">
+            <div class="container-lg d-flex flex-wrap justify-content-between">
+                <div class="menu-controls d-flex">
+                    <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="Org Structure" data-translate="topbar.orgStructure">
+                        <span class="icon network">
+                            <i data-lucide="network" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+                    <a class="control-link " href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                        <span class="icon layout-template" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Templates" data-translate="topbar.templates">
+                            <i data-lucide="layout-template" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+
+                    <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="ETL" data-translate="topbar.etl">
+                        <span class="icon layout-grid">
+                            <i data-lucide="layout-grid" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+                    <div class="nav-item dropdown dropdown-top-header">
+                        <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-translate="topbar.masters"></a>
+                        <ul class="dropdown-menu dropdown-menu-start border-0 shadow-sm"
+                            aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.products"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.process"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.vitalRecords"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.technology"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.facilities"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.personal"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.iso"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.budget"></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap ms-auto">
+                    <div class="top-date-picker">
+                        <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap">
+
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+                            </span>
+                            <span id="currentLanguage">EN</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="ar">Arabic</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md navbar-light">
+            <div class="container-lg gap-2 gap-md-3">
+                <div class="position-relative logo me-auto">
+                    <a href="landing.html" class="logo-preview" id="logoPreview">
+                        <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                    </a>
+
+                </div>
+
+
+
+                <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                    aria-labelledby="mobileMenuLabel">
+                    <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="navbar-collapse">
+
+
+                            <ul class="navbar-nav p-0 ms-md-auto">
+
+                                <!-- 1) Plan -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.plan"></a>
+
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" data-menu="plan"
+                                        aria-labelledby="planningDropdown">
+                                        <li data-id="strategy-planner">
+                                            <a class="dropdown-item" href="strategy-planner.html"
+                                                data-translate="menu.planItems.strategyPlanner"></a>
+                                        </li>
+                                        <li data-id="swot">
+                                            <a class="dropdown-item" href="swot.html"
+                                                data-translate="menu.planItems.swot"></a>
+                                        </li>
+                                        <li data-id="pestel">
+                                            <a class="dropdown-item" href="pestel.html"
+                                                data-translate="menu.planItems.pestel"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 2) Measure -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="measureDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.measure"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="measureDropdown">
+                                        <li data-id="scorecard">
+                                            <a class="dropdown-item" href="scorecard.html"
+                                                data-translate="menu.measureItems.scorecard"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 3) Execute -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="executeDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.execute"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="executeDropdown">
+                                        <li data-id="initiatives">
+                                            <a class="dropdown-item" href="initiatives-projects.html"
+                                                data-translate="menu.executeItems.initiatives"></a>
+                                        </li>
+                                        <li data-id="tasks">
+                                            <a class="dropdown-item" href="tasks.html"
+                                                data-translate="menu.executeItems.tasks"></a>
+                                        </li>
+                                        <li data-id="budget-approval">
+                                            <a class="dropdown-item" href="budget-approval.html"
+                                                data-translate="menu.executeItems.budgetApproval"></a>
+                                        </li>
+                                        <li data-id="budgets">
+                                            <a class="dropdown-item" href="budgets.html"
+                                                data-translate="menu.executeItems.budgets"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 4) Govern -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="governDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.govern"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="governDropdown">
+                                        <li data-id="risk-register">
+                                            <a class="dropdown-item" href="risk-register.html"
+                                                data-translate="menu.governItems.riskRegister"></a>
+                                        </li>
+                                        <li data-id="risk-approval">
+                                            <a class="dropdown-item" href="risk-approval.html"
+                                                data-translate="menu.governItems.riskApproval"></a>
+                                        </li>
+                                        <li data-id="compliance">
+                                            <a class="dropdown-item" href="compliance.html"
+                                                data-translate="menu.governItems.compliance"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 5) Meet -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="meetDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.meet"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="meetDropdown">
+                                        <li data-id="meetings">
+                                            <a class="dropdown-item" href="meetings.html"
+                                                data-translate="menu.meetItems.meetings"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 6) Report -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-translate="menu.report"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="reportDropdown">
+                                        <li data-id="my-cockpit">
+                                            <a class="dropdown-item" href="my-cockpit.html"
+                                                data-translate="menu.reportItems.myCockpit"></a>
+                                        </li>
+                                        <li data-id="my-performance">
+                                            <a class="dropdown-item" href="my-performance.html"
+                                                data-translate="menu.reportItems.myPerformance"></a>
+                                        </li>
+                                        <li data-id="whiteboard">
+                                            <a class="dropdown-item" href="whiteboard.html"
+                                                data-translate="menu.reportItems.whiteboard"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-controls global-control  d-flex flex-wrap">
+
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="notificationDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-placement="bottom"
+                            data-bs-title="Notification">
+                            <span class="icon">
+                                <i data-lucide="bell-dot" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-notification-menu dropdown-menu-icon border-0 shadow-sm"
+                            aria-labelledby="notificationDropdown" data-bs-auto-close="outside"
+                            style="width: 350px; max-width: calc(100vw - 2rem); max-height: 400px; overflow-y: auto;">
+
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">New message from John Smith</div>
+                                        <small class="text-muted">Risk approval required for Phase 2</small>
+                                        <div class="text-muted small">2 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">System maintenance scheduled</div>
+                                        <small class="text-muted">Server will be down for 30 minutes</small>
+                                        <div class="text-muted small">1 day ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Template review deadline</div>
+                                        <small class="text-muted">Document template needs approval by EOD</small>
+                                        <div class="text-muted small">3 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Audit report generated</div>
+                                        <small class="text-muted">Monthly compliance report is ready</small>
+                                        <div class="small" class="text-muted small">5 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Meeting reminder</div>
+                                        <small class="text-muted">Weekly team standup in 30 minutes</small>
+                                        <div class="text-muted small">30 min ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Task completed</div>
+                                        <small class="text-muted">Database backup completed successfully</small>
+                                        <div class="text-muted small">1 hour ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">New user registered</div>
+                                        <small class="text-muted">Sarah Johnson joined the platform</small>
+                                        <div class="text-muted small">6 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Security update</div>
+                                        <small class="text-muted">Password policy has been updated</small>
+                                        <div class="text-muted small">2 days ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); border-radius: 50%; color: #333;">
+                                        <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Download ready</div>
+                                        <small class="text-muted">Export file generation completed</small>
+                                        <div class="text-muted small">3 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                                    <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                                        <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                                    </span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium">Audit report generated</div>
+                                        <small class="text-muted">Monthly compliance report is ready</small>
+                                        <div class="small" class="text-muted small">5 hours ago</div>
+                                    </div>
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-center py-2" href="#">
+                                    <small class="text-primary fw-medium">View all notifications</small>
+                                </a></li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="controlPanelDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="controlPanelDropdown">
+                            <li><a class="dropdown-item" href="control-panel.html"
+                                    data-translate="topbar.settingsItems.controlPanel"></a></li>
+                            <li><a class="dropdown-item" href="audit-trail.html"
+                                    data-translate="topbar.settingsItems.auditTrail"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="user-role.html"
+                                    data-translate="topbar.settingsItems.userRoles"></a>
+                            </li>
+                        </ul>
+
+
+                        </ul>
+                    </div>
+
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item profile-card" href="#">
+
+                                    <span class="icon circle-user-round">
+                                        <i data-lucide="circle-user-round" style="width: 32px; height: 32px;"></i>
+                                    </span>
+
+
+                                    <div class="">
+                                        <h4><span data-translate="topbar.hi">Hi</span> John </h4>
+                                        <small data-translate="topbar.welcomeToPortal"></small>
+                                    </div>
+                                </a></li>
+
+
+                            <li><a class="dropdown-item profile-card" href="#"
+                                    data-translate="topbar.profileItems.myProfile"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="manual.html"
+                                    data-translate="topbar.profileItems.myForms"></a></li>
+                            <li><a class="dropdown-item" href="performance-contract.html"
+                                    data-translate="topbar.profileItems.performanceContract"></a></li>
+                            <li>
+                                <a class="dropdown-item" href="performance-improvement-plan.html"
+                                    data-translate="topbar.profileItems.performanceImprovementPlan"
+                                    style="cursor: pointer;">
+
+                                    Performance improvement Plan</a>
+                            </li>
+                            <li><a class="dropdown-item" href="audit-trail.html"
+                                    data-translate="topbar.profileItems.auditTrail"></a>
+                            </li>
+                            <li><a class="dropdown-item" href="user-role.html"
+                                    data-translate="topbar.profileItems.logout"></a></li>
+
+
+                        </ul>
+
+                    </div>
+                    <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+                </div>
+                <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                    aria-controls="mobileMenu">
+                    <div class="hamburger-icon">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </div>
+                </div>
+
+
+        </nav>
+    </header>
+
+  <main class="pt-2 pb-2">
+    <div class="container-lg">
+      <div class="page-header grid gap-2 pb-1">
+        <div class="g-col-8 d-flex align-items-center">
+          <h4 class="title">
+            <span class="icon">
+              <img src="assets/images/icons/audit-trail-i.svg" alt="control-panel" title="control-panel" width="18" height="18">
+            </span>
+           Performance Contract
+          </h4>
+        </div>
+        <div class="load-page page-actions g-col-4">
+          <div class="d-flex">
+     
+<select id="myTeam" class="form-select form-select-sm">
+  <option value="" selected disabled>Select My Team</option>
+  <option value="team1">Design Team</option>
+  <option value="team2">Development Team</option>
+  <option value="team3">QA Team</option>
+  <option value="team4">HR Team</option>
+  <option value="team5">Management</option>
+</select>
+</div>
+        </div>
+        
+      </div>
+
+    </div>
+    <div class="container-lg py-2">
+       <div class="card custom-card">
+              <div
+                class="card-header">
+                 <div class="c-header-left"><h5 class="card-title">
+                  <strong editable="true" contenteditable="true" onkeypress="return (this.innerText.length <= 36)">Performance Contract</strong>
+                </h5></div>
+                <div class="card-actions">
+                            <button class="btn btn-sm btn-icon" data-bs-toggle="modal" data-bs-target="#employee-performance-modal">
+                  <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Empoyee perfomence">
+                    <i data-lucide="user-check" width="16" height="16"></i>
+                  </span>
+                </button>
+                            </div>
+              </div>
+              <div class="card-body p-3">
+              <div class="grid">
+                    <div class="g-col-12 g-col-xl-3 g-col-md-4">
+                      <div class="d-flex flex-column justify-content-center text-center gap-2 p-3 bg-primary rounded mb-3"
+                        style="--stratroom-bg-opacity:0.1">
+                    
+                    
+                        <div class="user-card flex-column gap-2 justify-content-center">
+                          <div class="user-image user-image-lg">
+                            <!-- <img src="assets/images/user/user7.jpg" alt="George" width="48" height="48"> -->
+                            <span class="img-initial rounded-circle">CH</span>
+                          </div>
+                          <div class="user-text d-flex flex-column">
+                            <h6 class="text-heading text-truncate"> Chris Hemsworth</h6>
+                            <small>Chairman Board of Directors</small>
+                          </div>
+                        </div>
+                    
+                    
+                      </div>
+                      <div>
+<div class="mb-3">
+                    
+                          <div class="grid gap-0 grid-from-box">
+                            <div class="form-group g-col-12 p-2">
+                              <h6 class="mb-2">Performance Ratings</h6>
+                              <ul class="mb-0 list-unstyled small d-flex flex-column gap-1">
+                                <li><strong class="text-success">3 = Good</strong> (Overall performance consistently meets
+                                  requirements in essential job areas)</li>
+                                <li><strong class="text-warning">2 = Fair</strong> (Overall performance needs improvement in
+                                  essential job areas)</li>
+                                <li><strong class="text-danger">1 = Poor</strong> (Overall performance is regularly unacceptable
+                                  in one or more essential job areas)</li>
+                              </ul>
+                            </div>
+                    
+                    
+                    
+                    
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <h6 class="mb-2">Overall Performance</h6>
+                          <table class="table table-bordered table-striped text-center align-middle">
+                                <thead class="table-dark">
+                                  <tr>
+                                    <th>Category</th>
+                                    <th>Score</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>SI Score</td>
+                                    <td>30%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>RI Score</td>
+                                    <td>25%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>LMC Score</td>
+                                    <td>20%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>BC Score</td>
+                                    <td>15%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>PDP Score</td>
+                                    <td>10%</td>
+                                  </tr>
+                                  <!-- <tr class="fw-bold">
+                                <td>Total</td>
+                                <td>100%</td>
+                            </tr> -->
+                                </tbody>
+                              </table>
+                        </div>
+                    
+                        
+                        <div class="mb-3">
+                    
+                          <div class="grid gap-0 grid-from-box">
+                            <div class="form-group g-col-12 p-2">
+                              <h6 class="mb-2">Document Structure</h6>
+                              <ul class="mb-0 list-unstyled small d-flex flex-column gap-1">
+                                <li>
+                                  <strong class="text-primary">Section I - Strategic Initiatives:</strong>
+                                  Activities undertaken by the employee under strategic initiatives.
+                                </li>
+                                <li>
+                                  <strong class="text-primary">Section II - Routine Initiatives:</strong>
+                                  Activities undertaken by the employee as part of routine responsibilities.
+                                </li>
+                                <li>
+                                  <strong class="text-primary">Section III - Leadership and Management Capabilities:</strong>
+                                  Employee leadership and management capabilities in delivering divisional and Authority objectives.
+                                </li>
+                                <li>
+                                  <strong class="text-primary">Section IV Behavioural Capabilities:</strong>
+                                  Corporate values and behaviours demonstrated in day-to-day activities.
+                                </li>
+                                <li>
+                                  <strong class="text-primary">Section V - Personal Development Plan:</strong>
+                                  Employee development needs based on performance gaps or job requirements identified by the Line Manager.
+                                </li>
+                              </ul>
+                            </div>
+                    
+                    
+                    
+                    
+                          </div>
+                        </div>
+                    
+                        
+                    
+                    
+                    
+                    
+                    
+                    
+                      </div>
+                    
+                      <!-- <div class="d-flex flex-column gap-4 p-3 rounded border">
+                        <div class="user-card ">
+                          <div class="user-image user-active">
+                            <img src="assets/images/user/usrbig1.jpg" alt="Chris" width="32" height="32">
+                          </div>
+                          <div class="user-text d-flex flex-column">
+                            <h6 class="text-heading text-truncate">Chris</h6>
+                            <small>Chris@demo.com</small>
+                          </div>
+                        </div>
+                        <div class="performance-ratings">
+                          <h6>Performance Ratings</h6>
+                          <ul class="mb-0 list-unstyled small">
+                            <li><strong class="text-success">3 = Good</strong> (Overall performance consistently meets
+                              requirements in essential job areas)</li>
+                            <li><strong class="text-warning">2 = Fair</strong> (Overall performance needs improvement in
+                              essential job areas)</li>
+                            <li><strong class="text-danger">1 = Poor</strong> (Overall performance is regularly unacceptable
+                              in one or more essential job areas)</li>
+                          </ul>
+                        </div>
+                      </div> -->
+                    </div>
+                    <div class="g-col-12 g-col-xl-9 g-col-md-8 grid gap-3">                    
+                      <div class="g-col-12">
+
+
+
+                        <div class="form-group">
+                          <label for="inputState">Scorecard</label>
+                          <select id="inputState" class="form-select persp_status">
+                            <option value="" data-i18n="Select Scorecard">Select Scorecard</option>
+                            <option value="3006">St_ Annes_Mission_Hospital_Balanced_Scorecard</option>
+                            <option value="3005">Ok_Zimbabwe_ Store_Balanced_Scorecard</option>
+                            <option value="3004" selected>OK_Zimbabwe_Balanced_Scorecard</option>
+                            <option value="3003">Bank Scorecard</option>
+                            <option value="3002">ENPC Scorecard</option>
+                            <option value="3001">CSO Scorecard</option>
+                            <option value="3000">CEO OKR Scorecard</option>
+                            <option value="2998">Chief Sustainability Officer Scorecard</option>
+                            <option value="2997">CRO Scorecard</option>
+                            <option value="2949">BOD Scorecard</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="g-col-12" style="height: 600px;overflow: auto;">
+                    
+                        <div id="kpi_performance_table" class="questionnaire-block-grid size-300"></div>
+                      </div>
+                      <div class="g-col-12">
+                        <div id="kpi_performance_table_total" class="kpi-performance-header d-flex gap-3 flex-wrap align-items-center">
+                        </div>
+                      </div>
+                      <div class="g-col-12">
+                        <div class="form-group">
+                          <label for="Comments" data-i18n="Comments">Comments</label>
+                          <textarea class="form-control comments" id="savecommentsService"></textarea>
+                        </div>
+                      </div>                    
+                      <div class="g-col-12">
+                        <div class="form-group">
+                          <label for="" class="form-label">Upload File</label>
+                          <label for="uploadBox" class="upload-label upload-box">
+                            <div class="upload">Choose a file or drag it here.</div>
+                            <input type="file" class="file-input" id="uploadBox" accept=".doc,.docx,.pdf,.xls,.xlsx,.jpg,.jpeg,.png">
+                          </label>
+                          <div class="upload-preview row g-3"></div>
+                        </div>
+                      </div>
+                      <div class="g-col-12 pt-3">
+                        <div class="form-line right">
+                          <button type="button" class="btn btn-label-secondary" data-dismiss="modal" aria-label="Close">
+                            Submit
+                          </button>
+                          <button class="btn btn-primary" value="Save">
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+
+                   
+              </div>
+            </div>
+    </div>
+  </main>
+  <footer class="col-12 text-center py-2 copyright">
+    <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</footer>
+
+  <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+    <div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Templates</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card custom-card border-0">
+                        <div class="card-body">
+<form id="menuForm">
+                        <div class="grid gap-3">
+                            <div class="g-col-12">
+                                <div class="form-group">
+                                    <label for="menuName" class="form-label">Name</label>
+                                    
+                                                      <input type="text" class="form-control" id="menuName" placeholder="Enter Name" required>
+                                </div>
+                            </div>
+                            <div class="g-col-12 g-col-md-6">
+                                <div class="form-group">
+                                    <label for="pageType" class="form-label">Page Type</label>
+                                  
+                                     <select id="pageType" class="form-select" required>
+                <option value="">Select Page Type</option>
+                <option value="Plan">Plan</option>
+                <option value="Measure">Measure</option>
+                <option value="Execute">Execute</option>
+                <option value="Govern">Govern</option>
+                <option value="Meet">Meet</option>
+                <option value="Report">Report</option>
+              </select>
+                                </div>
+                            </div>
+                            <div class="g-col-12 g-col-md-6">
+                                <div class="form-group">
+                                    <label for="boardType" class="form-label">Board Type</label>
+                                     <select id="boardType" class="form-select" required>
+                <option value="">Select Board Type</option>
+              </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" id="saveMenuBtn">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- create-template END -->
+
+
+<!-- Notification Offcanvas for Mobile -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvas"
+        aria-labelledby="notificationOffcanvasLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="notificationOffcanvasLabel">Notifications</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">New message from John Smith</div>
+                            <small class="text-muted">Project approval required for Phase 2</small>
+                            <div class="text-muted small mt-1">2 minutes ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">System Maintenance Alert</div>
+                            <small class="text-muted">Scheduled maintenance on Sunday at 2:00 AM</small>
+                            <div class="text-muted small mt-1">1 hour ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">Task Completed</div>
+                            <small class="text-muted">Data backup process finished successfully</small>
+                            <div class="text-muted small mt-1">3 hours ago</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+                    <div class="d-flex align-items-start">
+                        <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+                            style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                            <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                        </span>
+                        <div class="flex-grow-1">
+                            <div class="fw-medium">New Team Member</div>
+                            <small class="text-muted">Sarah Johnson joined the Marketing team</small>
+                            <div class="text-muted small mt-1">1 day ago</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="p-3 border-top text-center">
+                <a href="#" class="btn btn-sm btn-outline-primary">View All Notifications</a>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Menu Text</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editInput" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Context Menu -->
+    <div id="contextMenu" class="custom-context-menu">
+        <button id="editItem">Edit</button>
+        <button id="deleteItem">Delete</button>
+        <button id="moveUpItem">Move Up</button>
+        <button id="moveDownItem">Move Down</button>
+    </div>
+
+
+    <!--#START Task Add -->
+<div id="employee-performance-modal" class="modal custom-modal fade" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" role="dialog" aria-labelledby="employeePperformanceLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="employeePperformanceLabel">Employee Performance</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-3">
+        <div class="grid gap-3">
+              <div class="g-col-12 grid gap-3">
+                <div class="g-col-12">
+                  <div class="questionnaire-block">
+                    <div class="form-group">
+                      <label for="LMC" data-i18n="LMC" class="form-label">Leadership And Management Capabilities</label>
+                    </div>
+                    <div class="table-responsive">
+                      <table id="lmcTable" class="table table-bordered w-100 ">
+                        <thead class="table-light text-center align-middle">
+                          <tr>
+                            <th rowspan="2" style="min-width: 180px;">Key Performance Area</th>
+                            <th rowspan="2" style="min-width: 200px;">Operational Goal</th>
+                            <th rowspan="2" style="min-width: 180px;">Key Activity</th>
+                            <th rowspan="2" style="min-width: 160px;">Outputs</th>
+                            <th rowspan="2" style="min-width: 200px;">Target Date &amp; Standard</th>
+                            <th colspan="3" style="min-width: 200px;">Score</th>
+                          </tr>
+                          <tr>
+                            <th>Self</th>
+                            <th>Manager</th>
+                            <th>Consensual</th>
+                          </tr>
+                        </thead>
+                
+                        <tbody>
+                          <tr>
+                            <td rowspan="5"><strong>PERFORMANCE<br>MANAGEMENT</strong></td>
+                            <td>Achieve 100% development of the Divisional Workplan</td>
+                            <td>Develop Divisional Workplan</td>
+                            <td>Divisional Work Plan</td>
+                            <td rowspan="2">On 20 April 2023, in line with Strategic Management Framework</td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-1-self-1" name="lmc-1-self-1" value="1">
+                                  <label class="form-check-label" for="lmc-1-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-1-self-2" name="lmc-1-self-1" value="2">
+                                  <label class="form-check-label" for="lmc-1-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-1-self-3" name="lmc-1-self-1" value="3">
+                                  <label class="form-check-label" for="lmc-1-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-1-manager-1" name="kpi-1-manager" value="1">
+                                  <label class="form-check-label" for="kpi-1-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-1-manager-2" name="kpi-1-manager" value="2">
+                                  <label class="form-check-label" for="kpi-1-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-1-manager-3" name="kpi-1-manager" value="3">
+                                  <label class="form-check-label" for="kpi-1-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-1-consensual-1" name="kpi-1-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="kpi-1-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-1-consensual-2" name="kpi-1-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="kpi-1-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-1-consensual-3" name="kpi-1-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="kpi-1-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                
+                          <tr>
+                            <td>Achieve 100% implementation of the Divisional Workplan</td>
+                            <td>Monitor implementation of the Divisional Workplan</td>
+                            <td>Divisional Workplan implemented</td>
+                          </tr>
+                
+                          <tr>
+                            <td>Achieve 100% compliance to reporting framework</td>
+                            <td>Prepare Divisional Performance Report</td>
+                            <td>Divisional Performance Report</td>
+                            <td>On the 5th of the month
+                              following end of a
+                              quarter, In line with the
+                              Authority Reporting
+                              Framework </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-2-self-1" name="lmc-2-self-1" value="1">
+                                  <label class="form-check-label" for="lmc-2-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-2-self-2" name="lmc-2-self-1" value="2">
+                                  <label class="form-check-label" for="lmc-2-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-2-self-3" name="lmc-2-self-1" value="3">
+                                  <label class="form-check-label" for="lmc-2-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-2-manager-1" name="kpi-2-manager" value="1">
+                                  <label class="form-check-label" for="kpi-2-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-2-manager-2" name="kpi-2-manager" value="2">
+                                  <label class="form-check-label" for="kpi-2-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-2-manager-3" name="kpi-2-manager" value="3">
+                                  <label class="form-check-label" for="kpi-2-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-2-consensual-1" name="kpi-2-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="kpi-2-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-2-consensual-2" name="kpi-2-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="kpi-2-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-2-consensual-3" name="kpi-2-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="kpi-2-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                
+                          <tr>
+                            <td rowspan="2">Achieve 100% compliance to performance management system</td>
+                            <td rowspan="2">Ensure development and assessment of performance agreements</td>
+                            <td>Performance Agreements in place</td>
+                            <td>In line with Authority Performance Management System</td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-3-self-1" name="lmc-3-self-1" value="1">
+                                  <label class="form-check-label" for="lmc-3-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-3-self-2" name="lmc-3-self-1" value="2">
+                                  <label class="form-check-label" for="lmc-3-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-3-self-3" name="lmc-3-self-1" value="3">
+                                  <label class="form-check-label" for="lmc-3-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-3-manager-1" name="kpi-3-manager" value="1">
+                                  <label class="form-check-label" for="kpi-3-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-3-manager-2" name="kpi-3-manager" value="2">
+                                  <label class="form-check-label" for="kpi-3-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-3-manager-3" name="kpi-3-manager" value="3">
+                                  <label class="form-check-label" for="kpi-3-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-3-consensual-1" name="kpi-3-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="kpi-3-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-3-consensual-2" name="kpi-3-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="kpi-3-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-3-consensual-3" name="kpi-3-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="kpi-3-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                
+                          <tr>
+                            <td>Performance Assessments conducted </td>
+                            <td>In line with the Authority PerformanceManagement System</td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-4-self-1" name="lmc-4-self-1" value="1">
+                                  <label class="form-check-label" for="lmc-4-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-4-self-2" name="lmc-4-self-1" value="2">
+                                  <label class="form-check-label" for="lmc-4-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-4-self-3" name="lmc-4-self-1" value="3">
+                                  <label class="form-check-label" for="lmc-4-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-4-manager-1" name="kpi-4-manager" value="1">
+                                  <label class="form-check-label" for="kpi-4-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-4-manager-2" name="kpi-4-manager" value="2">
+                                  <label class="form-check-label" for="kpi-4-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-4-manager-3" name="kpi-4-manager" value="3">
+                                  <label class="form-check-label" for="kpi-4-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-4-consensual-1" name="kpi-4-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="kpi-4-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-4-consensual-2" name="kpi-4-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="kpi-4-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-4-consensual-3" name="kpi-4-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="kpi-4-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <!-- PEOPLE MANAGEMENT & EMPOWERMENT -->
+                          <tr>
+                            <td rowspan="2"><strong>PEOPLE MANAGEMENT<br>&amp; EMPOWERMENT</strong></td>
+                            <td>Achieve 100% development of Coaching and Mentorship Plan</td>
+                            <td>Develop Divisional Coaching and Mentorship Plan</td>
+                            <td rowspan="2">Annual Divisional Coaching and Mentorship Plan </td>
+                            <td rowspan="2">In line with Human Resource Rules</td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-5-self-1" name="lmc-5-self-1" value="1">
+                                  <label class="form-check-label" for="lmc-5-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-5-self-2" name="lmc-5-self-1" value="2">
+                                  <label class="form-check-label" for="lmc-5-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-5-self-3" name="lmc-5-self-1" value="3">
+                                  <label class="form-check-label" for="lmc-5-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-5-manager-1" name="kpi-5-manager" value="1">
+                                  <label class="form-check-label" for="kpi-5-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-5-manager-2" name="kpi-5-manager" value="2">
+                                  <label class="form-check-label" for="kpi-5-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-5-manager-3" name="kpi-5-manager" value="3">
+                                  <label class="form-check-label" for="kpi-5-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-5-consensual-1" name="kpi-5-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="kpi-5-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-5-consensual-2" name="kpi-5-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="kpi-5-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-5-consensual-3" name="kpi-5-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="kpi-5-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                
+                          <tr>
+                            <td>Achieve 100% implementation of Coaching and Mentorship Plan</td>
+                            <td>Implement Divisional Coaching and Mentorship Plan</td>
+                
+                
+                          </tr>
+                
+                          <!-- FINANCIAL MANAGEMENT -->
+                          <tr>
+                            <td rowspan="2"><strong>FINANCIAL<br>MANAGEMENT</strong></td>
+                            <td>Achieve 85% absorption capacity (budget variance)</td>
+                            <td>Implement Divisional Budget</td>
+                            <td>Divisional Budget Variance Report</td>
+                            <td rowspan="2">On the 5th of the month following end of the quarter, In line with the LCA Financial Rules
+                            </td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-6-self-1" name="lmc-6-self-1" value="1">
+                                  <label class="form-check-label" for="lmc-6-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-6-self-2" name="lmc-6-self-1" value="2">
+                                  <label class="form-check-label" for="lmc-6-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="lmc-6-self-3" name="lmc-6-self-1" value="3">
+                                  <label class="form-check-label" for="lmc-6-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-6-manager-1" name="kpi-6-manager" value="1">
+                                  <label class="form-check-label" for="kpi-6-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-6-manager-2" name="kpi-6-manager" value="2">
+                                  <label class="form-check-label" for="kpi-6-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-6-manager-3" name="kpi-6-manager" value="3">
+                                  <label class="form-check-label" for="kpi-6-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td rowspan="2">
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-7-consensual-1" name="kpi-7-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="kpi-7-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-7-consensual-2" name="kpi-7-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="kpi-7-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="kpi-7-consensual-3" name="kpi-7-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="kpi-7-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                
+                          <tr>
+                            <td>Achieve 99% compliance to procurement requirements</td>
+                            <td>Monitor divisional budget</td>
+                            <td>Divisional Compliance Procurement Report</td>
+                
+                
+                
+                          </tr>
+                
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+<div class="g-col-12">
+                  <div class="questionnaire-block">
+                    <div class="form-group">
+                      <label for="BC" data-i18n="BC" class="form-label">Behavioural Capabilities</label>
+                    </div>
+                    <div class="table-responsive">
+                      <table id="bcTable" class="table table-bordered w-100 ">
+                        <thead class="table-light text-center align-middle">
+                          <tr>
+                            <th rowspan="2" style="min-width: 180px;">Corporating Values</th>
+                            <th rowspan="2" style="min-width: 200px;">Category</th>
+                            <th rowspan="2" style="min-width: 180px;">Expected Behaviours </th>
+                         
+                            <th colspan="3" style="min-width: 200px;">Score</th>
+                          </tr>
+                          <tr>
+                            <th>Self</th>
+                            <th>Manager</th>
+                            <th>Consensual</th>
+                          </tr>
+                        </thead>
+                
+                        <tbody>
+                          <tr>
+                            <td rowspan="8"><strong>CARE:</strong> We care for our employees, consumers and service providers</td>
+                            <td rowspan="5">People -oriented </td>
+                            <td>Good Communicator, able to communicate with clarity when working with colleagues</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-self-1" name="bc-1-self-1" value="1">
+                                  <label class="form-check-label" for="bc-1-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-self-2" name="bc-1-self-1" value="2">
+                                  <label class="form-check-label" for="bc-1-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-self-3" name="bc-1-self-1" value="3">
+                                  <label class="form-check-label" for="bc-1-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-manager-1" name="bc-1-manager" value="1">
+                                  <label class="form-check-label" for="bc-1-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-manager-2" name="bc-1-manager" value="2">
+                                  <label class="form-check-label" for="bc-1-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-manager-3" name="bc-1-manager" value="3">
+                                  <label class="form-check-label" for="bc-1-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-consensual-1" name="bc-1-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-1-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-consensual-2" name="bc-1-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-1-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-consensual-3" name="bc-1-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-1-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                 <tr><td>Listening actively to other's concerns and ideas</td>
+                 <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-self-1" name="bc-1-self-1" value="1">
+                                  <label class="form-check-label" for="bc-1-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-self-2" name="bc-1-self-1" value="2">
+                                  <label class="form-check-label" for="bc-1-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-self-3" name="bc-1-self-1" value="3">
+                                  <label class="form-check-label" for="bc-1-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-manager-1" name="bc-1-manager" value="1">
+                                  <label class="form-check-label" for="bc-1-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-manager-2" name="bc-1-manager" value="2">
+                                  <label class="form-check-label" for="bc-1-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-1-manager-3" name="bc-1-manager" value="3">
+                                  <label class="form-check-label" for="bc-1-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-2-consensual-1" name="bc-2-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-2-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-2-consensual-2" name="bc-2-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-2-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-2-consensual-3" name="bc-2-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-2-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td></tr>
+                 <tr><td>Patience, able to keep a level head in stressful situations</td>
+                 <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-self-1" name="bc-3-self-1" value="1">
+                                  <label class="form-check-label" for="bc-3-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-self-2" name="bc-3-self-1" value="2">
+                                  <label class="form-check-label" for="bc-3-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-self-3" name="bc-3-self-1" value="3">
+                                  <label class="form-check-label" for="bc-3-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-manager-1" name="bc-3-manager" value="1">
+                                  <label class="form-check-label" for="bc-3-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-manager-2" name="bc-3-manager" value="2">
+                                  <label class="form-check-label" for="bc-3-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-manager-3" name="bc-3-manager" value="3">
+                                  <label class="form-check-label" for="bc-3-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-consensual-1" name="bc-3-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-3-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-consensual-2" name="bc-3-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-3-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-3-consensual-3" name="bc-3-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-3-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td></tr>
+                 <tr><td>Provides feedback timeously </td>
+                
+                 <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-self-1" name="bc-4-self-1" value="1">
+                                  <label class="form-check-label" for="bc-4-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-self-2" name="bc-4-self-1" value="2">
+                                  <label class="form-check-label" for="bc-4-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-self-3" name="bc-4-self-1" value="3">
+                                  <label class="form-check-label" for="bc-4-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-manager-1" name="bc-4-manager" value="1">
+                                  <label class="form-check-label" for="bc-4-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-manager-2" name="bc-4-manager" value="2">
+                                  <label class="form-check-label" for="bc-4-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-manager-3" name="bc-4-manager" value="3">
+                                  <label class="form-check-label" for="bc-4-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-consensual-1" name="bc-4-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-4-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-consensual-2" name="bc-4-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-4-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-4-consensual-3" name="bc-4-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-4-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                </tr>
+                 <tr><td>Flexibility, understanding that there are multiple ways to complete a task </td>
+                 <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-self-1" name="bc-5-self-1" value="1">
+                                  <label class="form-check-label" for="bc-5-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-self-2" name="bc-5-self-1" value="2">
+                                  <label class="form-check-label" for="bc-5-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-self-3" name="bc-5-self-1" value="3">
+                                  <label class="form-check-label" for="bc-5-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-manager-1" name="bc-5-manager" value="1">
+                                  <label class="form-check-label" for="bc-5-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-manager-2" name="bc-5-manager" value="2">
+                                  <label class="form-check-label" for="bc-5-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-manager-3" name="bc-5-manager" value="3">
+                                  <label class="form-check-label" for="bc-5-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-consensual-1" name="bc-5-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-5-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-consensual-2" name="bc-5-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-5-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-5-consensual-3" name="bc-5-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-5-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td></tr>
+                 <tr>
+                  <td rowspan="3">Service oriented and customer care </td>
+                  <td>Emotional intelligence, able to relate to anybody, especially frustrated clients or employees and intuitively understand them and communicate with empathy</td>
+                   <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-self-1" name="bc-6-self-1" value="1">
+                                  <label class="form-check-label" for="bc-6-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-self-2" name="bc-6-self-1" value="2">
+                                  <label class="form-check-label" for="bc-6-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-self-3" name="bc-6-self-1" value="3">
+                                  <label class="form-check-label" for="bc-6-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-manager-1" name="bc-6-manager" value="1">
+                                  <label class="form-check-label" for="bc-6-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-manager-2" name="bc-6-manager" value="2">
+                                  <label class="form-check-label" for="bc-6-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-manager-3" name="bc-6-manager" value="3">
+                                  <label class="form-check-label" for="bc-6-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-consensual-1" name="bc-6-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-6-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-consensual-2" name="bc-6-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-6-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-6-consensual-3" name="bc-6-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-6-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                 </tr>
+                 <tr><td>Good communicator, able to communicate with clarity when working with customers</td>
+                 <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-self-1" name="bc-7-self-1" value="1">
+                                  <label class="form-check-label" for="bc-7-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-self-2" name="bc-7-self-1" value="2">
+                                  <label class="form-check-label" for="bc-7-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-self-3" name="bc-7-self-1" value="3">
+                                  <label class="form-check-label" for="bc-7-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-manager-1" name="bc-7-manager" value="1">
+                                  <label class="form-check-label" for="bc-7-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-manager-2" name="bc-7-manager" value="2">
+                                  <label class="form-check-label" for="bc-7-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-manager-3" name="bc-7-manager" value="3">
+                                  <label class="form-check-label" for="bc-7-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-consensual-1" name="bc-7-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-7-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-consensual-2" name="bc-7-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-7-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-7-consensual-3" name="bc-7-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-7-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td></tr>
+                 <tr><td>Ability to intuit not just what went wrong, but also what action the customer was ultimately after and offer pre-emptive advice or a solution that the customer doesn’t even realize is an option</td>
+                 <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-self-1" name="bc-8-self-1" value="1">
+                                  <label class="form-check-label" for="bc-8-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-self-2" name="bc-8-self-1" value="2">
+                                  <label class="form-check-label" for="bc-8-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-self-3" name="bc-8-self-1" value="3">
+                                  <label class="form-check-label" for="bc-8-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-manager-1" name="bc-8-manager" value="1">
+                                  <label class="form-check-label" for="bc-8-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-manager-2" name="bc-8-manager" value="2">
+                                  <label class="form-check-label" for="bc-8-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-manager-3" name="bc-8-manager" value="3">
+                                  <label class="form-check-label" for="bc-8-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-consensual-1" name="bc-8-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-8-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-consensual-2" name="bc-8-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-8-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-8-consensual-3" name="bc-8-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-8-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td></tr>
+   <!-- COLLABORATIVE -->
+
+  <tr>
+                            <td rowspan="5"><strong>COLLABORATIVE:</strong>  We will be collaborating with our stakeholders and key strategic partners for success</td>
+                            <td rowspan="5"></td>
+                            <td>Good Communicator, able to communicate with clarity</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-self-1" name="bc-9-self-1" value="1">
+                                  <label class="form-check-label" for="bc-9-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-self-2" name="bc-9-self-1" value="2">
+                                  <label class="form-check-label" for="bc-9-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-self-3" name="bc-9-self-1" value="3">
+                                  <label class="form-check-label" for="bc-9-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-manager-1" name="bc-9-manager" value="1">
+                                  <label class="form-check-label" for="bc-9-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-manager-2" name="bc-9-manager" value="2">
+                                  <label class="form-check-label" for="bc-9-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-manager-3" name="bc-9-manager" value="3">
+                                  <label class="form-check-label" for="bc-9-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-consensual-1" name="bc-9-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-9-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-consensual-2" name="bc-9-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-9-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-9-consensual-3" name="bc-9-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-9-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Setting realistic expectations</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-self-1" name="bc-10-self-1" value="1">
+                                  <label class="form-check-label" for="bc-10-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-self-2" name="bc-10-self-1" value="2">
+                                  <label class="form-check-label" for="bc-10-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-self-3" name="bc-10-self-1" value="3">
+                                  <label class="form-check-label" for="bc-10-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-manager-1" name="bc-10-manager" value="1">
+                                  <label class="form-check-label" for="bc-10-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-manager-2" name="bc-10-manager" value="2">
+                                  <label class="form-check-label" for="bc-10-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-manager-3" name="bc-10-manager" value="3">
+                                  <label class="form-check-label" for="bc-10-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-consensual-1" name="bc-10-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-10-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-consensual-2" name="bc-10-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-10-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-10-consensual-3" name="bc-10-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-10-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+                           <tr>
+                            <td>Listening actively to other's concerns and ideas</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-self-1" name="bc-11-self-1" value="1">
+                                  <label class="form-check-label" for="bc-11-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-self-2" name="bc-11-self-1" value="2">
+                                  <label class="form-check-label" for="bc-11-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-self-3" name="bc-11-self-1" value="3">
+                                  <label class="form-check-label" for="bc-11-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-manager-1" name="bc-11-manager" value="1">
+                                  <label class="form-check-label" for="bc-11-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-manager-2" name="bc-11-manager" value="2">
+                                  <label class="form-check-label" for="bc-11-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-manager-3" name="bc-11-manager" value="3">
+                                  <label class="form-check-label" for="bc-11-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-consensual-1" name="bc-11-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-11-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-consensual-2" name="bc-11-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-11-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-11-consensual-3" name="bc-11-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-11-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+                           <tr>
+                          <td>Accountability, taking responsibility for own work and the work of your employees</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-self-1" name="bc-12-self-1" value="1">
+                                  <label class="form-check-label" for="bc-12-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-self-2" name="bc-12-self-1" value="2">
+                                  <label class="form-check-label" for="bc-12-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-self-3" name="bc-12-self-1" value="3">
+                                  <label class="form-check-label" for="bc-12-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-manager-1" name="bc-12-manager" value="1">
+                                  <label class="form-check-label" for="bc-12-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-manager-2" name="bc-12-manager" value="2">
+                                  <label class="form-check-label" for="bc-12-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-manager-3" name="bc-12-manager" value="3">
+                                  <label class="form-check-label" for="bc-12-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-consensual-1" name="bc-12-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-12-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-consensual-2" name="bc-12-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-12-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-12-consensual-3" name="bc-12-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-12-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+                           <tr>
+                          <td>Embraces change, ability to adjust quickly to changing circumstances</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-self-1" name="bc-13-self-1" value="1">
+                                  <label class="form-check-label" for="bc-13-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-self-2" name="bc-13-self-1" value="2">
+                                  <label class="form-check-label" for="bc-13-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-self-3" name="bc-13-self-1" value="3">
+                                  <label class="form-check-label" for="bc-13-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-manager-1" name="bc-13-manager" value="1">
+                                  <label class="form-check-label" for="bc-13-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-manager-2" name="bc-13-manager" value="2">
+                                  <label class="form-check-label" for="bc-13-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-manager-3" name="bc-13-manager" value="3">
+                                  <label class="form-check-label" for="bc-13-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-consensual-1" name="bc-13-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-13-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-consensual-2" name="bc-13-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-13-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-13-consensual-3" name="bc-13-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-13-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+
+                          <!-- Creativity -->
+
+                          <tr>
+                            <td rowspan="4"><strong>CREATIVITY:</strong> Our operations will be driven by creativity </td>
+                            <td rowspan="4"></td>
+                            <td>Willing to take risks and trying new ways of doing things that improve efficiency in the workplace and can easily be used on a daily basis at work. </td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-self-1" name="bc-14-self-1" value="1">
+                                  <label class="form-check-label" for="bc-14-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-self-2" name="bc-14-self-1" value="2">
+                                  <label class="form-check-label" for="bc-14-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-self-3" name="bc-14-self-1" value="3">
+                                  <label class="form-check-label" for="bc-14-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-manager-1" name="bc-1-manager" value="1">
+                                  <label class="form-check-label" for="bc-1-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-manager-2" name="bc-1-manager" value="2">
+                                  <label class="form-check-label" for="bc-14-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-manager-3" name="bc-1-manager" value="3">
+                                  <label class="form-check-label" for="bc-14-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-consensual-1" name="bc-14-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-14-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-consensual-2" name="bc-14-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-14-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-14-consensual-3" name="bc-14-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-14-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr> <td>Apply their imagination to everyday scenarios to come up with
+unique solutions to the challenges they may face at work.
+Instead of simply accepting ideas, they question them, build on
+them and apply them to for efficiency in the workplace</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-self-1" name="bc-15-self-1" value="1">
+                                  <label class="form-check-label" for="bc-15-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-self-2" name="bc-15-self-1" value="2">
+                                  <label class="form-check-label" for="bc-15-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-self-3" name="bc-15-self-1" value="3">
+                                  <label class="form-check-label" for="bc-15-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-manager-1" name="bc-15-manager" value="1">
+                                  <label class="form-check-label" for="bc-15-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-manager-2" name="bc-15-manager" value="2">
+                                  <label class="form-check-label" for="bc-15-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-manager-3" name="bc-15-manager" value="3">
+                                  <label class="form-check-label" for="bc-15-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-consensual-1" name="bc-15-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-15-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-consensual-2" name="bc-15-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-15-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-15-consensual-3" name="bc-15-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-15-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr> <td>Have a strong understanding of the usual processes and
+practices that govern their workplaces, therefore they can easily
+recognize when established practices could benefit from
+improvement. Do not conform without thought and therefore
+able to have fresh perspective about what is usually accepted as
+a normal procedure or practice in the workplace, allowing room
+for continuous improvement.</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-self-1" name="bc-16-self-1" value="1">
+                                  <label class="form-check-label" for="bc-16-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-self-2" name="bc-16-self-1" value="2">
+                                  <label class="form-check-label" for="bc-16-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-self-3" name="bc-16-self-1" value="3">
+                                  <label class="form-check-label" for="bc-16-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-manager-1" name="bc-16-manager" value="1">
+                                  <label class="form-check-label" for="bc-16-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-manager-2" name="bc-16-manager" value="2">
+                                  <label class="form-check-label" for="bc-16-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-manager-3" name="bc-16-manager" value="3">
+                                  <label class="form-check-label" for="bc-16-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-consensual-1" name="bc-16-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-16-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-consensual-2" name="bc-16-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-16-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-16-consensual-3" name="bc-16-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-16-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr> <td>Value preparation and are skilled at thinking about possible
+solutions to problems from multiple angles. Think of the possible
+issues they might need to improve their work.</td>
+                           
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-self-1" name="bc-17-self-1" value="1">
+                                  <label class="form-check-label" for="bc-17-self-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-self-2" name="bc-17-self-1" value="2">
+                                  <label class="form-check-label" for="bc-17-self-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-self-3" name="bc-17-self-1" value="3">
+                                  <label class="form-check-label" for="bc-17-self-3"><span>3</span></label>
+                                </div>
+                              </div>
+                
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-manager-1" name="bc-17-manager" value="1">
+                                  <label class="form-check-label" for="bc-17-manager-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-manager-2" name="bc-17-manager" value="2">
+                                  <label class="form-check-label" for="bc-17-manager-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-manager-3" name="bc-17-manager" value="3">
+                                  <label class="form-check-label" for="bc-17-manager-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-check-group">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-consensual-1" name="bc-17-consensual"
+                                    value="1">
+                                  <label class="form-check-label" for="bc-17-consensual-1"><span>1</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-consensual-2" name="bc-17-consensual"
+                                    value="2">
+                                  <label class="form-check-label" for="bc-17-consensual-2"><span>2</span></label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" id="bc-17-consensual-3" name="bc-17-consensual"
+                                    value="3">
+                                  <label class="form-check-label" for="bc-17-consensual-3"><span>3</span></label>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                
+<div class="g-col-12">
+                  <div class="questionnaire-block">
+                    <div class="form-group">
+                      <label for="PDP" data-i18n="PDP" class="form-label">Personal Development Plan</label>
+                    </div>
+                    <div class="table-responsive">
+                      <table id="pdpTable" class="table table-bordered w-100 ">
+                        <thead class="table-light text-center align-middle">
+                          <tr>
+                            <th style="min-width: 80px;max-width: 80px; white-space: normal;">Key Performance Area</th>
+                            <th style="min-width: 80px;max-width: 80px; white-space: normal;">Performance Gap Identified</th>
+                            <th style="min-width: 180px; max-width: 180px; white-space: normal;">Type Of Training Intervention Needed (Course, Attachment, On-the-job Training Etc.) </th>
+                            <th style="min-width: 80px;max-width: 80px; white-space: normal;">Recommended Period For Intervention</th>
+                            <th style="min-width: 80px;max-width: 80px; white-space: normal;">Control In The Interim </th>
+                           
+                          </tr>
+                          
+                        </thead>
+                
+                        <tbody>
+                        <tr>
+                          <td><input type="number" class="form-control form-control-sm impact-input text-center" value="1" min="0" ></td>
+                          <td><input type="number" class="form-control form-control-sm impact-input text-center" value="1" min="0" ></td>
+                          <td><input type="number" class="form-control form-control-sm impact-input text-center" value="1" min="0" ></td>
+                          <td><input type="number" class="form-control form-control-sm impact-input text-center" value="1" min="0" ></td>
+                          <td><input type="number" class="form-control form-control-sm impact-input text-center" value="1" min="0" ></td>
+                        </tr>
+               
+                
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="g-col-12">
+                  <div class="kpi-performance-header d-flex gap-3 flex-wrap align-items-center">
+                    <div class="header-col">Total</div>
+                    <div class="header-col">Self - 0</div>
+                    <div class="header-col">Manager - 0</div>
+                    <div class="header-col">Consensual - 0</div>
+                    <div class="header-col">
+                      <button class="btn btn-generatePdf" title="Download">
+                        <i class="fas fa-file-pdf-o"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                 <div class="g-col-12">
+                        <div class="form-group">
+                          <label for="epComments" data-i18n="epComments">Comments</label>
+                          <textarea class="form-control comments" id="employeePerformanceComments"></textarea>
+                        </div>
+                      </div>                    
+                      <div class="g-col-12">
+                        <div class="form-group">
+                          <label for="" class="form-label">Upload File</label>
+                          <label for="uploadBox" class="upload-label upload-box">
+                            <div class="upload">Choose a file or drag it here.</div>
+                            <input type="file" class="file-input" id="uploadBox" accept=".doc,.docx,.pdf,.xls,.xlsx,.jpg,.jpeg,.png">
+                          </label>
+                          <div class="upload-preview row g-3"></div>
+                        </div>
+                      </div>
+
+              </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+          Cancel
+        </button>
+        <button class="btn btn-primary" value="Save">Save</button>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--#END Task Add -->
+
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/sortablejs/1.15.0/sortable.min.js"></script>
+    <script src="assets/js/lucide.js"></script>
+ 
+
+  <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/knockout-3.5.0.js"></script>
+  <script src="assets/js/daterangepicker.min.js"></script>
+
+
+   <script src="assets/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="assets/jspdf/3.5.29/jspdf.plugin.autotable.min.js"></script>
+ 
+  <script src="assets/js/main.js"></script>
+
+   <!-- jQuery & DataTables JS -->
+ <script src="assets/datatables/1.13.6/jquery.dataTables.min.js"></script>
+<script src="assets/datatables/1.13.6/dataTables.bootstrap5.min.js"></script>
+
+
+
+<!-- In tbody, repeat KPA text instead of rowspan, e.g., first 5 rows start with <td><strong>PERFORMANCE MANAGEMENT</strong></td> -->
+<!-- Similarly for others -->
+
+
+
+
+
+
+
+
+  <script>
+     const kpiData = [
+    { id: "01", title: "Customer Satisfaction" },
+    { id: "02", title: "On-Time Delivery" },
+    { id: "03", title: "Revenue Growth" },
+    { id: "04", title: "Cost Reduction" },
+    { id: "05", title: "Employee Turnover Rate" },
+    { id: "06", title: "Training Completion" },
+    { id: "07", title: "Project Delivery Timeliness" },
+    { id: "08", title: "Innovation & Ideas" },
+    { id: "09", title: "Process Compliance" },
+    { id: "10", title: "Customer Retention" },
+    { id: "11", title: "Productivity Improvement" },
+    { id: "12", title: "Team Collaboration" },
+    { id: "13", title: "Client Acquisition" },
+    { id: "14", title: "System Downtime" },
+    { id: "15", title: "Risk Management" },
+    { id: "16", title: "Audit Findings" },
+    { id: "17", title: "Stakeholder Feedback" },
+    { id: "18", title: "Resource Utilization" },
+    { id: "19", title: "Market Share Growth" },
+    { id: "20", title: "Data Accuracy" },
+    { id: "21", title: "Helpdesk Resolution Time" },
+    { id: "22", title: "Customer Complaints Resolved" },
+    { id: "23", title: "Regulatory Compliance" },
+    { id: "24", title: "Revenue per Employee" },
+    { id: "25", title: "Social Media Engagement" }
+  ];
+  //  const kpiData = [
+  //   { id: "01", title: "Customer Satisfaction" },
+  //   { id: "02", title: "On-Time Delivery" },
+   
+  // ];
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("kpi_performance_table");
+    if (!container) {
+    console.error("Container with ID 'kpi_performance_table' not found.");
+    return; // Exit early if container is not present
+  }
+
+    kpiData.forEach((item, index) => {
+      const num = (index + 1).toString().padStart(2, '0');
+      const html = `
+        <div class="questionnaire-block">
+          <label class="form-label">${index + 1}. ${item.title}</label>
+          
+          ${["self", "manager", "consensual"].map(role => `
+            <div class="d-flex align-items-center gap-2 mt-2"> <label class="form-label mb-0" >${role.toLocaleUpperCase()}</label>
+              <div class="form-check-group">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="kpi-${num}-${role}-1" name="kpi-${num}-${role}" value="1">
+                  <label class="form-check-label" for="kpi-${num}-${role}-1"><span>1</span></label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="kpi-${num}-${role}-2" name="kpi-${num}-${role}" value="2">
+                  <label class="form-check-label" for="kpi-${num}-${role}-2"><span>2</span></label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="kpi-${num}-${role}-3" name="kpi-${num}-${role}" value="3">
+                  <label class="form-check-label" for="kpi-${num}-${role}-3"><span>3</span></label>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+ 
+      container.innerHTML += html;
+    
+    });
+  });
+  
+    function updateKpiTotals() {
+      const totalKpis = 25;
+
+      let selfScore = 0, managerScore = 0, consensualScore = 0;
+kpiData.forEach((item, index) => {
+      // for (let i = 1; i <= totalKpis; i++) {
+        // const kpiId = i.toString().padStart(2, '0');
+        const kpiId = item.id;
+
+        const self = document.querySelector(`input[name="kpi-${kpiId}-self"]:checked`);
+        const manager = document.querySelector(`input[name="kpi-${kpiId}-manager"]:checked`);
+        const consensual = document.querySelector(`input[name="kpi-${kpiId}-consensual"]:checked`);
+
+        if (self) selfScore += parseInt(self.value);
+        if (manager) managerScore += parseInt(manager.value);
+        if (consensual) consensualScore += parseInt(consensual.value);
+      // }
+      })
+
+      // Update the table header
+      const totalContainer = document.getElementById("kpi_performance_table_total");
+totalContainer.innerHTML = `
+  <div class="header-col">Total</div>
+  <div class="header-col">Self - ${selfScore}</div>
+  <div class="header-col">Manager - ${managerScore}</div>
+  <div class="header-col">Consensual - ${consensualScore}</div>
+  <div class="header-col">
+    <button class="btn btn-generatePdf" title="Download">
+      <i class="fas fa-file-pdf-o"></i>
+    </button>
+  </div>
+`;
+
+    }
+
+    // Bind to all radio changes
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#kpi_performance_table input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', updateKpiTotals);
+      });
+
+      updateKpiTotals(); // Initial call
+    });
+
+    
+  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("click", async function (event) {
+    if (!event.target.closest('.btn-generatePdf')) return;
+
+    const scorecardSelect = document.querySelector(".persp_status");
+    const scorecardValue = scorecardSelect?.value || "";
+    if (!scorecardValue) {
+      alert("Please select a Scorecard before downloading.");
+      return;
+    }
+
+    const enqName = "Chris";
+    const email = "Chris@demo.com";
+    const submissionDate = new Date().toLocaleDateString();
+    const score = `${scorecardSelect.options[scorecardSelect.selectedIndex].text}` || "--";
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const pageWidth = doc.internal.pageSize.width;
+    const pageHeight = doc.internal.pageSize.height;
+    const marginLeft = 10;
+    const marginRight = pageWidth - marginLeft;
+
+    const coverImage = "https://stratroom.io/assets/images/diagnostic-cover.jpeg";
+    const logoUrl = "https://stratroom.io/assets/images/logo.jpg";
+
+    // Utility
+    const addFullPageImage = (imageUrl) => {
+      doc.addImage(imageUrl, 'JPEG', 0, 0, pageWidth, pageHeight);
+      doc.addPage();
+    };
+
+    const header = () => {
+      const imgX = 10, imgY = 5, imgWidth = 50, imgHeight = 10;
+      const textStartY = imgY + 5;
+
+      doc.addImage(logoUrl, "JPEG", imgX, imgY, imgWidth, imgHeight);
+      doc.setFontSize(13);
+      doc.setFont("helvetica", "bold");
+      doc.text("Performance Contract Report", marginRight, textStartY - 3, { align: "right" });
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.text(`Generated Date: ${submissionDate}`, marginRight, textStartY + 1, { align: "right" });
+      doc.text(`Generated By: ${enqName} | Scorecard: ${score}`, marginRight, textStartY + 10, { align: "right" });
+
+      doc.line(10, imgHeight + 12, pageWidth - 10, imgHeight + 12);
+      return imgHeight + 20;
+    };
+
+    const footer = () => {
+      const currentYear = new Date().getFullYear();
+      doc.setFontSize(8);
+      doc.text(`Copyright © ${currentYear}, StratRoom. All Rights Reserved.`, pageWidth / 2, 292, { align: "center" });
+      doc.line(10, pageHeight - 12, pageWidth - 10, pageHeight - 12);
+    };
+
+    // Add Cover
+    addFullPageImage(coverImage);
+
+    // Main Header
+    let y = header();
+
+    // === Build Table Data ===
+    let tableBody = [];
+    let selfTotal = 0;
+    let managerTotal = 0;
+    let consensualTotal = 0;
+
+    const blocks = document.querySelectorAll(".questionnaire-block");
+
+    if (blocks.length === 0) {
+      alert("No KPI questions found. Please complete the form first.");
+      return;
+    }
+
+    blocks.forEach((block, index) => {
+      const kpiTitle = block.querySelector("label.form-label")?.innerText?.trim() || `KPI ${index + 1}`;
+
+      const selfSelected = block.querySelector("input[name^='kpi-'][name*='self']:checked");
+      const managerSelected = block.querySelector("input[name^='kpi-'][name*='manager']:checked");
+      const consensualSelected = block.querySelector("input[name^='kpi-'][name*='consensual']:checked");
+
+      const selfValue = selfSelected?.value || "--";
+      const managerValue = managerSelected?.value || "--";
+      const consensualValue = consensualSelected?.value || "--";
+
+      if (!selfSelected && !managerSelected && !consensualSelected) {
+        return; // Skip if no selections
+      }
+
+      if (selfSelected) selfTotal++;
+      if (managerSelected) managerTotal++;
+      if (consensualSelected) consensualTotal++;
+
+      tableBody.push([
+        (index + 1).toString(),
+        kpiTitle,
+        selfValue,
+        managerValue,
+        consensualValue
+      ]);
+    });
+
+    if (tableBody.length === 0) {
+      alert("No KPI selections found. Please fill in the form before exporting.");
+      return;
+    }
+
+    // === Draw Table ===
+    doc.autoTable({
+      head: [["#", "KPI", "SELF", "MANAGER", "CONSENSUAL"]],
+      body: tableBody,
+      startY: y,
+      margin: { top: y, bottom: 20 },
+      styles: { fontSize: 9, cellPadding: 2 },
+      headStyles: { fillColor: [40, 100, 150], textColor: 255 }
+    });
+
+    // === Totals Row ===
+    doc.autoTable({
+      startY: doc.lastAutoTable.finalY + 5,
+      body: [
+        ["", "Total", selfTotal.toString(), managerTotal.toString(), consensualTotal.toString()]
+      ],
+      styles: { fontStyle: "bold", fontSize: 10 },
+      theme: "grid",
+      margin: { left: 14 }
+    });
+
+    // Footer
+    footer();
+
+    // Save PDF
+    doc.save(`Performance_Contract_Report_${submissionDate}.pdf`);
+  });
+});
+
+ 
+</script>
+
+
+  <script>
+   document.querySelectorAll('.file-input').forEach((inputEl) => {
+  const previewContainer = inputEl.closest('.form-group').querySelector('.upload-preview');
+  let filesList = [];
+
+  function render() {
+    previewContainer.innerHTML = '';
+    filesList.forEach((file, index) => {
+      const fileURL = URL.createObjectURL(file);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'col-md-3 upload-item';
+
+      if (file.type.startsWith('image/')) {
+        wrapper.innerHTML = `
+          <div class="card h-100 shadow-sm">
+            <img src="${fileURL}" class="card-img-top img-fluid" alt="${file.name}">
+            <div class="card-body p-2">
+              <p class="card-text text-truncate small mb-2">${file.name}</p>
+              <div class="d-flex justify-content-between">
+                <a href="${fileURL}" download="${file.name}" class="btn btn-sm btn-outline-primary"><i class="fa fa-download"></i></a>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-index="${index}"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        wrapper.innerHTML = `
+          <div class="card h-100 shadow-sm">
+            <div class="card-body p-2">
+              <p class="card-text text-truncate mb-3">📄 ${file.name}</p>
+              <div class="d-flex justify-content-between">
+                <a href="${fileURL}" download="${file.name}" class="btn btn-sm btn-outline-primary"><i class="fa fa-download"></i></a>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-index="${index}"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      previewContainer.appendChild(wrapper);
+    });
+
+    previewContainer.querySelectorAll('button[data-index]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = parseInt(btn.getAttribute('data-index'));
+        filesList.splice(i, 1);
+        render();
+      });
+    });
+  }
+
+  inputEl.addEventListener('change', () => {
+    filesList = [...filesList, ...inputEl.files];
+    inputEl.value = "";
+    render();
+  });
+
+  const uploadBox = inputEl.closest('.upload-box');
+  uploadBox.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadBox.classList.add('border-primary');
+  });
+
+  uploadBox.addEventListener('dragleave', () => {
+    uploadBox.classList.remove('border-primary');
+  });
+
+  uploadBox.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadBox.classList.remove('border-primary');
+    const droppedFiles = [...e.dataTransfer.files];
+    filesList = [...filesList, ...droppedFiles];
+    render();
+  });
+});
+</script>
+
+  
+
+
+  
+
+
+</body>
+
+</html>

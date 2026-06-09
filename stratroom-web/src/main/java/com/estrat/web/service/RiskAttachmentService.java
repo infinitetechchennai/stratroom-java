@@ -54,7 +54,7 @@ public class RiskAttachmentService {
 
     public List<RiskAttachmentDto> findAll(Long riskId) {
         String url = this.scoreCardUrl + "riskAttachList/" + riskId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }
@@ -62,7 +62,7 @@ public class RiskAttachmentService {
     public List<RiskAttachmentDto> findByEmpId(Long empId) {
         String scorecardUrl1 = this.scoreCardUrl + "/emp/riskAttachList";
         String url = String.join((CharSequence)"/", scorecardUrl1, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

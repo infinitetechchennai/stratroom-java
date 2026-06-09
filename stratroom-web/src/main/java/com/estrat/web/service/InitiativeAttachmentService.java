@@ -54,7 +54,7 @@ public class InitiativeAttachmentService {
 
     public List<InitiativeAttachmentDto> findAll(Long initiativeId) {
         String url = this.scoreCardUrl + "initiativeAttachList/" + initiativeId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List initDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return initDTOList;
     }
@@ -62,7 +62,7 @@ public class InitiativeAttachmentService {
     public List<InitiativeAttachmentDto> findByEmpId(String empId) {
         String scorecardUrl1 = this.scoreCardUrl + "/emp/initiativesAttachList";
         String url = String.join((CharSequence)"/", scorecardUrl1, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

@@ -25,7 +25,7 @@ import com.estrat.web.dto.KpiDetailsAttachmentsDTO;
 import com.estrat.web.exception.RequestException;
 import com.estrat.web.service.KpiAttachmentService;
 import com.estrat.web.util.RequestSessionUtil;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

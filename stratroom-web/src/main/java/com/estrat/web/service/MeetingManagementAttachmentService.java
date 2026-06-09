@@ -51,7 +51,7 @@ public class MeetingManagementAttachmentService {
 
     public List<MeetingManagementAttachmentDTO> findAll(Long meetingId) {
         String url = this.scoreCardUrl + "/meetingAttachList/" + meetingId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List MeetingManagementAttachmentDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return MeetingManagementAttachmentDTOList;
     }

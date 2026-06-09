@@ -36,14 +36,14 @@ public class OrgTrackerService {
     public List<OrgTrackerDTO> orgTrackList(String type, String datePeriod, String id) {
         String url = this.userUrl + "/orgTrackList";
         String restoreUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("flagType", new Object[]{type}).queryParam("datePeriod", new Object[]{datePeriod}).queryParam("id", new Object[]{id}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(restoreUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<OrgTrackerDTO> orgTrackAllList(String datePeriod) {
         String url = this.userUrl + "/orgTrackAllList";
         String restoreUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("datePeriod", new Object[]{datePeriod}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(restoreUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -56,7 +56,7 @@ public class OrgTrackerService {
     public List<OrgTrackerDTO> orgTrackSearchList(String type, String datePeriod) {
         String url = this.userUrl + "/orgTrackSearchList";
         String restoreUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("flagType", new Object[]{type}).queryParam("datePeriod", new Object[]{datePeriod}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(restoreUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

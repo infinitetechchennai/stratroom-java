@@ -15,14 +15,15 @@ package com.estrat.service.db.scheduler;
 import com.estrat.service.db.service.NotificationBatchService;
 import com.estrat.service.db.service.SchedulerBatchService;
 import java.util.Date;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StratroomScheduler {
-    private Logger log = Logger.getLogger(StratroomScheduler.class);
+    private Logger log = LoggerFactory.getLogger(StratroomScheduler.class);
     @Autowired
     private SchedulerBatchService schedulerBatchService;
     @Autowired

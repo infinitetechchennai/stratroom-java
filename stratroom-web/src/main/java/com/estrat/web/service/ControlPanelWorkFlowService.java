@@ -37,7 +37,7 @@ public class ControlPanelWorkFlowService {
 
     public List<ControlPanelWorkFlowDTO> findWorkFlow() {
         String url = this.dbUrl + "/retriveWorkFlow";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 

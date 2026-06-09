@@ -15,9 +15,9 @@ package com.estrat.service.db.bean.po;
 import com.estrat.service.db.bean.po.EmployeeProfilePo;
 import com.estrat.service.db.bean.po.OrgGroupUserEmbeddedId;
 import com.estrat.service.db.bean.po.OrgstructureGroup;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name="org_group_user_mapping", schema="orgstructure")

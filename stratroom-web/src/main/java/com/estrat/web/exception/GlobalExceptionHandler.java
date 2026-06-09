@@ -28,7 +28,8 @@ import com.estrat.web.exception.RequestException;
 import com.estrat.web.exception.RestServiceClientException;
 import com.estrat.web.exception.RestServiceException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -39,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    private static Logger log = Logger.getLogger(GlobalExceptionHandler.class);
+    private static Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(value={HttpMessageNotReadableException.class})
     @ResponseBody

@@ -47,7 +47,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -72,7 +73,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class TemplateWriterUtil {
-    private Logger logger = Logger.getLogger(TemplateWriterUtil.class);
+    private Logger logger = LoggerFactory.getLogger(TemplateWriterUtil.class);
     @Value(value="${template.upload.file.path}")
     private String templateFilePath;
     @Autowired

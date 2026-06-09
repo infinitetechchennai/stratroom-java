@@ -35,7 +35,7 @@ import com.estrat.web.service.EmployeeService;
 import com.estrat.web.service.LicenseService;
 import com.estrat.web.util.RequestSessionUtil;
 import com.estrat.web.util.UserThreadLocal;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

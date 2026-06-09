@@ -37,7 +37,7 @@ public class ApproversHistoryService {
 
     public List<ApproversHistoryDTO> findFlowHistory() {
         String url = this.dbUrl + "/retriveWorkFlowHistory";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 

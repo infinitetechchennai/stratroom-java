@@ -26,7 +26,7 @@ import com.estrat.service.db.exception.RequestException;
 import com.estrat.service.db.service.ApproversHistoryService;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -24,13 +24,14 @@ import com.estrat.service.db.resource.util.UserThreadLocal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmployeeGoalsService {
-    private Logger log = Logger.getLogger(EmployeeGoalsService.class);
+    private Logger log = LoggerFactory.getLogger(EmployeeGoalsService.class);
     @Autowired
     protected EmployeeGoalsRepository employeeGoalsRepository;
     @Autowired

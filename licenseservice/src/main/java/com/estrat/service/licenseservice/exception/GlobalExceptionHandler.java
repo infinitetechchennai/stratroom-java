@@ -26,7 +26,8 @@ import com.estrat.service.licenseservice.exception.ExceptionLogHelper;
 import com.estrat.service.licenseservice.exception.InputValidationException;
 import com.estrat.service.licenseservice.exception.RequestException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -37,12 +38,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    private static Logger log = Logger.getLogger(GlobalExceptionHandler.class);
+    private static Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(value={HttpMessageNotReadableException.class})
     @ResponseBody
     public ResponseEntity<ErrorDTO> handle(HttpMessageNotReadableException exception) {
-        log.error((Object)("Exception occured " + ExceptionLogHelper.convertToString((Exception)exception)));
+        log.error("Exception occured " + ExceptionLogHelper.convertToString((Exception)exception));
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setException(exception.getMessage());
         errorDTO.setErrorCode("SC001");
@@ -64,7 +65,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(value=HttpStatus.BAD_REQUEST)
     public ErrorDTO handle(InputValidationException exception) {
-        log.error((Object)("Exception occured " + ExceptionLogHelper.convertToString((Exception)exception)));
+        log.error("Exception occured " + ExceptionLogHelper.convertToString((Exception)exception));
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setException(exception.getMessage());
         errorDTO.setErrorCode("BR001");
@@ -75,7 +76,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handle(RequestException exception) {
-        log.error((Object)("Exception occured " + ExceptionLogHelper.convertToString((Exception)exception)));
+        log.error("Exception occured " + ExceptionLogHelper.convertToString((Exception)exception));
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setException(ExceptionLogHelper.convertToString((Exception)exception));
         errorDTO.setErrorCode("RE001");
@@ -87,7 +88,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value=HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handle(Throwable throwable) {
         Exception exception = (Exception)throwable;
-        log.error((Object)("Exception occured " + ExceptionLogHelper.convertToString((Exception)exception)));
+        log.error("Exception occured " + ExceptionLogHelper.convertToString((Exception)exception));
         ErrorDTO errorDTO = new ErrorDTO();
         if (StringUtils.isNotEmpty((CharSequence)exception.getMessage())) {
             errorDTO.setException(exception.getMessage());

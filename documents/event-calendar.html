@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Calendar</title>
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/css/basic.css?v-0.002" rel="stylesheet">
+  <link href="assets/css/main.css?v-0.002" rel="stylesheet">
+  <link href="assets/css/responsive.css" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+
+  <!-- FullCalendar v6 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+</head>
+
+
+<body data-bs-theme="light" data-page="event-calendar">
+  <header id="header" class="header shadow-sm sticky-top">
+    <div class="navbar-topbar">
+      <div class="container-lg d-flex flex-wrap justify-content-between">
+        <div class="menu-controls d-flex">
+          <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="Org Structure" data-translate="topbar.orgStructure">
+            <span class="icon network">
+              <i data-lucide="network" style="width:18px; height: 18px;"></i>
+            </span>
+          </a>
+          <a class="control-link " href="#create-template" data-bs-toggle="modal" onclick="return false;">
+            <span class="icon layout-template" data-bs-toggle="tooltip" data-bs-placement="bottom"
+              data-bs-title="Templates" data-translate="topbar.templates">
+              <i data-lucide="layout-template" style="width: 18px; height: 18px;"></i>
+            </span>
+          </a>
+
+          <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="ETL" data-translate="topbar.etl">
+            <span class="icon layout-grid">
+              <i data-lucide="layout-grid" style="width: 18px; height: 18px;"></i>
+            </span>
+          </a>
+          <div class="nav-item dropdown dropdown-top-header">
+            <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false" data-translate="topbar.masters"></a>
+            <ul class="dropdown-menu dropdown-menu-start border-0 shadow-sm" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.products"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.process"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.vitalRecords"></a>
+              </li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.technology"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.facilities"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.personal"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.iso"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.budget"></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="menu-controls d-flex flex-wrap ms-auto">
+          <div class="top-date-picker">
+            <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+          </div>
+        </div>
+        <div class="menu-controls d-flex flex-wrap">
+          <div class="nav-item dropdown">
+            <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+              </span>
+              <span id="currentLanguage">EN</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="languageDropdown">
+              <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+              <li><a class="dropdown-item" href="#" data-lang="ar">Arabic</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-lg gap-2 gap-md-3">
+        <div class="position-relative logo me-auto">
+          <a href="landing.html" class="logo-preview" id="logoPreview">
+            <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+          </a>
+        </div>
+
+        <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+          aria-labelledby="mobileMenuLabel">
+          <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <div class="navbar-collapse">
+              <ul class="navbar-nav p-0 ms-md-auto">
+                <!-- 1) Plan -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.plan"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" data-menu="plan"
+                    aria-labelledby="planningDropdown">
+                    <li data-id="strategy-planner">
+                      <a class="dropdown-item" href="strategy-planner.html"
+                        data-translate="menu.planItems.strategyPlanner"></a>
+                    </li>
+                    <li data-id="swot">
+                      <a class="dropdown-item" href="swot.html" data-translate="menu.planItems.swot"></a>
+                    </li>
+                    <li data-id="pestel">
+                      <a class="dropdown-item" href="pestel.html" data-translate="menu.planItems.pestel"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 2) Measure -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="measureDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.measure"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="measureDropdown">
+                    <li data-id="scorecard">
+                      <a class="dropdown-item" href="scorecard.html" data-translate="menu.measureItems.scorecard"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 3) Execute -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="executeDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.execute"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="executeDropdown">
+                    <li data-id="initiatives">
+                      <a class="dropdown-item" href="initiatives-projects.html"
+                        data-translate="menu.executeItems.initiatives"></a>
+                    </li>
+                    <li data-id="tasks">
+                      <a class="dropdown-item" href="tasks.html" data-translate="menu.executeItems.tasks"></a>
+                    </li>
+                    <li data-id="budget-approval">
+                      <a class="dropdown-item" href="budget-approval.html"
+                        data-translate="menu.executeItems.budgetApproval"></a>
+                    </li>
+                    <li data-id="budgets">
+                      <a class="dropdown-item" href="budgets.html" data-translate="menu.executeItems.budgets"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 4) Govern -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="governDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.govern"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="governDropdown">
+                    <li data-id="risk-register">
+                      <a class="dropdown-item" href="risk-register.html"
+                        data-translate="menu.governItems.riskRegister"></a>
+                    </li>
+                    <li data-id="risk-approval">
+                      <a class="dropdown-item" href="risk-approval.html"
+                        data-translate="menu.governItems.riskApproval"></a>
+                    </li>
+                    <li data-id="compliance">
+                      <a class="dropdown-item" href="compliance.html" data-translate="menu.governItems.compliance"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 5) Meet -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="meetDropdown" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false" data-translate="menu.meet"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="meetDropdown">
+                    <li data-id="meetings">
+                      <a class="dropdown-item" href="meetings.html" data-translate="menu.meetItems.meetings"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 6) Report -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.report"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="reportDropdown">
+                    <li data-id="my-cockpit">
+                      <a class="dropdown-item" href="my-cockpit.html" data-translate="menu.reportItems.myCockpit"></a>
+                    </li>
+                    <li data-id="my-performance">
+                      <a class="dropdown-item" href="my-performance.html"
+                        data-translate="menu.reportItems.myPerformance"></a>
+                    </li>
+                    <li data-id="whiteboard">
+                      <a class="dropdown-item" href="whiteboard.html" data-translate="menu.reportItems.whiteboard"></a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-controls global-control d-flex flex-wrap">
+          <div class="nav-item dropdown">
+            <a class="control-link" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false" data-bs-placement="bottom" data-bs-title="Notification">
+              <span class="icon">
+                <i data-lucide="bell-dot" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+            <ul class="dropdown-menu dropdown-notification-menu dropdown-menu-icon border-0 shadow-sm"
+              aria-labelledby="notificationDropdown" data-bs-auto-close="outside"
+              style="width: 350px; max-width: calc(100vw - 2rem); max-height: 400px; overflow-y: auto;">
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">New message from John Smith</div>
+                    <small class="text-muted">Risk approval required for Phase 2</small>
+                    <div class="text-muted small">2 hours ago</div>
+                  </div>
+                </a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-center py-2" href="#">
+                  <small class="text-primary fw-medium">View all notifications</small>
+                </a></li>
+            </ul>
+          </div>
+
+          <div class="nav-item dropdown">
+            <a class="control-link" href="#" id="controlPanelDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+                <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+              aria-labelledby="controlPanelDropdown">
+              <li><a class="dropdown-item" href="control-panel.html"
+                  data-translate="topbar.settingsItems.controlPanel"></a></li>
+              <li><a class="dropdown-item" href="audit-trail.html" data-translate="topbar.settingsItems.auditTrail"></a>
+              </li>
+              <li><a class="dropdown-item" href="user-role.html" data-translate="topbar.settingsItems.userRoles"></a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav-item dropdown">
+            <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+                <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+              aria-labelledby="userDropdown">
+              <li><a class="dropdown-item profile-card" href="#">
+                  <span class="icon circle-user-round">
+                    <i data-lucide="circle-user-round" style="width: 32px; height: 32px;"></i>
+                  </span>
+                  <div>
+                    <h4><span data-translate="topbar.hi">Hi</span> John </h4>
+                    <small data-translate="topbar.welcomeToPortal"></small>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item profile-card" href="#" data-translate="topbar.profileItems.myProfile"></a>
+              </li>
+              <li><a class="dropdown-item" href="manual.html" data-translate="topbar.profileItems.myForms"></a></li>
+              <li><a class="dropdown-item" href="performance-contract.html"
+                  data-translate="topbar.profileItems.performanceContract"></a></li>
+              <li><a class="dropdown-item" href="performance-improvement-plan.html"
+                  data-translate="topbar.profileItems.performanceImprovementPlan" style="cursor: pointer;">
+                  Performance improvement Plan</a></li>
+              <li><a class="dropdown-item" href="audit-trail.html" data-translate="topbar.profileItems.auditTrail"></a>
+              </li>
+              <li><a class="dropdown-item" href="user-role.html" data-translate="topbar.profileItems.logout"></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+          <div class="hamburger-icon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-2 pb-2">
+    <div class="container-lg">
+      <div class="page-header grid gap-2 pb-1">
+        <div class="g-col-8 d-flex align-items-center">
+          <h4 class="title">
+            <span class="icon">
+              <i data-lucide="calendar-days" style="width: 18px; height: 18px;"></i>
+            </span>
+            <span>Event Calendar</span>
+          </h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg py-2">
+      <div class="event-calendar-wrapper">
+        <!-- Left Sidebar: Running Events -->
+        <div class="event-sidebar">
+          <div class="event-sidebar-header">
+            <h5 class="event-sidebar-title" id="eventSidebarTitle">Running Events</h5>
+          </div>
+          <div class="event-sidebar-body" id="eventSidebarBody">
+            <!-- Populated dynamically from JSON -->
+          </div>
+        </div>
+
+        <!-- Right: FullCalendar -->
+        <div class="event-calendar-main">
+          <div id="fullCalendar"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Event Detail Modal -->
+  <div class="modal custom-modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel"
+    aria-hidden="true">
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="eventDetailModalLabel">Event Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card custom-card border-0">
+            <div class="card-body">
+              <div class="grid gap-3">
+                <div class="g-col-12">
+                  <div class="form-group">
+                    <label class="form-label">Event Title</label>
+                    <p class="form-control-plaintext" id="modalEventTitle"></p>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <p class="form-control-plaintext" id="modalEventStart"></p>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <p class="form-control-plaintext" id="modalEventEnd"></p>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <p class="mb-0"><span class="badge rounded-pill" id="modalEventStatus"></span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/sortablejs/1.15.0/sortable.min.js"></script>
+  <script src="assets/js/lucide.js"></script>
+
+  <link href="assets/css/jquery-ui.min.css" rel="stylesheet">
+  <script src="assets/js/jquery-ui.min.js"></script>
+
+  <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/knockout-3.5.0.js"></script>
+  <script src="assets/js/daterangepicker.min.js"></script>
+
+  <link href="assets/css/select2.min.css" rel="stylesheet" />
+  <script src="assets/js/select2.min.js"></script>
+
+  <script src="assets/js/paging.js"></script>
+
+  <link href="assets/css/pickr.min.css" rel="stylesheet">
+  <script src="assets/js/pickr.es5.min.js"></script>
+  <script src="assets/js/widgets.js"></script>
+
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="assets/flatpickr/flatpickr.min.css">
+  <script src="assets/flatpickr/flatpickr.js"></script>
+
+  <script src="assets/js/main.js"></script>
+
+  <!-- FullCalendar v6 -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      // Format date for sidebar display
+      function formatEventDate(dateStr) {
+        if (!dateStr) return '';
+        var d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', {
+          month: 'long', day: 'numeric', year: 'numeric'
+        }) + ', ' + d.toLocaleTimeString('en-US', {
+          hour: 'numeric', minute: '2-digit'
+        }).toLowerCase();
+      }
+
+      // Build sidebar card HTML
+      function buildSidebarCard(event) {
+        var accent = event.accentColor || event.color || '#1a9a8a';
+        var fromDate = formatEventDate(event.start);
+        var toDate = event.end ? formatEventDate(event.end) : fromDate;
+
+        var card = document.createElement('div');
+        card.className = 'event-sidebar-card';
+        card.style.setProperty('--card-accent', accent);
+        card.innerHTML =
+          '<h6 class="event-card-title">' + event.title + '</h6>' +
+          '<p class="event-card-date">' +
+          '<span class="label">From:</span> ' + fromDate + '<br>' +
+          '<span class="label">To:</span> ' + toDate +
+          '</p>';
+        return card;
+      }
+
+      // Fetch events from JSON
+      fetch('assets/json/event-calendar.json')
+        .then(function (response) { return response.json(); })
+        .then(function (events) {
+
+          var sidebarBody = document.getElementById('eventSidebarBody');
+          var sidebarTitle = document.getElementById('eventSidebarTitle');
+
+          // --- Update sidebar based on calendar's visible date range ---
+          function updateSidebar(viewStart, viewEnd) {
+            sidebarBody.innerHTML = '';
+
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Check if the view is showing a past period
+            var isPast = viewEnd <= today;
+
+            var sidebarEvents;
+
+            if (isPast) {
+              // Past view: show only events within that date range
+              sidebarTitle.textContent = 'Completed Events';
+              sidebarEvents = events.filter(function (event) {
+                var evStart = new Date(event.start);
+                var evEnd = event.end ? new Date(event.end) : new Date(event.start);
+                return evStart < viewEnd && evEnd >= viewStart;
+              });
+            } else {
+              // Current/future view: show events from view start onward (running + upcoming)
+              sidebarTitle.textContent = 'Running & Upcoming Events';
+              sidebarEvents = events.filter(function (event) {
+                var evEnd = event.end ? new Date(event.end) : new Date(event.start);
+                return evEnd >= viewStart;
+              });
+            }
+
+            // Populate sidebar cards
+            if (sidebarEvents.length === 0) {
+              sidebarBody.innerHTML =
+                '<div class="event-sidebar-empty">' +
+                  '<i data-lucide="calendar-x-2" style="width:36px; height:36px;"></i>' +
+                  '<p>No events for this period</p>' +
+                '</div>';
+              if (window.lucide) lucide.createIcons();
+            } else {
+              sidebarEvents.forEach(function (event) {
+                sidebarBody.appendChild(buildSidebarCard(event));
+              });
+            }
+          }
+
+          // --- Initialize FullCalendar ---
+          var calendarEl = document.getElementById('fullCalendar');
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            buttonText: {
+              today: 'Today',
+              month: 'Month',
+              week: 'Week',
+              day: 'Day',
+              list: 'List'
+            },
+            height: 'auto',
+            navLinks: true,
+            editable: true,
+            dayMaxEvents: true,
+            events: events,
+            eventDisplay: 'block',
+            eventTimeFormat: {
+              hour: 'numeric',
+              minute: '2-digit',
+              meridiem: 'short'
+            },
+            datesSet: function (info) {
+              updateSidebar(info.start, info.end);
+            },
+            eventClick: function (info) {
+              info.jsEvent.preventDefault();
+              var event = info.event;
+
+              // Title
+              document.getElementById('modalEventTitle').textContent = event.title;
+
+              // Start date
+              var startStr = event.start ? event.start.toLocaleDateString('en-US', {
+                weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+              }) : '—';
+              document.getElementById('modalEventStart').textContent = startStr;
+
+              // End date
+              var endStr = '—';
+              if (event.end) {
+                var endDisplay = new Date(event.end);
+                endDisplay.setDate(endDisplay.getDate() - 1);
+                endStr = endDisplay.toLocaleDateString('en-US', {
+                  weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+                });
+              }
+              document.getElementById('modalEventEnd').textContent = endStr;
+
+              // Status badge
+              var today = new Date();
+              today.setHours(0, 0, 0, 0);
+              var statusEl = document.getElementById('modalEventStatus');
+              var evEnd = event.end ? new Date(event.end) : new Date(event.start);
+              if (evEnd < today) {
+                statusEl.textContent = 'Completed';
+                statusEl.className = 'badge rounded-pill bg-secondary';
+              } else if (event.start <= today) {
+                statusEl.textContent = 'In Progress';
+                statusEl.className = 'badge rounded-pill bg-success';
+              } else {
+                statusEl.textContent = 'Upcoming';
+                statusEl.className = 'badge rounded-pill bg-primary';
+              }
+
+              var modal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
+              modal.show();
+            }
+          });
+
+          calendar.render();
+        })
+        .catch(function (err) {
+          console.error('Failed to load events:', err);
+        });
+    });
+  </script>
+
+</body>
+
+</html>

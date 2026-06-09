@@ -1,0 +1,77 @@
+[
+  {
+    "department": "Kale BOD Scorecard",
+    "name": "Expand trading & storage operations",
+   "impact": [
+  { "name": "#Expand into new markets" }
+],
+    "plannedDate": "03/01/2025 - 03/31/2025",
+    "actualDate": "03/18/2025 - 03/31/2025",
+    "progress": "100%",
+    "target": "100%",
+    "status": "manual",
+    "total": "$0",
+    "utilised": "$0",
+    "balance": "$0"
+  },
+  {
+    "department": "Kale BOD Scorecard",
+    "name": "Launch high-margin retail fuel franchises",
+      "impact": [
+  { "name": "% Launch new digital products" }
+],
+    "plannedDate": "03/08/2025 - 03/31/2025",
+    "actualDate": "03/18/2025 - 03/31/2025",
+    "progress": "100%",
+    "target": "100%",
+    "status": "manual",
+    "total": "$0",
+    "utilised": "$0",
+    "balance": "$0"
+  },
+  {
+    "department": "Kale BOD Scorecard",
+    "name": "Strengthen revenue diversificationStrengthen revenue diversification",
+    "impact": [
+  { "name": "% Strengthen ethical supply chain compliance" }
+],
+    "plannedDate": "03/01/2025 - 03/31/2025",
+    "actualDate": "03/18/2025 - 03/31/2025",
+    "progress": "100%",
+    "target": "100%",
+    "status": "manual",
+    "total": "$0",
+    "utilised": "$0",
+    "balance": "$0"
+  },
+  {
+    "department": "Kale BOD Scorecard",
+    "name": "Develop new business models",
+      "impact": [
+  { "name": "% Leadership Readiness" }
+],
+    "plannedDate": "03/18/2025 - 03/31/2025",
+    "actualDate": "03/18/2025 - 03/26/2025",
+    "progress": "100%",
+    "target": "100%",
+    "status": "manual",
+    "total": "$0",
+    "utilised": "$0",
+    "balance": "$0"
+  },
+  {
+    "department": "Kale BOD Scorecard",
+    "name": "Roll out retail franchise program in underserved areas",
+      "impact": [
+  { "name": "# Inventory Turnover" }
+],
+    "plannedDate": "03/19/2025 - 03/31/2025",
+    "actualDate": "03/20/2025 - 03/31/2025",
+    "progress": "100%",
+    "target": "100%",
+    "status": "manual",
+    "total": "$0",
+    "utilised": "$0",
+    "balance": "$0"
+  }
+]

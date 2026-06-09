@@ -94,10 +94,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -127,7 +128,7 @@ import org.springframework.util.MultiValueMap;
  */
 @Component
 public class ScoreCardReaderUtil {
-    private Logger logger = Logger.getLogger(ScoreCardReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(ScoreCardReaderUtil.class);
     public static final String S3_ASSET_PATHS_SCORECARD = "/scoreCardImportDataFile";
     private static final String SUFFIX = "/";
     @Autowired

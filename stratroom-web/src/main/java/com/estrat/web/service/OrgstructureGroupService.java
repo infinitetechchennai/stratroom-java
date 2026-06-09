@@ -63,7 +63,7 @@ public class OrgstructureGroupService {
 
     public List<OrgstructureGroupDTO> findAllValue() {
         String url = this.dbUrl + "/orgGroupList";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

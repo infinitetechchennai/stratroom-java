@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Governance Report</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v0.004" rel="stylesheet">
+    <link href="assets/css/main.css?v0.004" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+    <link href="assets/css/login.css" rel="stylesheet">
+
+    <!-- Font Awsome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <!-- <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  -->
+    <script>
+        const savedLang = localStorage.getItem('lang');
+        const savedDir = localStorage.getItem('dir');
+
+        if (savedLang && savedDir) {
+            document.documentElement.setAttribute('lang', savedLang);
+            document.documentElement.setAttribute('dir', savedDir);
+        }
+    </script>
+
+</head>
+
+<body data-bs-theme="light">
+
+    <header id="header" class="header shadow-sm sticky-top">
+        <div class="navbar-topbar">
+            <div class="container-lg d-flex flex-wrap justify-content-between">
+                <div class="menu-controls d-flex">
+                    <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="Org-Structure">
+                        <span class="icon">
+                            <img src="assets/images/icons/org-structure-i.svg" width="18" height="18"
+                                alt="Org-Structure" title="Org-Structure">
+                        </span>
+                    </a>
+                    <a class="control-link" href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Templates">
+                            <img src="assets/images/icons/template-i.svg" width="18" height="18" alt="" title="">
+                        </span>
+                    </a>
+
+                    <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="ETL">
+                        <span class="icon">
+                            <img src="assets/images/icons/other-i.svg" width="18" height="18" alt="ETL" title="ETL">
+                        </span>
+                    </a>
+                </div>
+                <div class="menu-controls d-flex flex-wrap ms-auto">
+                    <div class="top-date-picker">
+                        <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap">
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <img src="assets/images/icons/global-i.svg" width="14" height="14" alt="organization">
+                            </span>
+                            <span id="currentLanguage">EN</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="#" data-lang="en" data-dir="ltr">English</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="ar" data-dir="rtl">Arabic</a></li>
+                            <!-- <li><a class="dropdown-item" href="#" data-lang="ta" data-dir="ltr">Tamil</a></li> -->
+                        </ul>
+
+                    </div>
+                    <div id="google_translate_element" class="d-none"></div>
+                </div>
+                <!-- <div class="menu-controls d-flex flex-wrap">
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/notification-i.svg" width="18" height="18" alt="organization">
+                </a>
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Logout">
+                    <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+                </a>
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a>
+            </div> -->
+
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md navbar-light">
+            <div class="container-lg gap-2 gap-md-3">
+
+
+                <form class="position-relative logo me-auto">
+                    <a href="landing.html" class="logo-preview" id="logoPreview">
+                        <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                    </a>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;"
+                        onchange="previewImage(event)">
+                    <label for="fileInput" class="upload-btn">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Edit Logo">
+                            <img src="assets/images/icons/edit-i.svg" width="12" height="12" alt="">
+                        </span>
+                    </label>
+                </form>
+
+                <!-- <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button> -->
+
+                <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                    aria-labelledby="mobileMenuLabel">
+                    <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="navbar-collapse">
+
+
+                            <ul class="navbar-nav ms-auto">
+
+                                <!-- 1) Plan -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Plan
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" data-menu="plan"
+                                        aria-labelledby="planningDropdown">
+                                        <li data-id="strategy-planner"><a class="dropdown-item"
+                                                href="strategy-planner.html">Strategy Planner</a></li>
+                                        <li data-id="swot"><a class="dropdown-item" href="swot.html">SWOT</a></li>
+                                        <li data-id="pestel"><a class="dropdown-item" href="pestel.html">PESTEL</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- 2) Measure -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="measureDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Measure
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="measureDropdown">
+                                        <li data-id="scorecard"><a class="dropdown-item"
+                                                href="scorecard.html">Scorecard</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- 3) Execute -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="executeDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Execute
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="executeDropdown">
+                                        <li data-id="initiatives"><a class="dropdown-item"
+                                                href="initiatives-projects.html">Initiatives & Projects</a></li>
+                                        <li data-id="tasks"><a class="dropdown-item" href="tasks.html">Tasks</a></li>
+                                        <li data-id="budget-approval"><a class="dropdown-item"
+                                                href="budget-approval.html">Budget Approval</a></li>
+                                        <li data-id="budgets"><a class="dropdown-item" href="budgets.html">Budgets</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- 4) Govern -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="governDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Govern
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="governDropdown">
+                                        <li data-id="risk-register"><a class="dropdown-item"
+                                                href="risk-register.html">Risk Register</a></li>
+                                        <li data-id="risk-approval"><a class="dropdown-item"
+                                                href="risk-approval.html">Risk Approval</a></li>
+                                        <li data-id="compliance"><a class="dropdown-item"
+                                                href="compliance.html">Compliance</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- 5) Meet -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="meetDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Meet
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="meetDropdown">
+                                        <li data-id="meetings"><a class="dropdown-item"
+                                                href="meetings.html">Meetings</a></li>
+                                    </ul>
+                                </li>
+
+                                <!-- 6) Report -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        Report
+                                    </a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="reportDropdown">
+                                        <li data-id="my-cockpit"><a class="dropdown-item" href="my-cockpit.html">My
+                                                Cockpit</a></li>
+                                        <li data-id="my-performance"><a class="dropdown-item"
+                                                href="my-performance.html">My Performance</a></li>
+                                        <li data-id="whiteboard"><a class="dropdown-item"
+                                                href="whiteboard.html">Whiteboard</a></li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-controls global-control  d-flex flex-wrap">
+
+                    <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="Notification">
+                        <img src="assets/images/icons/notification-i.svg" width="18" height="18" alt="organization">
+                    </a>
+                    <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Logout">
+            <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+          </a> -->
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="controlPanelDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="icon">
+                                <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="controlPanelDropdown">
+                            <li><a class="dropdown-item" href="control-panel.html"> <span class="icon">
+                                        <img src="assets/images/icons/control-panel-i.svg" width="18" height="18"
+                                            alt="">
+                                    </span>Control Panel</a></li>
+                            <li><a class="dropdown-item" href="audit-trail.html"> <span class="icon">
+                                        <img src="assets/images/icons/audit-trail-i.svg" width="18" height="18" alt="">
+                                    </span>Audit Trail</a></li>
+                            <li><a class="dropdown-item" href="user-role.html"> <span class="icon">
+                                        <img src="assets/images/icons/user-role-i.svg" width="18" height="18" alt="">
+                                    </span>User Role</a></li>
+
+
+                        </ul>
+                    </div>
+
+                    <div class="nav-item dropdown">
+
+
+                        <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon">
+                                <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                            </span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item profile-card" href="#">
+
+                                    <span class="icon">
+                                        <img src="assets/images/icons/user-i.svg" width="32" height="32" alt="">
+                                    </span>
+
+                                    <div class="">
+                                        <h4>Hi John </h4>
+                                        <small>welcome to your Multi-Governance Portal</small>
+                                    </div>
+                                </a></li>
+
+
+                            <li><a class="dropdown-item" href="manual.html">
+
+                                    <span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                                            height="18" alt="" title=""></span>My
+                                    Forms</a></li>
+                            <li>
+                                <a class="dropdown-item" href="performance-contract.html">
+
+                                    <span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                                            height="18" alt="" title=""></span>Performance Contract</a>
+                            </li>
+
+                            <li><a class="dropdown-item" href="audit-trail.html">
+
+                                    <span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                                            height="18" alt="" title=""></span>Adit Trail</a></li>
+
+                            <li><a class="dropdown-item" href="user-role.html"><span class="icon"><img
+                                            src="assets/images/icons/logout-i.svg" width="18" height="18" alt=""></span>
+                                    Logout</a></li>
+
+
+                        </ul>
+
+                    </div>
+                    <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+                </div>
+                <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                    aria-controls="mobileMenu">
+                    <div class="hamburger-icon">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </div>
+                </div>
+
+
+        </nav>
+    </header>
+
+    <main class="pt-2 pb-2">
+        <div class="container-lg">
+            <div class="page-header grid gap-2 pb-1">
+                <div class="g-col-8 d-flex align-items-center">
+                    <h4 class="title">
+                        <span class="icon">
+                            <img src="assets/images/icons/audit-trail-i.svg" alt="control-panel" title="control-panel"
+                                width="18" height="18">
+                        </span>
+                        Board Performance, Risk & Governance Report
+                    </h4>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="container-lg py-2">
+            <div class="card custom-card">
+                <div class="card-header">
+                    <div class="c-header-left">
+                        <h5 class="card-title">
+                            <strong editable="true" contenteditable="true"
+                                onkeypress="return (this.innerText.length <= 36)">Board Performance, Risk & Governance
+                                Report</strong>
+                        </h5>
+                    </div>
+
+                </div>
+                <div class="card-body p-3">
+                    <div class="grid">
+                        <div class="g-col-12 g-col-xl-3 g-col-md-4">
+
+                            <div class="d-flex flex-column justify-content-center text-center gap-2 p-3 bg-primary rounded mb-3"
+                                style="--stratroom-bg-opacity:0.1">
+
+
+                                <div class="user-card flex-column gap-2 justify-content-center">
+                                    <div class="user-image user-image-lg">
+                                        <!-- <img src="assets/images/user/user7.jpg" alt="George" width="48" height="48"> -->
+                                        <span class="img-initial rounded-circle">CH</span>
+                                    </div>
+                                    <div class="user-text d-flex flex-column">
+                                        <h6 class="text-heading text-truncate"> Chris Hemsworth</h6>
+                                        <small>Chairman Board of Directors</small>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div>
+                                <!-- <div class="grid gap-0 mb-3 grid-from-box">
+                                    <div class="form-group g-col-6">
+                                        <label class="form-label">Manager/Supervisor</label>
+                                        <ul class="list-unstyled d-flex align-items-center avatar-group mb-0">
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig1.jpg" class="rounded-circle"
+                                                    width="24" height="24">
+                                            </li>
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig6.jpg" class="rounded-circle"
+                                                    width="24" height="24">
+                                            </li>
+                                            <li class="avatar avatar-xs pull-up" href="#attendess-list"
+                                                data-bs-toggle="modal">
+                                                <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" data-bs-original-title="0 more">+2</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group g-col-6 text-end">
+                                        <label class="form-label">HR Representative</label>
+                                        <ul
+                                            class="list-unstyled d-flex align-items-center justify-content-end avatar-group mb-0">
+                                            <li class="avatar avatar-xs pull-up" title="User">
+                                                <img src="assets/images/user/usrbig1.jpg" class="rounded-circle"
+                                                    width="24" height="24">
+                                            </li>
+
+                                            <li class="avatar avatar-xs pull-up" href="#attendess-list"
+                                                data-bs-toggle="modal">
+                                                <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" data-bs-original-title="0 more">+0</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div> -->
+                                <div class="mb-3">
+                                    <!-- <h6 class="mb-2">Employee Information</h6> -->
+                                    <div class="grid gap-0 grid-from-box">
+                                        <div class="form-group g-col-12">
+                                            <label class="form-label">Bank</label>
+                                            <p class="form-control-plaintext">Apex Bank India Ltd</p>
+                                        </div>
+                                        <div class="form-group g-col-12">
+                                            <label class="form-label">Reporting Period</label>
+                                            <p class="form-control-plaintext">Q1 FY 2026</p>
+                                        </div>
+                                        <div class="form-group g-col-12">
+                                            <label class="form-label">Prepared By</label>
+                                            <p class="form-control-plaintext">Strategy & Enterprise Risk Office</p>
+                                        </div>
+                                        <div class="form-group g-col-6 ">
+                                            <label class="form-label">Reviewed By</label>
+                                            <p class="form-control-plaintext">CEO, CRO, CAE</p>
+                                        </div>
+                                        <div class="form-group g-col-6 text-end">
+                                            <label class="form-label">Presented To</label>
+                                            <p class="form-control-plaintext">Board of Directors</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="g-col-12 g-col-xl-9 g-col-md-8 ">
+
+                            <div class="grid gap-3">
+
+                                <div class="g-col-12 grid gap-3">
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="boardExecutiveSummary" data-i18n="boardExecutiveSummary"
+                                                    class="form-label fs-5">Board Executive Summary</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="overallPosition" data-i18n="overallPosition"
+                                                            class="form-label">Overall Position</label>
+                                                    </div>
+                                                    <table id="overallPositionTable"
+                                                        class="table table-sm table-bordered w-100">
+                                                        <thead class="d-none">
+                                                            <tr>
+                                                                <th>Area</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th>Strategy execution</th>
+                                                                <td>On track (2 initiatives at risk)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Financial performance</th>
+                                                                <td>Stable</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Risk profile</th>
+                                                                <td>Within appetite (1 emerging risk)</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Audit & compliance</th>
+                                                                <td>No critical regulatory breaches</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Management execution discipline</th>
+                                                                <td>Improving, delays persist in 2 areas</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="areasofConcern" data-i18n="areasofConcern"
+                                                            class="form-label">Board Attention Required</label>
+                                                    </div>
+
+                                                    <table id="boardAttentionTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th style="width:60px;">#</th>
+                                                                <th>Board Attention Required</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-center">1</td>
+                                                                <td>Delayed closure of 1 high-severity audit issue</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">2</td>
+                                                                <td>Repeated cyber resilience gaps in DR testing</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">3</td>
+                                                                <td>Approval for additional cyber investment (₹1.2 Cr)
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="strategyPerformanceOverview"
+                                                    data-i18n="strategyPerformanceOverview"
+                                                    class="form-label fs-5">Strategy & Performance Overview</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="scorecardStatus" data-i18n="scorecardStatus"
+                                                            class="form-label">Scorecard Status</label>
+                                                    </div>
+                                                    <table id="scorecardTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Perspective</th>
+                                                                <th>Status</th>
+                                                                <th>Commentary</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Financial</td>
+                                                                <td><span class="badge bg-success">🟢 On Track</span>
+                                                                </td>
+                                                                <td>NIM stable, cost discipline improving</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Customer</td>
+                                                                <td><span class="badge bg-success">🟢 On Track</span>
+                                                                </td>
+                                                                <td>Digital adoption up</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Internal Process</td>
+                                                                <td><span class="badge bg-warning text-dark">🟡
+                                                                        Watch</span></td>
+                                                                <td>KYC turnaround improving, but DR gaps</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Learning &amp; Growth</td>
+                                                                <td><span class="badge bg-success">🟢 On Track</span>
+                                                                </td>
+                                                                <td>Compliance training &gt;95%</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Governance &amp; Compliance</td>
+                                                                <td><span class="badge bg-warning text-dark">🟡
+                                                                        Watch</span></td>
+                                                                <td>1 overdue audit action</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="keyKPIs" data-i18n="keyKPIs" class="form-label">Key
+                                                            KPIs</label>
+                                                    </div>
+
+                                                    <table id="kpiTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>KPI</th>
+                                                                <th>Target</th>
+                                                                <th>Actual</th>
+                                                                <th>Trend</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Net Interest Margin</td>
+                                                                <td>&ge; 3.5%</td>
+                                                                <td class="fw-bold text-success">3.60%</td>
+                                                                <td class="text-center text-success">↑</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Digital Banking Uptime</td>
+                                                                <td>&ge; 99.9%</td>
+                                                                <td class="fw-bold text-danger">99.70%</td>
+                                                                <td class="text-center text-danger">↓</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Audit Issues Closed on Time</td>
+                                                                <td>&ge; 95%</td>
+                                                                <td class="fw-bold text-warning">92%</td>
+                                                                <td class="text-center text-warning">→</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Regulatory Violations</td>
+                                                                <td>0</td>
+                                                                <td class="fw-bold text-success">0</td>
+                                                                <td class="text-center">→</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="strategicInitiativesStatus"
+                                                    data-i18n="strategicInitiativesStatus"
+                                                    class="form-label fs-5">Strategic Initiatives Status</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="initiativeSummary" data-i18n="initiativeSummary"
+                                                            class="form-label">Initiative Summary</label>
+                                                    </div>
+                                                    <table id="initiativeTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Initiative</th>
+                                                                <th>Status</th>
+                                                                <th>Budget (₹ Cr)</th>
+                                                                <th>Key Risk</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Digital KYC Optimization</td>
+                                                                <td class="text-center">🟢</td>
+                                                                <td class="text-end">5</td>
+                                                                <td>None</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Cyber &amp; DR Resilience</td>
+                                                                <td class="text-center">🟡</td>
+                                                                <td class="text-end">8.5</td>
+                                                                <td>DR test delays</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Audit Issue Acceleration</td>
+                                                                <td class="text-center">🟡</td>
+                                                                <td class="text-end">2</td>
+                                                                <td>Owner dependency</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>ESG &amp; Workplace Safety</td>
+                                                                <td class="text-center">🟢</td>
+                                                                <td class="text-end">1.5</td>
+                                                                <td>None</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+                                                </div>
+
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="boardInsight" data-i18n="boardInsight"
+                                                            class="form-label">Board Insight</label>
+                                                    </div>
+
+                                                    <table id="boardInsightTable" class="table table-bordered w-100">
+                                                        <thead class="d-none">
+                                                            <tr>
+                                                                <th>Board Insight</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Cyber initiative needs stronger execution oversight
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Audit issue closure improving but requires
+                                                                    escalation authority</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="enterpriseRiskOverview" data-i18n="enterpriseRiskOverview"
+                                                    class="form-label fs-5">Enterprise Risk Overview</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="topEnterpriseRisks" data-i18n="topEnterpriseRisks"
+                                                            class="form-label">Top Enterprise Risks</label>
+                                                    </div>
+                                                    <table id="riskTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Risk</th>
+                                                                <th>Inherent</th>
+                                                                <th>Residual</th>
+                                                                <th>Appetite</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>AML / KYC Non-Compliance</td>
+                                                                <td class="text-danger fw-bold">High</td>
+                                                                <td class="text-warning fw-bold">Medium</td>
+                                                                <td class="text-muted">Low</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Customer Data Breach</td>
+                                                                <td class="text-danger fw-bold">High</td>
+                                                                <td class="text-warning fw-bold">Medium</td>
+                                                                <td class="text-danger">Very Low</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Cyber / Digital Outage</td>
+                                                                <td class="text-danger fw-bold">High</td>
+                                                                <td class="text-warning fw-bold">Medium</td>
+                                                                <td class="text-muted">Low</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Delayed Audit Closure</td>
+                                                                <td class="text-warning fw-bold">Medium</td>
+                                                                <td class="text-success fw-bold">Low</td>
+                                                                <td class="text-muted">Low</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>ESG / OSH Non-Compliance</td>
+                                                                <td class="text-warning fw-bold">Medium</td>
+                                                                <td class="text-success fw-bold">Low</td>
+                                                                <td class="text-primary">Moderate</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+                                                </div>
+
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="emergingRisk" data-i18n="emergingRisk"
+                                                            class="form-label">Emerging Risk</label>
+                                                    </div>
+
+                                                    <table id="emergingRiskTable" class="table table-bordered w-100">
+                                                        <thead class="d-none">
+                                                            <tr>
+                                                                <th>Emerging Risk</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    Increasing cyber sophistication
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="riskEventsSummary" data-i18n="riskEventsSummary"
+                                                    class="form-label fs-5">Risk Events Summary</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                    <table id="riskEventsTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Metric</th>
+                                                                <th>Q1</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Total Risk Events</td>
+                                                                <td class="fw-bold">18</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>High Severity</td>
+                                                                <td class="fw-bold text-danger">3</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Repeat Events</td>
+                                                                <td class="fw-bold text-warning">1</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Events Escalated to Committee</td>
+                                                                <td class="fw-bold">3</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+
+                                                </div>
+
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="boardInsight" data-i18n="boardInsight"
+                                                            class="form-label">Board Insight</label>
+                                                    </div>
+
+                                                    <table id="boardInsightTable" class="table table-bordered w-100">
+                                                        <thead class="d-none">
+                                                            <tr>
+                                                                <th>Board Insight</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    No material financial loss
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    No material financial loss
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="auditComplianceStatus" data-i18n="auditComplianceStatus"
+                                                    class="form-label fs-5">Audit & Compliance Status</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="auditSummary" data-i18n="auditSummary"
+                                                            class="form-label">Audit Summary</label>
+                                                    </div>
+                                                    <table id="auditSummaryTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Area</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Audits Completed</td>
+                                                                <td class="fw-bold">4</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>High Findings</td>
+                                                                <td class="fw-bold text-danger">2</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Overdue Actions</td>
+                                                                <td class="fw-bold text-warning">1</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Repeat Findings</td>
+                                                                <td class="fw-bold text-success">0</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+
+
+                                                </div>
+
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="keyAuditFinding" data-i18n="keyAuditFinding"
+                                                            class="form-label">Key Audit Finding</label>
+                                                    </div>
+
+                                                    <table id="keyAuditFindingTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Key Audit Finding</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><strong>Finding:</strong> Delayed DR test
+                                                                    remediation</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Root Cause:</strong> Vendor dependency</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Management Action:</strong> In progress</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="committeeEscalationsDecisions"
+                                                    data-i18n="committeeEscalationsDecisions"
+                                                    class="form-label fs-5">Committee Escalations & Decisions</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="itemsEscalatedThisQuarter"
+                                                            data-i18n="itemsEscalatedThisQuarter"
+                                                            class="form-label">Items Escalated This Quarter</label>
+                                                    </div>
+                                                    <table id="committeeEscalationTable"
+                                                        class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Committee</th>
+                                                                <th>Issue</th>
+                                                                <th>Decision</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Audit Committee</td>
+                                                                <td>DR gap</td>
+                                                                <td>Additional monitoring</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Risk Committee</td>
+                                                                <td>Cyber trend</td>
+                                                                <td>Budget enhancement</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>ESG Committee</td>
+                                                                <td>Safety audits</td>
+                                                                <td>No action</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+
+
+
+                                                </div>
+
+
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="managementExecutionDiscipline"
+                                                    data-i18n="managementExecutionDiscipline"
+                                                    class="form-label fs-5">Management Execution Discipline</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="taskExecutionSnapshot"
+                                                            data-i18n="taskExecutionSnapshot" class="form-label">Task
+                                                            Execution Snapshot</label>
+                                                    </div>
+                                                    <table id="taskExecutionTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Metric</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Strategic Tasks On Track</td>
+                                                                <td class="fw-bold text-success">87%</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Overdue Tasks (&gt;30 days)</td>
+                                                                <td class="fw-bold text-danger">6</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>No-Progress Tasks (7 days)</td>
+                                                                <td class="fw-bold text-warning">3</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+
+
+
+                                                </div>
+
+                                                <div class="g-col-12">
+                                                    <div class="form-group">
+                                                        <label for="boardInsight" data-i18n="boardInsight"
+                                                            class="form-label">Board Insight</label>
+                                                    </div>
+
+                                                    <table id="boardInsightTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Board Insight</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Execution visibility has improved</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Weekly monitoring has reduced “silent delays”</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+
+
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="boardDecisionsRequired"
+                                                    data-i18n="boardDecisionsRequired"
+                                                    class="form-label fs-5">Board Decisions Required</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                   
+                                                    <table id="boardDecisionsRequiredTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>Approve ₹1.2 Cr additional cyber investment</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2</td>
+                                                                <td>Direct management to close DR audit issue within 30 days</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>3</td>
+                                                                <td>Endorse continued third-party execution monitoring support</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                            
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                      <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="assuranceStatement"
+                                                    data-i18n="assuranceStatement"
+                                                    class="form-label fs-5">Assurance Statement</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                   
+                                                    <table id="assuranceStatementTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>Management confirms that systems, controls, and processes are operating within approved risk appetite, except where explicitly highlighted in this report.</td>
+                                                            </tr>
+                                                           
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                            
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                     <div class="g-col-12">
+                                        <div class="questionnaire-block">
+                                            <div class="form-group">
+                                                <label for="howThisReport"
+                                                    data-i18n="howThisReport"
+                                                    class="form-label fs-5">How This Report Is Generated In Stratroom</label>
+                                            </div>
+                                            <div class="grid gap-3">
+                                                <div class="g-col-12">
+                                                   
+                                                    <table id="howThisReportTable" class="table table-bordered w-100">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td>This Board report is not manually compiled</td>
+                                                            </tr>
+                                                             <tr>
+                                                                <td>2</td>
+                                                                <td>It is generated directly from strategy, execution, risk, audit, and committee data—ensuring one version of truth</td>
+                                                            </tr>
+                                                           
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                            
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="col-12 text-center py-2 copyright">
+        <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+
+    </footer>
+
+
+
+    <div class="modal custom-modal fade" id="attendess-list" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Users</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body d-grid gap-3">
+                    <div class="attendees-search">
+                        <div>
+                            <div class="form-check cusom-check">
+                                <input class="form-check-input" type="checkbox" value="" id="allusers">
+                                <label class="form-check-label" for="allusers">
+                                    All Users
+                                </label>
+                            </div>
+                        </div>
+                        <div class="search">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Recipient's username"
+                                    aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                    <i class="fas fa-search" data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Files"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group add-attendees">
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees1">
+                                <label class="form-check-label" for="attendees1">
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker-1.svg" alt="Chris" width="18" height="18">
+                                    </span>
+                                    <span class="name">Chris</span>
+
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees2">
+                                <label class="form-check-label" for="attendees2">
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="Kevin" width="18" height="18">
+                                    </span>
+                                    <span class="name">Kevin</span>
+
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees3">
+                                <label class="form-check-label" for="attendees3">
+
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Richard</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees4">
+                                <label class="form-check-label" for="attendees4">
+
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Stark</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees5">
+                                <label class="form-check-label" for="attendees5">
+
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Warner</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees6">
+                                <label class="form-check-label" for="attendees6">
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Williamson</span>
+
+                                </label>
+                            </div>
+                        </div>
+                        <div class="list-group-item attendee">
+                            <div class="form-check cusom-check form-check-reverse">
+                                <input class="form-check-input" type="checkbox" name="attendees" id="attendees7">
+                                <label class="form-check-label" for="attendees7">
+                                    <span class="image">
+                                        <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                                    </span>
+                                    <span class="name">Zara</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+
+    <div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Templates</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card custom-card border-0">
+                        <div class="card-body">
+                            <form id="menuForm">
+                                <div class="grid gap-3">
+                                    <div class="g-col-12">
+                                        <div class="form-group">
+                                            <label for="menuName" class="form-label">Name</label>
+
+                                            <input type="text" class="form-control" id="menuName"
+                                                placeholder="Enter Name" required>
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12 g-col-md-6">
+                                        <div class="form-group">
+                                            <label for="pageType" class="form-label">Page Type</label>
+
+                                            <select id="pageType" class="form-select" required>
+                                                <option value="">Select Page Type</option>
+                                                <option value="Plan">Plan</option>
+                                                <option value="Measure">Measure</option>
+                                                <option value="Execute">Execute</option>
+                                                <option value="Govern">Govern</option>
+                                                <option value="Meet">Meet</option>
+                                                <option value="Report">Report</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="g-col-12 g-col-md-6">
+                                        <div class="form-group">
+                                            <label for="boardType" class="form-label">Board Type</label>
+                                            <select id="boardType" class="form-select" required>
+                                                <option value="">Select Board Type</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" id="saveMenuBtn">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Menu Text</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editInput" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="contextMenu" class="custom-context-menu">
+        <button id="editItem">Edit</button>
+        <button id="deleteItem">Delete</button>
+        <button id="moveUpItem">Move Up</button>
+        <button id="moveDownItem">Move Down</button>
+    </div>
+
+    <!-- create-template END -->
+
+
+
+    <!-- Bootstrap Toast container -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+        <div id="rowToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Please fill all fields in existing rows before adding a new row!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sortablejs/1.15.0/sortable.min.js"></script>
+    <script src="assets/js/lucide.js"></script>
+
+
+    <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+    <script src="assets/js/moment.js"></script>
+    <script src="assets/js/knockout-3.5.0.js"></script>
+    <script src="assets/js/daterangepicker.min.js"></script>
+
+    <script src="assets/js/main.js"></script>
+    <link href="assets/css/select2.min.css" rel="stylesheet" />
+    <script src="assets/js/select2.min.js"></script>
+    <!-- jQuery & DataTables JS -->
+    <script src="assets/datatables/1.13.6/jquery.dataTables.min.js"></script>
+    <script src="assets/datatables/1.13.6/dataTables.bootstrap5.min.js"></script>
+
+
+
+    <script>
+        $(document).ready(function () {
+
+            var overallPositionTable = $('#overallPositionTable').DataTable({
+                scrollX: true,
+                ordering: false,
+                paging: false,
+                info: false,
+                searching: false
+            });
+
+            $('#boardAttentionTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false
+            });
+            $('#scorecardTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+
+            $('#kpiTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+            $('#initiativeTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+            $('#boardInsightTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false
+            });
+            $('#riskTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+            $('#emergingRiskTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false
+            });
+            $('#riskEventsTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+            $('#auditSummaryTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+            $('#keyAuditFindingTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false
+            });
+            $('#committeeEscalationTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+            $('#taskExecutionTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+            $('#boardDecisionsRequiredTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+             $('#assuranceStatementTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+            $('#howThisReportTable').DataTable({
+                paging: false,
+                ordering: false,
+                searching: false,
+                info: false,
+                autoWidth: false
+            });
+        });
+    </script>
+
+
+
+</body>
+
+</html>

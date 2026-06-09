@@ -1,0 +1,4035 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v0.004" rel="stylesheet">
+    <link href="assets/css/main.css?v0.004" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+    <link href="assets/css/login.css" rel="stylesheet">
+
+     <!-- Font Awsome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+  <!-- <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  -->
+<script>
+  const savedLang = localStorage.getItem('lang');
+  const savedDir = localStorage.getItem('dir');
+
+  if (savedLang && savedDir) {
+    document.documentElement.setAttribute('lang', savedLang);
+    document.documentElement.setAttribute('dir', savedDir);
+  }
+</script>
+</head>
+
+<body data-bs-theme="light">
+
+<header id="header" class="header shadow-sm sticky-top">
+    <div class="navbar-topbar">
+        <div class="container-lg d-flex flex-wrap justify-content-between">
+            <div class="menu-controls d-flex">
+                <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Org-Structure">
+                    <span class="icon">
+                        <img src="assets/images/icons/org-structure-i.svg" width="18" height="18" alt="Org-Structure"
+                            title="Org-Structure">
+                    </span>
+                </a>
+                <a class="control-link" href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Templates">
+                        <img src="assets/images/icons/template-i.svg" width="18" height="18" alt="" title="">
+                    </span>
+                </a>
+                <!-- <a class="control-link" href="control-panel.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Control Panel">
+                    <span class="icon">
+                        <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                    </span>
+                </a> -->
+
+
+                <!-- <div class="nav-item dropdown">
+
+
+                    <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="control-panel.html">Control Panel</a></li>
+                        <li><a class="dropdown-item" href="audit-trail.html">Audit Trail</a></li>
+                        <li><a class="dropdown-item" href="user-role.html">User Role</a></li>
+
+
+                    </ul>
+                </div> -->
+                <!-- <a class="control-link" href="audit-trail.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Audit Trail">
+                    <span class="icon">
+                        <img src="assets/images/icons/audit-trail-i.svg" width="18" height="18" alt="" title="">
+                    </span>
+                </a>
+                <a class="control-link" href="user-role.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User Role">
+                    <span class="icon">
+                        <img src="assets/images/icons/user-role-i.svg" width="18" height="18">
+                    </span>
+                </a> -->
+                <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="ETL">
+                    <span class="icon">
+                        <img src="assets/images/icons/other-i.svg" width="18" height="18" alt="ETL" title="ETL">
+                    </span>
+                </a>
+            </div>
+            <div class="menu-controls d-flex flex-wrap ms-auto">
+                <div class="top-date-picker">
+                    <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+                </div>
+            </div>
+            <div class="menu-controls d-flex flex-wrap">
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/global-i.svg" width="18" height="18" alt="organization"> EN
+                </a> -->
+
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/global-i.svg" width="14" height="14" alt="organization">
+                        </span>
+                        EN
+                    </a>
+
+                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="languageDropdown">
+  <li><a class="dropdown-item" href="#" data-lang="en" data-dir="ltr">English</a></li>
+  <li><a class="dropdown-item" href="#" data-lang="ar" data-dir="rtl">Arabic</a></li>
+</ul>
+                </div>
+
+            </div>
+            <!-- <div class="menu-controls d-flex flex-wrap">
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/notification-i.svg" width="18" height="18" alt="organization">
+                </a>
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Logout">
+                    <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+                </a>
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a>
+            </div> -->
+
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-light">
+        <div class="container-lg gap-2 gap-md-3">
+
+
+            <form class="position-relative logo me-auto">
+                <a href="landing.html" class="logo-preview" id="logoPreview">
+                    <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                </a>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;"
+                    onchange="previewImage(event)">
+                <label for="fileInput" class="upload-btn">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Logo">
+                        <img src="assets/images/icons/edit-i.svg" width="12" height="12" alt="">
+                    </span>
+                </label>
+            </form>
+
+            <!-- <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button> -->
+
+            <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                aria-labelledby="mobileMenuLabel">
+                <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="navbar-collapse">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Planning
+                                </a>
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="planningDropdown">
+                                    <li><a class="dropdown-item" href="strategy-planner.html">Strategy Formulation</a></li>
+                                    <li><a class="dropdown-item" href="#">Project Formulation</a></li>
+                                    <li><a class="dropdown-item" href="#">Risk Formulation</a></li>
+
+                                    <li><a class="dropdown-item" href="#">Strategy Map</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="mastersDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Masters
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="mastersDropdown">
+                                    <li><a class="dropdown-item" href="#">Process to Enabler</a></li>
+                                    <li><a class="dropdown-item" href="rpo.html">RPO</a></li>
+                                    <li><a class="dropdown-item" href="#">Impact Survey</a></li>
+                                    <li><a class="dropdown-item" href="k-approval.html">Approval Page</a></li>
+                                    <li><a class="dropdown-item" href="risk-event-database.html">Risk Event</a></li>
+                                    <li><a class="dropdown-item" href="budgets.html">Budgets</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="myWorkSpaceDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Work Space
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="myWorkSpaceDropdown">
+
+                                    <li><a class="dropdown-item" href="my-work-space.html">My Work Space</a></li>
+                                    <li><a class="dropdown-item" href="initatives.html">Initiatives &amp;
+                                            Projects</a></li>
+                                    <li><a class="dropdown-item" href="meetings.html">Meetings</a></li>
+                                    <li><a class="dropdown-item" href="myspace.html">My Space</a></li>
+                                     <li><a class="dropdown-item" href="pestel.html">PESTEL Analysis</a></li>
+
+                                    <li><a class="dropdown-item" href="risk.html">Risk</a></li>
+                                        <li><a class="dropdown-item" href="task.html">Task</a></li>
+
+                                  <li><a class="dropdown-item" href="swot.html">SWOT Analysis</a></li>
+                                    <li><a class="dropdown-item" href="scorecard-standard.html">Scorecard</a></li>
+
+                                    <li><a class="dropdown-item" href="#">Scorecard View</a></li>
+                                    <li><a class="dropdown-item" href="#">Initiative View</a></li>
+
+
+                                </ul>
+                            </li>
+
+                            <!-- <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="my-work-space.html">My Work
+                                        Space</a>
+                                </li> -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="whiteBoardDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    White Board
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="whiteBoardDropdown">
+                                    <li><a class="dropdown-item" href="landing.html">Landing</a></li>
+                                    <li><a class="dropdown-item" href="cockpit.html">Cockpit</a></li>
+                                    <!-- <li><a class="dropdown-item" href="charts.html">Charts</a></li> -->
+                                    <li><a class="dropdown-item" href="multi-governance.html">Multi-Governance</a></li>
+
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="myFormDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Forms
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="myFormDropdown">
+                                    <li><a class="dropdown-item" href="manual.html">Manual</a></li>
+                                    <!-- <li><a class="dropdown-item" href="excel.html">Excel</a></li> -->
+                                </ul>
+                            </li>
+
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-controls global-control  d-flex flex-wrap">
+
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/notification-i.svg" width="18" height="18" alt="organization">
+                </a>
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Logout">
+            <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+          </a> -->
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="controlPanelDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                        aria-labelledby="controlPanelDropdown">
+                        <li><a class="dropdown-item" href="control-panel.html"> <span class="icon">
+                                    <img src="assets/images/icons/control-panel-i.svg" width="18" height="18" alt="">
+                                </span>Control Panel</a></li>
+                        <li><a class="dropdown-item" href="audit-trail.html"> <span class="icon">
+                                    <img src="assets/images/icons/audit-trail-i.svg" width="18" height="18" alt="">
+                                </span>Audit Trail</a></li>
+                        <li><a class="dropdown-item" href="user-role.html"> <span class="icon">
+                                    <img src="assets/images/icons/user-role-i.svg" width="18" height="18" alt="">
+                                </span>User Role</a></li>
+
+
+                    </ul>
+                </div>
+
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                        aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item profile-card" href="#">
+
+                                <span class="icon">
+                                    <img src="assets/images/icons/user-i.svg" width="32" height="32" alt="">
+                                </span>
+
+                                <div class="">
+                                    <h4>Hi John </h4>
+                                    <small>welcome to your Multi-Governance Portal</small>
+                                </div>
+                            </a></li>
+
+
+                        <li><a class="dropdown-item" href="#create-template" data-bs-toggle="modal">
+
+                                <span class="icon"><img src="assets/images/icons/template-i.svg" width="18" height="18"
+                                        alt="" title=""></span>Create Templates</a></li>
+
+                        <li><a class="dropdown-item" href="user-role.html"><span class="icon"><img
+                                        src="assets/images/icons/logout-i.svg" width="18" height="18" alt=""></span>
+                                Logout</a></li>
+
+
+                    </ul>
+                </div>
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+            </div>
+            <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                aria-controls="mobileMenu">
+                <div class="hamburger-icon">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </div>
+            </div>
+
+
+    </nav>
+</header>
+
+  <main class="pt-3 pb-3">
+    <div class="container-lg">
+      <div class="mb-2 page-header">
+        <div class="row">
+          <div class="col-12 col-md-8 col-lg-10">
+            <h4 class="title">
+              <span class="icon">
+                <img src="assets/images/icons/my-workspace-i.svg" alt="my work space" title="my work space">
+              </span>
+              My Work Space
+            </h4>
+          </div>
+          <div class="col-12 col-md-4 col-lg-2">
+            <div class="load-page">
+              <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Load Page
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                  <li><a class="dropdown-item" href="#">Select Page</a></li>
+                  <li><a class="dropdown-item" href="#">Initiatives &amp; Projects</a></li>
+                  <li><a class="dropdown-item" href="#">Meetings</a></li>
+                  <li><a class="dropdown-item" href="#">My Space</a></li>
+                  <li><a class="dropdown-item" href="#">PESTEL</a></li>
+                  <li><a class="dropdown-item" href="#">Project Formulation</a></li>
+                  <li><a class="dropdown-item" href="risk.html">Risk</a></li>
+                                        <li><a class="dropdown-item" href="task.html">Task</a></li>
+                  <li><a class="dropdown-item" href="#">Risk Formulation</a></li>
+                  <li><a class="dropdown-item" href="#">SWOT</a></li>
+                  <li><a class="dropdown-item" href="#">Scorecard</a></li>
+                  <li><a class="dropdown-item" href="strategy-planner.html">Strategy Formulation</a></li>
+                  <li><a class="dropdown-item" href="#">Scorecard View</a></li>
+                  <li><a class="dropdown-item" href="#">Initiative View</a></li>
+                  <li><a class="dropdown-item" href="#">Strategy Map</a></li>
+                  <li><a class="dropdown-item" href="#">Process to Enabler</a></li>
+                  <li><a class="dropdown-item" href="#">RPO</a></li>
+                  <li><a class="dropdown-item" href="#">Impact Survey</a></li>
+                  <li><a class="dropdown-item" href="k-approval.html">Approval Page</a></li>
+                  <li><a class="dropdown-item" href="#">Risk Event</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-lg ondrop-container customTabContent d-grid py-2" ondrop="drop(event)"
+      ondragover="allowDrop(event)">
+      <div class="grid gap-2 mb-2" id="text-body"></div>
+      <div class="grid gap-2" id="dashboard-body"></div>
+    </div>
+  </main>
+
+  <footer class="col-12 text-center py-2 copyright">
+    <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</footer>
+
+<div class="floating-box shadow-sm">
+        <a class="control-link" href="#"><span class="icon"><img src="assets/images/icons/organization-i.svg" width="18"
+                    height="18" alt="organization"></span></a>
+        <a class="control-link" href="#"><span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                    height="18" alt="organization"></span></a>
+    </div>
+
+ 
+
+  <div style="--stratroom-offcanvas-width: 280px;"
+    class="offcanvas offcanvas-toggle offcanvas-start offcanvasSettings border-0 shadow-lg" data-bs-scroll="true"
+    data-bs-backdrop="false" tabindex="-1" id="offcanvasSettings" aria-labelledby="offcanvasSettingsLabel">
+
+    <div class="offcanvas-toggle-menu shadow toggle-right">
+      <button id="toggleButton" class="btn p-0" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSettings"
+        aria-controls="offcanvasSettings">
+        <i class="fas fa-caret-right"></i>
+      </button>
+      <button class="btn p-0" data-bs-dismiss="offcanvas" aria-label="Close">
+        <i class="fas fa-caret-left"></i>
+      </button>
+    </div>
+
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title text-uppercase fs-6 fw-bold" id="offcanvasSettingsLabel">Settings</h5>
+      <!-- <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button> -->
+    </div>
+    <div class="offcanvas-body">
+      <div class="widget-wrap">
+        <!-- <h5 class="fs-6 text-start">Widget Type</h4> -->
+
+        <div class="browser-default text-start mb-4">
+          <label for="widget_type" class="form-label">Widget Type</label>
+          <select id="widget_type" name="initiative_owner" class="form-select form-select-sm" aria-invalid="false">
+            <option value="Chart">Chart</option>
+            <option value="Text">Text</option>
+            <option value="Table">Table</option>
+            <option value="Map">Map</option>
+          </select>
+        </div>
+
+        <!-- widget chart start -->
+        <div class="widget chart grid g-2" style="--stratroom-columns: 4;">
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Bubble">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="BubbleChart"
+              src="assets/images/icons/bubble-chart-i.svg" alt="Bubble Chart" />
+          </span>
+
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Column">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="ColumnChart"
+              src="assets/images/icons/column-chart-i.svg" alt="Column Chart" />
+          </span>
+
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Line">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="LineChart"
+              src="assets/images/icons/line-chart-i.svg" alt="Line Chart" />
+          </span>
+
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Area">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="AreaChart"
+              src="assets/images/icons/area-chart-i.svg" alt="Area Chart" />
+          </span>
+
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Pie">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="PieChart"
+              src="assets/images/icons/pie-chart-i.svg" alt="Pie Chart" />
+          </span>
+
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Waterfall">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="WaterfallChart"
+              src="assets/images/icons/waterfall-chart-i.svg" alt="Waterfall Chart" />
+          </span>
+
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Multi axis">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="MultiAxis"
+              src="assets/images/icons/multi-axis-chart-i.svg" alt="Multi axis Chart" />
+          </span>
+
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Stacked">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="StackedChart"
+              src="assets/images/icons/stcked-chart-i.svg" alt="Stacked Chart" />
+          </span>
+
+          <span class="icon" data-bs-toggle="tooltip" data-bs-title="Radial">
+            <img width="32" height="32" ondragstart="dragStart(event)" draggable="true" id="RadialMulti"
+              src="assets/images/icons/radial-chart-i.svg" alt="Radial Chart" />
+          </span>
+
+        </div>
+        <!-- widget chart end -->
+
+        <!-- widget text start -->
+        <div class="widget text" style="display: none;">
+
+          <div class="d-grid gap-2">
+            <div ondragstart="dragStart(event)" draggable="true" id="normalTextType1">
+              <div class="card text-start text-card border">
+                <div class="card-body">
+                  <div class="icon p-3">
+                    <img width="32" height="32" src="assets/images/icons/risk-management-i.svg" alt="risk-management" />
+                  </div>
+                  <div class="text-muted period mb-2">
+                    Jan 2019 - Dec 2020
+                  </div>
+                  <h4 class="card-title mb-2">Total Revenue</h4>
+                  <h5 class="amount mb-2">$ 202.35 M</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="trend-icon me-2">
+                      <img width="14" height="14" src="assets/images/icons/up-i.png" alt="Trend Up" />
+                    </div>
+                    <div class="amount-trend">$ 202.36 M</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div ondragstart="dragStart(event)" draggable="true" id="normalTextType2">
+              <div class="card text-start text-card border">
+                <div class="card-body">
+                  <div class="icon p-3">
+                    <img width="32" height="32" src="assets/images/icons/initiatives-i.svg" alt="risk-management" />
+                  </div>
+                  <div class="text-muted period mb-2">
+                    Jan 2019 - Dec 2020
+                  </div>
+                  <h4 class="card-title mb-2">Total Revenue</h4>
+                  <h5 class="amount mb-2">$ 202.35 M</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="trend-icon me-2">
+                      <img width="14" height="14" src="assets/images/icons/up-i.png" alt="Trend Up" />
+                    </div>
+                    <div class="amount-trend">$ 202.36 M</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div ondragstart="dragStart(event)" draggable="true" id="chartTextType">
+              <div class="card text-start text-card border">
+                <div class="card-body">
+                  <div class="icon p-3">
+                    <img width="32" height="32" src="assets/images/icons/kpi-i.svg" alt="kpi" />
+                  </div>
+                  <div class="text-muted period mb-2">
+                    Jan 2019 - Dec 2020
+                  </div>
+                  <h4 class="card-title mb-2">Total Revenue</h4>
+                  <h5 class="amount mb-2">$ 202.35 M</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="trend-icon me-2">
+                      <img width="14" height="14" src="assets/images/icons/up-i.png" alt="Trend Up" />
+                    </div>
+                    <div class="amount-trend">$ 202.36 M</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div ondragstart="dragStart(event)" draggable="true" id="normalTextType4">
+              <div class="card text-start text-card border">
+                <div class="card-body">
+                  <div class="icon p-3">
+                    <img width="32" height="32" src="assets/images/icons/personal-dashboard-i.svg"
+                      alt="Personal Dashboard" />
+                  </div>
+                  <div class="text-muted period mb-2">
+                    Jan 2019 - Dec 2020
+                  </div>
+                  <h4 class="card-title mb-2">Total Revenue</h4>
+                  <h5 class="amount mb-2">$ 202.35 M</h5>
+                  <div class="d-flex align-items-center">
+                    <div class="trend-icon me-2">
+                      <img width="14" height="14" src="assets/images/icons/up-i.png" alt="Trend Up" />
+                    </div>
+                    <div class="amount-trend">$ 202.36 M</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- widget text end -->
+
+        <!-- widget table start -->
+        <div class="widget table" style="display: none">
+          <div class="d-grid gap-2">
+            <div class="card-box">
+              <label for="drilldown" class="form-label p-0">Drill Down
+                Table</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="drilldownDragDiv" src="assets/images/widgets/table/drilldown-i.png" alt="Drilldown" />
+                </div>
+              </div>
+            </div>
+            <div class="card-box">
+              <label for="kpidrilldownDragDiv" class="form-label p-0">KPI
+                Drill Down Table</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="kpidrilldownDragDiv" src="assets/images/widgets/table/drilldown-i.png"
+                    alt="KPI Drill Down Table" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="kpistatusCount" class="form-label p-0">KPI Status
+                Count</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="kpistatusCount" src="assets/images/widgets/table/drilldown-i.png" alt="KPI Status Count" />
+                </div>
+              </div>
+            </div>
+            <div class="card-box">
+              <label for="projectstatusCount" class="form-label p-0">Project
+                Status Count</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="projectstatusCount" src="assets/images/widgets/table/drilldown-i.png"
+                    alt="Project Status Count" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="riskstatusCount" class="form-label p-0">Risk
+                Status Count</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="riskstatusCount" src="assets/images/widgets/table/drilldown-i.png" alt="Risk Status Count" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="riskeventdatabase" class="form-label p-0">Risk
+                Event Data Base</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="riskeventdatabase" src="assets/images/widgets/table/drilldown-i.png"
+                    alt="Risk Event Data Base" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="dataDragDiv" class="form-label p-0">Data
+                Table</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="dataDragDiv" src="assets/images/widgets/table/data-i.png" alt="Data Table" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="riskRegDiv" class="form-label p-0">Risk
+                Register</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="riskRegDiv" src="assets/images/widgets/table/risk-i.png" alt="Risk Register" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="ermriskRegDiv" class="form-label p-0">ERM Risk
+                Register</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="ermriskRegDiv" src="assets/images/widgets/table/risk-i.png" alt="Risk Register" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="riskmonitersreg" class="form-label p-0">Risk
+                Monitoring Register-table</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="riskmonitersreg" src="assets/images/widgets/table/risk-i.png"
+                    alt="Risk Monitoring Register-table" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="biareport" class="form-label p-0">BIA
+                Report</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="biareport" src="assets/images/widgets/table/risk-i.png" alt="BIA Report" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="rpobiareport" class="form-label p-0">BIA RPO
+                Report</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="rpobiareport" src="assets/images/widgets/table/risk-i.png" alt="BIA RPO Report" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="posbiareport" class="form-label p-0">BIA –POS
+                Report</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="posbiareport" src="assets/images/widgets/table/risk-i.png" alt="BIA –POS Report" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="b-trading-hours" class="form-label p-0">Business
+                Process Based on Trading Hours</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="b-trading-hours" src="assets/images/widgets/table/risk-i.png"
+                    alt="Business Process Based on Trading Hours" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="occurrence" class="form-label p-0">Risk Events
+                Frequency of Occurrence</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="occurrence" src="assets/images/widgets/table/risk-i.png"
+                    alt="Risk Events Frequency of Occurrence" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="pb-critical" class="form-label p-0">Process
+                Business Critical</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="pb-critical" src="assets/images/widgets/table/risk-i.png" alt="Process Business Critical" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="drcavailability" class="form-label p-0">List of
+                Availability of a DRC system </label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="drcavailability" src="assets/images/widgets/table/risk-i.png"
+                    alt="List of Availability of a DRC system" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="intRegDiv" class="form-label p-0">Initiative
+                Register </label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="intRegDiv" src="assets/images/widgets/table/risk-i.png" alt="Initiative Register" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="cockTypeDiv" class="form-label p-0">R M
+                Table</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="cockTypeDiv" src="assets/images/widgets/table/risk-i.png" alt="R M Table" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <label for="singleWindow" class="form-label p-0">Single
+                Window</label>
+              <div class="card table-card border p-0">
+                <div class="card-body p-1">
+                  <img width="220" height="80" class="img-fluid" ondragstart="dragStart(event)" draggable="true"
+                    id="singleWindow" src="assets/images/widgets/table/risk-i.png" alt="Single Window" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- widget table end -->
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- text_setting -->
+  <div class="modal fade" id="text_setting" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="myLargeModalLabel_1">Text
+            Settings</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="displayName" class="form-label">Display
+                  Name</label>
+                <input type="text" id="displayName" class="form-control" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="card_type_select" class="form-label">Card
+                  Type</label>
+                <select class="form-control" id="card_type_select">
+                  <option value="Text">Icon</option>
+                  <option value="Chart">Chart</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="icon_select" class="form-label">Select
+                  Icon</label>
+                <select class="form-control browser-default" id="icon_select">
+                  <option value="$ Dollar">$ Dollar</option>
+                  <option value="% Percentage">% Percentage</option>
+                  <option value="# Number"># Number</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="kpi_formula" class="form-label">Data Field</label>
+                <input type="text" class="form-control browser-default" id="kpi_formula" readonly data-bs-toggle="modal"
+                  data-bs-target="#kpi_formula_popup" role="button" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="period" class="form-label">Period</label>
+                <input id="period" type="text" class="
+                    form-control
+                    browser-default
+                    daterangepicker-field-period
+                  " />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group col-md-6">
+                <label for="kpi_formula" class="form-label">Gap</label>
+                <input type="text" class="form-control browser-default" id="kpi_formula" readonly data-bs-toggle="modal"
+                  data-bs-target="#kpi_formula_popup" role="button" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary" value="Save">Save</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- text_setting End-->
+
+  <!-- Chart Setting -->
+  <div class="modal fade" id="chart_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Chart Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table id="chart_table" class="table table-bordered">
+            <thead class="bg-light">
+              <tr>
+                <th>
+
+                  <div class="d-flex justify-content-between align-items-center gap-3">
+                    Data Fields
+                    <button class="btn btn-success rounded-circle form-close" id="add-chart-setting">+
+                    </button>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody style="
+                 display: -webkit-inline-box;
+                 height: 410px;
+                 overflow-x: hidden;
+               ">
+              <tr>
+                <td style="text-align: left">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for class="form-label">Display Name</label>
+                      <input type="text" class="form-control browser-default" value="Period" disabled />
+                    </div>
+                    <div class="col-md-6">
+                      <label for class="form-label">Axis</label>
+                      <select class="form-control browser-default" disabled>
+                        <option value="X-axis">X-axis</option>
+                        <option value="Y-axis">Y-axis</option>
+                        <option value="Z-axis">Z-axis</option>
+                      </select>
+                    </div>
+                    <div class="col-md-12">
+                      <label for class="form-label">Data Aggregation
+                        Period</label>
+                      <select class="form-control browser-default" name="chartfrequency" id="chartfrequency">
+                        <option value="Monthly">Monthly</option>
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Half Yearly">Half
+                          Yearly</option>
+                        <option value="Annually">Annually</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-12">
+                      <label for="kpi_fields" class="form-label">Data Field
+                        Type
+                      </label>
+                      <div class="pt-2 form-check-wrap">
+                        <div class="form-check form-check-inline">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value />
+                            Measure
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
+                          </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value />
+                            Sub Measure
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div class="col-12">
+                     <hr style="border: 1px solid #505050" />
+                   </div> -->
+                  </div>
+                  <div id="chart-setting-div">
+                    <div class="row g-3">
+                      <div class="col-md-10">
+                        <label for class="form-label">Display Name</label>
+                        <input type="text" class="form-control browser-default" />
+                      </div>
+                      <div class="col-md-2 color_picks_1">
+                        <label for="sub_initative_progress" class="form-label">Color</label>
+                        <div class="input-group" style="margin-bottom: 0">
+                          <div class="input-group-append">
+                            <span class="input-group-text pickr" style="
+                                 width: 90px;
+                                 border-radius: 0px;
+                                 height: 30px;
+                               "></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <label for class="form-label">Data Field</label>
+                        <input type="text" class="form-control browser-default" id="kpi_formula" readonly
+                          data-bs-toggle="modal" data-bs-target="#kpi_formula_popup" role="button" />
+                        <a href="#" id="kpi_trigger1" data-bs-toggle="modal" data-bs-target=".kpi_formula_popup"></a>
+                      </div>
+
+                      <div class="col-md-6">
+                        <label for class="form-label">Axis</label>
+                        <select class="form-control browser-default">
+                          <option value="Y-axis">Y-axis</option>
+                          <option value="Z-axis">Z-axis</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label for class="form-label">Type</label>
+                        <select class="form-control">
+                          <option value="Actual">Actual</option>
+                          <option value="Target">Target</option>
+                          <option value="Budget">Budget</option>
+                          <option value="Forecast">Forecast</option>
+                          <option value="Gap">Gap</option>
+                        </select>
+                      </div>
+                      <!-- <div class="col-12">
+                       <hr style="border: 1px solid #505050" />
+                     </div> -->
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary" value="Save">Save</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- END Chart Setting -->
+
+  <!-- Bubble Large -->
+  <div class="modal fade" id="bubble-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="Bubblelarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Bubble Large -->
+
+  <!-- Column Large -->
+  <div class="modal fade" id="column-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="Columnlarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Column Large -->
+
+  <!-- Line Large -->
+  <div class="modal fade" id="line-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="Linelarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Line Large -->
+
+  <!-- Area Large -->
+  <div class="modal fade" id="area-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="Arealarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Area Large -->
+
+  <!-- Pie Large -->
+  <div class="modal fade" id="pie-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="Pielarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Pie Large -->
+
+  <!-- Waterfall Large -->
+  <div class="modal fade" id="waterfall-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="Waterfalllarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Waterfall Large -->
+
+  <!-- Multiaxis Large -->
+  <div class="modal fade" id="multiaxis-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="Multiaxislarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Multiaxis Large -->
+
+  <!-- Stackedchart Large -->
+  <div class="modal fade" id="Stackedchart-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="Stackedlarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Stackedchart Large -->
+
+  <!-- Radial Large -->
+  <div class="modal fade" id="radial-large" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="RadialMultilarge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Column Large -->
+
+  <!-- KPI Calculator -->
+  <div class="modal fade" id="kpi_formula_popup" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" modal-backdrop="false" data-backdrop="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title fs-5" id="myLargeModalLabel">KPI
+            Calculator</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-2">
+            <div class="col-md-3">
+              <label for="fieldName" class="form-label"><small>Field
+                  Name</small></label>
+              <select class="form-select form-select-sm" id="fieldName">
+                <option value="Actual">Actual</option>
+                <option value="Target">Target</option>
+                <option value="Budget">Budget</option>
+                <option value="Forecast">Forecast</option>
+                <option value="Gap">Gap</option>
+              </select>
+            </div>
+          </div>
+          <div class="card border">
+            <div class="card-header bg-transparent border-0">
+              <ul class="nav nav-underline gap-3" role="tablist">
+
+                <li class="nav-item" role="Formula Builder">
+                  <button class="nav-link text-uppercase active" id="formulaBuilder-tab" data-bs-toggle="tab"
+                    data-bs-target="#formulaBuilderTab-pane" type="button" role="tab"
+                    aria-controls="formulaBuilder-tab-pane" aria-selected="true">Formula Builder</button>
+                </li>
+
+                <li class="nav-item" role="Summary Calculation">
+                  <button class="nav-link text-uppercase" id="summaryCalculationTab" data-bs-toggle="tab"
+                    data-bs-target="#summaryCalculationTab-pane" type="button" role="tab"
+                    aria-controls="summaryCalculationTab-pane" aria-selected="true">Summary Calculation</button>
+                </li>
+
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <div class="tab-content">
+
+                <div class="tab-pane fade show active" id="formulaBuilderTab-pane" role="tabpanel"
+                  aria-labelledby="formulaBuilderTab-tab" tabindex="0">
+                  <div class="mb-3">
+                    <textarea class="form-control" name="formula" id="formula" placeholder cols rows="3"></textarea>
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      +
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      -
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      *
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      /
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      %
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      (
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      )
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      :
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      AND
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      OR
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      NOT
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-sm btn-secondary">
+                      IN
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      ==
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      !=
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      >
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary"></button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      >=
+                    </button>
+                    <button type="button" class="opr btn btn-sm btn-secondary">
+                      =
+                    </button>
+                  </div>
+
+                  <div class="grid gap-3 mt-3">
+                    <div class="g-col-12 g-col-md-4">
+
+                      <div class="measuresWrap">
+
+                        <ul class="nav nav-pills mb-2" id="pills-tab" role="tablist">
+                          <li class="nav-item">
+                            <a class="nav-link active rounded-0" id="pills-measures-tab" data-bs-toggle="pill"
+                              href="#pills-measures" role="tab" aria-controls="pills-measures"
+                              aria-selected="true">Measures</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link rounded-0" id="pills-subMeasures-tab" data-bs-toggle="pill"
+                              href="#pills-subMeasures" role="tab" aria-controls="pills-subMeasures"
+                              aria-selected="false">Sub
+                              Measures</a>
+                          </li>
+                        </ul>
+
+                        <div class="tab-content" id="pills-tabContent">
+                          <div class="tab-pane fade show active" id="pills-measures" role="tabpanel"
+                            aria-labelledby="pills-home-tab">
+                            <div class="panel panel-primary" id="result_panel">
+                              <div class="panel-heading">
+
+                                <div class="searchMeasures">
+
+                                  <div class="input-group mb-3">
+                                    <input id="searchMeasure" type="text" class="form-control form-control-sm"
+                                      placeholder="Search" aria-label="Search" aria-describedby="basic-addon2">
+                                    <button class="btn btn-outline-secondary" type="button" id="basic-addon2"><i
+                                        class="fas fa-search"></i></button>
+                                  </div>
+
+                                </div>
+                              </div>
+                              <div class="panel-body" data-spy="scroll">
+                                <ul class="list-group overflow-auto" style="max-height: 180px">
+                                  <li class="list-group-item measure-list" data-search="state">
+                                    State
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                  <li class="list-group-item measure-list" data-search="state/province">
+                                    State/Province
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="tab-pane fade" id="pills-subMeasures" role="tabpanel"
+                            aria-labelledby="pills-subMeasures-tab">
+                            <div class="panel panel-primary" id="result_panel">
+                              <div class="panel-heading">
+                                <!-- <h6 class="panel-title">Fields and measures:</h6> -->
+                                <div class="searchMeasures">
+                                  <div class="input-group mb-0">
+                                    <input id="searchSubMeasure" type="text" class="form-control" placeholder="Search"
+                                      aria-label="Search" aria-describedby="basic-addon2" />
+                                    <button class="input-group-append p-0">
+                                      <span class="input-group-text" id="basic-addon2"><i
+                                          class="fas fa-search"></i></span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="panel-body" data-spy="scroll">
+                                <ul class="list-group overflow-auto" style="max-height: 180px">
+                                  <li class="list-group-item submeasure-list" data-search="submeasure 1">
+                                    Submeasure 1
+                                  </li>
+                                  <li class="list-group-item submeasure-list" data-search="submeasure 2">
+                                    Submeasure 2
+                                  </li>
+                                  <li class="list-group-item submeasure-list" data-search="submeasure 3">
+                                    Submeasure 3
+                                  </li>
+                                  <li class="list-group-item submeasure-list" data-search="submeasure 4">
+                                    Submeasure 4
+                                  </li>
+                                  <li class="list-group-item submeasure-list" data-search="submeasure 5">
+                                    Submeasure 5
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="g-col-12 g-col-md-4">
+                      <div class="panel panel-primary" id="result_panel1">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">Functions:</h6>
+                        </div>
+                        <div class="panel-body">
+                          <ul class="list-group overflow-auto" style="max-height: 240px">
+                            <li class="list-group-item">Elapsed
+                              Year</li>
+                            <li class="list-group-item">Ends
+                              With</li>
+                            <li class="list-group-item">If</li>
+                            <li class="list-group-item">Is
+                              Null</li>
+                            <li class="list-group-item">Max</li>
+                            <li class="list-group-item">Min</li>
+                            <li class="list-group-item">Median</li>
+                            <li class="list-group-item">Mid</li>
+                            <li class="list-group-item">Test</li>
+                            <li class="list-group-item">Test</li>
+                            <li class="list-group-item">Test</li>
+                            <li class="list-group-item">Test</li>
+                            <li class="list-group-item">Test</li>
+                            <li class="list-group-item">Test</li>
+                            <li class="list-group-item">Test</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="g-col-12 g-col-md-4">
+                      <div class="panel panel-primary" id="result_panel1">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">Function
+                            Description:</h6>
+                        </div>
+                        <div class="panel-body">
+                          <h6>IF</h6>
+                          <p>
+                            Returns second argument if first
+                            argument is true;
+                            Returns optional third argument if
+                            first argument is
+                            false; IF('element', 'trueCalc',
+                            'falseCalc')
+                          </p>
+                        </div>
+
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value id="argumnetsFormula">
+                          <label class="form-check-label" for="argumnetsFormula">
+                            Show argumnets in formula
+                          </label>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-2 mt-4">
+                    <button name="validate" id="validate" class="btn btn-sm btn-secondary">
+                      Validate
+                    </button>
+                    <button name="add" id="add" class="btn btn-sm btn-primary">
+                      Add
+                    </button>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade" id="summaryCalculationTab-pane" role="tabpanel"
+                  aria-labelledby="summaryCalculationTab-tab" tabindex="0">
+                  <!-- <div class="tab-pane body" id="summary_calculation"> -->
+                  <div class="col-md-12">
+                    <div class="panel panel-primary" id="final_panel">
+                      <div class="panel-heading">
+                        <h6 class="panel-title">Formula</h6>
+                      </div>
+                      <div class="panel-body">
+                        <ul class="list-group formula-panel overflow-auto" style="max-height: 240px">
+                          <li class="list-group-item">Elapsed
+                            Year</li>
+                          <li class="list-group-item">Ends
+                            With</li>
+                          <li class="list-group-item">If</li>
+                          <li class="list-group-item">Is
+                            Null</li>
+                          <li class="list-group-item">Max</li>
+                          <li class="list-group-item">Min</li>
+                          <li class="list-group-item">Median</li>
+                          <li class="list-group-item">Mid</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END KPI Calculator -->
+
+  <!-- Drill Down Table Setting -->
+  <div class="modal fade" id="drilldown_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Drill Down Table Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for class="form-label">KPI Name</label>
+                <input type="text" class="form-control browser-default" id="kpi_formula" readonly data-bs-toggle="modal"
+                  data-bs-target="#kpi_formula_popup" role="button" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Data Fields</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfActual">
+                    <label class="form-check-label" for="dfActual">Actual</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfTarget">
+                    <label class="form-check-label" for="dfTarget">Target</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfGap">
+                    <label class="form-check-label" for="dfGap">Gap</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfYTD">
+                    <label class="form-check-label" for="dfYTD">YTD</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary  initative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Drill Down Table Setting -->
+
+  <!-- Drill Down Table View -->
+  <div class="modal fade" id="drilldown_view" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Table View</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-container">
+          <div class="table-responsive">
+            <table class="table table-bordered dashboard-task-infos align-center dashboard-table"
+              id="drilldownTableView">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="width: 40px">
+                    <i class="fas fa-arrow-up"></i>
+                    <i class="fas fa-arrow-down"></i>
+                  </th>
+                  <th rowspan="2" style="width: 80px;">
+                    Status
+                  </th>
+                  <th rowspan="2" style="width: 198px">Name/Period</th>
+                  <th colspan="3">Q1 2020</th>
+                </tr>
+                <tr>
+                  <th style="width: 98px">Actual</th>
+                  <th style="width: 98px">Target</th>
+                  <th style="width: 98px">Gap</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><i class="fas fa-arrow-up"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Sales and Marketing</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+
+                <tr class="cchild " id="child1">
+
+                  <td></td>
+                  <td></td>
+                  <td>Sales and Marketing <br />- SubMeasure</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr class="cchild " id="child2">
+
+                  <td></td>
+                  <td></td>
+                  <td>Sales and Marketing <br />- SubMeasure</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+
+                <tr>
+                  <td><i class="fas fa-arrow-down"></i></td>
+                  <td><i class="fas fa-flag" style="color:rgb(252, 10, 10)"></i></td>
+                  <td>Human Resource and admin</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr class="cchild active">
+
+                  <td></td>
+                  <td></td>
+                  <td>Human Resource and<br /> admin -
+                    Submeasure</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-up"></i></td>
+                  <td><i class="fas fa-flag" style="color:yellow"></i></td>
+                  <td>Product Design</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-up"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+
+                  <td>Development Process</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-up"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Marketing</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-down"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Admin</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-down"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Admin</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-down"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Admin</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-up"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Sales and Marketing</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-down"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Human Resource and admin</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-up"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Product Design</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-up"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Development Process</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+                <tr>
+                  <td><i class="fas fa-arrow-up"></i></td>
+                  <td><i class="fas fa-flag" style="color:green"></i></td>
+                  <td>Marketing</td>
+                  <td>28.53425%</td>
+                  <td>24.53425%</td>
+                  <td>38.53425%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="navigation-wrap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI STATUS COUNT TABLE START -->
+  <div class="modal fade" id="kpistatusCountsettingsModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">KPI Status Count Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="mb-3">
+            <label for="Name" class="form-label">Organisation</label>
+            <select class="int-dept-multi-select form-select" name="states[]" multiple="multiple">
+              <option value="971">Human Resource</option>
+              <option value="972">Designer</option>
+              <option value="973">Developer</option>
+              <option value="973">Tester</option>
+              <option value="973">Manager</option>
+              <option value="973">Marketing</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="Name" class="form-label">Scorecard</label>
+            <select class="int-status-multi-select form-select" name="states[]" multiple="multiple">
+              <option value="KPI11">infra</option>
+              <option value="KPI12">Marketing</option>
+              <option value="KPI12">Accounting</option>
+              <option value="KPI12">Trainer </option>
+              <option value="KPI12">Human
+                Resource</option>
+
+            </select>
+          </div>
+          <div class>
+            <label for="kpi_fields" class="form-label">Select Fields</label>
+            <div class>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="fParent">
+                <label class="form-check-label" for="fParent">Parent</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="fChild">
+                <label class="form-check-label" for="fChild">Child</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="fGreen">
+                <label class="form-check-label" for="fGreen">Green</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="fAmber">
+                <label class="form-check-label" for="fAmber">Amber</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="fRed">
+                <label class="form-check-label" for="fRed">Red</label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary  initative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END KPI COUNT Table View  -->
+  <div class="modal fade" id="kpicount_view" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Table View</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-container">
+
+          <div class="table-responsive">
+            <table class="table table-bordered dashboard-task-infos align-center dashboard-table kpistatusCountView">
+              <thead>
+                <tr>
+
+                  <th editable="true" contenteditable="true" style="width: 200px;">
+                    Parent
+                  </th>
+                  <th editable="true" contenteditable="true" style="width: 300px;">Child</th>
+                  <th editable="true" contenteditable="true" style="width:120px;">Red</th>
+                  <th editable="true" contenteditable="true" style="width: 120px;">Amber</th>
+                  <th editable="true" contenteditable="true" style="width: 120px;">Green</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+
+                  <th id=parent rowspan="2">Technology</th>
+                  <td class=child>Infra</td>
+                  <td id="Red">1</td>
+                  <td id="amber">2</td>
+                  <td id="green">3 </td>
+                </tr>
+
+                <tr>
+
+                  <td class=child>Project New</td>
+                  <td id="Red">1</td>
+                  <td id="amber">2</td>
+                  <td id="green"> 3</td>
+                </tr>
+                <tr>
+
+                  <th id=parent rowspan="2">Branding</th>
+                  <td class=child>Brand Planning</td>
+                  <td id="Red">1</td>
+                  <td id="amber">2</td>
+                  <td id="green">3 </td>
+                </tr>
+                <tr>
+
+                  <td class=child>Accounting</td>
+                  <td id="Red">1</td>
+                  <td id="amber">2</td>
+                  <td id="green"> 3</td>
+                </tr>
+                <tr>
+
+                  <th id=parent rowspan="3">IED Stategy</th>
+                  <td class=child>Trainer</td>
+                  <td id="Red">1</td>
+                  <td id="amber">2</td>
+                  <td id="green">3 </td>
+                </tr>
+                <tr>
+
+                  <td class=child>Administration officers</td>
+                  <td id="Red">1</td>
+                  <td id="amber">2</td>
+                  <td id="green"> 3</td>
+                </tr>
+                <tr>
+
+                  <td class=child>Auxiliary Staff</td>
+                  <td id="Red">1</td>
+                  <td id="amber">2</td>
+                  <td id="green"> 3</td>
+
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+          <div class="navigation-wrap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Risk status Count -->
+  <div class="modal fade" id="riskstatusCountsettings" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Risk Status Count Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="Name" class="form-label">Department</label>
+                <select class="form-select int-dept-multi-select" name="states[]" multiple="multiple">
+                  <option value="971">EKU</option>
+                  <option value="972">OTI</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Select
+                  Fields</label>
+
+                <div class>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fLow">
+                    <label class="form-check-label" for="fLow">Low</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fMedium">
+                    <label class="form-check-label" for="fMedium">Medium</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fHigh">
+                    <label class="form-check-label" for="fHigh">High</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fExtreme">
+                    <label class="form-check-label" for="fExtreme">Extreme</label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary  initative_save_btn" data-bs-dismiss="modal" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- riskcount_view -->
+  <div class="modal fade" id="riskcount_view" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Table View</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-container">
+
+          <div class="table-responsive">
+            <table class="table dashboard-task-infos align-center dashboard-table kpistatusCount riskcount_view"
+              id="kpistatusCountsettings">
+              <thead>
+                <tr>
+
+                  <th class="pjparent" style="width: 150px; ">
+                    <strong editable="true" contenteditable="true"
+                      onkeypress="return (this.innerText.length <= 36)">Department
+                    </strong>
+
+                  </th>
+
+                  <th class="pjgren" style="width:50px;">
+                    <strong editable="true" contenteditable="true"
+                      onkeypress="return (this.innerText.length <= 25)">Low</strong>
+                  </th>
+                  <th class="pjamber" style="width: 50px;">
+                    <strong editable="true" contenteditable="true"
+                      onkeypress="return (this.innerText.length <= 25)">Medium</strong>
+                  </th>
+
+                  <th class="pjchilld" style="width: 50px;">
+                    <strong editable="true" contenteditable="true"
+                      onkeypress="return (this.innerText.length <= 36)">High</strong>
+                  </th>
+
+                  <th class="pjparent" style="width: 50px; ">
+                    <strong editable="true" contenteditable="true"
+                      onkeypress="return (this.innerText.length <= 36)">Extreme
+                    </strong>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+
+                  <th class="pjparent" id=parent>EKU</th>
+                  <td class=pjchilld>1</td>
+
+                  <td class="pjamber" id="amber">2</td>
+                  <td class="pjgren" id="amber">> 3</td>
+                  <td class="pjgren" id="Red"> 3</td>
+                </tr>
+                <tr>
+
+                  <th class="pjparent" id=parent>OTI</th>
+                  <td class=pjchilld>1</td>
+
+                  <td class="pjamber" id="amber">2</td>
+                  <td class="pjgren" id="amber">> 3</td>
+                  <td class="pjgren" id="Red"> 3</td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+          <div class="navigation-wrap"></div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- riskevendatab -->
+  <div class="modal fade" id="riskevendatab" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Risk Event Data Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Department</label>
+                <select class="risk-dept-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">EKU</option>
+                  <option value="972">KEA</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Types of Event</label>
+                <select class="risk-dept-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">Near Miss Event</option>
+                  <option value="972">Near Miss Event</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Status</label>
+                <select class="risk-status-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="Very good">OPEN</option>
+                  <option value="Good">CLOSE</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Select Fields</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fDATEOFINCIDENT">
+                    <label class="form-check-label" for="fDATEOFINCIDENT">DATE OF INCIDENT</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fRISKCODE">
+                    <label class="form-check-label" for="fRISKCODE">RISK
+                      CODE</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fRISKCODE">
+                    <label class="form-check-label" for="fINCIDENT">INCIDENT</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fIMPACTLOSS">
+                    <label class="form-check-label" for="fIMPACTLOSS">IMPACT
+                      / LOSS</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fIMPACTLEVELS">
+                    <label class="form-check-label" for="fIMPACTLEVELS">IMPACT LEVELS</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fCORRECTIVEACTION">
+                    <label class="form-check-label" for="fCORRECTIVEACTION">CORRECTIVE ACTION</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fRISKMITIGATION">
+                    <label class="form-check-label" for="fRISKMITIGATION">RISK MITIGATION (CORRECTIVE
+                      ACTION)</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fEVENTSTATUS">
+                    <label class="form-check-label" for="fEVENTSTATUS">EVENT
+                      STATUS</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fINVENTORREPORTER">
+                    <label class="form-check-label" for="fINVENTORREPORTER">INVENTOR / REPORTER</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- riskreg_view -->
+  <div class="modal fade" id="riskreg_view" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80% !important">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Table View</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-container">
+
+          <div class="table-responsive">
+            <table class="table dashboard-task-infos align-center dashboard-table" id="riskRegView">
+              <thead>
+                <tr>
+                  <th style="width: 40px">Status</th>
+                  <th style="width: 40px">ID</th>
+                  <th style="width: 80px">Name</th>
+                  <th style="width: 60px">Category</th>
+                  <th style="width: 60px">Impact</th>
+                  <th style="width: 50px">Likelihood</th>
+                  <th style="width: 40px">Score</th>
+                  <th style="width: 120px">Raised on</th>
+                  <th style="width: 60px">Next Assessment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Failure to meet compliance
+                    obligations</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="navigation-wrap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- riskreg_setting -->
+  <div class="modal fade" id="riskreg_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Risk Register Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-12 form-group mb-3">
+              <label for="Name" class="form-label">Departments</label>
+              <select class="risk-dept-multi-select" name="states[]" multiple="multiple">
+                <option value="971">Human Resource</option>
+                <option value="972">Designer</option>
+                <option value="973">Developer</option>
+                <option value="973">Tester</option>
+                <option value="973">Manager</option>
+                <option value="973">Marketing</option>
+              </select>
+            </div>
+
+            <div class="col-12 form-group mb-3">
+              <label for="Name" class="form-label">Status</label>
+              <select class="risk-status-multi-select form-select" name="states[]" multiple="multiple">
+                <option value="Very good">Very good</option>
+                <option value="Good">Good</option>
+                <option value="Tolerable">Tolerable</option>
+                <option value="High">High</option>
+                <option value="Very high">Very high</option>
+              </select>
+            </div>
+
+            <div class="col-12 form-group mb-3">
+              <label for="Name" class="form-label">Risks</label>
+              <select class="risk-reg-multi-select form-select" name="states[]" multiple="multiple">
+                <option value="971">
+                  Failure to meet compliance obligations
+                </option>
+                <option value="972">
+                  Failure to meet compliance obligations
+                </option>
+                <option value="973">Failure to meet</option>
+                <option value="971">
+                  Failure to meet compliance obligations
+                </option>
+                <option value="972">
+                  Failure to meet compliance obligations
+                </option>
+                <option value="973">Failure to meet</option>
+                <option value="971">
+                  Failure to meet compliance obligations
+                </option>
+                <option value="972">
+                  Failure to meet compliance obligations
+                </option>
+                <option value="973">Failure to meet</option>
+                <option value="971">
+                  Failure to meet compliance obligations
+                </option>
+                <option value="972">
+                  Failure to meet compliance obligations
+                </option>
+                <option value="973">Failure to meet</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-12 mb-3">
+              <label for="kpi_fields" class="form-label">Select
+                Fields</label>
+
+              <div>
+
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fName">
+                  <label class="form-check-label" for="fName">Name</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fCategory">
+                  <label class="form-check-label" for="fCategory">Category</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fContext">
+                  <label class="form-check-label" for="fContext">Context</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fImpact">
+                  <label class="form-check-label" for="fImpact">Impact</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fLikelihood">
+                  <label class="form-check-label" for="fLikelihood">Likelihood</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fScore">
+                  <label class="form-check-label" for="fScore">Score</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fStatus">
+                  <label class="form-check-label" for="fStatus">Status</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fRaisedon">
+                  <label class="form-check-label" for="fRaisedon">Raised
+                    on</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fNextAssessment">
+                  <label class="form-check-label" for="fNextAssessment">Next Assessment</label>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ermriskreg_setting -->
+  <div class="modal fade" id="ermriskreg_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">ERM Risk Register Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Departments</label>
+                <select class="risk-dept-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">Human Resource</option>
+                  <option value="972">Designer</option>
+                  <option value="973">Developer</option>
+                  <option value="973">Tester</option>
+                  <option value="973">Manager</option>
+                  <option value="973">Marketing</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Status</label>
+                <select class="risk-status-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="Very good">Very good</option>
+                  <option value="Good">Good</option>
+                  <option value="Tolerable">Tolerable</option>
+                  <option value="High">High</option>
+                  <option value="Very high">Very high</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Risks</label>
+                <select class="risk-reg-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">
+                    Failure to meet compliance obligations
+                  </option>
+                  <option value="972">
+                    Failure to meet compliance obligations
+                  </option>
+                  <option value="973">Failure to meet</option>
+                  <option value="971">
+                    Failure to meet compliance obligations
+                  </option>
+                  <option value="972">
+                    Failure to meet compliance obligations
+                  </option>
+                  <option value="973">Failure to meet</option>
+                  <option value="971">
+                    Failure to meet compliance obligations
+                  </option>
+                  <option value="972">
+                    Failure to meet compliance obligations
+                  </option>
+                  <option value="973">Failure to meet</option>
+                  <option value="971">
+                    Failure to meet compliance obligations
+                  </option>
+                  <option value="972">
+                    Failure to meet compliance obligations
+                  </option>
+                  <option value="973">Failure to meet</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Select
+                  Fields</label>
+
+                <div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fName">
+                    <label class="form-check-label" for="fName">Name</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fCategory">
+                    <label class="form-check-label" for="fCategory">Category</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fImpact">
+                    <label class="form-check-label" for="fImpact">Impact</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fLikelihood">
+                    <label class="form-check-label" for="fLikelihood">Likelihood</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fContext">
+                    <label class="form-check-label" for="fContext">Context</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fScore">
+                    <label class="form-check-label" for="fScore">Score</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fCause">
+                    <label class="form-check-label" for="fCause">Cause</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fConsequence">
+                    <label class="form-check-label" for="fConsequence">Consequence</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fInherentRiskScore">
+                    <label class="form-check-label" for="fInherentRiskScore">Inherent Risk Score</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fReducingImpact">
+                    <label class="form-check-label" for="fReducingImpact">Reducing Impact</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fReducingthePossibility">
+                    <label class="form-check-label" for="fReducingthePossibility">Reducing the
+                      Possibility</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fControlType">
+                    <label class="form-check-label" for="fControlType">Control Type</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fControlEffectiveness">
+                    <label class="form-check-label" for="fControlEffectiveness">Control
+                      Effectiveness</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fControlEffectiveness">
+                    <label class="form-check-label" for="fResidualRiskScores">Residual Risk Score</label>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primaryinitative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- riskmonitors -->
+  <div class="modal fade" id="riskmonitors" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Risk Monitoring Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Department</label>
+                <select class="risk-dept-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">EKU</option>
+                  <option value="972">KEA</option>
+
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Types of Event</label>
+                <select class="risk-dept-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">Near Miss Event</option>
+                  <option value="972">Near Miss Event</option>
+
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="Name" class="form-label">Status</label>
+                <select class="risk-status-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="Very good">OPEN</option>
+                  <option value="Good">CLOSE</option>
+
+                </select>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Select Fields</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fNameofRisk">
+                    <label class="form-check-label" for="fNameofRisk">Name
+                      of Risk</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fRiskTreatmentPlan">
+                    <label class="form-check-label" for="fRiskTreatmentPlan">Risk Treatment Plan
+                      (RTP)</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fINCIDENT">
+                    <label class="form-check-label" for="fINCIDENT">INCIDENT</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fTargetcompletionTime">
+                    <label class="form-check-label" for="fTargetcompletionTime">Target completion
+                      Time</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fIMPACT">
+                    <label class="form-check-label" for="fIMPACT">IMPACT</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fChangeinthecompletiontime">
+                    <label class="form-check-label" for="fChangeinthecompletiontime">Change in the
+                      completion time</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fCompletion">
+                    <label class="form-check-label" for="fCompletion"> %
+                      Completion</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fStatus">
+                    <label class="form-check-label" for="fStatus">Status</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary  secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table Setting -->
+  <div class="modal fade" id="datatable_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Data Table Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for class="form-label">KPI Name</label>
+                <input type="text" class="form-control browser-default" id="kpi_formula" readonly data-bs-toggle="modal"
+                  data-bs-target="#kpi_formula_popup" role="button" />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Data
+                  Fields</label>
+                <div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfActual">
+                    <label class="form-check-label" for="dfActual">Actual</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfTarget">
+                    <label class="form-check-label" for="dfTarget">Target</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfGap">
+                    <label class="form-check-label" for="dfGap">Gap</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfYTD">
+                    <label class="form-check-label" for="dfYTD">YTD</label>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table View -->
+  <div class="modal fade" id="datatable_view" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Table View</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-container">
+          <div class="table-responsive">
+            <table class="table dashboard-task-infos align-center dashboard-table" id="dataTableView">
+              <thead>
+                <tr>
+                  <th style="width: 80px">Period</th>
+                  <th style="width: 98px">Actual</th>
+                  <th style="width: 98px">Target</th>
+                  <th style="width: 98px">Gap</th>
+                  <th style="width: 98px">YTD</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Q1 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q2 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q3 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q4 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q1 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q2 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q3 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q4 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q2 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q3 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q4 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q1 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q2 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q3 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+                <tr>
+                  <td>Q4 2019</td>
+                  <td>28%</td>
+                  <td>24%</td>
+                  <td>38.091%</td>
+                  <td>38%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="navigation-wrap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Data Table View  -->
+
+  <div class="modal fade" id="bia_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">BIA Setting</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Departments</label>
+                <input type="number" class="modal-custom-input form-control" placeholder="EKU" disabled />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="meeting-name">Business Impact Analysis
+                  (BIA)</label>
+                <input type="number" class="modal-custom-input form-control" disabled />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Data
+                  Fields</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfProductServices">
+                    <label class="form-check-label" for="dfProductServices">Product/Services</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfSubProcess">
+                    <label class="form-check-label" for="dfSubProcess">Sub
+                      Process (POS)</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfInputsvitalrecords">
+                    <label class="form-check-label" for="dfInputsvitalrecords">Inputs vital
+                      records</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfDatabaserecoverystrategy">
+                    <label class="form-check-label" for="dfDatabaserecoverystrategy">Database recovery
+                      strategy</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfMaximumAllowableOutage">
+                    <label class="form-check-label" for="dfMaximumAllowableOutage">Maximum Allowable
+                      Outage</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfRecoveryTimeObjective">
+                    <label class="form-check-label" for="dfRecoveryTimeObjective">Recovery Time Objective
+                      (RTO)</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfRecoveryPointObjective">
+                    <label class="form-check-label" for="dfRecoveryPointObjective">Recovery Point
+                      Objective (RPO)</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfAvailabilityofDRCsystem">
+                    <label class="form-check-label" for="dfAvailabilityofDRCsystem"> Availability of DRC
+                      system</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="bia_setting-1" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">BIA – POS Setting</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Departments</label>
+                <input type="number" class="modal-custom-input form-control" placeholder="EKU" disabled />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Business Impact
+                  Analysis
+                  (BIA – POS)</label>
+                <input type="number" class="modal-custom-input form-control" disabled />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Data
+                  Fields</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfProductServices">
+                    <label class="form-check-label" for="dfProductServices">
+                      Product/Services</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfSubProcess">
+                    <label class="form-check-label" for="dfSubProcess">Sub
+                      Process</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfWorkingTime">
+                    <label class="form-check-label" for="dfWorkingTime">Working Time (during normal
+                      conditions)</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfFrequency">
+                    <label class="form-check-label" for="dfFrequency">Frequency</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfResourceSupport">
+                    <label class="form-check-label" for="dfResourceSupport">Resource Support</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfOutput">
+                    <label class="form-check-label" for="dfOutput">Output</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfMAOFinal">
+                    <label class="form-check-label" for="dfMAOFinal">MAO
+                      Final</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfStrategiesandSolutions">
+                    <label class="form-check-label" for="dfStrategiesandSolutions"> Strategies and
+                      Solutions</label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="bia_setting-2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">BIA – POS Setting</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Departments</label>
+                <input type="number" class="modal-custom-input form-control" placeholder="EKU" disabled />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Business Impact
+                  Analysis
+                  (BIA – RPO)</label>
+                <input type="number" class="modal-custom-input form-control" disabled />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Data
+                  Fields</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfProces">
+                    <label class="form-check-label" for="dfProces">Process
+                      (POS)</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfNameofVitalRecords">
+                    <label class="form-check-label" for="dfNameofVitalRecords">Name of Vital
+                      Records</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfTypeofMedia">
+                    <label class="form-check-label" for="dfTypeofMedia">Type
+                      of Media</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfBackupMethod">
+                    <label class="form-check-label" for="dfBackupMethod">Backup Method</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfBackupTime">
+                    <label class="form-check-label" for="dfBackupTime">
+                      Time</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfRetention">
+                    <label class="form-check-label" for="dfRetention">Retention</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfDatabaseRecoveryStrategy">
+                    <label class="form-check-label" for="dfDatabaseRecoveryStrategy">Database Recovery
+                      Strategy</label>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- riskstatusCountsettings -->
+  <div class="modal fade" id="riskstatusCountsettings" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Risk Status Count Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="Name" class="form-label">Department</label>
+                <select class="int-dept-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">EKU</option>
+                  <option value="972">OTI</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Select
+                  Fields</label>
+
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fLow">
+                    <label class="form-check-label" for="fLow">Low</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fMedium">
+                    <label class="form-check-label" for="fMedium">Medium</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fHigh">
+                    <label class="form-check-label" for="fHigh">High</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fExtreme">
+                    <label class="form-check-label" for="fExtreme">Extreme</label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary btn-default1  secondary-btn" data-bs-dismiss="modal"
+            aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn-primary initative_save_btn" data-bs-dismiss="modal" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- intreg_setting -->
+  <div class="modal fade" id="intreg_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Initiative Register Settings</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-4">
+              <div class="form-control">
+                <label for="kpi_fields" class="form-label">What are the
+                  parameters to be considered for plotting the
+                  graph?</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="pSelf">
+                    <label class="form-check-label" for="pSelf">Self</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="pChildren">
+                    <label class="form-check-label" for="pChildren">Children</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-control">
+                <label for="Name" class="form-label">Departments</label>
+                <select class="int-dept-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">Human Resource</option>
+                  <option value="972">Designer</option>
+                  <option value="973">Developer</option>
+                  <option value="973">Tester</option>
+                  <option value="973">Manager</option>
+                  <option value="973">Marketing</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-control">
+                <label for="Name" class="form-label">Status</label>
+                <select class="int-status-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="Very good">Very good</option>
+                  <option value="Good">Good</option>
+                  <option value="Tolerable">Tolerable</option>
+                  <option value="High">High</option>
+                  <option value="Very high">Very high</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-control">
+                <label for="Name" class="form-label">Initiatives</label>
+                <select class="int-reg-multi-select form-select" name="states[]" multiple="multiple">
+                  <option value="971">Initiatives</option>
+                  <option value="972">Initiatives</option>
+                  <option value="973">Failure to meet</option>
+                  <option value="971">Initiatives</option>
+                  <option value="972">Initiatives</option>
+                  <option value="973">Failure to meet</option>
+                  <option value="971">Initiatives</option>
+                  <option value="972">Initiatives</option>
+                  <option value="973">Failure to meet</option>
+                  <option value="971">Initiatives</option>
+                  <option value="972">Initiatives</option>
+                  <option value="973">Failure to meet</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-control">
+                <label for="kpi_fields" class="form-label">Select
+                  Fields</label>
+                <div class>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fName">
+                    <label class="form-check-label" for="fName">Name</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fImpact">
+                    <label class="form-check-label" for="fImpact">Impact</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fPlanned">
+                    <label class="form-check-label" for="fPlanned">Planned
+                      Start/ End Date</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fActual">
+                    <label class="form-check-label" for="fActual">Actual
+                      Start/ End Date</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fActual">
+                    <label class="form-check-label" for="fProgress">Progress</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fStatus">
+                    <label class="form-check-label" for="fStatus">Status</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fTotal">
+                    <label class="form-check-label" for="fTotal">Total</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fUtilised">
+                    <label class="form-check-label" for="fUtilised">Utilised</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fBalance">
+                    <label class="form-check-label" for="fBalance">Balance</label>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- intreg_view -->
+  <div class="modal fade" id="intreg_view" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Table View</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body table-container">
+          <div class="table-responsive">
+            <table class="table dashboard-task-infos align-center dashboard-table" id="intRegView">
+              <thead>
+                <tr>
+                  <th style="width: 40px">Status</th>
+                  <th style="width: 40px">ID</th>
+                  <th style="width: 80px">Name</th>
+                  <th style="width: 60px">Category</th>
+                  <th style="width: 60px">Impact</th>
+                  <th style="width: 50px">Likelihood</th>
+                  <th style="width: 40px">Score</th>
+                  <th style="width: 120px">Raised on</th>
+                  <th style="width: 60px">Next Assessment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="fas fa-flag" style="color: #28f76d"></i>
+                  </td>
+                  <td>12</td>
+                  <td>Initiative</td>
+                  <td>Regulatory</td>
+                  <td style="color: #28f76d">Tolerable</td>
+                  <td style="color: #f72f28">High</td>
+                  <td>3</td>
+                  <td>23-05-2020</td>
+                  <td>23-06-2020</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="navigation-wrap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="refot_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Risk Events Frequency of
+            Occurrence</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-md-12 mb-3">
+              <label for="meeting-name">Process Name</label>
+              <input type="text" class="modal-custom-input" />
+            </div>
+            <div class="form-group col-md-12  mb-3">
+              <label for="meeting-name" class="form-label">Yearly</label>
+              <input type="number" class="modal-custom-input" />
+            </div>
+
+            <div class="form-group col-md-12  mb-3">
+              <label for="kpi_fields" class="form-label">Data
+                Fields</label>
+
+              <div>
+
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fProcessName">
+                  <label class="form-check-label" for="fProcessName">Process Name</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="fYearly">
+                  <label class="form-check-label" for="fYearly">Yearly</label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+          Cancel
+        </button>
+        <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="pbc_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">Process Business Critical</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Less
+                  Critical</label>
+                <input type="number" class="modal-custom-input form-control" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Critical</label>
+                <input type="number" class="modal-custom-input  form-control" />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Data
+                  Fields</label>
+                <div class>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fCritical">
+                    <label class="form-check-label" for="fCritical">Critical</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="fLessCritical">
+                    <label class="form-check-label" for="fLessCritical">Less
+                      Critical</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+          Cancel
+        </button>
+        <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- laoadrc_setting -->
+  <div class="modal fade" id="laoadrc_setting" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5">List of Availability of a DRC
+            system</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Sistem</label>
+                <input type="number" class="modal-custom-input form-control" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">RTO</label>
+                <input type="number" class="modal-custom-input form-control" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="meeting-name" class="form-label">Status
+                  Ketersediaan DRC
+                </label>
+                <input type="text" class="modal-custom-input form-control" />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="kpi_fields" class="form-label">Data
+                  Fields</label>
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfSistem">
+                    <label class="form-check-label" for="dfSistem">Sistem</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfRTO">
+                    <label class="form-check-label" for="dfRTO">RTO</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="dfStatusKetersediaanDRC">
+                    <label class="form-check-label" for="dfStatusKetersediaanDRC">Status Ketersediaan
+                      DRC</label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary  secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary initative_save_btn" value="Save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- template -->
+  <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <div class="modal fade" id="create-template" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title fs-5">Create Templates</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="sub_initative_Form">
+            <div class="row g-2">
+              <div class="col-12 col-md-6">
+                <div class="form-group">
+                  <label for="sub_initative_progress" class="form-label">Name</label>
+                  <input type="text" class="form-control browser-default" name="" id="" placeholder="">
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group">
+                  <label for="sub_initative_desc" class="form-label">Page Type</label>
+                  <select id="attachment" name="attachment" class="form-control form-select">
+                    <option value="">My Work Space</option>
+                    <option value="Scheduled">White Board</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-group">
+                  <label for="sub_initative_desc" class="form-label">Board Type</label>
+                  <select id="attachment" name="attachment" class="form-control form-select">
+                    <option value="">Select Page</option>
+                    <option value="">Initiatives & Projects</option>
+                    <option value="">Meetings</option>
+                    <option value="">My Space</option>
+                    <option value="">PESTEL</option>
+                    <option value="">Project Formulation</option>
+                    <option value="">Risk</option>
+                    <option value="">Risk Formulation</option>
+                    <option value="">SWOT</option>
+                    <option value="">Scorecard</option>
+                    <option value="">Strategy Formulation</option>
+                    <option value="">Scorecard View</option>
+                    <option value="">Initiative View</option>
+                    <option value="">Strategy Map</option>
+                    <option value="">Process to Enabler</option>
+                    <option value="">RPO</option>
+                    <option value="">Impact Survey</option>
+                    <option value="">Approval Page</option>
+                    <option value="">Risk Event</a></li>
+                    </option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select Page Type
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary  initative_save_btn" value="Save">Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- create-template END -->
+
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <link href="assets/css/jquery-ui.min.css" rel="stylesheet">
+  <script src="assets/js/jquery-ui.min.js"></script>
+
+  <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/knockout-3.5.0.js"></script>
+  <script src="assets/js/daterangepicker.min.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+  <script src="assets/js/paging.js"></script>
+
+  <link href="assets/css/pickr.min.css" rel="stylesheet">
+  <script src="assets/js/pickr.es5.min.js"></script>
+  <script src="assets/js/widgets.js"></script>
+
+  <script src="assets/js/drop.js"></script>
+  <script src="assets/js/main.js"></script>
+
+  <!-- <script>
+     
+        const myModal = new bootstrap.Modal('#kpistatusCountsettings', {});
+        myModal.show();
+      
+    </script> -->
+
+  <script>
+
+    document.getElementById('kpi_formula_popup').addEventListener('show.bs.modal', function () {
+      document.getElementById('chart_setting').classList.add('modal-static');
+    });
+
+    document.getElementById('kpi_formula_popup').addEventListener('hidden.bs.modal', function () {
+      document.getElementById('chart_setting').classList.remove('modal-static');
+      const fghaModal = new bootstrap.Modal('#chart_setting', {});
+      fghaModal.show();
+    });
+
+  </script>
+
+
+  <script>
+    $(document).ready(function () {
+      $("#drilldownTableView").paging({ limit: 6 });
+      $("#dataTableView").paging({ limit: 7 });
+      $("#riskRegView").paging({ limit: 7 });
+      $("#intRegView").paging({ limit: 7 });
+      $(".kpistatusCountView").paging({ limit: 7 });
+      $(".riskcount_view").paging({ limit: 7 });
+
+    });
+
+
+    // $(".int-dept-multi-select").select2({ minimumInputLength: 3,dropdownCssClass: 'dropdown-menu',width: '100%',containerCssClass: 'form-select' });
+    //$(".int-status-multi-select").select2({dropdownCssClass: 'dropdown-menu',width: '100%',containerCssClass: 'form-select'});
+
+    $(".int-dept-multi-select").each(function () {
+      var $modal = $(this).closest(".modal");
+      $(this).select2({
+        minimumInputLength: 3,
+        dropdownParent: $modal, // Automatically detect and append to the closest modal
+        width: "100%",
+        containerCssClass: "form-select",
+      });
+    });
+
+    $(".int-status-multi-select").each(function () {
+      var $modal = $(this).closest(".modal");
+      $(this).select2({
+        dropdownParent: $modal, // Automatically detect and append to the closest modal
+        width: "100%",
+        containerCssClass: "form-select",
+      });
+    });
+
+    // $(".risk-dept-multi-select").select2({ minimumInputLength: 3,dropdownCssClass: 'dropdown-menu',width: '100%',containerCssClass: 'form-select' });
+    $(".risk-dept-multi-select").each(function () {
+      var $modal = $(this).closest(".modal");
+      $(this).select2({
+        minimumInputLength: 3,
+        dropdownParent: $modal, // Automatically detect and append to the closest modal
+        width: "100%",
+        containerCssClass: "form-select",
+      });
+    });
+
+
+    $(".risk-reg-multi-select").select2({ minimumInputLength: 3, dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+    $(".int-reg-multi-select").select2({ minimumInputLength: 3, dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+    $(".risk-status-multi-select").select2({ dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+
+
+
+
+
+    $(".heatmap-dept-multi-select").select2({ dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+    $(".gantt-dept-multi-select").select2({ dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+    $(".heatmap-status-multi-select").select2({ dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+    $(".gantt-status-multi-select").select2({ dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+    $(".dept-multi-select").select2({ minimumInputLength: 3, dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+    $(".user-multi-select").select2({ minimumInputLength: 3, dropdownCssClass: 'dropdown-menu', width: '100%', containerCssClass: 'form-select' });
+    for (var i = 0; i < 1000; i++) {
+      $(".risk-dept-multi-select").append(
+        "<option value='" +
+        (i + 1) +
+        "'>Value test " +
+        (i + 1) +
+        "</option>"
+      );
+    }
+
+
+
+
+    function hide_show_table(col_name) {
+      var checkbox_val = document.getElementById(col_name).value;
+      if (checkbox_val == "hide") {
+        var all_col = document.getElementsByClassName(col_name);
+        for (var i = 0; i < all_col.length; i++) {
+          all_col[i].style.display = "none";
+        }
+        document.getElementById(col_name + "_head").style.display = "none";
+        document.getElementById(col_name).value = "show";
+      } else {
+        var all_col = document.getElementsByClassName(col_name);
+        for (var i = 0; i < all_col.length; i++) {
+          all_col[i].style.display = "table-cell";
+        }
+        document.getElementById(col_name + "_head").style.display =
+          "table-cell";
+        document.getElementById(col_name).value = "hide";
+      }
+    }
+
+  </script>
+
+  <!-- language-translation :::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- 
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    }
+  </script>
+
+  <script type="text/javascript"
+    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> -->
+
+  <!-- language-translation-end :::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+</body>
+
+</html>

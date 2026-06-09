@@ -49,7 +49,7 @@ public class MasterValueService {
 
     public List<MasterValueDto> findAllMasterValue() {
         String url = this.scoreCardUrl + "/retrieveMasterValue";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -66,7 +66,7 @@ public class MasterValueService {
     public List<MasterValueDto> findAllByTypes(String type) {
         HashMap urlVariable = new HashMap();
         String urlbuilt = UriComponentsBuilder.fromHttpUrl((String)this.getTypeUrl).queryParam("type", new Object[]{type}).buildAndExpand(urlVariable).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(urlbuilt, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 

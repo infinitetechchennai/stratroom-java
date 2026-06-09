@@ -72,27 +72,27 @@ public class RiskMonitoringService {
 
     public List<RiskMonitoringDTO> findAllByRiskId(Long riskId) {
         String url = String.join((CharSequence)"/", this.riskActivitiesListByRiskIdUrl, String.valueOf(riskId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<RiskMonitoringDTO> findAllByEmpId(Long empId) {
         String url = String.join((CharSequence)"/", this.riskActivitiesListByEmpIdUrl, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<RiskMonitoringDTO> riskMonitorListWithChild(long empId, String riskIds, String dateRange) {
         String url = String.join((CharSequence)"/", this.riskMonitoringListWithChildUrl, String.valueOf(empId));
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("riskIds", new Object[]{riskIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskMonitorDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskMonitorDTOList;
     }
 
     public List<RiskDTO> riskMonitorListWithDeptids(String deptIds) {
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)this.riskMonitorListWithDeptidsUrl).queryParam("deptIds", new Object[]{deptIds}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

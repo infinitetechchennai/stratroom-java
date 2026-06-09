@@ -15,9 +15,9 @@ package com.estrat.service.db.bean.po;
 import com.estrat.service.db.bean.po.EmployeeProfilePo;
 import com.estrat.service.db.bean.po.FormulationSubRiskDetails;
 import com.estrat.service.db.bean.po.SubRiskUserEmbeddedId;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name="formulation_sub_risk_mapping")

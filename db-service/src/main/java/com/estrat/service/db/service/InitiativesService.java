@@ -128,7 +128,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -179,7 +180,7 @@ public class InitiativesService {
     private ActivitiesMapRepository activitiesMapRepository;
     @Autowired
     private SubInitiativesMapRepository subInitiativesMapRepository;
-    private Logger log = Logger.getLogger(InitiativesService.class);
+    private Logger log = LoggerFactory.getLogger(InitiativesService.class);
 
     public Optional<Initiatives> findById(long id) {
         return this.initiativesRepository.findByIdAndActive(Long.valueOf(id), 0);

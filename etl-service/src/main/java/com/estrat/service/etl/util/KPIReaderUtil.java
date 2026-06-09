@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -31,7 +32,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class KPIReaderUtil {
-    private Logger logger = Logger.getLogger(KPIReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(KPIReaderUtil.class);
 
     public List<KPIDetailsDTO> readKPIDetails(InputStream inputStream) {
         ArrayList<KPIDetailsDTO> detailsDTOs = new ArrayList<KPIDetailsDTO>();
@@ -42,7 +43,7 @@ public class KPIReaderUtil {
             for (int sheetIndex = 0; sheetIndex < myExcelBook.getNumberOfSheets(); ++sheetIndex) {
                 XSSFSheet myExcelSheet = myExcelBook.getSheetAt(sheetIndex);
                 if (myExcelSheet == null) {
-                    this.logger.debug((Object)"Sheet not found");
+                    this.logger.debug("Sheet not found");
                 } else {
                     int totalRows = myExcelSheet.getPhysicalNumberOfRows();
                     for (int i = 1; i < totalRows; ++i) {

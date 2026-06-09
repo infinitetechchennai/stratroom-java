@@ -16,6 +16,7 @@
  *  org.springframework.web.client.RestTemplate
  */
 package com.estrat.service.user.config;
+import org.springframework.http.HttpStatus;
 
 import com.estrat.service.user.config.AbstractRestTemplate;
 import com.estrat.service.user.exception.RestServiceClientException;
@@ -46,7 +47,7 @@ public abstract class AbstractRestTemplate {
             response = this.restTemplate.exchange(url, httpMethod, requestEntity, returnType, new Object[0]);
         }
         catch (HttpStatusCodeException e) {
-            throw new RestServiceClientException(String.format("Status Code %s error occured", e.getStatusCode()), e.getStatusCode(), e.getResponseBodyAsString(), (Throwable)e);
+            throw new RestServiceClientException(String.format("Status Code %s error occured", e.getStatusCode()), HttpStatus.resolve(e.getStatusCode().value()), e.getResponseBodyAsString(), (Throwable)e);
         }
         catch (RestClientException e) {
             throw new RestServiceException("Rest Service Exception Occured", (Throwable)e);
@@ -60,7 +61,7 @@ public abstract class AbstractRestTemplate {
             response = this.restTemplate.exchange(url, httpMethod, requestEntity, returnType, new Object[0]);
         }
         catch (HttpStatusCodeException e) {
-            throw new RestServiceClientException(String.format("Status Code %s error occured", e.getStatusCode()), e.getStatusCode(), e.getResponseBodyAsString(), (Throwable)e);
+            throw new RestServiceClientException(String.format("Status Code %s error occured", e.getStatusCode()), HttpStatus.resolve(e.getStatusCode().value()), e.getResponseBodyAsString(), (Throwable)e);
         }
         catch (RestClientException e) {
             throw new RestServiceException("Rest Service Exception Occured", (Throwable)e);

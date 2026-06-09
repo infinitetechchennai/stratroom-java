@@ -72,7 +72,7 @@ public class PageService {
 
     public List<PageDTO> pageList(long empId) {
         String url = this.scoreCardUrl + "pageList/" + empId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List pageDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return pageDTOList;
     }
@@ -80,7 +80,7 @@ public class PageService {
     public List<PageDTO> pageDeptList(long deptId, String pageType) {
         String url = this.scoreCardUrl + "pageDeptList/" + deptId;
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("pageType", new Object[]{pageType}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List pageDTOList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return pageDTOList;
     }
@@ -88,7 +88,7 @@ public class PageService {
     public List<PageDTO> pageDeptList(String pageType) {
         String url = this.scoreCardUrl + "pageDeptList";
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("pageType", new Object[]{pageType}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List pageDTOList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return pageDTOList;
     }
@@ -113,7 +113,7 @@ public class PageService {
 
     public Map<String, Object> checkpages(String pageName, long empId) {
         String url = this.scoreCardUrl + "checkpages/" + pageName + "/" + empId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         Map map = (Map)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return map;
     }
@@ -127,7 +127,7 @@ public class PageService {
     public List<PageDTO> pageListByPageType(long empId, String pageType) {
         String url = this.scoreCardUrl + "pageListByPageType/" + empId;
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("pageType", new Object[]{pageType}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List pageDTOList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return pageDTOList;
     }
@@ -141,7 +141,7 @@ public class PageService {
     public List<PageDTO> pageListByDeptPageType(long deptId, String pageType) {
         String url = this.scoreCardUrl + "pageListByDeptPageType/" + deptId;
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("pageType", new Object[]{pageType}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List pageDTOList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return pageDTOList;
     }
@@ -149,7 +149,7 @@ public class PageService {
     public List<PageDTO> pageByDeptListPageType(String deptId, String pageType) {
         String url = this.scoreCardUrl + "pageByDeptListPageType";
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("deptId", new Object[]{deptId}).queryParam("pageType", new Object[]{pageType}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List pageDTOList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return pageDTOList;
     }
@@ -157,7 +157,7 @@ public class PageService {
     public List<PageDTO> findAllByPinnedList(Long deptId) {
         String url = this.scoreCardUrl + "pageByPinnedList";
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("deptId", new Object[]{deptId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List pageDTOList = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return pageDTOList;
     }

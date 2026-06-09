@@ -24,7 +24,8 @@ import com.estrat.service.db.service.CommentsMappingService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class KPICommentsService {
     private CommentsConverter converter;
     @Autowired
     private CommentsMappingService commentsMappingService;
-    private Logger log = Logger.getLogger(CommentService.class);
+    private Logger log = LoggerFactory.getLogger(CommentService.class);
 
     public CommentsDTO save(KPIComments comments) {
         return this.converter.convert((KPIComments)this.commentsRepository.save(comments));

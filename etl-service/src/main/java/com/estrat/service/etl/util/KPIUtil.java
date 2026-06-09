@@ -70,7 +70,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -91,7 +92,7 @@ public class KPIUtil {
     private RiskDetailsService riskDetailsService;
     private static String quarterFrequency = "quarter,quarterly";
     private static String halfYearFrequency = "halfyear,half year,half yearly,halfyearly";
-    private Logger logger = Logger.getLogger(KPIUtil.class);
+    private Logger logger = LoggerFactory.getLogger(KPIUtil.class);
     private Predicate<String> validateDataKey = dataKey -> !StringUtils.isEmpty((CharSequence)dataKey) && !"Not Available".equalsIgnoreCase((String)dataKey);
     private Map<String, String> statusLightKeyMap = new HashMap();
     BiPredicate<String, String> freqFunction = (frequency, validateFreq) -> StringUtils.isNotEmpty((CharSequence)frequency) && Arrays.asList(validateFreq.split(",")).contains(frequency.toLowerCase());
@@ -107,7 +108,7 @@ public class KPIUtil {
     @Async
     public void sendKPIDataNotifications(String orgId) {
         if (this.dateUtil.isTodayEligibleForDataNotification()) {
-            this.logger.debug((Object)"Notification batch started");
+            this.logger.debug("Notification batch started");
             HashMap commonHeaders = new HashMap();
             commonHeaders.put("USER_ORG_ID", orgId);
             UserThreadLocal.set(commonHeaders);
@@ -128,7 +129,7 @@ public class KPIUtil {
             }
             UserThreadLocal.set(null);
             KPIThreadLocal.set(null);
-            this.logger.debug((Object)"Notification batch ended");
+            this.logger.debug("Notification batch ended");
         }
     }
 
@@ -142,8 +143,8 @@ public class KPIUtil {
                 String message = messageMap.get(frequencyValue);
                 Set measureNameList = new FormulaUtil().getNodeKeyListFromFormula(kpidto.getKpiFormula().getFormula());
                 List<String> nodeKeyList = (List<String>)measureNameList.stream().map(measureName -> this.kpiService.lookupNodeKey((String)measureName)).collect(Collectors.toList());
-                this.logger.debug((Object)("nodeKeyList" + nodeKeyList));
-                this.logger.debug((Object)("periodList" + periodList));
+                this.logger.debug("nodeKeyList" + nodeKeyList);
+                this.logger.debug("periodList" + periodList);
                 if (CollectionUtils.isNotEmpty(nodeKeyList) && CollectionUtils.isNotEmpty(periodList)) {
                     KPICriteria kpiCriteria = new KPICriteria();
                     kpiCriteria.setRealDates(periodList);
@@ -175,8 +176,8 @@ public class KPIUtil {
             if (shouldProcess) {
                 Set measureNameList = new FormulaUtil().getNodeKeyListFromFormula(kpidto.getKpiFormula().getFormula());
                 List<String> nodeKeyList = (List<String>)measureNameList.stream().map(measureName -> this.kpiService.lookupNodeKey((String)measureName)).collect(Collectors.toList());
-                this.logger.debug((Object)("nodeKeyList" + nodeKeyList));
-                this.logger.debug((Object)("periodList" + periodList));
+                this.logger.debug("nodeKeyList" + nodeKeyList);
+                this.logger.debug("periodList" + periodList);
                 if (CollectionUtils.isNotEmpty(nodeKeyList) && CollectionUtils.isNotEmpty(periodList)) {
                     KPICriteria kpiCriteria = new KPICriteria();
                     kpiCriteria.setRealDates(periodList);
@@ -272,7 +273,7 @@ public class KPIUtil {
             }
         }
         catch (Exception e) {
-            this.logger.error((Object)"Exception while building status light", (Throwable)e);
+            this.logger.error("Exception while building status light", e);
         }
     }
 
@@ -739,7 +740,7 @@ public class KPIUtil {
                     secondDate = pattern.parse(endDate);
                 }
                 catch (ParseException pe) {
-                    this.logger.error((Object)("parser exception for unknown pattern " + pattern));
+                    this.logger.error("parser exception for unknown pattern " + pattern);
                 }
             }
             Long difference = ChronoUnit.DAYS.between(firstDate.toInstant(), secondDate.toInstant());
@@ -807,7 +808,7 @@ public class KPIUtil {
                 dueDateCrossed = true;
             }
             catch (Exception pe) {
-                this.logger.error((Object)("parser exception for unknown pattern " + pattern));
+                this.logger.error("parser exception for unknown pattern " + pattern);
             }
         }
         if (dueDateCrossed) {
@@ -909,7 +910,7 @@ public class KPIUtil {
             return decimalFormat.parse(result).toString();
         }
         catch (ParseException e) {
-            this.logger.error((Object)"Exception while parsing the decimal data", (Throwable)e);
+            this.logger.error("Exception while parsing the decimal data", e);
             throw new RuntimeException(e);
         }
     }

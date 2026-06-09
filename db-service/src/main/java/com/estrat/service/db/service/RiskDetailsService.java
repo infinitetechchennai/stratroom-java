@@ -123,7 +123,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -133,7 +134,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RiskDetailsService {
-    private Logger log = Logger.getLogger(RiskDetailsService.class);
+    private Logger log = LoggerFactory.getLogger(RiskDetailsService.class);
     @Autowired
     protected RiskDetailsRepository riskDetailsRepository;
     @Autowired

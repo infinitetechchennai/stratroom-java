@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v0.004" rel="stylesheet">
+    <link href="assets/css/main.css?v0.004" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+    <link href="assets/css/login.css" rel="stylesheet">
+
+     <!-- Font Awsome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+   <!-- <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  -->
+<script>
+  const savedLang = localStorage.getItem('lang');
+  const savedDir = localStorage.getItem('dir');
+
+  if (savedLang && savedDir) {
+    document.documentElement.setAttribute('lang', savedLang);
+    document.documentElement.setAttribute('dir', savedDir);
+  }
+</script>
+</head>
+
+<body data-bs-theme="light">
+<header id="header" class="header shadow-sm sticky-top">
+    <div class="navbar-topbar">
+        <div class="container-lg d-flex flex-wrap justify-content-between">
+            <div class="menu-controls d-flex">
+                <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Org-Structure">
+                    <span class="icon">
+                        <img src="assets/images/icons/org-structure-i.svg" width="18" height="18" alt="Org-Structure"
+                            title="Org-Structure">
+                    </span>
+                </a>
+                <a class="control-link" href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Templates">
+                        <img src="assets/images/icons/template-i.svg" width="18" height="18" alt="" title="">
+                    </span>
+                </a>
+                <!-- <a class="control-link" href="control-panel.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Control Panel">
+                    <span class="icon">
+                        <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                    </span>
+                </a> -->
+
+
+                <!-- <div class="nav-item dropdown">
+
+
+                    <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="control-panel.html">Control Panel</a></li>
+                        <li><a class="dropdown-item" href="audit-trail.html">Audit Trail</a></li>
+                        <li><a class="dropdown-item" href="user-role.html">User Role</a></li>
+
+
+                    </ul>
+                </div> -->
+                <!-- <a class="control-link" href="audit-trail.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Audit Trail">
+                    <span class="icon">
+                        <img src="assets/images/icons/audit-trail-i.svg" width="18" height="18" alt="" title="">
+                    </span>
+                </a>
+                <a class="control-link" href="user-role.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User Role">
+                    <span class="icon">
+                        <img src="assets/images/icons/user-role-i.svg" width="18" height="18">
+                    </span>
+                </a> -->
+                <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="ETL">
+                    <span class="icon">
+                        <img src="assets/images/icons/other-i.svg" width="18" height="18" alt="ETL" title="ETL">
+                    </span>
+                </a>
+            </div>
+            <div class="menu-controls d-flex flex-wrap ms-auto">
+                <div class="top-date-picker">
+                    <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+                </div>
+            </div>
+            <div class="menu-controls d-flex flex-wrap">
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/global-i.svg" width="18" height="18" alt="organization"> EN
+                </a> -->
+
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/global-i.svg" width="14" height="14" alt="organization">
+                        </span>
+                        EN
+                    </a>
+
+                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="languageDropdown">
+  <li><a class="dropdown-item" href="#" data-lang="en" data-dir="ltr">English</a></li>
+  <li><a class="dropdown-item" href="#" data-lang="ar" data-dir="rtl">Arabic</a></li>
+</ul>
+                </div>
+
+            </div>
+            <!-- <div class="menu-controls d-flex flex-wrap">
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/notification-i.svg" width="18" height="18" alt="organization">
+                </a>
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Logout">
+                    <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+                </a>
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a>
+            </div> -->
+
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-light">
+        <div class="container-lg gap-2 gap-md-3">
+
+
+            <form class="position-relative logo me-auto">
+                <a href="landing.html" class="logo-preview" id="logoPreview">
+                    <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                </a>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;"
+                    onchange="previewImage(event)">
+                <label for="fileInput" class="upload-btn">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Logo">
+                        <img src="assets/images/icons/edit-i.svg" width="12" height="12" alt="">
+                    </span>
+                </label>
+            </form>
+
+            <!-- <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button> -->
+
+            <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                aria-labelledby="mobileMenuLabel">
+                <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="navbar-collapse">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Planning
+                                </a>
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="planningDropdown">
+                                    <li><a class="dropdown-item" href="strategy-planner.html">Strategy Formulation</a></li>
+                                    <li><a class="dropdown-item" href="#">Project Formulation</a></li>
+                                    <li><a class="dropdown-item" href="#">Risk Formulation</a></li>
+
+                                    <li><a class="dropdown-item" href="#">Strategy Map</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="mastersDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Masters
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="mastersDropdown">
+                                    <li><a class="dropdown-item" href="#">Process to Enabler</a></li>
+                                    <li><a class="dropdown-item" href="rpo.html">RPO</a></li>
+                                    <li><a class="dropdown-item" href="#">Impact Survey</a></li>
+                                    <li><a class="dropdown-item" href="k-approval.html">Approval Page</a></li>
+                                    <li><a class="dropdown-item" href="risk-event-database.html">Risk Event</a></li>
+                                    <li><a class="dropdown-item" href="budgets.html">Budgets</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="myWorkSpaceDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Work Space
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="myWorkSpaceDropdown">
+
+                                    <li><a class="dropdown-item" href="my-work-space.html">My Work Space</a></li>
+                                    <li><a class="dropdown-item" href="initatives.html">Initiatives &amp;
+                                            Projects</a></li>
+                                    <li><a class="dropdown-item" href="meetings.html">Meetings</a></li>
+                                    <li><a class="dropdown-item" href="myspace.html">My Space</a></li>
+                                     <li><a class="dropdown-item" href="pestel.html">PESTEL Analysis</a></li>
+
+                                    <li><a class="dropdown-item" href="risk.html">Risk</a></li>
+                                        <li><a class="dropdown-item" href="task.html">Task</a></li>
+
+                                  <li><a class="dropdown-item" href="swot.html">SWOT Analysis</a></li>
+                                    <li><a class="dropdown-item" href="scorecard-standard.html">Scorecard</a></li>
+
+                                    <li><a class="dropdown-item" href="#">Scorecard View</a></li>
+                                    <li><a class="dropdown-item" href="#">Initiative View</a></li>
+
+
+                                </ul>
+                            </li>
+
+                            <!-- <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="my-work-space.html">My Work
+                                        Space</a>
+                                </li> -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="whiteBoardDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    White Board
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="whiteBoardDropdown">
+                                    <li><a class="dropdown-item" href="landing.html">Landing</a></li>
+                                    <li><a class="dropdown-item" href="cockpit.html">Cockpit</a></li>
+                                    <!-- <li><a class="dropdown-item" href="charts.html">Charts</a></li> -->
+                                    <li><a class="dropdown-item" href="multi-governance.html">Multi-Governance</a></li>
+
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="myFormDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Forms
+                                </a>
+
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="myFormDropdown">
+                                    <li><a class="dropdown-item" href="manual.html">Manual</a></li>
+                                    <!-- <li><a class="dropdown-item" href="excel.html">Excel</a></li> -->
+                                </ul>
+                            </li>
+
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-controls global-control  d-flex flex-wrap">
+
+                <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="Notification">
+                    <img src="assets/images/icons/notification-i.svg" width="18" height="18" alt="organization">
+                </a>
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Logout">
+            <img src="assets/images/icons/logout-i.svg" width="18" height="18" alt="">
+          </a> -->
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="controlPanelDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/control-panel-i.svg" width="18" height="18">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                        aria-labelledby="controlPanelDropdown">
+                        <li><a class="dropdown-item" href="control-panel.html"> <span class="icon">
+                                    <img src="assets/images/icons/control-panel-i.svg" width="18" height="18" alt="">
+                                </span>Control Panel</a></li>
+                        <li><a class="dropdown-item" href="audit-trail.html"> <span class="icon">
+                                    <img src="assets/images/icons/audit-trail-i.svg" width="18" height="18" alt="">
+                                </span>Audit Trail</a></li>
+                        <li><a class="dropdown-item" href="user-role.html"> <span class="icon">
+                                    <img src="assets/images/icons/user-role-i.svg" width="18" height="18" alt="">
+                                </span>User Role</a></li>
+
+
+                    </ul>
+                </div>
+
+                <div class="nav-item dropdown">
+
+
+                    <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="icon">
+                            <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                        </span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+                        aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item profile-card" href="#">
+
+                                <span class="icon">
+                                    <img src="assets/images/icons/user-i.svg" width="32" height="32" alt="">
+                                </span>
+
+                                <div class="">
+                                    <h4>Hi John </h4>
+                                    <small>welcome to your Multi-Governance Portal</small>
+                                </div>
+                            </a></li>
+
+
+                        <li><a class="dropdown-item" href="#create-template" data-bs-toggle="modal">
+
+                                <span class="icon"><img src="assets/images/icons/template-i.svg" width="18" height="18"
+                                        alt="" title=""></span>Create Templates</a></li>
+
+                        <li><a class="dropdown-item" href="user-role.html"><span class="icon"><img
+                                        src="assets/images/icons/logout-i.svg" width="18" height="18" alt=""></span>
+                                Logout</a></li>
+
+
+                    </ul>
+                </div>
+                <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+            </div>
+            <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"
+                aria-controls="mobileMenu">
+                <div class="hamburger-icon">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </div>
+            </div>
+
+
+    </nav>
+</header>
+
+  <main class="pt-4 pb-4">
+    <div class="container-lg">
+      <div class="mb-4 page-header">
+        <div class="row">
+          <div class="col-12">
+            <h4 class="title">
+              <span class="icon">
+                <img src="assets/images/icons/control-panel-i.svg" alt="control-panel" title="control-panel">
+              </span>
+              Control Panel
+            </h4>
+          </div>
+
+        </div>
+      </div>
+      <div class="card controlpanel-container">
+        <div class="d-flex flex-column flex-lg-row align-items-start control-panel-tabs">
+
+
+          <!-- <div class="nav flex-column nav-pills control-panel-tab" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                          <button class="card nav-link active" id="v-pills-general-tab" data-bs-toggle="pill" data-bs-target="#v-pills-general" type="button" role="tab" aria-controls="v-pills-general" aria-selected="true">
+                            <div class="control-panel-menu general">
+                                <div class="icon">
+                                    <img src="assets/images/icons/control-panel-i.svg">
+                                </div>
+                                <h5>General</h5>
+                            </div>
+                            </button>
+                          <button class="card nav-link" id="v-pills-theme-tab" data-bs-toggle="pill" data-bs-target="#v-pills-theme" type="button" role="tab" aria-controls="v-pills-theme" aria-selected="false">
+                            <div class="control-panel-menu theme">
+                                <div class="icon">
+                                    <img src="assets/images/icons/theme-i.svg">
+                                </div>
+                                <h5>Theme</h5>
+                            </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-license-tab" data-bs-toggle="pill" data-bs-target="#v-pills-license" type="button" role="tab" aria-controls="v-pills-license" aria-selected="false">
+                                <div class="control-panel-menu license">
+                                    <div class="icon">
+                                        <img src="assets/images/icons/licence-i.svg">
+                                    </div>
+                                    <h5>License</h5>
+                                </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-notifications-tab" data-bs-toggle="pill" data-bs-target="#v-pills-notifications" type="button" role="tab" aria-controls="v-pills-notifications" aria-selected="false">
+                                <div class="control-panel-menu notifications">
+                                    <div class="icon">
+                                        <img src="assets/images/icons/notification-i.svg">
+                                    </div>
+                                    <h5>Notifications</h5>
+                                </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-security-tab" data-bs-toggle="pill" data-bs-target="#v-pills-security" type="button" role="tab" aria-controls="v-pills-security" aria-selected="false">
+                                <div class="control-panel-menu security">
+                                    <div class="icon">
+                                        <img src="assets/images/icons/security-i.svg">
+                                    </div>
+                                    <h5>Security</h5>
+                                </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-scheduler-tab" data-bs-toggle="pill" data-bs-target="#v-pills-scheduler" type="button" role="tab" aria-controls="v-pills-scheduler" aria-selected="false">
+                                <div class="control-panel-menu scheduler">
+                                    <div class="icon">
+                                        <img src="assets/images/icons/schedule-i.svg">
+                                    </div>
+                                    <h5>Scheduler</h5>
+                                </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-device-tab" data-bs-toggle="pill" data-bs-target="#v-pills-device" type="button" role="tab" aria-controls="v-pills-device" aria-selected="false">
+                                <div class="control-panel-menu device">
+                                        <div class="icon">
+                                            <img src="assets/images/icons/device-i.svg">
+                                        </div>
+                                        <h5>Device</h5>
+                                </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-backup-restore-tab" data-bs-toggle="pill" data-bs-target="#v-pills-backup-restore" type="button" role="tab" aria-controls="v-pills-backup-restore" aria-selected="false">
+                                <div class="control-panel-menu restore">
+                                    <div class="icon">
+                                        <img src="assets/images/icons/backup-i.svg">
+                                    </div>
+                                    <h5>Back Up & Restore</h5>
+                                </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-scorecard-tab" data-bs-toggle="pill" data-bs-target="#v-pills-scorecard" type="button" role="tab" aria-controls="v-pills-scorecard" aria-selected="false">
+                                <div class="control-panel-menu scorecard">
+                                    <div class="icon">
+                                        <img src="assets/images/icons/scorecard-i.svg">
+                                    </div>
+                                    <h5>Scorecard</h5>
+                                </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-okr-tab" data-bs-toggle="pill" data-bs-target="#v-pills-okr" type="button" role="tab" aria-controls="v-pills-okr" aria-selected="false">
+                                <div class="control-panel-menu okr">
+                                    <div class="icon">
+                                        <img src="assets/images/icons/okr-i.svg">
+                                    </div>
+                                    <h5>OKR</h5>
+                                </div>
+                            </button>
+                            <button class="card nav-link" id="v-pills-risk-tab" data-bs-toggle="pill" data-bs-target="#v-pills-risk" type="button" role="tab" aria-controls="v-pills-risk" aria-selected="false">
+                                <div class="control-panel-menu risk">
+                                    <div class="icon">
+                                        <img src="assets/images/icons/risk-i.svg">
+                                    </div>
+                                    <h5>Risk</h5>
+                                </div>
+                            </button>
+                        </div> -->
+
+          <div class="dropdown control-panel-wrap">
+            <button class="btn btn-dark dropdown-toggle d-lg-none" type="button" id="dropdownMenuButton1"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Control Panel
+            </button>
+
+            <!-- <ul class="nav flex-column nav-pills control-panel-tab dropdown-menu" id="v-pills-tab" role="tablist" aria-orientation="vertical"> -->
+            <ul class="dropdown-menu" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+              <button class="card nav-link active" id="v-pills-general-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-general" type="button" role="tab" aria-controls="v-pills-general"
+                aria-selected="true">
+                <div class="control-panel-menu general">
+                  <div class="icon">
+                    <img src="assets/images/icons/control-panel-i.svg">
+                  </div>
+                  <h5>General</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-theme-tab" data-bs-toggle="pill" data-bs-target="#v-pills-theme"
+                type="button" role="tab" aria-controls="v-pills-theme" aria-selected="false">
+                <div class="control-panel-menu theme">
+                  <div class="icon">
+                    <img src="assets/images/icons/theme-i.svg">
+                  </div>
+                  <h5>Theme</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-license-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-license" type="button" role="tab" aria-controls="v-pills-license"
+                aria-selected="false">
+                <div class="control-panel-menu license">
+                  <div class="icon">
+                    <img src="assets/images/icons/licence-i.svg">
+                  </div>
+                  <h5>License</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-notifications-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-notifications" type="button" role="tab" aria-controls="v-pills-notifications"
+                aria-selected="false">
+                <div class="control-panel-menu notifications">
+                  <div class="icon">
+                    <img src="assets/images/icons/notification-i.svg">
+                  </div>
+                  <h5>Notifications</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-security-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-security" type="button" role="tab" aria-controls="v-pills-security"
+                aria-selected="false">
+                <div class="control-panel-menu security">
+                  <div class="icon">
+                    <img src="assets/images/icons/security-i.svg">
+                  </div>
+                  <h5>Security</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-scheduler-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-scheduler" type="button" role="tab" aria-controls="v-pills-scheduler"
+                aria-selected="false">
+                <div class="control-panel-menu scheduler">
+                  <div class="icon">
+                    <img src="assets/images/icons/schedule-i.svg">
+                  </div>
+                  <h5>Scheduler</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-device-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-device" type="button" role="tab" aria-controls="v-pills-device"
+                aria-selected="false">
+                <div class="control-panel-menu device">
+                  <div class="icon">
+                    <img src="assets/images/icons/device-i.svg">
+                  </div>
+                  <h5>Device</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-backup-restore-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-backup-restore" type="button" role="tab" aria-controls="v-pills-backup-restore"
+                aria-selected="false">
+                <div class="control-panel-menu restore">
+                  <div class="icon">
+                    <img src="assets/images/icons/backup-i.svg">
+                  </div>
+                  <h5>Back Up & Restore</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-scorecard-tab" data-bs-toggle="pill"
+                data-bs-target="#v-pills-scorecard" type="button" role="tab" aria-controls="v-pills-scorecard"
+                aria-selected="false">
+                <div class="control-panel-menu scorecard">
+                  <div class="icon">
+                    <img src="assets/images/icons/scorecard-i.svg">
+                  </div>
+                  <h5>Scorecard</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-okr-tab" data-bs-toggle="pill" data-bs-target="#v-pills-okr"
+                type="button" role="tab" aria-controls="v-pills-okr" aria-selected="false">
+                <div class="control-panel-menu okr">
+                  <div class="icon">
+                    <img src="assets/images/icons/okr-i.svg">
+                  </div>
+                  <h5>OKR</h5>
+                </div>
+              </button>
+              <button class="card nav-link" id="v-pills-risk-tab" data-bs-toggle="pill" data-bs-target="#v-pills-risk"
+                type="button" role="tab" aria-controls="v-pills-risk" aria-selected="false">
+                <div class="control-panel-menu risk">
+                  <div class="icon">
+                    <img src="assets/images/icons/risk-i.svg">
+                  </div>
+                  <h5>Risk</h5>
+                </div>
+              </button>
+            </ul>
+
+          </div>
+
+          <div class="tab-content" id="v-pills-tabContent">
+            <!-- general :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade show active" id="v-pills-general" role="tabpanel"
+              aria-labelledby="v-pills-general-tab" tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>General Settings</h5>
+                </div>
+                <div class="general">
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Site Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control browser-default" />
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Site Language <span class="text-danger">*</span></label>
+                        <select name="owner_select" class="form-control form-select browser-default">
+                          <option value="English">English</option>
+                          <option value="Arabic">Arabic</option>
+                          <option value="Amharic">Amharic</option>
+                          <option value="Vietnamese">Vietnamese</option>
+                          <option value="French">French</option>
+                          <option value="German">German</option>
+                          <option value="Portuguese">Portuguese</option>
+                          <option value="Spanish">Spanish</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Admin Email ID <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control browser-default" />
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Currency <span class="text-danger">*</span></label>
+                        <select id="inputState" name="" class="form-control form-select browser-default">
+                          <option selected value="">Select currency</option>
+                          <option value="America (United States) Dollars - USD">
+                            America (United States) Dollars – USD
+                          </option>
+                          <option value="Afghanistan Afghanis - AFN">
+                            Afghanistan Afghanis – AFN
+                          </option>
+                          <option value="Albania Leke - ALL">
+                            Albania Leke – ALL
+                          </option>
+                          <option value="Algeria Dinars - DZD">
+                            Algeria Dinars – DZD
+                          </option>
+                          <option value="Argentina Pesos - ARS">
+                            Argentina Pesos – ARS
+                          </option>
+                          <option value="Australia Dollars - AUD">
+                            Australia Dollars – AUD
+                          </option>
+                          <option value="Austria Schillings - ATS">
+                            Austria Schillings – ATS
+                          </option>
+
+                          <option value="Bahamas Dollars - BSD">
+                            Bahamas Dollars – BSD
+                          </option>
+                          <option value="Bahrain Dinars - BHD">
+                            Bahrain Dinars – BHD
+                          </option>
+                          <option value="Bangladesh Taka - BDT">
+                            Bangladesh Taka – BDT
+                          </option>
+                          <option value="Barbados Dollars - BBD">
+                            Barbados Dollars – BBD
+                          </option>
+                          <option value="Belgium Francs - BEF">
+                            Belgium Francs – BEF
+                          </option>
+                          <option value="Bermuda Dollars - BMD">
+                            Bermuda Dollars – BMD
+                          </option>
+
+                          <option value="Brazil Reais - BRL">
+                            Brazil Reais – BRL
+                          </option>
+                          <option value="Bulgaria Leva - BGN">
+                            Bulgaria Leva – BGN
+                          </option>
+                          <option value="Canada Dollars - CAD">
+                            Canada Dollars – CAD
+                          </option>
+                          <option value="CFA BCEAO Francs - XOF">
+                            CFA BCEAO Francs – XOF
+                          </option>
+                          <option value="CFA BEAC Francs - XAF">
+                            CFA BEAC Francs – XAF
+                          </option>
+                          <option value="Chile Pesos - CLP">
+                            Chile Pesos – CLP
+                          </option>
+
+                          <option value="China Yuan Renminbi - CNY">
+                            China Yuan Renminbi – CNY
+                          </option>
+                          <option value="RMB (China Yuan Renminbi) - CNY">
+                            RMB (China Yuan Renminbi) – CNY
+                          </option>
+                          <option value="Colombia Pesos - COP">
+                            Colombia Pesos – COP
+                          </option>
+                          <option value="CFP Francs - XPF">
+                            CFP Francs – XPF
+                          </option>
+                          <option value="Costa Rica Colones - CRC">
+                            Costa Rica Colones – CRC
+                          </option>
+                          <option value="Croatia Kuna - HRK">
+                            Croatia Kuna – HRK
+                          </option>
+
+                          <option value="Cyprus Pounds - CYP">
+                            Cyprus Pounds – CYP
+                          </option>
+                          <option value="Czech Republic Koruny - CZK">
+                            Czech Republic Koruny – CZK
+                          </option>
+                          <option value="Denmark Kroner - DKK">
+                            Denmark Kroner – DKK
+                          </option>
+                          <option value="Deutsche (Germany) Marks - DEM">
+                            Deutsche (Germany) Marks – DEM
+                          </option>
+                          <option value="Dominican Republic Pesos - DOP">
+                            Dominican Republic Pesos – DOP
+                          </option>
+                          <option value="Dutch (Netherlands) Guilders - NLG">
+                            Dutch (Netherlands) Guilders – NLG
+                          </option>
+
+                          <option value="Eastern Caribbean Dollars - XCD">
+                            Eastern Caribbean Dollars – XCD
+                          </option>
+                          <option value="Egypt Pounds - EGP">
+                            Egypt Pounds – EGP
+                          </option>
+                          <option value="Estonia Krooni - EEK">
+                            Estonia Krooni – EEK
+                          </option>
+                          <option value="Euro - EUR">Euro – EUR</option>
+                          <option value="Fiji Dollars - FJD">
+                            Fiji Dollars – FJD
+                          </option>
+                          <option value="Finland Markkaa - FIM">
+                            Finland Markkaa – FIM
+                          </option>
+
+                          <option value="France Francs - FRF*">
+                            France Francs – FRF*
+                          </option>
+                          <option value="Germany Deutsche Marks - DEM">
+                            Germany Deutsche Marks – DEM
+                          </option>
+                          <option value="Gold Ounces - XAU">
+                            Gold Ounces – XAU
+                          </option>
+                          <option value="Greece Drachmae - GRD">
+                            Greece Drachmae – GRD
+                          </option>
+                          <option value="Guatemalan Quetzal - GTQ">
+                            Guatemalan Quetzal – GTQ
+                          </option>
+                          <option value="Holland (Netherlands) Guilders - NLG">
+                            Holland (Netherlands) Guilders – NLG
+                          </option>
+                          <option value="Hong Kong Dollars - HKD">
+                            Hong Kong Dollars – HKD
+                          </option>
+
+                          <option value="Hungary Forint - HUF">
+                            Hungary Forint – HUF
+                          </option>
+                          <option value="Iceland Kronur - ISK">
+                            Iceland Kronur – ISK
+                          </option>
+                          <option value="IMF Special Drawing Right - XDR">
+                            IMF Special Drawing Right – XDR
+                          </option>
+                          <option value="India Rupees - INR">
+                            India Rupees – INR
+                          </option>
+                          <option value="Indonesia Rupiahs - IDR">
+                            Indonesia Rupiahs – IDR
+                          </option>
+                          <option value="Iran Rials - IRR">
+                            Iran Rials – IRR
+                          </option>
+
+                          <option value="Iraq Dinars - IQD">
+                            Iraq Dinars – IQD
+                          </option>
+                          <option value="Ireland Pounds - IEP*">
+                            Ireland Pounds – IEP*
+                          </option>
+                          <option value="Israel New Shekels - ILS">
+                            Israel New Shekels – ILS
+                          </option>
+                          <option value="Italy Lire - ITL*">
+                            Italy Lire – ITL*
+                          </option>
+                          <option value="Jamaica Dollars - JMD">
+                            Jamaica Dollars – JMD
+                          </option>
+                          <option value="Japan Yen - JPY">
+                            Japan Yen – JPY
+                          </option>
+
+                          <option value="Jordan Dinars - JOD">
+                            Jordan Dinars – JOD
+                          </option>
+                          <option value="Kenya Shillings - KES">
+                            Kenya Shillings – KES
+                          </option>
+                          <option value="Korea (South) Won - KRW">
+                            Korea (South) Won – KRW
+                          </option>
+                          <option value="Kuwait Dinars - KWD">
+                            Kuwait Dinars – KWD
+                          </option>
+                          <option value="Lebanon Pounds - LBP">
+                            Lebanon Pounds – LBP
+                          </option>
+                          <option value="Luxembourg Francs - LUF">
+                            Luxembourg Francs – LUF
+                          </option>
+
+                          <option value="Malaysia Ringgits - MYR">
+                            Malaysia Ringgits – MYR
+                          </option>
+                          <option value="Malta Liri - MTL">
+                            Malta Liri – MTL
+                          </option>
+                          <option value="Mauritius Rupees - MUR">
+                            Mauritius Rupees – MUR
+                          </option>
+                          <option value="Mexico Pesos - MXN">
+                            Mexico Pesos – MXN
+                          </option>
+                          <option value="Morocco Dirhams - MAD">
+                            Morocco Dirhams – MAD
+                          </option>
+                          <option value="Netherlands Guilders - NLG">
+                            Netherlands Guilders – NLG
+                          </option>
+
+                          <option value="New Zealand Dollars - NZD">
+                            New Zealand Dollars – NZD
+                          </option>
+                          <option value="Norway Kroner - NOK">
+                            Norway Kroner – NOK
+                          </option>
+                          <option value="Oman Rials - OMR">
+                            Oman Rials – OMR
+                          </option>
+                          <option value="Pakistan Rupees - PKR">
+                            Pakistan Rupees – PKR
+                          </option>
+                          <option value="Palladium Ounces - XPD">
+                            Palladium Ounces – XPD
+                          </option>
+                          <option value="Peru Nuevos Soles - PEN">
+                            Peru Nuevos Soles – PEN
+                          </option>
+
+                          <option value="Philippines Pesos - PHP">
+                            Philippines Pesos – PHP
+                          </option>
+                          <option value="Platinum Ounces - XPT">
+                            Platinum Ounces – XPT
+                          </option>
+                          <option value="Poland Zlotych - PLN">
+                            Poland Zlotych – PLN
+                          </option>
+                          <option value="Portugal Escudos - PTE">
+                            Portugal Escudos – PTE
+                          </option>
+                          <option value="Qatar Riyals - QAR">
+                            Qatar Riyals – QAR
+                          </option>
+                          <option value="Romania New Lei - RON">
+                            Romania New Lei – RON
+                          </option>
+
+                          <option value="Romania Lei - ROL">
+                            Romania Lei – ROL
+                          </option>
+                          <option value="Russia Rubles - RUB">
+                            Russia Rubles – RUB
+                          </option>
+                          <option value="Saudi Arabia Riyals - SAR">
+                            Saudi Arabia Riyals – SAR
+                          </option>
+                          <option value="Silver Ounces - XAG">
+                            Silver Ounces – XAG
+                          </option>
+                          <option value="Singapore Dollars - SGD">
+                            Singapore Dollars – SGD
+                          </option>
+                          <option value="Slovakia Koruny - SKK">
+                            Slovakia Koruny – SKK
+                          </option>
+
+                          <option value="Slovenia Tolars - SIT">
+                            Slovenia Tolars – SIT
+                          </option>
+                          <option value="South Africa Rand - ZAR">
+                            South Africa Rand – ZAR
+                          </option>
+                          <option value="South Korea Won - KRW">
+                            South Korea Won – KRW
+                          </option>
+                          <option value="Spain Pesetas - ESP">
+                            Spain Pesetas – ESP
+                          </option>
+                          <option value="Special Drawing Rights (IMF) - XDR">
+                            Special Drawing Rights (IMF) – XDR
+                          </option>
+                          <option value="Sri Lanka Rupees - LKR">
+                            Sri Lanka Rupees – LKR
+                          </option>
+
+                          <option value="Sudan Dinars - SDD">
+                            Sudan Dinars – SDD
+                          </option>
+                          <option value="Sweden Kronor - SEK">
+                            Sweden Kronor – SEK
+                          </option>
+                          <option value="Switzerland Francs - CHF">
+                            Switzerland Francs – CHF
+                          </option>
+                          <option value="Taiwan New Dollars - TWD">
+                            Taiwan New Dollars – TWD
+                          </option>
+                          <option value="Thailand Baht - THB">
+                            Thailand Baht – THB
+                          </option>
+                          <option value="Trinidad and Tobago Dollars - TTD">
+                            Trinidad and Tobago Dollars – TTD
+                          </option>
+
+                          <option value="Tunisia Dinars - TND">
+                            Tunisia Dinars – TND
+                          </option>
+                          <option value="Turkey New Lira - TRY">
+                            Turkey New Lira – TRY
+                          </option>
+                          <option value="United Arab Emirates Dirhams - AED">
+                            United Arab Emirates Dirhams – AED
+                          </option>
+                          <option value="United Kingdom Pounds - GBP">
+                            United Kingdom Pounds – GBP
+                          </option>
+                          <option value="United States Dollars - USD">
+                            United States Dollars – USD
+                          </option>
+                          <option value="Venezuela Bolivares - VEB">
+                            Venezuela Bolivares – VEB
+                          </option>
+
+                          <option value="Vietnam Dong - VND">
+                            Vietnam Dong – VND
+                          </option>
+                          <option value="Zambia Kwacha - ZMK">
+                            Zambia Kwacha – ZMK
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Currency View <span class="text-danger">*</span></label>
+                        <select name="owner_select" class="form-control form-select browser-default">
+                          <option value="Thousands(K)">
+                            Thousands (K)
+                          </option>
+                          <option value="Milions(M)">
+                            Milions (M)
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Default Date Period <span class="text-danger">*</span></label>
+                        <select name="owner_select" class="form-control form-select browser-default">
+                          <option value="Month">
+                            Month
+                          </option>
+                          <option value="Milions(M)">
+                            Quarter
+                          </option>
+                          <option value="Milions(M)">
+                            Half Year
+                          </option>
+                          <option value="Milions(M)">
+                            Year
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Financial Cycle <span class="text-danger">*</span></label>
+                        <select name="owner_select" class="form-control form-select browser-default">
+                          <option value="month">
+                            January
+                          </option>
+                          <option value="month">
+                            February
+                          </option>
+                          <option value="month">
+                            March
+                          </option>
+                          <option value="month">
+                            April
+                          </option>
+                          <option value="month">
+                            May
+                          </option>
+                          <option value="month">
+                            June
+                          </option>
+                          <option value="month">
+                            July
+                          </option>
+                          <option value="month">
+                            August
+                          </option>
+                          <option value="month">
+                            September
+                          </option>
+                          <option value="month">
+                            October
+                          </option>
+                          <option value="month">
+                            November
+                          </option>
+                          <option value="month">
+                            December
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Time Zone <span class="text-danger">*</span></label>
+                        <select id="inputState" name="" class="form-control form-select browser-default">
+                          <option timeZoneId="1" gmtAdjustment="GMT-12:00" useDaylightTime="0" value="-12">
+                            (GMT-12:00) International Date Line West
+                          </option>
+                          <option timeZoneId="2" gmtAdjustment="GMT-11:00" useDaylightTime="0" value="-11">
+                            (GMT-11:00) Midway Island, Samoa
+                          </option>
+                          <option timeZoneId="3" gmtAdjustment="GMT-10:00" useDaylightTime="0" value="-10">
+                            (GMT-10:00) Hawaii
+                          </option>
+                          <option timeZoneId="4" gmtAdjustment="GMT-09:00" useDaylightTime="1" value="-9">
+                            (GMT-09:00) Alaska
+                          </option>
+                          <option timeZoneId="5" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="-8">
+                            (GMT-08:00) Pacific Time (US & Canada)
+                          </option>
+                          <option timeZoneId="6" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="-8">
+                            (GMT-08:00) Tijuana, Baja California
+                          </option>
+                          <option timeZoneId="7" gmtAdjustment="GMT-07:00" useDaylightTime="0" value="-7">
+                            (GMT-07:00) Arizona
+                          </option>
+                          <option timeZoneId="8" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="-7">
+                            (GMT-07:00) Chihuahua, La Paz, Mazatlan
+                          </option>
+                          <option timeZoneId="9" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="-7">
+                            (GMT-07:00) Mountain Time (US & Canada)
+                          </option>
+                          <option timeZoneId="10" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="-6">
+                            (GMT-06:00) Central America
+                          </option>
+                          <option timeZoneId="11" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="-6">
+                            (GMT-06:00) Central Time (US & Canada)
+                          </option>
+                          <option timeZoneId="12" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="-6">
+                            (GMT-06:00) Guadalajara, Mexico City, Monterrey
+                          </option>
+                          <option timeZoneId="13" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="-6">
+                            (GMT-06:00) Saskatchewan
+                          </option>
+                          <option timeZoneId="14" gmtAdjustment="GMT-05:00" useDaylightTime="0" value="-5">
+                            (GMT-05:00) Bogota, Lima, Quito, Rio Branco
+                          </option>
+                          <option timeZoneId="15" gmtAdjustment="GMT-05:00" useDaylightTime="1" value="-5">
+                            (GMT-05:00) Eastern Time (US & Canada)
+                          </option>
+                          <option timeZoneId="16" gmtAdjustment="GMT-05:00" useDaylightTime="1" value="-5">
+                            (GMT-05:00) Indiana (East)
+                          </option>
+                          <option timeZoneId="17" gmtAdjustment="GMT-04:00" useDaylightTime="1" value="-4">
+                            (GMT-04:00) Atlantic Time (Canada)
+                          </option>
+                          <option timeZoneId="18" gmtAdjustment="GMT-04:00" useDaylightTime="0" value="-4">
+                            (GMT-04:00) Caracas, La Paz
+                          </option>
+                          <option timeZoneId="19" gmtAdjustment="GMT-04:00" useDaylightTime="0" value="-4">
+                            (GMT-04:00) Manaus
+                          </option>
+                          <option timeZoneId="20" gmtAdjustment="GMT-04:00" useDaylightTime="1" value="-4">
+                            (GMT-04:00) Santiago
+                          </option>
+                          <option timeZoneId="21" gmtAdjustment="GMT-03:30" useDaylightTime="1" value="-3.5">
+                            (GMT-03:30) Newfoundland
+                          </option>
+                          <option timeZoneId="22" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-3">
+                            (GMT-03:00) Brasilia
+                          </option>
+                          <option timeZoneId="23" gmtAdjustment="GMT-03:00" useDaylightTime="0" value="-3">
+                            (GMT-03:00) Buenos Aires, Georgetown
+                          </option>
+                          <option timeZoneId="24" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-3">
+                            (GMT-03:00) Greenland
+                          </option>
+                          <option timeZoneId="25" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-3">
+                            (GMT-03:00) Montevideo
+                          </option>
+                          <option timeZoneId="26" gmtAdjustment="GMT-02:00" useDaylightTime="1" value="-2">
+                            (GMT-02:00) Mid-Atlantic
+                          </option>
+                          <option timeZoneId="27" gmtAdjustment="GMT-01:00" useDaylightTime="0" value="-1">
+                            (GMT-01:00) Cape Verde Is.
+                          </option>
+                          <option timeZoneId="28" gmtAdjustment="GMT-01:00" useDaylightTime="1" value="-1">
+                            (GMT-01:00) Azores
+                          </option>
+                          <option timeZoneId="29" gmtAdjustment="GMT+00:00" useDaylightTime="0" value="0">
+                            (GMT+00:00) Casablanca, Monrovia, Reykjavik
+                          </option>
+                          <option timeZoneId="30" gmtAdjustment="GMT+00:00" useDaylightTime="1" value="0">
+                            (GMT+00:00) Greenwich Mean Time : Dublin,
+                            Edinburgh, Lisbon, London
+                          </option>
+                          <option timeZoneId="31" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">
+                            (GMT+01:00) Amsterdam, Berlin, Bern, Rome,
+                            Stockholm, Vienna
+                          </option>
+                          <option timeZoneId="32" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">
+                            (GMT+01:00) Belgrade, Bratislava, Budapest,
+                            Ljubljana, Prague
+                          </option>
+                          <option timeZoneId="33" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">
+                            (GMT+01:00) Brussels, Copenhagen, Madrid, Paris
+                          </option>
+                          <option timeZoneId="34" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">
+                            (GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb
+                          </option>
+                          <option timeZoneId="35" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="1">
+                            (GMT+01:00) West Central Africa
+                          </option>
+                          <option timeZoneId="36" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">
+                            (GMT+02:00) Amman
+                          </option>
+                          <option timeZoneId="37" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">
+                            (GMT+02:00) Athens, Bucharest, Istanbul
+                          </option>
+                          <option timeZoneId="38" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">
+                            (GMT+02:00) Beirut
+                          </option>
+                          <option timeZoneId="39" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">
+                            (GMT+02:00) Cairo
+                          </option>
+                          <option timeZoneId="40" gmtAdjustment="GMT+02:00" useDaylightTime="0" value="2">
+                            (GMT+02:00) Harare, Pretoria
+                          </option>
+                          <option timeZoneId="41" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">
+                            (GMT+02:00) Helsinki, Kyiv, Riga, Sofia,
+                            Tallinn, Vilnius
+                          </option>
+                          <option timeZoneId="42" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">
+                            (GMT+02:00) Jerusalem
+                          </option>
+                          <option timeZoneId="43" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">
+                            (GMT+02:00) Minsk
+                          </option>
+                          <option timeZoneId="44" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="2">
+                            (GMT+02:00) Windhoek
+                          </option>
+                          <option timeZoneId="45" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="3">
+                            (GMT+03:00) Kuwait, Riyadh, Baghdad
+                          </option>
+                          <option timeZoneId="46" gmtAdjustment="GMT+03:00" useDaylightTime="1" value="3">
+                            (GMT+03:00) Moscow, St. Petersburg, Volgograd
+                          </option>
+                          <option timeZoneId="47" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="3">
+                            (GMT+03:00) Nairobi
+                          </option>
+                          <option timeZoneId="48" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="3">
+                            (GMT+03:00) Tbilisi
+                          </option>
+                          <option timeZoneId="49" gmtAdjustment="GMT+03:30" useDaylightTime="1" value="3.5">
+                            (GMT+03:30) Tehran
+                          </option>
+                          <option timeZoneId="50" gmtAdjustment="GMT+04:00" useDaylightTime="0" value="4">
+                            (GMT+04:00) Abu Dhabi, Muscat
+                          </option>
+                          <option timeZoneId="51" gmtAdjustment="GMT+04:00" useDaylightTime="1" value="4">
+                            (GMT+04:00) Baku
+                          </option>
+                          <option timeZoneId="52" gmtAdjustment="GMT+04:00" useDaylightTime="1" value="4">
+                            (GMT+04:00) Yerevan
+                          </option>
+                          <option timeZoneId="53" gmtAdjustment="GMT+04:30" useDaylightTime="0" value="4.5">
+                            (GMT+04:30) Kabul
+                          </option>
+                          <option timeZoneId="54" gmtAdjustment="GMT+05:00" useDaylightTime="1" value="5">
+                            (GMT+05:00) Yekaterinburg
+                          </option>
+                          <option timeZoneId="55" gmtAdjustment="GMT+05:00" useDaylightTime="0" value="5">
+                            (GMT+05:00) Islamabad, Karachi, Tashkent
+                          </option>
+                          <option timeZoneId="56" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="5.5">
+                            (GMT+05:30) Sri Jayawardenapura
+                          </option>
+                          <option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="5.5">
+                            (GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi
+                          </option>
+                          <option timeZoneId="58" gmtAdjustment="GMT+05:45" useDaylightTime="0" value="5.75">
+                            (GMT+05:45) Kathmandu
+                          </option>
+                          <option timeZoneId="59" gmtAdjustment="GMT+06:00" useDaylightTime="1" value="6">
+                            (GMT+06:00) Almaty, Novosibirsk
+                          </option>
+                          <option timeZoneId="60" gmtAdjustment="GMT+06:00" useDaylightTime="0" value="6">
+                            (GMT+06:00) Astana, Dhaka
+                          </option>
+                          <option timeZoneId="61" gmtAdjustment="GMT+06:30" useDaylightTime="0" value="6.5">
+                            (GMT+06:30) Yangon (Rangoon)
+                          </option>
+                          <option timeZoneId="62" gmtAdjustment="GMT+07:00" useDaylightTime="0" value="7">
+                            (GMT+07:00) Bangkok, Hanoi, Jakarta
+                          </option>
+                          <option timeZoneId="63" gmtAdjustment="GMT+07:00" useDaylightTime="1" value="7">
+                            (GMT+07:00) Krasnoyarsk
+                          </option>
+                          <option timeZoneId="64" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">
+                            (GMT+08:00) Beijing, Chongqing, Hong Kong,
+                            Urumqi
+                          </option>
+                          <option timeZoneId="65" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">
+                            (GMT+08:00) Kuala Lumpur, Singapore
+                          </option>
+                          <option timeZoneId="66" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">
+                            (GMT+08:00) Irkutsk, Ulaan Bataar
+                          </option>
+                          <option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">
+                            (GMT+08:00) Perth
+                          </option>
+                          <option timeZoneId="68" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="8">
+                            (GMT+08:00) Taipei
+                          </option>
+                          <option timeZoneId="69" gmtAdjustment="GMT+09:00" useDaylightTime="0" value="9">
+                            (GMT+09:00) Osaka, Sapporo, Tokyo
+                          </option>
+                          <option timeZoneId="70" gmtAdjustment="GMT+09:00" useDaylightTime="0" value="9">
+                            (GMT+09:00) Seoul
+                          </option>
+                          <option timeZoneId="71" gmtAdjustment="GMT+09:00" useDaylightTime="1" value="9">
+                            (GMT+09:00) Yakutsk
+                          </option>
+                          <option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="9.5">
+                            (GMT+09:30) Adelaide
+                          </option>
+                          <option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="9.5">
+                            (GMT+09:30) Darwin
+                          </option>
+                          <option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="10">
+                            (GMT+10:00) Brisbane
+                          </option>
+                          <option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="10">
+                            (GMT+10:00) Canberra, Melbourne, Sydney
+                          </option>
+                          <option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="10">
+                            (GMT+10:00) Hobart
+                          </option>
+                          <option timeZoneId="77" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="10">
+                            (GMT+10:00) Guam, Port Moresby
+                          </option>
+                          <option timeZoneId="78" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="10">
+                            (GMT+10:00) Vladivostok
+                          </option>
+                          <option timeZoneId="79" gmtAdjustment="GMT+11:00" useDaylightTime="1" value="11">
+                            (GMT+11:00) Magadan, Solomon Is., New Caledonia
+                          </option>
+                          <option timeZoneId="80" gmtAdjustment="GMT+12:00" useDaylightTime="1" value="12">
+                            (GMT+12:00) Auckland, Wellington
+                          </option>
+                          <option timeZoneId="81" gmtAdjustment="GMT+12:00" useDaylightTime="0" value="12">
+                            (GMT+12:00) Fiji, Kamchatka, Marshall Is.
+                          </option>
+                          <option timeZoneId="82" gmtAdjustment="GMT+13:00" useDaylightTime="0" value="13">
+                            (GMT+13:00) Nuku'alofa
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Implementation <span class="text-danger">*</span></label>
+                        <select name="owner_select" class="form-control form-select browser-default">
+                          <option selected value="">
+                            Select implementation*
+                          </option>
+                          <option value="BSC">BSC</option>
+                          <option value="OKR">OKR</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Implementation Type <span class="text-danger">*</span></label>
+                        <select name="owner_select" class="form-control form-select browser-default">
+                          <option selected value="">
+                            Select Implementation Type
+                          </option>
+                          <option value="Department">Department</option>
+                          <option value="Employee">Employee</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-end form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- general END:::::::::::::::::::::::::::: -->
+
+            <!-- theme :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-theme" role="tabpanel" aria-labelledby="v-pills-theme-tab"
+              tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>Theme</h5>
+                </div>
+                <div class="theme">
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Login</label>
+                        <label for="login" class="upload-label">
+                          <div class="upload">Choose a file or drag it here.</div>
+                          <input type="file" id="login">
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group form-group">
+                        <label for class="form-label">Logo</label>
+                        <label for="logo" class="upload-label">
+                          <div class="upload">Choose a file or drag it here.</div>
+                          <input type="file" id="logo">
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group form-group">
+                        <label for class="form-label">Branding Color</label>
+                        <div class="input-group">
+                          <input id="option1color1" type="text" class="form-control browser-default" />
+                          <div class="input-group-append">
+                            <span class="input-group-text pickr form-control" role="button"
+                              aria-label="toggle color picker dialog" id="p-1"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-end form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- theme END:::::::::::::::::::::::::::: -->
+
+            <!-- license :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-license" role="tabpanel" aria-labelledby="v-pills-license-tab"
+              tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>License</h5>
+                </div>
+                <div class="license">
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group form-group">
+                        <label for class="form-label">Valid</label>
+                        <input type="text" class="form-control browser-default" />
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group form-group">
+                        <label for class="form-label">Total Users</label>
+                        <input type="text" class="form-control browser-default" />
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="mb-4 section-title">
+                    <h5>Modules Subscribed</h5>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Scorecard</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Initiative</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Risk</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Employee</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Meeting</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">SWOT</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">PESTEL</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Strategy Formulation</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Budgeting</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Portfolio Program & Projects
+                          (P3M)</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Dashboards</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Forms</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Reports</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-end form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- license END:::::::::::::::::::::::::::: -->
+
+            <!-- notifications :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-notifications" role="tabpanel"
+              aria-labelledby="v-pills-notifications-tab" tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>Notification</h5>
+                </div>
+                <div class="notifications">
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Enable</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-end form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- notifications END:::::::::::::::::::::::::::: -->
+
+            <!-- security :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-security" role="tabpanel" aria-labelledby="v-pills-security-tab"
+              tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>Security (Sign on method)</h5>
+                </div>
+                <div class="general">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                        <label class="form-check-label" for="inlineCheckbox1">SAML 2.0</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                        <label class="form-check-label" for="inlineCheckbox2">OpenID Connect</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-4">
+                      <div class="mb-3 form-group">
+                        <label for="" class="form-label">Application Name</label>
+                        <input type="text" class="form-control browser-default">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="mb-3 form-group">
+                        <label for="" class="form-label">Client Name</label>
+                        <input type="text" class="form-control browser-default">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="mb-3 form-group">
+                        <label for="" class="form-label">Redirect URL</label>
+                        <input type="text" class="form-control browser-default">
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="mb-3 form-group">
+                        <label for="" class="form-label">Description</label>
+                        <textarea class="form-control browser-default" placeholder="" rows="3"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="mb-3 form-group">
+                        <label for="" class="form-label">Access Token Expiry (in hours)</label>
+                        <input type="text" class="form-control browser-default">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="mb-3 form-group">
+                        <label for="" class="form-label">JWT Token Expiry (in hours)</label>
+                        <input type="text" class="form-control browser-default">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="mb-3 form-group">
+                        <label for="" class="form-label">Refresh Token Expiry (in days)</label>
+                        <input type="text" class="form-control browser-default">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-end form-actions">
+                        <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal"
+                          aria-label="Close">
+                          Cancel
+                        </button>
+                        <button class="btn btn-primary  initative_save_btn" value="Save">save
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- security END:::::::::::::::::::::::::::: -->
+
+            <!-- scheduler :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-scheduler" role="tabpanel" aria-labelledby="v-pills-scheduler-tab"
+              tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>Scheduler</h5>
+                </div>
+                <div class="scheduler">
+                  <div class="mb-3 row">
+                    <div class="form-group col-6">
+                      <label for="owner_select" class="form-label">Archive</label>
+                      <select name="owner_select" class="form-control form-select browser-default">
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                        <option value="3">Option 3</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-6">
+                      <div class="d-flex justify-content-start mt-29 form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Archive
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- scheduler END:::::::::::::::::::::::::::: -->
+
+            <!-- device :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-device" role="tabpanel" aria-labelledby="v-pills-device-tab"
+              tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>Device</h5>
+                </div>
+                <div class="general">
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Web</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Mobile App</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- device END:::::::::::::::::::::::::::: -->
+
+            <!-- backup-restore:::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-backup-restore" role="tabpanel"
+              aria-labelledby="v-pills-backup-restore-tab" tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>Back Up & Restore</h5>
+                </div>
+                <div class="general">
+                  <div class="mb-3 row">
+                    <div class="form-group col-6">
+                      <label for="owner_select" class="form-label">Back Up</label>
+                      <select name="owner_select" class="form-control form-select browser-default">
+                        <option value="1">6 month</option>
+                        <option value="2">3 month</option>
+                        <option value="3">Month</option>
+                        <option value="4">weekly</option>
+                        <option value="4">Now</option>
+                      </select>
+                      <div class="d-flex justify-content-center mt-4 form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Back up
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for="" class="form-label">Restore (Application)</label>
+                        <label for="login" class="upload-label">
+                          <div class="upload">Choose a file or drag it here.</div>
+                          <input type="file" id="login">
+                        </label>
+                      </div>
+                      <div class="d-flex justify-content-center mt-4 form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Restore
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- backup-restore END:::::::::::::::::::::::::::: -->
+
+            <!-- scorecard :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-scorecard" role="tabpanel" aria-labelledby="v-pills-scorecard-tab"
+              tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>Scorecard</h5>
+                </div>
+                <div class="Scorecard">
+                  <div class="row">
+                    <div class="mb-3 form-group">
+                      <label for="kpi_fields" class="form-label">Scorecard Fields</label>
+                      <div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfActual">
+                          <label class="form-check-label" for="dfActual">Actual</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfTarget">
+                          <label class="form-check-label" for="dfTarget">Target</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfBudget">
+                          <label class="form-check-label" for="dfBudget">Budget</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfForecast">
+                          <label class="form-check-label" for="dfForecast">Forecast</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfBaseline">
+                          <label class="form-check-label" for="dfBaseline">Baseline</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfScore">
+                          <label class="form-check-label" for="dfScore">Score</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfTrend">
+                          <label class="form-check-label" for="dfTrend">Trend</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfRisk">
+                          <label class="form-check-label" for="dfRisk">Risk</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Year to Date (YTD)</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Aggregation</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Status</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Performance</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Score</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Custom Performance</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="mb-4 section-title">
+                    <h5>KPI View Settings</h5>
+                  </div>
+                  <div class="row">
+                    <div class="mb-3 form-group">
+                      <label for="kpi_fields" class="form-label">Data Table Fields</label>
+                      <div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfActual">
+                          <label class="form-check-label" for="dfActual">Actual</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfTarget">
+                          <label class="form-check-label" for="dfTarget">Target</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfBudget">
+                          <label class="form-check-label" for="dfBudget">Budget</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfForecast">
+                          <label class="form-check-label" for="dfForecast">Forecast</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfBaseline">
+                          <label class="form-check-label" for="dfBaseline">Baseline</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfScore">
+                          <label class="form-check-label" for="dfScore">Score</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfTrend">
+                          <label class="form-check-label" for="dfTrend">Trend</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfRisk">
+                          <label class="form-check-label" for="dfRisk">Risk</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3 form-group">
+                      <label for="kpi_fields" class="form-label">Data Drill Down Fields</label>
+                      <div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfActual">
+                          <label class="form-check-label" for="dfActual">Actual</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfTarget">
+                          <label class="form-check-label" for="dfTarget">Target</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfGap">
+                          <label class="form-check-label" for="dfGap">Gap</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfBaseline">
+                          <label class="form-check-label" for="dfBaseline">Baseline</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfPeriod">
+                          <label class="form-check-label" for="dfPeriod">Period</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Are Sub Measures required?</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="mb-4 section-title">
+                    <h5>KPI Form Schedule Settings</h5>
+                  </div>
+                  <div class="mb-3 row">
+                    <div class="form-group col-6">
+                      <label for="owner_select" class="form-label">Open the form on</label>
+                      <select name="owner_select" class="form-control form-select browser-default">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="4">5</option>
+                        <option value="4">5</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-6">
+                      <label for="owner_select" class="form-label">Close the form on</label>
+                      <select name="owner_select" class="form-control form-select browser-default">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="4">5</option>
+                        <option value="4">5</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-end form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- scorecard END:::::::::::::::::::::::::::: -->
+
+            <!-- okr :::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-okr" role="tabpanel" aria-labelledby="v-pills-okr-tab" tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>General Settings</h5>
+                </div>
+                <div class="general">
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="mb-3 form-group">
+                        <label for class="form-label">Site Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control browser-default" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="d-flex justify-content-end form-actions">
+                        <button class="btn btn-primary  initative_save_btn" value="Save">Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- okr END:::::::::::::::::::::::::::: -->
+
+            <!-- risk END:::::::::::::::::::::::::::: -->
+            <div class="tab-pane fade" id="v-pills-risk" role="tabpanel" aria-labelledby="v-pills-risk-tab"
+              tabindex="0">
+              <div class="control-panel-content">
+                <div class="mb-4 section-title">
+                  <h5>Risk Setting</h5>
+                </div>
+                <div class="Scorecard">
+                  <div class="row">
+                    <div class="mb-3 form-group">
+                      <label for="kpi_fields" class="form-label">Risk Fields</label>
+                      <div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfInherentRiskScore">
+                          <label class="form-check-label" for="dfInherentRiskScore">Inherent Risk Score</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfResidualRiskScore">
+                          <label class="form-check-label" for="dfResidualRiskScore">Residual Risk Score</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfRelatedParties">
+                          <label class="form-check-label" for="dfRelatedParties">Related Parties</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfPOS">
+                          <label class="form-check-label" for="dfPOS">POS</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfISO">
+                          <label class="form-check-label" for="dfISO">ISO</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfInformationAsset">
+                          <label class="form-check-label" for="dfInformationAsset">Information Asset</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfPersoninCharge">
+                          <label class="form-check-label" for="dfPersoninCharge">Person in Charge</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="dfOthers">
+                          <label class="form-check-label" for="dfOthers">Others</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Cause Description</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Category</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Consequence Description</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Possible Event</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Reducing Impact Description</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Rating</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Reducing Possibility
+                          Description</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Risk Category</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Control Types</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Control effectivenesss</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Action</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Risk Custom Score</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Inherent Risk Score</label>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="form-check form-switch mb-3 license-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Residual Risk Score</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- risk END:::::::::::::::::::::::::::: -->
+
+
+          </div>
+          <!-- TAB CONTENT END:::::::::::::::::::::::::::: -->
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="col-12 text-center py-2 copyright">
+    <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</footer>
+
+<div class="floating-box shadow-sm">
+        <a class="control-link" href="#"><span class="icon"><img src="assets/images/icons/organization-i.svg" width="18"
+                    height="18" alt="organization"></span></a>
+        <a class="control-link" href="#"><span class="icon"><img src="assets/images/icons/template-i.svg" width="18"
+                    height="18" alt="organization"></span></a>
+    </div>
+
+
+  <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <div class="modal fade" id="create-template" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title fs-5">Create Templates</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="sub_initative_Form">
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="mb-3 form-group">
+                  <label for="sub_initative_progress" class="form-label">Name</label>
+                  <input type="text" class="form-control browser-default" name="" id="" placeholder="">
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="mb-3 form-group">
+                  <label for="sub_initative_desc" class="form-label">Page Type</label>
+                  <select id="attachment" name="attachment" class="form-control form-select">
+                    <option value="">My Work Space</option>
+                    <option value="Scheduled">White Board</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="mb-3 form-group">
+                  <label for="sub_initative_desc" class="form-label">Board Type</label>
+                  <select id="attachment" name="attachment" class="form-control form-select">
+                    <option value="">Select Page</option>
+                    <option value="">Initiatives & Projects</option>
+                    <option value="">Meetings</option>
+                    <option value="">My Space</option>
+                    <option value="">PESTEL</option>
+                    <option value="">Project Formulation</option>
+                    <option value="">Risk</option>
+                    <option value="">Risk Formulation</option>
+                    <option value="">SWOT</option>
+                    <option value="">Scorecard</option>
+                    <option value="">Strategy Formulation</option>
+                    <option value="">Scorecard View</option>
+                    <option value="">Initiative View</option>
+                    <option value="">Strategy Map</option>
+                    <option value="">Process to Enabler</option>
+                    <option value="">RPO</option>
+                    <option value="">Impact Survey</option>
+                    <option value="">Approval Page</option>
+                    <option value="">Risk Event</a></li>
+                    </option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select Page Type
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary secondary-btn" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary  initative_save_btn" value="Save">Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- create-template END -->
+
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <link href="assets/css/jquery-ui.min.css" rel="stylesheet">
+  <script src="assets/js/jquery-ui.min.js"></script>
+
+  <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/knockout-3.5.0.js"></script>
+  <script src="assets/js/daterangepicker.min.js"></script>
+  <script src="assets/js/paging.js"></script>
+
+  <link href="assets/css/pickr.min.css" rel="stylesheet">
+  <script src="assets/js/pickr.es5.min.js"></script>
+  <script src="assets/js/widgets.js"></script>
+  <script src="assets/js/main.js"></script>
+
+
+  <!-- language-translation :::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    }
+  </script>
+
+  <script type="text/javascript"
+    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- language-translation-end :::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+
+</body>
+
+</html>

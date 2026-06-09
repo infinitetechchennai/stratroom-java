@@ -46,7 +46,7 @@ public class StrategyMapService {
         String url = String.join((CharSequence)"/", this.getAllScoreUrl, String.valueOf(pageid));
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("dateRange", new Object[]{dateRange}).toUriString();
         System.out.println(pageURL);
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -55,7 +55,7 @@ public class StrategyMapService {
         String url = String.join((CharSequence)"/", this.scoreService, "strategyMap/" + String.valueOf(id));
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).toUriString();
         System.out.println(pageURL);
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         StrategyMapDto scoreCard = (StrategyMapDto)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }

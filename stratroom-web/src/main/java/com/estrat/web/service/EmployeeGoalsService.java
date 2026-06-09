@@ -60,7 +60,7 @@ public class EmployeeGoalsService {
 
     public List<EmployeeGoalsDTO> findAll(long empId) {
         String url = this.goalList + "/" + empId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List employeeGoalsDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         for (Object _obj_employeeGoalsDTO : employeeGoalsDTOList) {
             EmployeeGoalsDTO employeeGoalsDTO = (EmployeeGoalsDTO) _obj_employeeGoalsDTO;

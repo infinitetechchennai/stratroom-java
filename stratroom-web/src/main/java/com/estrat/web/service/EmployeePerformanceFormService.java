@@ -58,7 +58,7 @@ public class EmployeePerformanceFormService {
         String url = this.dbUrl + "/retrievePerformanceFormList";
         String url1 = String.join((CharSequence)"/", url, String.valueOf(empId));
         String urlVariabe = UriComponentsBuilder.fromHttpUrl((String)url1).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(urlVariabe, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

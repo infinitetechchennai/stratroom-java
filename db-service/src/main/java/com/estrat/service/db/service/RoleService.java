@@ -84,10 +84,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,7 +96,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional(rollbackOn={HibernateException.class})
 public class RoleService {
-    private Logger logger = Logger.getLogger(RoleService.class);
+    private Logger logger = LoggerFactory.getLogger(RoleService.class);
     @Autowired
     private EmployeeService employeeService;
     @Autowired

@@ -48,13 +48,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SubKPIService {
-    private Logger logger = Logger.getLogger(SubKPIService.class);
+    private Logger logger = LoggerFactory.getLogger(SubKPIService.class);
     @Autowired
     private SubKPIRepository subKPIRepository;
     @Autowired

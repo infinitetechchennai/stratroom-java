@@ -21,7 +21,8 @@
  */
 package com.estrat.web.config;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.estrat.web.dto.TokenResponseDTO;
 import com.estrat.web.dto.UserDTO;
@@ -32,8 +33,8 @@ import com.estrat.web.util.UserThreadLocal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +47,7 @@ import org.springframework.web.servlet.HandlerMapping;
 @Order(value=0x7FFFFFFF)
 public class RequestValidationIntereptor
 implements HandlerInterceptor {
-    private static final Logger log = Logger.getLogger(RequestValidationIntereptor.class);
+    private static final Logger log = LoggerFactory.getLogger(RequestValidationIntereptor.class);
     @Autowired
     private EmployeeService employeeService;
     @Autowired

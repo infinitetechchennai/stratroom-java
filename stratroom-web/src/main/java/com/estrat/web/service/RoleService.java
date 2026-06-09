@@ -49,7 +49,7 @@ import com.estrat.web.util.UserThreadLocal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -98,7 +98,7 @@ public class RoleService {
     public List<RoleDTO> getRoleList(String type, String empId) {
         String url = this.roleListUrl + "/" + empId;
         String roleUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("type", new Object[]{type}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(roleUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -128,12 +128,12 @@ public class RoleService {
     }
 
     public List<PrivilegeDTO> getPrivilegeList() {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(this.privListUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<ModuleDTO> getModuleList() {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        ParameterizedTypeReference<List<ModuleDTO>> parameterizedTypeReference = new ParameterizedTypeReference<List<ModuleDTO>>() {};
         List moduleList = (List)this.restTemplate.getForObject(this.moduleListUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return RoleUtil.filterModules((List)moduleList, (List)UserThreadLocal.get().getLicenseResponseDTO().getModuleList());
     }
@@ -142,7 +142,7 @@ public class RoleService {
         HashMap urlVaiables = new HashMap();
         urlVaiables.put("empId", empId);
         String roleUrl = UriComponentsBuilder.fromHttpUrl((String)this.userRoleListUrl).buildAndExpand(urlVaiables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(roleUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -150,14 +150,14 @@ public class RoleService {
         HashMap urlVaiables = new HashMap();
         urlVaiables.put("empId", empId);
         String roleUrl = UriComponentsBuilder.fromHttpUrl((String)this.permissionUrl).buildAndExpand(urlVaiables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         Map permissionMap = (Map)this.restTemplate.getForObject(roleUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return RoleUtil.filterPermissionModules((Map)permissionMap, (List)UserThreadLocal.get().getLicenseResponseDTO().getModuleList());
     }
 
     public List<Employee> getUserModuleRoleList(String moduleName) {
         String roleUrl = UriComponentsBuilder.fromHttpUrl((String)this.userModuleRoleListUrl).queryParam("moduleName", new Object[]{moduleName}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(roleUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -180,7 +180,7 @@ public class RoleService {
     public Map getCustomRoles() {
         String url = this.userUrl + "/rolesList";
         String roleUrl = UriComponentsBuilder.fromHttpUrl((String)url).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Map)this.restTemplate.getForObject(roleUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -198,7 +198,7 @@ public class RoleService {
         String url = this.userUrl + "/checkPermission";
         FindDTO findDTO = new FindDTO();
         findDTO.setEmpId(Long.valueOf(this.sessionUtil.getSessionId(request)));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.putForObject(url, findDTO, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -206,7 +206,7 @@ public class RoleService {
         HashMap urlVaiables = new HashMap();
         urlVaiables.put("empId", empId);
         String roleUrl = UriComponentsBuilder.fromHttpUrl((String)this.permissionUrl).buildAndExpand(urlVaiables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         Map permissionMap = (Map)this.restTemplate.getForObject(roleUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return permissionMap;
     }
@@ -215,14 +215,14 @@ public class RoleService {
         String url = this.userUrl + "/checkPermission";
         FindDTO findDTO = new FindDTO();
         findDTO.setEmpId(empId);
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.putForObject(url, findDTO, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Employee> moduleAccessUserList(String moduleName, String tagName) {
         String url = this.userUrl + "/user/moduleAccessUserList";
         String roleUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("moduleName", new Object[]{moduleName}).queryParam("tagName", new Object[]{tagName}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(roleUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

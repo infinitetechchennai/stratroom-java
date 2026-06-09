@@ -24,9 +24,10 @@ import com.estrat.service.db.exception.ExceptionLogHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.apache.log4j.Logger;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ModulePrivilegeMappingDAO {
-    private Logger log = Logger.getLogger(BatchDAO.class);
+    private Logger log = LoggerFactory.getLogger(BatchDAO.class);
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @PersistenceContext

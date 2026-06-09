@@ -51,7 +51,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -144,7 +144,7 @@ public class ChartController {
                 Files.walk(directoryPath, new FileVisitOption[0]).filter(path -> !Files.isDirectory(path, new LinkOption[0])).forEach(path -> {
                     ZipArchiveEntry zipEntry = new ZipArchiveEntry(directoryPath.relativize((Path)path).toFile(), path.getFileName().toString());
                     try {
-                        zipOutputStream.putArchiveEntry((ArchiveEntry)zipEntry);
+                        zipOutputStream.putArchiveEntry(zipEntry);
                         Files.copy(path, (OutputStream)zipOutputStream);
                         zipOutputStream.closeArchiveEntry();
                     }

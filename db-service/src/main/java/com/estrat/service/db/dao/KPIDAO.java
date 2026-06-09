@@ -79,10 +79,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
@@ -103,7 +103,7 @@ import org.springframework.jdbc.core.RowMapper;
  */
 @Configuration
 public class KPIDAO {
-    private org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(KPIDAO.class);
+    private org.apache.log4j.Logger log = org.apache.log4j.LoggerFactory.getLogger(KPIDAO.class);
     private Logger logger = LoggerFactory.getLogger(KPIDAO.class);
     @Autowired
     private JdbcTemplate jdbcTemplate;

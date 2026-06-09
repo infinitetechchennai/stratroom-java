@@ -79,14 +79,14 @@ public class SubKPIService {
 
     public ResponseEntity<List<SubKPIDTO>> getSubKpiListWithObjId(long objId) {
         String url = this.scoreCardUrl + "/v2/subkpiList/" + objId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List kpi1 = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(kpi1, HttpStatus.OK);
     }
 
     public PerformanceContractDTO saveOrgSubKpiDetails(PerformanceContractDTO performanceContractDTO) {
         String url = this.scoreCardUrl + "/web/saveSubkpiEntry";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference_elem = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference_elem = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         if (performanceContractDTO.getEmployeeDocuments() != null) {
             System.out.println("Enter in doucemnts");
             EmployeeDocumentsDTO documents = performanceContractDTO.getEmployeeDocuments();
@@ -109,7 +109,7 @@ public class SubKPIService {
     public List<PerformanceContractDTO> findAllByEmpId(String empId) {
         String url1 = this.scoreCardUrl + "/getPerformanceEntry";
         String url = String.join((CharSequence)"/", url1, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

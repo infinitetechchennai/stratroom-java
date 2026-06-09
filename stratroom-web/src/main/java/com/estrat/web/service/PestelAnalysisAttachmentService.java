@@ -51,7 +51,7 @@ public class PestelAnalysisAttachmentService {
 
     public List<PestelAnalysisAttachmentDTO> findAll(Long pestelId) {
         String url = this.scoreCardUrl + "/pestelAttachList/" + pestelId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List pestelAnalysisAttachmentDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return pestelAnalysisAttachmentDTOList;
     }

@@ -68,7 +68,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -100,7 +101,7 @@ public class RsUtil {
     private RiskActivitiesService riskActivitiesService;
     @Autowired
     private RiskUtil riskUtil;
-    private Logger logger = Logger.getLogger(RiskReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(RiskReaderUtil.class);
 
     private static boolean isRowEmpty(XSSFRow row) {
         boolean isEmpty = true;

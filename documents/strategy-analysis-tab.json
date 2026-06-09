@@ -1,0 +1,107 @@
+[{
+	"pageTitle": "Strategy Analysis",
+	"userName": "Sajin",
+	"period": "3/01/2025 - 3/22/2025",
+	"tab": [{
+			"title": "SWOT",			
+			"tabledata": [
+				{
+				"id": "SA-SWOT-01",
+				"name": "Strengths",
+				"analysisType":"Strengths",			
+				"actions": "",
+				"children": [
+                    {					
+					"id": "SA-SWOT-01-1",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"department ": "Department 1",					
+					"businessImpact": "Lorem ipsum dolor",
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"actions": ""					
+				   },
+				   {					
+					"id": "SA-SWOT-01-2",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"department ": "Department 1",					
+					"businessImpact": "Lorem ipsum dolor",
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "warning",
+					"actions": ""					
+				   }
+			
+			]
+			},{
+				"id": "SA-SWOT-02",
+				"name": "Weaknesses",
+				"analysisType":"Weaknesses",			
+				"actions": "",
+				"children": [
+                    {					
+					"id": "SA-SWOT-02-1",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"department ": "Department 1",					
+					"businessImpact": "Lorem ipsum dolor",
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"actions": ""					
+				   },
+				   {					
+					"id": "SA-SWOT-02-2",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"department ": "Department 1",					
+					"businessImpact": "Lorem ipsum dolor",
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"actions": ""					
+				   }
+			
+			]
+			}
+		
+		]
+		},
+		{
+			"title": "PESTEL",			
+			"tabledata": [{
+				"id": "SA-PESTEL-01",
+				"name": "Strengths fdf",
+				"analysisType":"Strengths",			
+				"actions": "",
+				"children": [
+                    {					
+					"id": "SA-PESTEL-01-1",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"department ": "Department 1",					
+					"businessImpact": "Lorem ipsum dolor",
+					"nextDue": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"actions": ""					
+				   },
+				   {					
+					"id": "SA-PESTEL-01-2",
+                    "image":"usrbig6.jpg",
+					"descripion": "Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+					"department ": "Department 1",					
+					"businessImpact": "Lorem ipsum dolor",
+					"Next Due": "Oct 12, 2020",
+					"responsible": ["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+					"status": "good",
+					"actions": ""					
+				   }
+			
+			]
+			}]
+		}
+	]
+}]

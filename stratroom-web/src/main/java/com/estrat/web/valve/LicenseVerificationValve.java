@@ -23,17 +23,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.valves.ValveBase;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 public class LicenseVerificationValve
 extends ValveBase {
-    private static final Logger LOGGER = Logger.getLogger(LicenseVerificationValve.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LicenseVerificationValve.class);
     private LicenseService licenseService;
     private final List<AntPathRequestMatcher> ignoringList = new ArrayList();
     private BiPredicate<List<AntPathRequestMatcher>, HttpServletRequest> ignoreRequest = (ignoreList, request) -> ignoreList.stream().anyMatch(matcher -> matcher.matches(request));

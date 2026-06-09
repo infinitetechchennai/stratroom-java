@@ -94,7 +94,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -145,7 +146,7 @@ public class BudgetReaderUtil {
     private BudgetDetailService budgetDetailService;
     @Autowired
     private SubActivitiesService subActivitiesService;
-    private Logger logger = Logger.getLogger(BudgetReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(BudgetReaderUtil.class);
 
     private static boolean isRowEmpty(XSSFRow row) {
         boolean isEmpty = true;

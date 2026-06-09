@@ -87,9 +87,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -130,7 +131,7 @@ public class ImpactSurveyReaderUtil {
     protected DepartmentDetailsService departmentDetailsService;
     @Autowired
     protected AuditTrailService auditTrailService;
-    private Logger logger = Logger.getLogger(ImpactSurveyReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(ImpactSurveyReaderUtil.class);
 
     public Map importImpact(InputStream inputStream, String type) throws IOException {
         Map resultMap = new HashMap();

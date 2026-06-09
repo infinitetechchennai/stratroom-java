@@ -1,0 +1,599 @@
+[
+  {
+    "pageTitle": "Initiatives Projects",
+    "userName": "Sajin",
+    "period": "3/01/2026 - 3/22/2026",
+    "id": "890",
+    "title": "Expand trading & storage operations",
+    "owner": {
+      "name": "George",
+      "image": "assets/images/user/user7.jpg"
+    },
+    "department": "Chairman Board of Directors",
+    "progress": {
+      "value": 9,
+      "colorClass": "bg-danger",
+      "wrapClass": "red"
+    },
+    "startDate": "18 Mar 2025",
+    "endDate": "31 Mar 2025",
+    "remainingDays": 0,
+    "status": "green",
+    "perspective": "OO-1 Enhance operational Efficiency",
+    "objective": "Uphold good governance_Board",
+    "impactKPIs": [
+      "Expand into new markets",
+      "Expand into new markets",
+      "Expand into new markets"
+    ],
+    "financials": {
+      "assetBudget": 0,
+      "assetRealization": 0,
+      "liabilitiesBudget": 0,
+      "liabilitiesRealization": 0,
+      "totalBudget": 0,
+      "totalBudgetRealization": 0,
+      "assetRealizationPercent": 0,
+      "liabilitiesRealizationPercent": 0,
+      "totalBudgetRealizationPercent": 0
+    },
+    "subInitiatives": [
+      {
+        "id": "sub1",
+        "title": "Upgrade Lighting Systems to LED",
+        "startDate": "Oct 09, 2019",
+        "endDate": "Oct 11, 2019",
+        "progress": {
+          "value": 90
+        },
+        "owners": [
+          {
+            "name": "Kim Karlos",
+            "image": "assets/images/user/user9.jpg"
+          },
+          {
+            "name": "John Doe",
+            "image": "assets/images/user/user9.jpg"
+          }
+        ],
+        "remainingOwners": 3,
+        "activities": [
+          {
+            "id": "act1",
+            "title": "Conduct a comprehensive audit of all existing lighting systems across facilities to identify areas where upgrades are needed",
+            "startDate": "Sep 23, 2024",
+            "endDate": "Sep 25, 2024",
+            "progress": {
+              "value": 90
+            },
+            "owners": [
+              {
+                "name": "Kim Karlos",
+                "image": "assets/images/user/user9.jpg"
+              },
+              {
+                "name": "John Doe",
+                "image": "assets/images/user/user9.jpg"
+              }
+            ],
+            "remainingOwners": 3,
+            "tasks": [
+              {
+                "id": "task1",
+                "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                "startDate": "Sep 23, 2024",
+                "endDate": "Sep 25, 2024",
+                "progress": {
+                  "value": 20
+                },
+                "owners": [
+                  {
+                    "name": "Kim Karlos",
+                    "image": "assets/images/user/user9.jpg"
+                  },
+                  {
+                    "name": "John Doe",
+                    "image": "assets/images/user/user9.jpg"
+                  }
+                ],
+                "remainingOwners": 3,
+                "status": "Not Started"
+              },
+              {
+                "id": "task2",
+                "title": "Second sample task for demonstration purposes.",
+                "startDate": "Sep 26, 2024",
+                "endDate": "Sep 30, 2024",
+                "progress": {
+                  "value": 50
+                },
+                "owners": [
+                  {
+                    "name": "Kim Karlos",
+                    "image": "assets/images/user/user9.jpg"
+                  }
+                ],
+                "remainingOwners": 0,
+                "status": "In Progress"
+              },
+              {
+                "id": "task3",
+                "title": "Third sample task showing completed status.",
+                "startDate": "Oct 01, 2024",
+                "endDate": "Oct 05, 2024",
+                "progress": {
+                  "value": 100
+                },
+                "owners": [
+                  {
+                    "name": "John Doe",
+                    "image": "assets/images/user/user9.jpg"
+                  }
+                ],
+                "remainingOwners": 0,
+                "status": "Completed"
+              },
+              {
+                "id": "task4",
+                "title": "Fourth sample task showing delayed status.",
+                "startDate": "Oct 06, 2024",
+                "endDate": "Oct 10, 2024",
+                "progress": {
+                  "value": 20
+                },
+                "owners": [],
+                "remainingOwners": 0,
+                "status": "Delayed"
+              },
+              {
+                "id": "task5",
+                "title": "Fifth sample task showing on hold status.",
+                "startDate": "Oct 11, 2024",
+                "endDate": "Oct 15, 2024",
+                "progress": {
+                  "value": 10
+                },
+                "owners": [],
+                "remainingOwners": 0,
+                "status": "On Hold"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "sub2",
+        "title": "Enhance Energy Efficiency",
+        "startDate": "Oct 15, 2025",
+        "endDate": "Dec 31, 2025",
+        "progress": {
+          "value": 45
+        },
+        "owners": [
+          {
+            "name": "Sarah Smith",
+            "image": "assets/images/user/user8.jpg"
+          }
+        ],
+        "remainingOwners": 0,
+        "activities": [
+          {
+            "id": "act2",
+            "title": "Install Solar Panels",
+            "startDate": "Nov 01, 2025",
+            "endDate": "Dec 15, 2025",
+            "progress": {
+              "value": 45
+            },
+            "owners": [
+              {
+                "name": "Sarah Smith",
+                "image": "assets/images/user/user8.jpg"
+              }
+            ],
+            "remainingOwners": 0,
+            "tasks": [
+              {
+                "id": "task2",
+                "title": "Vendor Selection",
+                "startDate": "Nov 01, 2025",
+                "endDate": "Nov 15, 2025",
+                "progress": {
+                  "value": 100
+                },
+                "owners": [
+                  {
+                    "name": "Sarah Smith",
+                    "image": "assets/images/user/user8.jpg"
+                  }
+                ],
+                "remainingOwners": 0
+              },
+              {
+                "id": "task3",
+                "title": "Site Survey",
+                "startDate": "Nov 16, 2025",
+                "endDate": "Nov 30, 2025",
+                "progress": {
+                  "value": 20
+                },
+                "owners": [
+                  {
+                    "name": "Sarah Smith",
+                    "image": "assets/images/user/user8.jpg"
+                  }
+                ],
+                "remainingOwners": 0
+              }
+            ]
+          },
+          {
+            "id": "act3",
+            "title": "Replace HVAC Systems",
+            "startDate": "Dec 01, 2025",
+            "endDate": "Dec 31, 2025",
+            "progress": {
+              "value": 10
+            },
+            "owners": [
+              {
+                "name": "Sarah Smith",
+                "image": "assets/images/user/user8.jpg"
+              }
+            ],
+            "remainingOwners": 0,
+            "tasks": [
+              {
+                "id": "task4",
+                "title": "Audit Current Systems",
+                "startDate": "Dec 01, 2025",
+                "endDate": "Dec 05, 2025",
+                "progress": {
+                  "value": 0
+                },
+                "owners": [
+                  {
+                    "name": "Sarah Smith",
+                    "image": "assets/images/user/user8.jpg"
+                  }
+                ],
+                "remainingOwners": 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "sub3",
+        "title": "Waste Management Program",
+        "startDate": "Jan 01, 2026",
+        "endDate": "Mar 31, 2026",
+        "progress": {
+          "value": 80
+        },
+        "owners": [
+          {
+            "name": "Mike Johnson",
+            "image": "assets/images/user/user6.jpg"
+          },
+          {
+            "name": "Lisa Brown",
+            "image": "assets/images/user/user5.jpg"
+          }
+        ],
+        "remainingOwners": 1,
+        "activities": [
+          {
+            "id": "act4",
+            "title": "Recycling Training for Staff",
+            "startDate": "Jan 10, 2026",
+            "endDate": "Jan 20, 2026",
+            "progress": {
+              "value": 80
+            },
+            "owners": [
+              {
+                "name": "Mike Johnson",
+                "image": "assets/images/user/user6.jpg"
+              }
+            ],
+            "remainingOwners": 0,
+            "tasks": [
+              {
+                "id": "task5",
+                "title": "Create Training Material",
+                "startDate": "Jan 10, 2026",
+                "endDate": "Jan 15, 2026",
+                "progress": {
+                  "value": 80
+                },
+                "owners": [
+                  {
+                    "name": "Mike Johnson",
+                    "image": "assets/images/user/user6.jpg"
+                  }
+                ],
+                "remainingOwners": 0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "ganttChartTitle": "Chart",
+    "ganttChart": [
+      {
+        "start": "2024-09-03",
+        "end": "2024-09-20",
+        "name": "Implement Energy Efficiency Measures",
+        "id": "Task 0",
+        "owner": "assets/images/user/usrbig10.jpg",
+        "progress": 20,
+        "budget": "$ 1000000",
+        "utillized": "$ 600000",
+        "balance": "$ 400000",
+        "custom_class": "initiatives-gantt-color"
+      },
+      {
+        "start": "2024-09-14",
+        "end": "2024-09-17",
+        "name": "Upgrade Lighting Systems to LED",
+        "id": "Task 1",
+        "owner": "assets/images/user/usrbig9.jpg",
+        "progress": 90,
+        "budget": "$ 5,00,000",
+        "utillized": "$ 2,00,000",
+        "balance": "$ 3,00,000",
+        "dependencies": "Task 0",
+        "custom_class": "subinitiatives-gantt-color"
+      },
+      {
+        "start": "2024-09-15",
+        "end": "2024-09-25",
+        "name": "Install Smart HVAC Systems",
+        "id": "Task 2",
+        "owner": "assets/images/user/usrbig8.jpg",
+        "progress": 100,
+        "budget": "$ 5,00,000",
+        "utillized": "$ 2,00,000",
+        "balance": "$ 3,00,000",
+        "dependencies": "Task 0",
+        "custom_class": "subinitiatives-gantt-color"
+      },
+      {
+        "start": "2024-09-23",
+        "end": "2024-09-25",
+        "name": "Conduct a comprehensive audit of all existing lighting systems across facilities to identify areas where upgrades are needed",
+        "id": "Task 5",
+        "owner": "assets/images/user/usrbig5.jpg",
+        "progress": 90,
+        "budget": "$ 5,00,000",
+        "utillized": "$ 2,00,000",
+        "balance": "$ 3,00,000",
+        "dependencies": "Task 2",
+        "custom_class": "activities-gantt-color"
+      },
+      {
+        "start": "2024-09-23",
+        "end": "2024-09-25",
+        "name": "test",
+        "id": "Task 6",
+        "owner": "assets/images/user/usrbig5.jpg",
+        "progress": 90,
+        "budget": "$ 5,00,000",
+        "utillized": "$ 2,00,000",
+        "balance": "$ 3,00,000",
+        "dependencies": "Task 5",
+        "custom_class": "subactivities-gantt-color"
+      },
+      {
+        "start": "2024-09-25",
+        "end": "2024-09-25",
+        "name": "Complete the lighting audit across all major venues",
+        "id": "Task 3",
+        "owner": "assets/images/user/usrbig7.jpg",
+        "progress": 55,
+        "budget": "$ 5,00,000",
+        "utillized": "$ 2,00,000",
+        "balance": "$ 3,00,000",
+        "dependencies": "Task 2",
+        "custom_class": "activities-gantt-color"
+      },
+      {
+        "start": "2024-09-25",
+        "end": "2024-09-25",
+        "name": "Finalize selection of LED suppliers and negotiate contracts",
+        "id": "Task 4",
+        "owner": "assets/images/user/usrbig6.jpg",
+        "progress": 75,
+        "budget": "$ 5,00,000",
+        "utillized": "$ 2,00,000",
+        "balance": "$ 3,00,000",
+        "dependencies": "Task 2",
+        "custom_class": "activities-gantt-color"
+      }
+    ],
+    "tasksTitle": "Task",
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Painting",
+        "startDate": "Sep 23, 2024",
+        "endDate": "Sep 25, 2024",
+        "progress": {
+          "value": 0
+        },
+        "status": "Not Started",
+        "owners": []
+      },
+      {
+        "id": "task2",
+        "title": "Painting",
+        "startDate": "Sep 23, 2024",
+        "endDate": "Sep 25, 2024",
+        "progress": {
+          "value": 30
+        },
+        "status": "In Progress",
+        "owners": []
+      },
+      {
+        "id": "task3",
+        "title": "Painting",
+        "startDate": "Sep 23, 2024",
+        "endDate": "Sep 25, 2024",
+        "progress": {
+          "value": 100
+        },
+        "status": "Completed",
+        "owners": []
+      },
+      {
+        "id": "task4",
+        "title": "Painting",
+        "startDate": "Sep 23, 2024",
+        "endDate": "Sep 25, 2024",
+        "progress": {
+          "value": 50
+        },
+        "status": "Delayed",
+        "owners": []
+      },
+      {
+        "id": "task5",
+        "title": "Painting",
+        "startDate": "Sep 23, 2024",
+        "endDate": "Sep 25, 2024",
+        "progress": {
+          "value": 40
+        },
+        "status": "On Hold",
+        "owners": []
+      }
+    ],
+    "milestonesTitle": "Milestones",
+    "milestones": [
+      {
+        "id": "m1",
+        "title": "Complete the lighting audit across all major venues",
+        "date": "Sep 25, 2024",
+        "status": "Pending",
+        "badgeClass": "text-bg-danger",
+        "progress": {
+          "value": 30
+        }
+      },
+      {
+        "id": "m2",
+        "title": "Finalize selection of LED suppliers and negotiate contracts",
+        "date": "Sep 25, 2024",
+        "status": "Pending",
+        "badgeClass": "text-bg-warning",
+        "progress": {
+          "value": 60
+        }
+      },
+      {
+        "id": "m3",
+        "title": "Finalize selection of LED suppliers and negotiate contracts",
+        "date": "Sep 25, 2024",
+        "status": "Pending",
+        "badgeClass": "text-bg-success",
+        "progress": {
+          "value": 40
+        }
+      }
+    ],
+    "filesTitle": "Attachments",
+    "files": [
+      {
+        "id": "file1",
+        "title": "Report 1",
+        "fileName": "report (47).pdf",
+        "size": "2.79 MB",
+        "date": "27 Mar 2025"
+      },
+      {
+        "id": "file2",
+        "title": "Report 2",
+        "fileName": "report (47).pdf",
+        "size": "2.79 MB",
+        "date": "27 Mar 2025"
+      },
+      {
+        "id": "file3",
+        "title": "Report 3",
+        "fileName": "report (47).pdf",
+        "size": "2.79 MB",
+        "date": "27 Mar 2025"
+      }
+    ],
+    "commentsTitle": "Comments",
+    "comments": [
+      {
+        "id": "c1",
+        "user": {
+          "name": "karthik Ramani, CEO",
+          "avatar": "assets/images/user/usrbig6.jpg"
+        },
+        "time": "11:44 PM",
+        "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.",
+        "replies": [
+          {
+            "id": "r1",
+            "user": {
+              "name": "Saj Abraham",
+              "avatar": "assets/images/user/usrbig6.jpg"
+            },
+            "time": "11:44 PM",
+            "text": "Contrary to popular belief, Lorem Ipsum is not simply random text.",
+            "replies": [
+              {
+                "id": "rr1",
+                "user": {
+                  "name": "Saj Abraham",
+                  "avatar": "assets/images/user/usrbig6.jpg"
+                },
+                "time": "11:45 PM",
+                "text": "The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.",
+                "replies": [
+                  {
+                    "id": "rrr1",
+                    "user": {
+                      "name": "Saj Abraham",
+                      "avatar": "assets/images/user/usrbig6.jpg"
+                    },
+                    "time": "11:45 PM",
+                    "text": "The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.",
+                    "replies": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "c2",
+        "user": {
+          "name": "karthik Ramani, CEO",
+          "avatar": "assets/images/user/usrbig6.jpg"
+        },
+        "time": "11:44 PM",
+        "text": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "replies": [
+          {
+            "id": "r2",
+            "user": {
+              "name": "Saj Abraham",
+              "avatar": "assets/images/user/usrbig6.jpg"
+            },
+            "time": "11:45 PM",
+            "text": "Contrary to popular belief, Lorem Ipsum is not simply random text.",
+            "replies": []
+          }
+        ]
+      }
+    ]
+  }
+]

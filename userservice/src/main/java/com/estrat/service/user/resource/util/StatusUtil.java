@@ -20,12 +20,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StatusUtil {
-    private Logger logger = Logger.getLogger(StatusUtil.class);
+    private Logger logger = LoggerFactory.getLogger(StatusUtil.class);
 
     public Map<String, Integer> updateStatus(Map<String, Object> stringObjectsMap, Map<String, Integer> countMap) {
         String dateRange;
@@ -79,7 +80,7 @@ public class StatusUtil {
                     secondDate = pattern.parse(endDate);
                 }
                 catch (ParseException pe) {
-                    this.logger.error((Object)("parser exception for unknown pattern " + pattern));
+                    this.logger.error("parser exception for unknown pattern " + pattern);
                 }
             }
             Long difference = ChronoUnit.DAYS.between(firstDate.toInstant(), secondDate.toInstant());
@@ -102,7 +103,7 @@ public class StatusUtil {
                     firstDate = pattern.parse(startDate);
                 }
                 catch (ParseException pe) {
-                    this.logger.error((Object)("parser exception for unknown pattern " + pattern));
+                    this.logger.error("parser exception for unknown pattern " + pattern);
                 }
             }
             Date curDate = new Date();
@@ -166,7 +167,7 @@ public class StatusUtil {
                 dueDateCrossed = true;
             }
             catch (Exception pe) {
-                this.logger.error((Object)("parser exception for unknown pattern " + pattern));
+                this.logger.error("parser exception for unknown pattern " + pattern);
             }
         }
         if (dueDateCrossed) {

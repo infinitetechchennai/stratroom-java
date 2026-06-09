@@ -15,9 +15,10 @@
 package com.estrat.service.db.dao;
 
 import com.estrat.service.db.cache.DBCache;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.apache.log4j.Logger;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ScoreCardDAO {
-    private Logger log = Logger.getLogger(ScoreCardDAO.class);
+    private Logger log = LoggerFactory.getLogger(ScoreCardDAO.class);
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired

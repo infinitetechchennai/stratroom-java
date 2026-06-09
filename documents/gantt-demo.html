@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Custom Gantt Chart</title>
+
+  
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    #control-view {
+      margin-bottom: 20px;
+    }
+
+    #control-view button {
+      padding: 10px 15px;
+      margin-right: 10px;
+      border: none;
+      background-color: #ddd;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    #control-view button.active {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .high-progress .bar { fill: #f44336 !important; } /* red */
+    .mid-progress .bar { fill: #ff9800 !important; } /* orange */
+    .low-progress .bar { fill: #009688 !important; } /* teal */
+    .default-progress .bar { fill: #3f51b5 !important; } /* blue */
+  </style>
+</head>
+<body data-bs-theme="light">
+
+  <h2>Custom Gantt Chart with Month-Year Format</h2>
+
+  <div id="control-view">
+    <button data-value="Month" class="active">Month</button>
+    <button data-value="Week">Week</button>
+    <button data-value="Day">Day</button>
+  </div>
+
+  <div id="gantt"></div>
+
+  <!-- Frappe Gantt CSS -->
+<link rel="stylesheet" href="https://unpkg.com/frappe-gantt/dist/frappe-gantt.css" />
+
+<!-- Frappe Gantt JS (correct version that exposes Gantt) -->
+<script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.5.0/dist/frappe-gantt.min.js"></script>
+
+
+  <script>
+    const tasks = [
+      {
+        start: "2024-09-03",
+        end: "2024-09-20",
+        name: "Implement Energy Efficiency Measures",
+        id: "Task 0",
+        progress: 9,
+      },
+      {
+        start: "2024-09-14",
+        end: "2024-09-17",
+        name: "Upgrade Lighting Systems to LED",
+        id: "Task 1",
+        progress: 100,
+        dependencies: "Task 0",
+      },
+      {
+        start: "2024-09-15",
+        end: "2024-09-25",
+        name: "Install Smart HVAC Systems",
+        id: "Task 2",
+        progress: 100,
+        dependencies: "Task 0",
+      },
+      {
+        start: "2024-09-23",
+        end: "2024-09-25",
+        name: "Audit existing lighting systems",
+        id: "Task 5",
+        progress: 90,
+        dependencies: "Task 2",
+      },
+      {
+        start: "2024-09-25",
+        end: "2024-09-25",
+        name: "Complete lighting audit",
+        id: "Task 3",
+        progress: 55,
+        dependencies: "Task 2",
+      },
+      {
+        start: "2024-09-25",
+        end: "2024-09-25",
+        name: "Finalize LED suppliers",
+        id: "Task 4",
+        progress: 75,
+        dependencies: "Task 2",
+      },
+    ];
+
+    let gantt;
+
+    function renderGantt(containerId, viewMode = "Month") {
+      const container = document.querySelector(containerId);
+      container.innerHTML = "";
+
+      // Set progress-based class
+      tasks.forEach(task => {
+        if (task.progress === 100) task.custom_class = "high-progress";
+        else if (task.progress >= 80) task.custom_class = "mid-progress";
+        else if (task.progress >= 50) task.custom_class = "low-progress";
+        else task.custom_class = "default-progress";
+      });
+
+      gantt = new Gantt(containerId, tasks, {
+        header_height: 50,
+        column_width: 30,
+        step: 24,
+        view_modes: ["Quarter Day", "Half Day", "Day", "Week", "Month"],
+        bar_height: 20,
+        bar_corner_radius: 10,
+        arrow_curve: 5,
+        padding: 18,
+        view_mode: viewMode,
+        date_format: "YYYY-MM-DD",
+        popup_trigger: "false",
+        move_dependencies: false,
+      });
+
+      setTimeout(() => {
+        formatGanttMonthHeaders();
+      }, 100);
+    }
+
+    function formatGanttMonthHeaders() {
+      const lowerTexts = document.querySelectorAll("g.date .lower-text");
+      const upperTexts = document.querySelectorAll("g.date .upper-text");
+
+      const monthsMap = {
+        January: "Jan", February: "Feb", March: "Mar", April: "Apr",
+        May: "May", June: "Jun", July: "Jul", August: "Aug",
+        September: "Sep", October: "Oct", November: "Nov", December: "Dec"
+      };
+
+      lowerTexts.forEach(monthEl => {
+        const monthText = monthEl.textContent.trim();
+        const monthX = parseFloat(monthEl.getAttribute("x"));
+
+        let yearText = "????";
+        let closestYearX = -Infinity;
+
+        upperTexts.forEach(yearEl => {
+          const yearX = parseFloat(yearEl.getAttribute("x"));
+          if (yearX <= monthX && yearX > closestYearX) {
+            closestYearX = yearX;
+            yearText = yearEl.textContent.trim();
+          }
+        });
+
+        const shortMonth = monthsMap[monthText] || monthText;
+        const shortYear = yearText.slice(2);
+        monthEl.textContent = `${shortMonth}-${shortYear}`;
+      });
+
+      upperTexts.forEach(el => el.remove());
+    }
+
+    renderGantt("#gantt");
+
+    document.querySelectorAll("#control-view button").forEach((button) => {
+      button.addEventListener("click", function () {
+        const mode = this.dataset.value;
+        if (gantt) {
+          gantt.change_view_mode(mode);
+          setTimeout(() => {
+            formatGanttMonthHeaders();
+          }, 100);
+        }
+
+        document.querySelectorAll("#control-view button").forEach((btn) =>
+          btn.classList.remove("active")
+        );
+        this.classList.add("active");
+      });
+    });
+  </script>
+
+</body>
+</html>

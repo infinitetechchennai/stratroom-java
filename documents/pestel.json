@@ -1,0 +1,173 @@
+[{
+	"pageTitle": "PESTEL Analysis",
+	"userName": "Sajin",
+	"period": "3/01/2025 - 3/22/2025",
+	"tab": [{
+	  "title": "PESTEL",
+	  "tabledata": [
+		{
+		  "id": "SA-PESTEL-01",
+		  "name": "Political",
+		  "analysisType": "Political",
+		  "icon": "landmark",
+		  "actions": "",
+		  "children": [
+			{
+			  "id": "SA-PESTEL-01-1",
+			  "image": "usrbig1.jpg",
+			  "descripion": "Upcoming government regulation changes could impact operations.",
+			  "type": "Internal",
+			  "department": ["Compliance", "Legal"],
+			  "businessImpact": ["Regulatory delays", "Increased compliance cost"],
+			  "nextDue": "Apr 20, 2025",
+			  "responsible": ["usrbig1.jpg", "usrbig6.jpg"],
+			  "status": "warning",
+			  "action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+			  "actions": ""
+			}
+		  ]
+		},
+		{
+		  "id": "SA-PESTEL-02",
+		  "name": "Economical",
+		  "analysisType": "Economical",
+		  "icon": "chart-line",
+		  "actions": "",
+		  "children": [
+			{
+			  "id": "SA-PESTEL-02-1",
+			  "image": "usrbig8.jpg",
+			  "descripion": "Fluctuating exchange rates are affecting profit margins.",
+			  "type": "External",
+			  "department": ["Finance"],
+			  "businessImpact": ["Reduced revenue", "Budget reforecasting"],
+			  "nextDue": "May 5, 2025",
+			  "responsible": ["usrbig8.jpg"],
+			  "status": "good",
+			  "action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+			  "actions": ""
+			}
+		  ]
+		},
+		{
+		  "id": "SA-PESTEL-03",
+		  "name": "Social",
+		  "analysisType": "Social",
+		  "icon": "users",
+		  "actions": "",
+		  "children": [
+			{
+			  "id": "SA-PESTEL-03-1",
+			  "image": "usrbig9.jpg",
+			  "descripion": "Changing consumer preferences towards eco-friendly products.",
+			  "type": "Internal",
+			  "department": ["Marketing", "Product Dev"],
+			  "businessImpact": ["Product redesign", "New market opportunities"],
+			  "nextDue": "Apr 25, 2025",
+			  "responsible": ["usrbig9.jpg"],
+			  "status": "good",
+			  "action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+			  "actions": ""
+			}
+		  ]
+		},
+		{
+		  "id": "SA-PESTEL-04",
+		  "name": "Technological",
+		  "analysisType": "Technological",
+		  "icon": "cpu",
+		  "actions": "",
+		  "children": [
+			{
+			  "id": "SA-PESTEL-04-1",
+			  "image": "usrbig10.jpg",
+			  "descripion": "New AI tools can optimize internal workflows.",
+			  "type": "Internal",
+			  "department": ["IT", "Operations"],
+			  "businessImpact": ["Increased efficiency", "Training requirements"],
+			  "nextDue": "May 15, 2025",
+			  "responsible": ["usrbig10.jpg"],
+			  "status": "good",
+			  "action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+			  "actions": ""
+			}
+		  ]
+		},
+		{
+		  "id": "SA-PESTEL-05",
+		  "name": "Environmental",
+		  "analysisType": "Environmental",
+		  "icon": "leaf",
+		  "actions": "",
+		  "children": [
+			{
+			  "id": "SA-PESTEL-05-1",
+			  "image": "usrbig1.jpg",
+			  "descripion": "New sustainability laws will affect manufacturing.",
+			  "type": "Internal",
+			  "department": ["Sustainability", "Operations"],
+			  "businessImpact": ["Increased cost", "Brand reputation boost"],
+			  "nextDue": "May 30, 2025",
+			  "responsible": ["usrbig1.jpg"],
+			  "status": "warning",
+			  "action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+			  "actions": ""
+			}
+		  ]
+		},
+		{
+		  "id": "SA-PESTEL-06",
+		  "name": "Legal",
+		  "analysisType": "Legal",
+		  "icon": "scale",
+		  "actions": "",
+		  "children": [
+			{
+			  "id": "SA-PESTEL-06-1",
+			  "image": "usrbig10.jpg",
+			  "descripion": "Pending litigation could affect quarterly reporting.",
+			  "type": "Internal",
+			  "department": ["Legal", "Finance"],
+			  "businessImpact": ["Financial risk", "Shareholder confidence impact"],
+			  "nextDue": "Jun 10, 2025",
+			  "responsible": ["usrbig10.jpg"],
+			  "status": "warning",
+			  "action":[{
+						"recommendation":"Lorem ipsum dolor sit amet, consut labore et dolore magna aliqua...",
+						"byDate":"Nov 8, 2025",
+						"responsible":["usrbig6.jpg","usrbig6.jpg","usrbig6.jpg"],
+						"status":"Pending"
+					}],
+			  "actions": ""
+			}
+		  ]
+		}
+	  ]
+	}]
+  }]
+  

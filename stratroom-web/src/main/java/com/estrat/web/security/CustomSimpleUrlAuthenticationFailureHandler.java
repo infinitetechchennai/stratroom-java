@@ -24,12 +24,13 @@ import com.estrat.web.util.HeaderThreadLocal;
 import com.estrat.web.util.TempUserThreadLocal;
 import com.estrat.web.util.UserThreadLocal;
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.util.UrlUtils;
@@ -39,7 +40,7 @@ import org.springframework.util.Assert;
 @Repository
 public class CustomSimpleUrlAuthenticationFailureHandler
 extends SimpleUrlAuthenticationFailureHandler {
-    private static final Logger logger = Logger.getLogger(CustomSimpleUrlAuthenticationFailureHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomSimpleUrlAuthenticationFailureHandler.class);
     private String defaultFailureUrl;
 
     public CustomSimpleUrlAuthenticationFailureHandler() {

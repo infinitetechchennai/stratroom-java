@@ -18,7 +18,8 @@ import com.estrat.service.db.dto.InitiativeTaskDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Service;
 public class InitiativeTaskService {
     @Autowired
     protected InitiativeTaskRepository initiativeTaskRepository;
-    private Logger log = Logger.getLogger(InitiativeTaskService.class);
+    private Logger log = LoggerFactory.getLogger(InitiativeTaskService.class);
 
     public Optional<InitiativeTask> findById(long id) {
         return this.initiativeTaskRepository.findById(id);

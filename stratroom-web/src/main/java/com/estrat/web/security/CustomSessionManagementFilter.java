@@ -27,14 +27,15 @@
 package com.estrat.web.security;
 
 import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
@@ -50,7 +51,7 @@ import org.springframework.security.web.session.SessionManagementFilter;
 
 public class CustomSessionManagementFilter
 extends SessionManagementFilter {
-    private static final Logger logger = Logger.getLogger(CustomSessionManagementFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomSessionManagementFilter.class);
     static final String FILTER_APPLIED = "__spring_security_session_mgmt_filter_applied";
     private String contextPath;
     private final SecurityContextRepository securityContextRepository;

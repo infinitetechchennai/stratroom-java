@@ -17,10 +17,10 @@ import com.estrat.service.db.bean.po.KpiTargetEmbeddedId;
 import com.estrat.service.db.dto.KPIDetailsDTO;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity

@@ -174,17 +174,17 @@ public class EmployeeService {
     }
 
     public List<EmployeeDTO> getReporteeList(long empID) {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(this.removeEmpUrl + "reporteeList/" + empID, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Employee> getAllReporteeList(long empID) {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(this.removeEmpUrl + "allReporteeList/" + empID, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Employee> getAllDeptReporteeList(long empID) {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(this.removeEmpUrl + "allDeptReporteeList/" + empID, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -209,7 +209,7 @@ public class EmployeeService {
     public Map<String, Object> checkEmail(String email, String empId) {
         String emaiCheckurl = this.removeEmpUrl + "/checkEmail";
         String url = UriComponentsBuilder.fromHttpUrl((String)emaiCheckurl).queryParam("email", new Object[]{email}).queryParam("empId", new Object[]{empId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         Map map = (Map)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return map;
     }
@@ -257,13 +257,13 @@ public class EmployeeService {
 
     public List<Employee> getOrgEmployeeList() {
         String url = UriComponentsBuilder.fromHttpUrl((String)this.orgEmpListUrl).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Map<String, Object>> getCurrencyList() {
         String url = UriComponentsBuilder.fromHttpUrl((String)this.currencyListUrl).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -275,7 +275,7 @@ public class EmployeeService {
     public List<String> getDepartmentList() {
         String deptUrl = this.orgChartUrl + "/departmentList";
         String url = UriComponentsBuilder.fromHttpUrl((String)deptUrl).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -306,27 +306,27 @@ public class EmployeeService {
     public List<Employee> getOrgEmployeeListByOrgId(Long orgId) {
         String orgEmpListUrl = this.removeEmpUrl + "org/employeeList";
         String url = UriComponentsBuilder.fromHttpUrl((String)orgEmpListUrl).queryParam("orgId", new Object[]{orgId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Integer> getYearsForDropdown() {
         String url = this.orgChartUrl + "/years";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<String> getOrgDepartmentList(String name) {
         String deptUrl = this.orgChartUrl + "/orgDepartmentList";
         String url = UriComponentsBuilder.fromHttpUrl((String)deptUrl).queryParam("name", new Object[]{name}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<EmployeeDepartmentMappingDTO> departmentByEmployeeList(String deptId) {
         String orgEmpListUrl = this.orgurl + "/departmentByEmployeeList/" + deptId;
         String url = UriComponentsBuilder.fromHttpUrl((String)orgEmpListUrl).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -349,7 +349,7 @@ public class EmployeeService {
     }
 
     public DepartmentResponseDetailsDTO departmentByEmployeeListChartDetails(String empId) throws RequestException {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (DepartmentResponseDetailsDTO)this.restTemplate.getForObject(this.orgurl + "/" + empId + "/departmentByEmployeeList", (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -395,35 +395,35 @@ public class EmployeeService {
 
     public Map<String, Object> findByDeptName(FindDTO findDTO) {
         String url = this.orgurl + "/checkDept";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Map)this.restTemplate.getForObject(url, findDTO, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public Map<String, Object> getDepartmentChart(String email) {
         String url = this.orgurl + "/checkDeptEmail";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("email", new Object[]{email}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Map)this.restTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Employee> getDesignationList(String name, String datePeriod) {
         String deptUrl = this.orgChartUrl + "/designationList";
         String url = UriComponentsBuilder.fromHttpUrl((String)deptUrl).queryParam("name", new Object[]{name}).queryParam("datePeriod", new Object[]{datePeriod}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<Employee> checkParentEmployee(Long orgId) {
         String deptUrl = this.orgChartUrl + "/checkParentEmployee/" + orgId;
         String url = UriComponentsBuilder.fromHttpUrl((String)deptUrl).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<DepartmentChartDTO> checkDepartmentChart(Long orgId) {
         String deptUrl = this.orgChartUrl + "/checkDepartmentChart/" + orgId;
         String url = UriComponentsBuilder.fromHttpUrl((String)deptUrl).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.restTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 

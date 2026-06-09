@@ -1,0 +1,67 @@
+{
+
+    "page": {
+        "orgstructure": {
+            "title": " Org Structure",
+            "create_orgstructure": "Create Org Structure",
+            "edit_orgstructure": "Edit Org Structure",
+            "delete_confirmation": "Do you really want to delete?",
+            "file_upload": "File Upload",
+            "orgstructure_list": "Org Structure List",
+            "orgstructure_list_items": {
+                "name": "Name",
+                "department": "Department"
+            },
+            "form_items": {
+                "attachment": "Attachment",
+                "department": "Department",
+                "department_id": "Department ID",
+                "owner": "Owner",
+                "email": "Email",
+                "members": "Members",
+                "scorecard": "Scorecard",
+                "initiative": "Initiative",
+                "kpi": "KPI",
+                "risk": "Risk",
+                 "upload": "Upload",
+                "validation": "Validation",
+                "import": "Import",
+                "import_category": "Import Category",
+                "upload_file": "Upload File",
+                "choose_file": "Choose a file or drag it here.",
+                "supported_file_types": "Supported file type (jpeg,pdf,pptx,xlsx,docx)",
+                "file_size_limit": "File size limit 10MB",
+                "no_file_chosen": "No file chosen",
+                "search": "Search",
+                "row": "Row",
+                "status": "Status",
+                "message": "Message",
+                "error": "Error"
+            },
+            "organisation_tracker": "Organisation Tracker",
+            "organisation_tracker_list": {
+                "ceo": "CEO",
+                "zimra": "ZIMRA",
+                "customer_services": "Customer Services",
+                "marketing": "Marketing",
+                "operations": "Operations",
+                "project_services": "Project Services",
+                "Product": "Product",
+                "compliance": "Compliance",
+                "india": "India",
+                "kenya": "Kenya",
+                "south_africa": "South Africa"
+            },
+            "organisation_tracker_items": {
+                "parent": "Parent",
+                "owner": "Owner",
+                "department": "Department",
+                "email": "Email",
+                "pages": "Pages",
+                "from_date": "From Date",
+                "to_date": "To Date"
+            }
+
+        }
+    }
+}

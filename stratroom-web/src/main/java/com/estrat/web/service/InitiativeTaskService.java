@@ -56,21 +56,21 @@ public class InitiativeTaskService {
     public List<InitiativeTaskDto> findAllByInitiativesId(Long initiativeId) {
         String url1 = this.scorecardUrl + "/initiativeTasklist";
         String url = String.join((CharSequence)"/", url1, String.valueOf(initiativeId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<InitiativeTaskDto> findAllByEmpId(String empId) {
         String url1 = this.scorecardUrl + "/retrieveInitiativesTask";
         String url = String.join((CharSequence)"/", url1, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<InitiativeTaskDto> findByEmpId(String empId) {
         String scorecardUrl1 = this.scorecardUrl + "/emp/initiativesTaskList";
         String url = String.join((CharSequence)"/", scorecardUrl1, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

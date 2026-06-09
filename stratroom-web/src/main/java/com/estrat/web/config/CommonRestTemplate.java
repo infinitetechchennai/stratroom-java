@@ -27,7 +27,8 @@ import com.estrat.web.util.HeaderThreadLocal;
 import com.estrat.web.util.UserThreadLocal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +39,7 @@ import org.springframework.util.MultiValueMap;
 
 public class CommonRestTemplate
 extends AbstractRestTemplate {
-    private static Logger log = Logger.getLogger(CommonRestTemplate.class);
+    private static Logger log = LoggerFactory.getLogger(CommonRestTemplate.class);
 
     public CommonRestTemplate(CommonHttpClientInterceptor httpClientInterceptor) {
         super(httpClientInterceptor);

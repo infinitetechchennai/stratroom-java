@@ -76,20 +76,20 @@ public class ActivitiesService {
 
     public List<ActivitiesDTO> findAllByInitiativesId(Long initiativeId) {
         String url = String.join((CharSequence)"/", this.activitiesListUrl, String.valueOf(initiativeId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<ActivitiesDTO> retrieveActivitiesLists(Long initiativeId) {
         String scorecardUrl1 = this.scorecardUrl + "/retrieveActivitiesLists";
         String url = String.join((CharSequence)"/", scorecardUrl1, String.valueOf(initiativeId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<ActivitiesDTO> findAllByEmpId(String empId) {
         String url = String.join((CharSequence)"/", this.activitiesEmpListUrl, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -104,21 +104,21 @@ public class ActivitiesService {
 
     public List<ActivitiesMapDTO> retrieveActivitiesMapList(Long activitiesId) {
         String url = String.join((CharSequence)"/", this.activitiesMapListUrl, String.valueOf(activitiesId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<ActivitiesDTO> findByEmpId(String empId) {
         String scorecardUrl1 = this.scorecardUrl + "/emp/activitiesLists";
         String url = String.join((CharSequence)"/", scorecardUrl1, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<ActivitiesDTO> retrieveSubInitiativeLists(Long subInitiativeId) {
         String scorecardUrl1 = this.scorecardUrl + "/retrieveSubInitiativeLists";
         String url = String.join((CharSequence)"/", scorecardUrl1, String.valueOf(subInitiativeId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

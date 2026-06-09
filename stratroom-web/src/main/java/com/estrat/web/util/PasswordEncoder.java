@@ -15,10 +15,11 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PasswordEncoder {
-    private static final Logger logger = Logger.getLogger(PasswordEncoder.class);
+    private static final Logger logger = LoggerFactory.getLogger(PasswordEncoder.class);
 
     public String encodedPassword(String password) {
         String encodedPassword = null;

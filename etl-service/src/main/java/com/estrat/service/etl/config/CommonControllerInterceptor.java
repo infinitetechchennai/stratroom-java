@@ -13,13 +13,14 @@ package com.estrat.service.etl.config;
 
 import com.estrat.service.etl.util.UserThreadLocal;
 import java.util.HashMap;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class CommonControllerInterceptor
-extends HandlerInterceptorAdapter {
+implements HandlerInterceptor {
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HashMap<String, String> commonHeaders = new HashMap<String, String>();
         commonHeaders.put("LOGGED_IN_EMPLOYEE_ID", request.getHeader("LOGGED_IN_EMP_ID"));
@@ -28,9 +29,9 @@ extends HandlerInterceptorAdapter {
         return true;
     }
 
+    @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         UserThreadLocal.set(null);
-        super.postHandle(request, response, handler, modelAndView);
     }
 }
 

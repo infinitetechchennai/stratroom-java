@@ -1,0 +1,172 @@
+{
+  "data": [{
+    "id": 53,
+    "process": ["vrc"],
+    "justificationForCritical": "qegg",
+    "impactData": [{
+        "id": 203,
+        "impact": "Operational Risk",
+        "hoursDaysMonths": {
+            "ls4Hours": "2",
+            "ls1week": "",
+            "ls5Hours": "1",
+            "ls2week": "",
+            "ls1month": "2",
+            "ls8Hours": "5",
+            "ls2Hours": "1",
+            "ls6Hours": "",
+            "ls1days": "",
+            "ls4days": "",
+            "ls3Hours": "2",
+            "ls2days": ""
+        },
+        "impactId": 53
+    }, {
+        "id": 204,
+        "impact": "Technology Risk",
+        "hoursDaysMonths": {
+            "ls4Hours": "5",
+            "ls1week": "1",
+            "ls5Hours": "1",
+            "ls2week": "1",
+            "ls1month": "1",
+            "ls8Hours": "",
+            "ls2Hours": "4",
+            "ls6Hours": "",
+            "ls1days": "",
+            "ls4days": "",
+            "ls3Hours": "5",
+            "ls2days": ""
+        },
+        "impactId": 53
+    }, {
+        "id": 205,
+        "impact": "Regulatory Risk",
+        "hoursDaysMonths": {
+            "ls4Hours": "",
+            "ls1week": "",
+            "ls5Hours": "1",
+            "ls2week": "",
+            "ls1month": "1",
+            "ls8Hours": "1",
+            "ls2Hours": "5",
+            "ls6Hours": "1",
+            "ls1days": "",
+            "ls4days": "",
+            "ls3Hours": "6",
+            "ls2days": ""
+        },
+        "impactId": 53
+    }, {
+        "id": 206,
+        "impact": "txzfesd",
+        "hoursDaysMonths": {
+            "ls4Hours": "",
+            "ls1week": "",
+            "ls5Hours": "",
+            "ls2week": "",
+            "ls1month": "",
+            "ls8Hours": "",
+            "ls2Hours": "",
+            "ls6Hours": "",
+            "ls1days": "",
+            "ls4days": "",
+            "ls3Hours": "",
+            "ls2days": ""
+        },
+        "impactId": 53
+    }],
+    "createTime": "2025-12-31T04:14:53",
+    "createBy": 2108,
+    "departmentId": 1016,
+    "owner": 0,
+    "pageId": 2715,
+    "pageName": "Impact survey 12-31",
+    "createrName": "Grace",
+    "changeId": 0
+}, {
+    "id": 54,
+    "process": ["sedrftghdcfvgbh", "dvb", "dxcfvgbs"],
+    "justificationForCritical": "test",
+    "impactData": [{
+        "id": 207,
+        "impact": "Operational Risk",
+        "hoursDaysMonths": {
+            "ls4Hours": "5",
+            "ls1week": "",
+            "ls5Hours": "5",
+            "ls2week": "",
+            "ls1month": "",
+            "ls8Hours": "",
+            "ls2Hours": "2",
+            "ls6Hours": "5",
+            "ls1days": "",
+            "ls4days": "",
+            "ls3Hours": "5",
+            "ls2days": ""
+        },
+        "impactId": 54
+    }, {
+        "id": 208,
+        "impact": "Project & Program Risk",
+        "hoursDaysMonths": {
+            "ls4Hours": "",
+            "ls1week": "",
+            "ls5Hours": "",
+            "ls2week": "",
+            "ls1month": "",
+            "ls8Hours": "",
+            "ls2Hours": "",
+            "ls6Hours": "",
+            "ls1days": "",
+            "ls4days": "",
+            "ls3Hours": "2",
+            "ls2days": ""
+        },
+        "impactId": 54
+    }, {
+        "id": 209,
+        "impact": "Project & Program Risk",
+        "hoursDaysMonths": {
+            "ls4Hours": "",
+            "ls1week": "",
+            "ls5Hours": "",
+            "ls2week": "",
+            "ls1month": "",
+            "ls8Hours": "",
+            "ls2Hours": "",
+            "ls6Hours": "",
+            "ls1days": "",
+            "ls4days": "",
+            "ls3Hours": "",
+            "ls2days": ""
+        },
+        "impactId": 54
+    }, {
+        "id": 210,
+        "impact": "test",
+        "hoursDaysMonths": {
+            "ls4Hours": "",
+            "ls1week": "",
+            "ls5Hours": "",
+            "ls2week": "",
+            "ls1month": "",
+            "ls8Hours": "",
+            "ls2Hours": "",
+            "ls6Hours": "",
+            "ls1days": "",
+            "ls4days": "",
+            "ls3Hours": "",
+            "ls2days": ""
+        },
+        "impactId": 54
+    }],
+    "createTime": "2026-01-06T14:47:00",
+    "createBy": 2108,
+    "departmentId": 1016,
+    "owner": 0,
+    "pageId": 2715,
+    "pageName": "Impact survey 12-31",
+    "createrName": "Grace",
+    "changeId": 0
+}]}

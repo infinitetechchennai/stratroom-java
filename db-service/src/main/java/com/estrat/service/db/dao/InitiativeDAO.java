@@ -20,10 +20,11 @@ import com.estrat.service.db.dao.KPIDAO;
 import com.estrat.service.db.exception.ExceptionLogHelper;
 import java.util.Collection;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ import org.springframework.dao.DataAccessException;
 
 @Configuration
 public class InitiativeDAO {
-    private Logger log = Logger.getLogger(KPIDAO.class);
+    private Logger log = LoggerFactory.getLogger(KPIDAO.class);
     @PersistenceContext
     private EntityManager entityManager;
 

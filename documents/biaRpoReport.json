@@ -1,0 +1,52 @@
+[
+  {
+    "department_name": "Finance",
+    "process": "Accounts Receivable",
+    "vital_records": "Customer Invoices Database",
+    "media_type": "Digital",
+    "backup_method": "Incremental Cloud Backup",
+    "backup_time": "Daily 11:00 PM",
+    "retention": "7 years",
+    "recovery_strategy": "Point-in-time recovery with 24-hour RPO"
+  },
+  {
+    "department_name": "Human Resources",
+    "process": "Employee Records",
+    "vital_records": "Employee Database",
+    "media_type": "Digital & Physical",
+    "backup_method": "Full Weekly + Daily Incremental",
+    "backup_time": "Sundays 10:00 PM, Weekdays 2:00 AM",
+    "retention": "Employee lifetime + 7 years",
+    "recovery_strategy": "Hot standby with 4-hour RPO"
+  },
+  {
+    "department_name": "IT Operations",
+    "process": "Application Hosting",
+    "vital_records": "Production Server Images",
+    "media_type": "Digital",
+    "backup_method": "Snapshot Replication",
+    "backup_time": "Continuous",
+    "retention": "90 days",
+    "recovery_strategy": "Failover to DR site with 15-minute RPO"
+  },
+  {
+    "department_name": "Legal",
+    "process": "Contract Management",
+    "vital_records": "Signed Contracts Repository",
+    "media_type": "Digital",
+    "backup_method": "Encrypted Cloud Backup",
+    "backup_time": "Real-time",
+    "retention": "10 years after contract expiration",
+    "recovery_strategy": "Versioned recovery with 1-hour RPO"
+  },
+  {
+    "department_name": "Research & Development",
+    "process": "Product Design",
+    "vital_records": "CAD Files & Prototype Designs",
+    "media_type": "Digital",
+    "backup_method": "Geographically Redundant Backup",
+    "backup_time": "Hourly",
+    "retention": "Product lifecycle + 5 years",
+    "recovery_strategy": "Multi-region replication with 5-minute RPO"
+  }
+]

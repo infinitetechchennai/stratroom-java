@@ -20,10 +20,11 @@ package com.estrat.service.db.dao;
 import com.estrat.service.db.exception.ExceptionLogHelper;
 import java.util.Collection;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ObjectivesDAO {
-    private Logger log = Logger.getLogger(ObjectivesDAO.class);
+    private Logger log = LoggerFactory.getLogger(ObjectivesDAO.class);
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired

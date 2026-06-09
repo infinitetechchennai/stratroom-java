@@ -28,12 +28,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LicenseUtil {
-    private Logger log = Logger.getLogger(LicenseUtil.class);
+    private Logger log = LoggerFactory.getLogger(LicenseUtil.class);
     BiPredicate<List<String>, List<String>> validateCollection = (elibileList, licenseList) -> licenseList.stream().allMatch(module -> elibileList.contains(module));
 
     public LicenseResponseDTO validateLicenseDetails(LicenseData licenseData, OrgLicenseDetails orgLicenseDetails, LicenseKey licenseObj) {
@@ -87,7 +88,7 @@ public class LicenseUtil {
             licenseResponseDTO.setDeviceList(deviceList);
         }
         catch (Exception e) {
-            this.log.error((Object)"Exception while validating license", (Throwable)e);
+            this.log.error("Exception while validating license", e);
             licenseResponseDTO = new LicenseResponseDTO();
             licenseResponseDTO.setValidationMesssage("Exception occured while validating license " + e.getMessage());
             licenseResponseDTO.setValidationSuccess(false);

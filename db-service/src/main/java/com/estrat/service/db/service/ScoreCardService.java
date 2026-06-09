@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -164,10 +164,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -242,7 +243,7 @@ public class EmployeeService {
     private DeptTrackerRepository deptTrackerRepository;
     @Autowired
     private ChildTrackerRepository childTrackerRepository;
-    private Logger log = Logger.getLogger(EmployeeService.class);
+    private Logger log = LoggerFactory.getLogger(EmployeeService.class);
 
     public Employee getEmployee(EmployeeDTO employeeDTO) {
         UserRoleManagement userRoleManagement;

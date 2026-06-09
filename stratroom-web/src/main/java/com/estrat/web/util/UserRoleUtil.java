@@ -64,7 +64,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -101,7 +102,7 @@ public class UserRoleUtil {
     protected ControlPanelGeneralService controlPanelGeneralService;
     @Autowired
     protected AuditTrailService auditTrailService;
-    private Logger logger = Logger.getLogger(UserRoleUtil.class);
+    private Logger logger = LoggerFactory.getLogger(UserRoleUtil.class);
 
     public Map readuserDetails(InputStream inputStream, String type) throws IOException {
         Map resultMap = new HashMap();

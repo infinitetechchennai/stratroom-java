@@ -61,7 +61,7 @@ public class SwotAnalysisService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("empId", empId);
         String url = UriComponentsBuilder.fromHttpUrl((String)retrieveSWOTAnalysisUrl).queryParam("flagType", new Object[]{flagType}).queryParam("pageId", new Object[]{pageId}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List swotAnalysisDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return swotAnalysisDTOList;
     }

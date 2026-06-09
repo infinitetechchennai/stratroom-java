@@ -46,7 +46,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -66,7 +67,7 @@ public class OrgChartReaderUtil {
     private DepartmentDetailsService departmentDetailsService;
     @Autowired
     private AuditTrailService auditTrailService;
-    private Logger logger = Logger.getLogger(OrgChartReaderUtil.class);
+    private Logger logger = LoggerFactory.getLogger(OrgChartReaderUtil.class);
 
     public Map<String, Object> readuserDetails(InputStream inputStream, String type) throws IOException {
         Map<String, Object> resultMap = new HashMap<String, Object>();

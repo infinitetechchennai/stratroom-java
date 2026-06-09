@@ -15,7 +15,7 @@
  *  org.springframework.stereotype.Service
  *  org.springframework.web.client.RestTemplate
  */
-package com.estrat.service.db.service;
+package com.estrat.service.dcb.service;
 
 import com.estrat.service.db.dto.LicenseResponseDTO;
 import com.estrat.service.db.resource.util.EncryptionProvider;
@@ -32,7 +32,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class LicenseService {
-    private static final Logger log = Logger.getLogger(LicenseService.class);
+    private static final Logger log = LoggerFactory.getLogger(LicenseService.class);
     @Autowired
     private RestTemplate restTemplate;
     @Autowired

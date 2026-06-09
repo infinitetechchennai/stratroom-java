@@ -41,7 +41,7 @@ public class StagingChangeService {
 
     public List<StagingChangeDTO> getStagingChangesForUser() {
         String url = this.dbUrl + "/api/workflowevents";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -52,7 +52,7 @@ public class StagingChangeService {
 
     public List<ApproversHistoryDTO> getApprovalHistory(Long changeId) {
         String url = this.dbUrl + "/api/workflowevents/" + changeId + "/history";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -64,7 +64,7 @@ public class StagingChangeService {
     public List<StagingChangeDTO> getApproveVersionr(String tableName, Long recordId) {
         String url = this.dbUrl + "/approveVersion";
         String urlVariabe = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("tableName", new Object[]{tableName}).queryParam("recordId", new Object[]{recordId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(urlVariabe, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

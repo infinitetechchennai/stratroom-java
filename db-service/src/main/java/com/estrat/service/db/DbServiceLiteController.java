@@ -25,7 +25,7 @@ public class DbServiceLiteController {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("validationSuccess", true);
         body.put("validationMesssage", "Validated in lite mode");
-        body.put("moduleList", java.util.Collections.emptyList());
+        body.put("moduleList", java.util.Arrays.asList("Risk", "Initiatives & Projects", "My Space", "PESTEL", "Meetings", "Scorecard", "SWOT", "Access Control", "Control Panel", "Data Sources", "Template", "Charts", "Cockpit", "Report", "KPI", "Organization", "Strategy Formulation", "Project Formulation", "Risk Formulation", "Risksummary", "User Management", "Audit Trail"));
         body.put("deviceList", java.util.Collections.emptyList());
         body.put("totalAllowedUsers", 1000);
         return ResponseEntity.ok(body);
@@ -46,7 +46,7 @@ public class DbServiceLiteController {
     public ResponseEntity<Map<String, Object>> getControlPanelGeneralList() {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("siteName", "StratRoom");
-        body.put("calendarYear", "JAN-DEC");
+        body.put("calendarYear", "01/01/2026 - 12/31/2026");
         return ResponseEntity.ok(body);
     }
 
@@ -108,7 +108,14 @@ public class DbServiceLiteController {
         privs.put("privilegeDelete", "TRUE");
         
         // Mock sub-modules based on moduleName if necessary, but returning a generic full access structure is usually enough.
-        body.put(moduleName, privs);
+        Map<String, Object> innerMap = new LinkedHashMap<>();
+        if ("Initiatives & Projects".equals(moduleName)) {
+            innerMap.put("Initiatives", privs);
+            innerMap.put("Projects", privs);
+        } else {
+            innerMap.put(moduleName, privs);
+        }
+        body.put(moduleName, innerMap);
         
         // For Data Sources and Templates, we need specific structure
         if ("Data Sources".equals(moduleName)) {
@@ -126,5 +133,34 @@ public class DbServiceLiteController {
         }
         
         return ResponseEntity.ok(body);
+    }
+    @GetMapping("/orgGroupList")
+    public ResponseEntity<java.util.List<Object>> orgGroupList() {
+        return ResponseEntity.ok(java.util.Collections.emptyList());
+    }
+
+    @GetMapping("/notificationList")
+    public ResponseEntity<java.util.List<Object>> notificationList() {
+        return ResponseEntity.ok(java.util.Collections.emptyList());
+    }
+
+    @GetMapping("/pageTypeList")
+    public ResponseEntity<java.util.List<Object>> pageTypeList() {
+        return ResponseEntity.ok(java.util.Collections.emptyList());
+    }
+
+    @GetMapping("/themeList")
+    public ResponseEntity<java.util.List<Object>> themeList() {
+        return ResponseEntity.ok(java.util.Collections.emptyList());
+    }
+
+    @GetMapping("/org/years")
+    public ResponseEntity<java.util.List<Object>> orgYears() {
+        return ResponseEntity.ok(java.util.Collections.emptyList());
+    }
+
+    @GetMapping("/notification/list/{id}")
+    public ResponseEntity<java.util.List<Object>> notificationListId() {
+        return ResponseEntity.ok(java.util.Collections.emptyList());
     }
 }

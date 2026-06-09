@@ -79,7 +79,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("id", id);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("period", new Object[]{period}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List statuscountdto = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(statuscountdto, HttpStatus.OK);
     }
@@ -89,7 +89,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("id", id);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("period", new Object[]{period}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List statuscountdto = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(statuscountdto, HttpStatus.OK);
     }
@@ -135,7 +135,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("empId", empId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("loadFlag", new Object[]{flag}).queryParam("pageId", new Object[]{pageId}).queryParam("dateRange", new Object[]{dateRange}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -203,7 +203,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("empId", empId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("scorename", new Object[]{scoreName}).queryParam("pageId", new Object[]{pageId}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         Map map = (Map)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(map, HttpStatus.OK);
     }
@@ -213,7 +213,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("empId", empId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -223,7 +223,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("deptId", deptId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -233,7 +233,7 @@ public class ScoreCardService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("empId", UserThreadLocal.get().getProfile().getEmpId());
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -243,7 +243,7 @@ public class ScoreCardService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("deptId", "");
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -253,7 +253,7 @@ public class ScoreCardService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("deptIds", deptIds);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("deptIds", new Object[]{deptIds}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -263,7 +263,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("empId", empId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List scoreCard = (List)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
         return scoreCard;
     }
@@ -273,7 +273,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("empId", empId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("dateRange", new Object[]{dateRange}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Map)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -282,7 +282,7 @@ public class ScoreCardService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("empId", empId);
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("pageId", new Object[]{pageId}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Map)this.commonRestTemplate.getForObject(pageURL, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -296,7 +296,7 @@ public class ScoreCardService {
         String url = this.scoreCardUrl + "/changePerspectiveName";
         HashMap urlVariables = new HashMap();
         String pageURL = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("scorecardId", new Object[]{scorecardId}).queryParam("name", new Object[]{name}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         Map map = (Map)this.commonRestTemplate.putForObject(pageURL, null, (ParameterizedTypeReference)parameterizedTypeReference);
         return new ResponseEntity(map, HttpStatus.OK);
     }

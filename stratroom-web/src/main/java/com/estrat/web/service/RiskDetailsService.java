@@ -265,7 +265,7 @@ public class RiskDetailsService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("empId", empId);
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("pageId", new Object[]{pageId}).queryParam("dateRange", new Object[]{dateRange}).queryParam("type", new Object[]{type}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         for (Object _obj_riskDTO : riskDTOList) {
             RiskDTO riskDTO = (RiskDTO) _obj_riskDTO;
@@ -278,7 +278,7 @@ public class RiskDetailsService {
         String url1 = this.dbUrl + "/riskListView";
         HashMap urlVariables = new HashMap();
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("pageId", new Object[]{pageId}).queryParam("dateRange", new Object[]{dateRange}).queryParam("type", new Object[]{type}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         for (Object _obj_riskDTO : riskDTOList) {
             RiskDTO riskDTO = (RiskDTO) _obj_riskDTO;
@@ -291,7 +291,7 @@ public class RiskDetailsService {
         HashMap<String, Long> urlVariables = new HashMap<String, Long>();
         urlVariables.put("kpiId", kpiId);
         String url = UriComponentsBuilder.fromHttpUrl((String)this.kpiRiskList).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -376,7 +376,7 @@ public class RiskDetailsService {
 
     public List<Map> findAllRiskDetailsByTableFormat(long empId) {
         String url = this.dbUrl + "/riskListByEmpId/" + empId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         ArrayList<Map> mapArrayList = new ArrayList<Map>();
         for (Object _obj_riskDTO : riskDTOList) {
@@ -400,7 +400,7 @@ public class RiskDetailsService {
     public List<RiskDTO> findAllRiskDetailsByEmpId(long empId, String dateRange) {
         String url1 = this.dbUrl + "/riskListByEmpId/" + empId;
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }
@@ -408,14 +408,14 @@ public class RiskDetailsService {
     public List<RiskDTO> riskCodeList(long empId, String dateRange) {
         String url1 = this.dbUrl + "/riskCodeListByEmpId/" + empId;
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }
 
     public List<RiskDTO> riskListByDeptId(long deptId) {
         String url = this.dbUrl + "/riskListByDeptId/" + deptId;
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }
@@ -423,7 +423,7 @@ public class RiskDetailsService {
     public List<RiskDTO> riskListWithChild(long empId, String riskIds, String dateRange) {
         String url = this.dbUrl + "/riskListWithChild/" + empId;
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("riskIds", new Object[]{riskIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         List<RiskDTO> riskwithStatus = ((List<RiskDTO>)riskDTOList).stream().map(v -> {
             this.calculateRiskScores(v);
@@ -436,7 +436,7 @@ public class RiskDetailsService {
     public List<RiskDTO> riskHeadListWithChild(long empId, String riskIds, int limit, String dateRange) {
         String url = this.dbUrl + "/riskListWithChild/" + empId;
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("riskIds", new Object[]{riskIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         HashMap<String, Integer> rankMapping = new HashMap<String, Integer>();
         String[] ranks = new String[]{"E5", "E4", "D5", "D4", "E3", "C5", "E2", "B5", "A5", "D3", "C4", "C3", "D2", "B4", "E1", "D1", "A4", "C2", "B3", "C1", "A3", "B2", "A2", "B1", "A1"};
@@ -458,7 +458,7 @@ public class RiskDetailsService {
         HashMap urlVariables = new HashMap();
         urlVariables.put("empId", empId);
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("pageId", new Object[]{pageId}).queryParam("dateRange", new Object[]{dateRange}).buildAndExpand(urlVariables).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }
@@ -471,7 +471,7 @@ public class RiskDetailsService {
     public List<RiskDTO> riskHistoryList(Long riskId, Long version) {
         String url = this.dbUrl + "/riskhistorylist";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("riskId", new Object[]{riskId}).queryParam("version", new Object[]{version}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }
@@ -479,7 +479,7 @@ public class RiskDetailsService {
     public List<RiskEventDTO> riskEventHistoryList(Long eventId, Long version) {
         String url = this.dbUrl + "/riskEventhistorylist";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("eventId", new Object[]{eventId}).queryParam("version", new Object[]{version}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskDTOList;
     }
@@ -509,14 +509,14 @@ public class RiskDetailsService {
         String url1 = this.dbUrl + "riskeventlist";
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("pageId", new Object[]{pageId}).queryParam("dateRange", new Object[]{dateRange}).queryParam("status", new Object[]{status}).toUriString();
         System.out.println(url);
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public RiskEventDTO findByEventId(long eventId) {
         String url1 = this.dbUrl + "riskeventbyid";
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("eventId", new Object[]{eventId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (RiskEventDTO)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -533,7 +533,7 @@ public class RiskDetailsService {
     public List<RiskEventDTO> riskEventListWithChild(long empId, String pageIds, String dateRange) {
         String url = this.dbUrl + "/riskEventListWithChild/" + empId;
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("pageIds", new Object[]{pageIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskEventDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         return riskEventDTOList;
     }
@@ -541,14 +541,14 @@ public class RiskDetailsService {
     public List<RiskEventDTO> riskEventListWithDeptids(String deptIds) {
         String url = this.dbUrl + "/riskEventListWithDeptids";
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("deptIds", new Object[]{deptIds}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<RiskStatusCountDto> statusCount(String pageIds, String dateRange) {
         String url_val = this.dbUrl + "/riskStatusCountwithPageId";
         String url = UriComponentsBuilder.fromHttpUrl((String)url_val).queryParam("pageIds", new Object[]{pageIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
         List riskwithStatus = ((List<RiskDTO>)riskDTOList).stream().map(v -> {
             this.calculateRiskScores(v);
@@ -561,7 +561,7 @@ public class RiskDetailsService {
     public List<RiskDTO> ermRiskListWithChild(long empId, String pageIds, int limit, String dateRange) {
         String url = this.dbUrl + "/ermRiskListWithChild/" + empId;
         String finalUrl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("pageIds", new Object[]{pageIds}).queryParam("dateRange", new Object[]{dateRange}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         List riskDTOList = (List)this.commonRestTemplate.getForObject(finalUrl, (ParameterizedTypeReference)parameterizedTypeReference);
         HashMap<String, Integer> rankMapping = new HashMap<String, Integer>();
         String[] ranks = new String[]{"E5", "E4", "D5", "D4", "E3", "C5", "E2", "B5", "A5", "D3", "C4", "C3", "D2", "B4", "E1", "D1", "A4", "C2", "B3", "C1", "A3", "B2", "A2", "B1", "A1"};
@@ -581,14 +581,14 @@ public class RiskDetailsService {
     public List<RiskEventNameCountDto> findRiskEventFreCountList(String pageIds, String dateRange, String limit) {
         String url_val = this.dbUrl + "/riskEventFrequencyCount";
         String url = UriComponentsBuilder.fromHttpUrl((String)url_val).queryParam("pageIds", new Object[]{pageIds}).queryParam("dateRange", new Object[]{dateRange}).queryParam("limit", new Object[]{limit}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public RiskDashBoardResponseDTO riskDashBoardData(long deptId) {
         String url1 = this.dbUrl + "/riskDashBoardData";
         String url = UriComponentsBuilder.fromHttpUrl((String)url1).queryParam("deptId", new Object[]{deptId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (RiskDashBoardResponseDTO)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 

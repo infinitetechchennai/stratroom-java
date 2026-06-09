@@ -1,0 +1,2930 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Incident Registry</title>
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/css/basic.css?v-0.002" rel="stylesheet">
+  <link href="assets/css/main.css?v-0.002" rel="stylesheet">
+  <link href="assets/css/responsive.css" rel="stylesheet">
+  <link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+
+  <!-- Font Awsome Icons -->
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+</head>
+
+
+<body data-bs-theme="light" data-page="universal-incident-registry">
+  <!-- <div class="page-loader">
+    <div class="d-flex flex-column justify-content-center gap-1">
+      <div class="circle-loader">
+        <img class="centre-logo" src="assets/images/logo-icon.svg" alt="startroom" width="62" height="62">
+      </div>
+      <h5 class="loader-title" data-translate="loaderTitle">â€œWhile we load, grab your espresso and stay caffeinated.â€ <i
+          class="fas fa-coffee text-primary"></i></h5>
+      <p class="loader-description" data-translate="loaderDescription"> â€œit takes 42 beans for a single shot. StratRoom
+        uses countless data points to deliver powerful insights!â€</p>
+      <p class="loader-text"><span data-translate="pageloading">Loading</span> <span id="percent">0%</span></p>
+    </div>
+  </div> -->
+  <header id="header" class="header shadow-sm sticky-top">
+    <div class="navbar-topbar">
+      <div class="container-lg d-flex flex-wrap justify-content-between">
+        <div class="menu-controls d-flex">
+          <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="Org Structure" data-translate="topbar.orgStructure">
+            <span class="icon network">
+              <i data-lucide="network" style="width:18px; height: 18px;"></i>
+            </span>
+          </a>
+          <a class="control-link " href="#create-template" data-bs-toggle="modal" onclick="return false;">
+            <span class="icon layout-template" data-bs-toggle="tooltip" data-bs-placement="bottom"
+              data-bs-title="Templates" data-translate="topbar.templates">
+              <i data-lucide="layout-template" style="width: 18px; height: 18px;"></i>
+            </span>
+          </a>
+
+          <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="ETL" data-translate="topbar.etl">
+            <span class="icon layout-grid">
+              <i data-lucide="layout-grid" style="width: 18px; height: 18px;"></i>
+            </span>
+          </a>
+          <div class="nav-item dropdown dropdown-top-header">
+            <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false" data-translate="topbar.masters"></a>
+            <ul class="dropdown-menu dropdown-menu-start border-0 shadow-sm" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.products"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.process"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.vitalRecords"></a>
+              </li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.technology"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.facilities"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.personal"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.iso"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.budget"></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="menu-controls d-flex flex-wrap ms-auto">
+          <div class="top-date-picker">
+            <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+          </div>
+        </div>
+        <div class="menu-controls d-flex flex-wrap">
+
+          <div class="nav-item dropdown">
+            <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+
+                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+              </span>
+              <span id="currentLanguage">EN</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="languageDropdown">
+              <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+              <li><a class="dropdown-item" href="#" data-lang="ar">Arabic</a></li>
+            </ul>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-lg gap-2 gap-md-3">
+        <div class="position-relative logo me-auto">
+          <a href="landing.html" class="logo-preview" id="logoPreview">
+            <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+          </a>
+
+        </div>
+
+
+
+        <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+          aria-labelledby="mobileMenuLabel">
+          <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <div class="navbar-collapse">
+
+
+              <ul class="navbar-nav p-0 ms-md-auto">
+
+                <!-- 1) Plan -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.plan"></a>
+
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" data-menu="plan"
+                    aria-labelledby="planningDropdown">
+                    <li data-id="strategy-planner">
+                      <a class="dropdown-item" href="strategy-planner.html"
+                        data-translate="menu.planItems.strategyPlanner"></a>
+                    </li>
+                    <li data-id="swot">
+                      <a class="dropdown-item" href="swot.html" data-translate="menu.planItems.swot"></a>
+                    </li>
+                    <li data-id="pestel">
+                      <a class="dropdown-item" href="pestel.html" data-translate="menu.planItems.pestel"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 2) Measure -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="measureDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.measure"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="measureDropdown">
+                    <li data-id="scorecard">
+                      <a class="dropdown-item" href="scorecard.html" data-translate="menu.measureItems.scorecard"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 3) Execute -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="executeDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.execute"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="executeDropdown">
+                    <li data-id="initiatives">
+                      <a class="dropdown-item" href="initiatives-projects.html"
+                        data-translate="menu.executeItems.initiatives"></a>
+                    </li>
+                    <li data-id="tasks">
+                      <a class="dropdown-item" href="tasks.html" data-translate="menu.executeItems.tasks"></a>
+                    </li>
+                    <li data-id="budget-approval">
+                      <a class="dropdown-item" href="budget-approval.html"
+                        data-translate="menu.executeItems.budgetApproval"></a>
+                    </li>
+                    <li data-id="budgets">
+                      <a class="dropdown-item" href="budgets.html" data-translate="menu.executeItems.budgets"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 4) Govern -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="governDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.govern"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="governDropdown">
+                    <li data-id="risk-register">
+                      <a class="dropdown-item" href="risk-register.html"
+                        data-translate="menu.governItems.riskRegister"></a>
+                    </li>
+                    <li data-id="risk-approval">
+                      <a class="dropdown-item" href="risk-approval.html"
+                        data-translate="menu.governItems.riskApproval"></a>
+                    </li>
+                    <li data-id="compliance">
+                      <a class="dropdown-item" href="compliance.html" data-translate="menu.governItems.compliance"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 5) Meet -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="meetDropdown" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false" data-translate="menu.meet"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="meetDropdown">
+                    <li data-id="meetings">
+                      <a class="dropdown-item" href="meetings.html" data-translate="menu.meetItems.meetings"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 6) Report -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.report"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="reportDropdown">
+                    <li data-id="my-cockpit">
+                      <a class="dropdown-item" href="my-cockpit.html" data-translate="menu.reportItems.myCockpit"></a>
+                    </li>
+                    <li data-id="my-performance">
+                      <a class="dropdown-item" href="my-performance.html"
+                        data-translate="menu.reportItems.myPerformance"></a>
+                    </li>
+                    <li data-id="whiteboard">
+                      <a class="dropdown-item" href="whiteboard.html" data-translate="menu.reportItems.whiteboard"></a>
+                    </li>
+                  </ul>
+                </li>
+
+              </ul>
+
+
+
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-controls global-control  d-flex flex-wrap">
+
+          <div class="nav-item dropdown">
+            <a class="control-link" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false" data-bs-placement="bottom" data-bs-title="Notification">
+              <span class="icon">
+                <i data-lucide="bell-dot" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-notification-menu dropdown-menu-icon border-0 shadow-sm"
+              aria-labelledby="notificationDropdown" data-bs-auto-close="outside"
+              style="width: 350px; max-width: calc(100vw - 2rem); max-height: 400px; overflow-y: auto;">
+
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">New message from John Smith</div>
+                    <small class="text-muted">Risk approval required for Phase 2</small>
+                    <div class="text-muted small">2 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">System maintenance scheduled</div>
+                    <small class="text-muted">Server will be down for 30 minutes</small>
+                    <div class="text-muted small">1 day ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Template review deadline</div>
+                    <small class="text-muted">Document template needs approval by EOD</small>
+                    <div class="text-muted small">3 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Audit report generated</div>
+                    <small class="text-muted">Monthly compliance report is ready</small>
+                    <div class="small" class="text-muted small">5 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Meeting reminder</div>
+                    <small class="text-muted">Weekly team standup in 30 minutes</small>
+                    <div class="text-muted small">30 min ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 50%; color: #333;">
+                    <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Task completed</div>
+                    <small class="text-muted">Database backup completed successfully</small>
+                    <div class="text-muted small">1 hour ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 50%; color: #333;">
+                    <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">New user registered</div>
+                    <small class="text-muted">Sarah Johnson joined the platform</small>
+                    <div class="text-muted small">6 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); border-radius: 50%; color: #333;">
+                    <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Security update</div>
+                    <small class="text-muted">Password policy has been updated</small>
+                    <div class="text-muted small">2 days ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); border-radius: 50%; color: #333;">
+                    <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Download ready</div>
+                    <small class="text-muted">Export file generation completed</small>
+                    <div class="text-muted small">3 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Audit report generated</div>
+                    <small class="text-muted">Monthly compliance report is ready</small>
+                    <div class="small" class="text-muted small">5 hours ago</div>
+                  </div>
+                </a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-center py-2" href="#">
+                  <small class="text-primary fw-medium">View all notifications</small>
+                </a></li>
+            </ul>
+          </div>
+
+          <div class="nav-item dropdown">
+
+
+            <a class="control-link" href="#" id="controlPanelDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+                <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+              aria-labelledby="controlPanelDropdown">
+              <li><a class="dropdown-item" href="control-panel.html"
+                  data-translate="topbar.settingsItems.controlPanel"></a></li>
+              <li><a class="dropdown-item" href="audit-trail.html" data-translate="topbar.settingsItems.auditTrail"></a>
+              </li>
+              <li><a class="dropdown-item" href="user-role.html" data-translate="topbar.settingsItems.userRoles"></a>
+              </li>
+            </ul>
+
+
+            </ul>
+          </div>
+
+          <div class="nav-item dropdown">
+
+
+            <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+                <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+              aria-labelledby="userDropdown">
+              <li><a class="dropdown-item profile-card" href="#">
+
+                  <span class="icon circle-user-round">
+                    <i data-lucide="circle-user-round" style="width: 32px; height: 32px;"></i>
+                  </span>
+
+
+                  <div class="">
+                    <h4><span data-translate="topbar.hi">Hi</span> John </h4>
+                    <small data-translate="topbar.welcomeToPortal"></small>
+                  </div>
+                </a></li>
+
+
+              <li><a class="dropdown-item profile-card" href="#" data-translate="topbar.profileItems.myProfile"></a>
+              </li>
+              <li><a class="dropdown-item" href="manual.html" data-translate="topbar.profileItems.myForms"></a></li>
+              <li><a class="dropdown-item" href="performance-contract.html"
+                  data-translate="topbar.profileItems.performanceContract"></a></li>
+              <li>
+                <a class="dropdown-item" href="performance-improvement-plan.html"
+                  data-translate="topbar.profileItems.performanceImprovementPlan" style="cursor: pointer;">
+
+                  Performance improvement Plan</a>
+              </li>
+              <li><a class="dropdown-item" href="audit-trail.html" data-translate="topbar.profileItems.auditTrail"></a>
+              </li>
+              <li><a class="dropdown-item" href="user-role.html" data-translate="topbar.profileItems.logout"></a></li>
+
+
+            </ul>
+
+          </div>
+          <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+        </div>
+        <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+          <div class="hamburger-icon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </div>
+        </div>
+
+
+    </nav>
+  </header>
+
+  <main class="pt-2 pb-2">
+    <!-- Page Header -->
+    <div class="container-lg">
+      <div class="page-header grid gap-2">
+        <div class="g-col-12 g-col-md-8 d-flex align-items-center">
+          <h4 class="title mb-0 fs-5 fw-bold d-flex align-items-center gap-2 text-uppercase"
+            style="letter-spacing: 0.05em; color: var(--stratroom-body-color);">
+            <span class="icon d-flex align-items-center" style="color: var(--stratroom-body-color);">
+              <i data-lucide="clipboard-list" style="width: 20px; height: 20px; stroke-width: 2px;"></i>
+            </span>
+            <span>UNIVERSAL INCIDENT REGISTRY</span>
+          </h4>
+        </div>
+        <div
+          class="g-col-12 g-col-md-4 d-flex justify-content-md-end justify-content-start align-items-center mt-2 mt-md-0">
+          <div class="overall-score-v2 d-flex">
+            <div>
+              <div class="score-label">REGISTRY STATUS</div>
+              <div class="score-detail"><span id="cnt-total-header">0</span> incidents logged</div>
+            </div>
+            <div class="score-percent" style="color: #2980b9; font-size: 16px;">ACTIVE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg py-3">
+      <!-- Navigation -->
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4 border px-1 ps-0 rounded">
+        <ul class="nav nav-pills gap-2" id="registryTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="tab-list" onclick="switchMain('list', this)" type="button"
+              role="tab">All Incidents</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-cat" onclick="switchMain('cat', this)" type="button" role="tab">By
+              Category</button>
+          </li>
+        </ul>
+        <div class="d-flex gap-1">
+          <a href="#" onclick="loadDataAndGeneratePDF()" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="Generate Report" class="btn btn-sm btn-icon">
+            <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+          </a>
+          <button class="btn btn-sm btn-primary d-flex align-items-center gap-1" onclick="switchMain('form', null)"><i
+              data-lucide="plus" style="width: 16px; height: 16px;"></i>Create</button>
+        </div>
+      </div>
+
+      <!-- LIST SCREEN -->
+      <div class="screen" id="screen-list" style="display:block;">
+        <!-- KPI Cards -->
+        <div class="row g-3 mb-4">
+          <div class="col-lg-3 col-md-6">
+            <div class="compliance-kpi-card">
+              <div class="kpi-label text-uppercase">Total Logged</div>
+              <div class="kpi-value" id="cnt-all">0</div>
+              <div class="kpi-sub">all time incidents</div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="compliance-kpi-card">
+              <div class="kpi-label text-uppercase">Open Incidents</div>
+              <div class="kpi-value" style="color:#2980b9;" id="cnt-open">0</div>
+              <div class="kpi-sub">awaiting resolution</div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="compliance-kpi-card">
+              <div class="kpi-label text-uppercase">Critical Severity</div>
+              <div class="kpi-value" style="color:#e74c3c;" id="cnt-crit">0</div>
+              <div class="kpi-sub">requires attention</div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="compliance-kpi-card">
+              <div class="kpi-label text-uppercase">Closed</div>
+              <div class="kpi-value" style="color:#27ae60;" id="cnt-closed">0</div>
+              <div class="kpi-sub">resolved successfully</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- List Actions -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+          <div class="d-flex flex-wrap  gap-2" id="cat-chips">
+            <!-- JS Generated category chips -->
+          </div>
+          <div class="d-flex gap-2" style="max-width: 400px; width: 100%;">
+            <div class="input-group">
+              <span class="input-group-text"><i data-lucide="search" style="width:16px;height:16px;"></i></span>
+              <input type="text" class="form-control" id="search-input"
+                placeholder="Search by title, ID, department, reporter&hellip;" oninput="renderList()">
+            </div>
+            <select class="form-select" style="width: auto;" id="sort-sel" onchange="renderList()">
+              <option value="date">Latest First</option>
+              <option value="sev">By Severity</option>
+              <option value="id">By ID</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Incident Cards Grid JS Container -->
+        <div class="row g-3" id="incident-list">
+          <!-- Data populated by JS -->
+        </div>
+      </div>
+
+      <!-- CATEGORY DASHBOARD SCREEN -->
+      <div class="screen" id="screen-cat" style="display:none;">
+        <div class="mb-4">
+          <div class="text-uppercase fw-bold text-muted mb-3" style="font-size:11px; letter-spacing:0.5px;">INCIDENT
+            CATEGORY DASHBOARD</div>
+          <div class="row g-3" id="cat-dashboard">
+            <!-- JS Populated Category Grid -->
+          </div>
+        </div>
+      </div>
+
+      <!-- CREATE NEW INCIDENT SCREEN (WIZARD) -->
+      <div class="screen inc-form-wizard border p-3" id="screen-form" style="display:none;">
+
+        <!-- Progress bar -->
+        <div class="wizard-progress" id="prog-bar">
+          <div class="prog-step active" id="pstep-1">
+            <div class="prog-dot" id="pdot-1">1</div>
+            <div class="prog-label">Basic Info</div>
+          </div>
+          <div class="prog-line" id="pline-1"></div>
+          <div class="prog-step" id="pstep-2">
+            <div class="prog-dot" id="pdot-2">2</div>
+            <div class="prog-label">Classification</div>
+          </div>
+          <div class="prog-line" id="pline-2"></div>
+          <div class="prog-step" id="pstep-3">
+            <div class="prog-dot" id="pdot-3">3</div>
+            <div class="prog-label">Assignment</div>
+          </div>
+          <div class="prog-line" id="pline-3"></div>
+          <div class="prog-step" id="pstep-4">
+            <div class="prog-dot" id="pdot-4">4</div>
+            <div class="prog-label">Review</div>
+          </div>
+        </div>
+
+        <!-- STEP 1 &mdash; Basic Info -->
+        <div class="step-panel active" id="step-1">
+          <div class="section-lbl">Incident Details</div>
+          <div class="form-group">
+            <label>Incident Title / Summary <span style="color:#c0392b">*</span></label>
+            <input id="f-title" type="text" placeholder="Brief description of the incident" />
+            <div class="error-msg" id="err-title">Please enter a title.</div>
+          </div>
+          <div class="form-group">
+            <label>Description / Initial Observations</label>
+            <textarea id="f-desc"
+              placeholder="Describe what happened, who was involved, what was observed immediately&hellip;"
+              style="min-height:72px"></textarea>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Incident Date / Time <span style="color:#c0392b">*</span></label>
+                <input id="f-idate" type="text" placeholder="Select incident date & time" />
+                <div class="error-msg" id="err-idate">Please select incident date.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Date Reported <span style="color:#c0392b">*</span></label>
+                <input id="f-rdate" type="text" placeholder="Select reporting date" />
+                <div class="error-msg" id="err-rdate">Please select reporting date.</div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Location / Site</label>
+                <input id="f-location" type="text" placeholder="e.g. Warehouse B, Floor 2" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Witnesses (optional)</label>
+                <input id="f-witnesses" type="text" placeholder="Names or 'None'" />
+              </div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-cancel-form"
+              onclick="switchMain('list', document.getElementById('tab-list'))">Cancel</button>
+            <button class="btn-next-form" onclick="goStep(2)">Next: Classification &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 &mdash; Classification -->
+        <div class="step-panel" id="step-2">
+          <div class="section-lbl">Incident Classification</div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Incident Type <span style="color:#c0392b">*</span></label>
+                <select id="f-type">
+                  <option value="">Select&hellip;</option>
+                  <option>Safety</option>
+                  <option>IT</option>
+                  <option>Security</option>
+                  <option>Environmental</option>
+                  <option>HR</option>
+                  <option>Compliance</option>
+                  <option>Quality</option>
+                  <option>Facilities</option>
+                  <option>Finance</option>
+                  <option>Legal</option>
+                </select>
+                <div class="error-msg" id="err-type">Please select an incident type.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Severity <span style="color:#c0392b">*</span></label>
+                <select id="f-sev">
+                  <option value="">Select&hellip;</option>
+                  <option>Critical</option>
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+                <div class="error-msg" id="err-sev">Please select severity.</div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Department / Site <span style="color:#c0392b">*</span></label>
+                <select id="f-dept">
+                  <option value="">Select&hellip;</option>
+                  <option>Plant A – Warehouse B</option>
+                  <option>HQ – Data Center</option>
+                  <option>HQ – Server Room</option>
+                  <option>Plant B – Lab C</option>
+                  <option>HR – HQ Floor 3</option>
+                  <option>Finance – HQ Floor 5</option>
+                  <option>Legal – HQ Floor 6</option>
+                  <option>Quality – Plant C</option>
+                  <option>Facilities – Site D</option>
+                  <option>Operations – Distribution</option>
+                </select>
+                <div class="error-msg" id="err-dept">Please select a department.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Root Cause Category</label>
+                <select id="f-root">
+                  <option value="">Select&hellip;</option>
+                  <option>Operational Lapse</option>
+                  <option>System Failure</option>
+                  <option>Cyber Threat</option>
+                  <option>Equipment Failure</option>
+                  <option>Human Error</option>
+                  <option>Process Gap</option>
+                  <option>Policy Violation</option>
+                  <option>Third-Party Failure</option>
+                  <option>Natural Cause</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="section-lbl">Business Impact</div>
+          <div class="form-group">
+            <label>Impact Level</label>
+            <div class="impact-group" id="impact-group">
+              <button type="button" class="impact-btn" onclick="setImpact(this,'No Impact')">No Impact</button>
+              <button type="button" class="impact-btn" onclick="setImpact(this,'Minor')">Minor</button>
+              <button type="button" class="impact-btn" onclick="setImpact(this,'Moderate')">Moderate</button>
+              <button type="button" class="impact-btn" onclick="setImpact(this,'Significant')">Significant</button>
+              <button type="button" class="impact-btn" onclick="setImpact(this,'Severe')">Severe</button>
+            </div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Regulatory / Compliance Flag</label>
+                <select id="f-regflag">
+                  <option value="">None</option>
+                  <option>OSHA Reportable</option>
+                  <option>GDPR Notifiable</option>
+                  <option>SOX Relevant</option>
+                  <option>ISO 45001</option>
+                  <option>POSH Act</option>
+                  <option>Local Authority</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Initial Status</label>
+                <select id="f-status">
+                  <option>New</option>
+                  <option>Under Investigation</option>
+                  <option>In Review</option>
+                  <option>Escalated</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Attachments</label>
+            <div class="attachment-zone" onclick="fakeAttach()">
+              <div style="font-size:22px">&#128206;</div>
+              <p>Click to attach files (photos, documents, logs)</p>
+            </div>
+            <div class="att-list" id="att-list"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-back-form" onclick="goStep(1)">&larr; Back</button>
+            <button class="btn-next-form" onclick="goStep(3)">Next: Assignment &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 &mdash; Assignment -->
+        <div class="step-panel" id="step-3">
+          <div class="section-lbl">Reporting & Assignment</div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Reported By <span style="color:#c0392b">*</span></label>
+                <select id="f-rby">
+                  <option value="">Select</option>
+                  <option>Mark Lewis</option>
+                  <option>Rina Patel</option>
+                  <option>Dr. Chen</option>
+                  <option>Arjun Mehta</option>
+                  <option>Priya Sharma</option>
+                  <option>Tom Wilson</option>
+                  <option>Sarah Okafor</option>
+                  <option>System Auto Log</option>
+                </select>
+                <div class="error-msg" id="err-rby">Please select who reported this.</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Primary Assignee <span style="color:#c0392b">*</span></label>
+                <select id="f-ato">
+                  <option value="">Select&hellip;</option>
+                  <option>John Smith</option>
+                  <option>IT Ops Team</option>
+                  <option>HSE Officer</option>
+                  <option>CISO</option>
+                  <option>HR Manager</option>
+                  <option>Legal Counsel</option>
+                  <option>Finance Controller</option>
+                  <option>QA Lead</option>
+                  <option>Facilities Manager</option>
+                  <option>DPO</option>
+                  <option>Compliance Officer</option>
+                  <option>Safety Officer</option>
+                </select>
+                <div class="error-msg" id="err-ato">Please select a primary assignee.</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Additional Assignees / Team Members</label>
+            <div class="assignee-list" id="extra-assignees">
+              <div class="assignee-chip" onclick="toggleAssignee(this,'Mark Lewis')">ML &middot; Mark Lewis</div>
+              <div class="assignee-chip" onclick="toggleAssignee(this,'Rina Patel')">RP &middot; Rina Patel</div>
+              <div class="assignee-chip" onclick="toggleAssignee(this,'Dr. Chen')">DC &middot; Dr. Chen</div>
+              <div class="assignee-chip" onclick="toggleAssignee(this,'Arjun Mehta')">AM &middot; Arjun Mehta</div>
+              <div class="assignee-chip" onclick="toggleAssignee(this,'Priya Sharma')">PS &middot; Priya Sharma</div>
+              <div class="assignee-chip" onclick="toggleAssignee(this,'Tom Wilson')">TW &middot; Tom Wilson</div>
+              <div class="assignee-chip" onclick="toggleAssignee(this,'Sarah Okafor')">SO &middot; Sarah Okafor</div>
+              <div class="assignee-chip" onclick="toggleAssignee(this,'IT Ops Team')">IO &middot; IT Ops Team</div>
+            </div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Due Date for Actions</label>
+                <input id="f-due" type="text" placeholder="Select due date" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label>Escalation Contact</label>
+                <select id="f-esc">
+                  <option value="">None</option>
+                  <option>CEO</option>
+                  <option>COO</option>
+                  <option>CFO</option>
+                  <option>CISO</option>
+                  <option>Head of HSE</option>
+                  <option>General Counsel</option>
+                  <option>Board Secretary</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="section-lbl">Corrective Actions</div>
+          <div id="ca-items">
+            <div class="ca-row"><input type="text" placeholder="Describe corrective action&hellip;" /><button
+                class="ca-remove" onclick="removeCA(this)">&times;</button></div>
+          </div>
+          <button class="add-ca-btn" onclick="addCA()">+ Add Corrective Action</button>
+          <div class="section-lbl" style="margin-top:18px">Notifications</div>
+          <div class="notif-container">
+            <div class="notif-row">
+              <div>
+                <div class="notif-label">Email assignee on creation</div>
+                <div class="notif-sub">Sends immediate alert to primary assignee</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="notif-1" checked /><span class="slider"></span></label>
+            </div>
+            <div class="notif-row">
+              <div>
+                <div class="notif-label">Notify management on Critical/High</div>
+                <div class="notif-sub">Auto-escalate if severity is Critical or High</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="notif-2" checked /><span class="slider"></span></label>
+            </div>
+            <div class="notif-row">
+              <div>
+                <div class="notif-label">Daily digest to reporter</div>
+                <div class="notif-sub">Send progress updates once daily</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="notif-3" /><span class="slider"></span></label>
+            </div>
+            <div class="notif-row">
+              <div>
+                <div class="notif-label">Slack / Teams alert</div>
+                <div class="notif-sub">Push notification to integrated channels</div>
+              </div>
+              <label class="toggle"><input type="checkbox" id="notif-4" /><span class="slider"></span></label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-back-form" onclick="goStep(2)">&larr; Back</button>
+            <div class="form-actions-right">
+              <button class="btn-draft-form" onclick="saveDraft()">Save Draft</button>
+              <button class="btn-next-form" onclick="goStep(4)">Review & Submit &rarr;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 &mdash; Review & Submit -->
+        <div class="step-panel" id="step-4">
+          <div id="review-body"></div>
+          <div class="review-confirm">
+            <input type="checkbox" id="confirm-check"
+              onchange="document.getElementById('btn-final-save').disabled=!this.checked" />
+            <label for="confirm-check">I confirm that the information provided is accurate and complete to the best of
+              my knowledge.</label>
+          </div>
+          <div class="form-actions">
+            <button class="btn-back-form" onclick="goStep(3)">&larr; Back</button>
+            <div class="form-actions-right">
+              <button class="btn-draft-form" onclick="saveDraft()">Save Draft</button>
+              <button class="btn-save-form" id="btn-final-save" onclick="saveIncident()" disabled>&#10003; Submit
+                Incident</button>
+            </div>
+          </div>
+          <div class="success-banner" id="success-banner">
+            <div style="font-size:32px;margin-bottom:8px">&#10003;…</div>
+            <h3>Incident Submitted Successfully</h3>
+            <p id="success-id" style="margin-bottom:12px"></p>
+            <button class="btn-next-form"
+              style="padding:8px 18px;border-radius:7px;font-size:12px;font-weight:600;border:none;cursor:pointer"
+              onclick="switchMain('list',document.getElementById('tab-list'))">View All Incidents &rarr;</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DETAIL SCREEN -->
+      <div class="screen" id="screen-detail" style="display:none;">
+        <div class="mb-3">
+          <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1"
+            onclick="switchMain('list', document.getElementById('tab-list'))">
+            <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Back to list
+          </button>
+        </div>
+        <div id="detail-content"></div>
+      </div>
+
+    </div>
+  </main>
+  <footer class="col-12 text-center py-2 copyright">
+    <p data-translate="footer.copyright" class="mb-0">Copyright &copy; <span id="year"></span>
+      <strong>StratRoom</strong>
+    </p>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+  </footer>
+
+  <!-- project-planning-add-modal Start-->
+
+  <div class="modal custom-modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    id="project-planning-add-modal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Universal Incident Registry</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card custom-card border-0">
+            <div class="card-body">
+              <div class="grid gap-3">
+                <!-- <div class="g-col-12 g-col-md-2">
+                    <div class="form-group">
+                      <label for="Project_id" class="form-label">ID</label>
+                      <input type="text" class="form-control" name="Project_show_id" id="Project_show_id" disabled
+                        placeholder="ID">
+                    </div>
+                  </div> -->
+                <div class="g-col-12">
+                  <div class="form-group">
+                    <label for="uic_name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="uic_name" name="uic_name" placeholder="Name" />
+                  </div>
+                </div>
+                <!-- <div class="g-col-12">
+                  <div class="form-group">
+                    <label for="Project_description" class="form-label">Description</label>
+                    <textarea class="form-control modal-custom-textarea" id="Project_description"
+                      name="Project_description" placeholder="Description" rows="3"></textarea>
+                  </div>
+                </div> -->
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="uic_reported_by" class="form-label">Reported By</label>
+                    <select id="uic_reported_by" name="uic_reported_by" class="form-select modal-custom-select"
+                      data-placeholder="Select Reported By" multiple>
+                      <!-- <option value="" disabled selected>Select Reported By</option> -->
+                      <option value="2241">Nizam Goolam</option>
+                      <option value="2242">Goolam</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="uic_assigned_to" class="form-label">Assigned To</label>
+                    <select id="uic_assigned_to" name="uic_assigned_to" class="form-select modal-custom-select"
+                      data-placeholder="Select Assigned To" multiple>
+                      <!-- <option value="" disabled selected>Select Team</option> -->
+                      <option value="2243">Nizam Goolam</option>
+                      <option value="2244">Nizam</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="uic_incident_type" class="form-label">Incident Type</label>
+                    <select id="uic_incident_type" name="" class="form-select modal-custom-select"
+                      data-placeholder="Select a Incident Type">
+                      <option value="1049">Safety</option>
+                      <option value="1050">IT</option>
+                      <option value="1051">Security</option>
+                      <option value="1051">Environmental</option>
+
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="uic_Department" class="form-label">Department</label>
+                    <select id="uic_Department" name="" class="form-select modal-custom-select"
+                      data-placeholder="Select a Department" multiple>
+                      <option value="1049">Plant A Warehouse B</option>
+                      <option value="1050">HQ Data Center</option>
+                      <option value="1051">HQ Server Room</option>
+                      <option value="1051">Plant B Lab C</option>
+
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="uic_root_case_category" class="form-label">Root Cause Category
+                    </label>
+                    <select id="uic_root_case_category" name="category" class="form-select modal-custom-select"
+                      data-placeholder="Select Root Cause Category">
+                      <option value="" disabled selected>Select Root Cause Category</option>
+                      <option value="Operational Lapse">Operational Lapse</option>
+                      <option value="System Failure">System Failure</option>
+                      <option value="Cyber Threat">Cyber Threat</option>
+                      <option value="Equipment Failure">Equipment Failure</option>
+
+                    </select>
+
+                  </div>
+                </div>
+
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="uic_date-reported" class="form-label">Date Reported</label>
+                    <input type="text" class="form-control date-picker" data-language="en" name="uic_date" id="uic_date"
+                      placeholder="Date Reported" />
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="uic_date_incident" class="form-label">Incident Date / Time</label>
+                    <input type="text" class="form-control date-time-picker" data-language="en" name="uic_date_incident"
+                      id="uic_date_incident" placeholder="Incident Date / Time" />
+                  </div>
+                </div>
+
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="uic_status" class="form-label">Status</label>
+                    <select id="uic_status" name="uic_status" class="form-select modal-custom-select"
+                      aria-invalid="false">
+                      <option value="" selected disabled>Select Status</option>
+                      <option value="new">New</option>
+                      <option value="under_investigation">Under Investigation</option>
+                      <option value="in-review">In Review</option>
+                      <option value="closed">Closed</option>
+
+
+                    </select>
+                  </div>
+                </div>
+
+                <div class="g-col-12">
+                  <div class="form-group">
+                    <label for="uic_severity" class="form-label">Severity</label>
+                    <div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input green" type="radio" name="status" id="statusGreen" value="green">
+                        <label class="form-check-label" for="statusGreen">High</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input orange" type="radio" name="status" id="statusOrange"
+                          value="orange">
+                        <label class="form-check-label" for="statusOrange">Medium</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input red" type="radio" name="status" id="statusRed" value="red">
+                        <label class="form-check-label" for="statusRed">Critical</label>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary" value="Save">Save</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- project-planning-add-modal End-->
+  <!-- delete-modal start-->
+  <div class="modal custom-modal custom-delete-modal fade" id="delete-modal" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="--stratroom-modal-width:320px">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="card custom-card delete-card border-0">
+            <div class="card-body">
+
+              <div class="delete-box">
+                <h4 class="title">Do you really want to delete?</h4>
+                <div class="btn-wrap">
+                  <button type="button" class="btn btn-sm btn-label-secondary rounded-pill" data-bs-dismiss="modal"
+                    aria-label="Close">Cancel</button>
+                  <button class="btn btn-sm btn-danger rounded-pill">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- delete-modal end-->
+
+
+  <!--  Notes modal :::::::::::::::::::::::::::::::::::::::: -->
+  <div class="modal custom-modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="notes-modal" tabindex="-1"
+    role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Notes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table tab-sm table-bordered align-center" id="kpidrilldownTable">
+            <thead>
+              <tr>
+                <th class="text-center">Recommendation</th>
+                <th class="text-center">Responsible</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="form-group">
+                    <textarea class="form-control" placeholder="Notes" rows="3"></textarea>
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <div class="d-flex align-items-start justify-content-center">
+                    <ul class="list-unstyled d-inline-flex align-items-center avatar-group mb-0">
+
+                      <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Kim Karlos">
+                        <img src="assets/images/user/user9.jpg" class="rounded-circle" alt="Kim Karlos" width="24"
+                          height="24">
+                      </li>
+
+                      <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="John Doe">
+                        <img src="assets/images/user/user9.jpg" class="rounded-circle" alt="John Doe" width="24"
+                          height="24">
+                      </li>
+
+
+                      <li class="avatar avatar-xs pull-up" href="#attendess-list" data-bs-toggle="modal">
+                        <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                          title="3 more">+3</span>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+                <td class="text-end align-middle">
+                  <div class="table-actions justify-content-center">
+                    <a class="btn btn-sm btn-icon">
+                      <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                      </span>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="form-group">
+                    <textarea class="form-control" placeholder="Notes" rows="3"></textarea>
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <div class="d-flex align-items-start justify-content-center">
+                    <ul class="list-unstyled d-inline-flex align-items-center avatar-group mb-0">
+
+                      <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Kim Karlos">
+                        <img src="assets/images/user/user9.jpg" class="rounded-circle" alt="Kim Karlos" width="24"
+                          height="24">
+                      </li>
+
+                      <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="John Doe">
+                        <img src="assets/images/user/user9.jpg" class="rounded-circle" alt="John Doe" width="24"
+                          height="24">
+                      </li>
+
+
+                      <li class="avatar avatar-xs pull-up" href="#attendess-list" data-bs-toggle="modal">
+                        <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                          title="3 more">+3</span>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+                <td class="text-end align-middle">
+
+
+                  <div class="table-actions justify-content-center">
+                    <a class="btn btn-sm btn-icon">
+                      <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                      </span>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-icon">
+                      <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                      </span>
+                    </a>
+                  </div>
+
+
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary" value="Save">Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  action modal :::::::::::::::::::::::::::::::::::::::: -->
+  <div class="modal custom-modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="action-modal"
+    tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Action</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-sm table-bordered align-center">
+            <thead>
+              <tr>
+                <th class="text-center">Recommendation</th>
+                <th class="text-center">By Date</th>
+                <th class="text-center">Responsible</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="form-group">
+                    <textarea class="form-control" placeholder="Notes" rows="3"></textarea>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group">
+                    <input type="date" class="form-control date-picker" id="actionByDate-01" placeholder="Select date">
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <div class="d-flex align-items-start justify-content-center">
+                    <ul class="list-unstyled d-inline-flex align-items-center avatar-group mb-0">
+
+                      <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Kim Karlos">
+                        <img src="assets/images/user/user9.jpg" class="rounded-circle" alt="Kim Karlos" width="24"
+                          height="24">
+                      </li>
+
+                      <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="John Doe">
+                        <img src="assets/images/user/user9.jpg" class="rounded-circle" alt="John Doe" width="24"
+                          height="24">
+                      </li>
+
+
+                      <li class="avatar avatar-xs pull-up" href="#attendess-list" data-bs-toggle="modal">
+                        <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                          title="3 more">+3</span>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+                <td class="text-center">
+
+
+                  <select id="action-status-01" name="action-status" class="form-select modal-custom-select"
+                    data-placeholder="Select Status">
+                    <option value="" selected disabled>Select Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                  </select>
+
+                </td>
+                <td class="text-end align-middle">
+                  <div class="table-actions justify-content-center">
+                    <a class="btn btn-sm btn-icon">
+                      <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                      </span>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+
+                  <textarea class="form-control" placeholder="Notes" rows="3"></textarea>
+
+                </td>
+                <td>
+
+                  <input type="date" class="form-control date-picker" id="actionByDate-02" placeholder="Select date">
+
+                </td>
+                <td class="align-middle">
+                  <div class="d-flex align-items-start justify-content-center">
+                    <ul class="list-unstyled d-inline-flex align-items-center avatar-group mb-0">
+
+                      <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="Kim Karlos">
+                        <img src="assets/images/user/user9.jpg" class="rounded-circle" alt="Kim Karlos" width="24"
+                          height="24">
+                      </li>
+
+                      <li class="avatar avatar-xs pull-up" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="John Doe">
+                        <img src="assets/images/user/user9.jpg" class="rounded-circle" alt="John Doe" width="24"
+                          height="24">
+                      </li>
+
+
+                      <li class="avatar avatar-xs pull-up" href="#attendess-list" data-bs-toggle="modal">
+                        <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                          title="3 more">+3</span>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+                <td class="text-center">
+
+                  <select id="action-status-02" name="action-status" class="form-select modal-custom-select"
+                    data-placeholder="Select Status">
+                    <option value="" selected disabled>Select Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                  </select>
+
+
+                </td>
+                <td>
+
+
+                  <div class="table-actions justify-content-center">
+                    <a class="btn btn-sm btn-icon">
+                      <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                      </span>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-icon">
+                      <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                      </span>
+                    </a>
+                  </div>
+
+
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary" value="Save">Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  attachment modal :::::::::::::::::::::::::::::::::::::::: -->
+  <div class="modal custom-modal fade" id="attachment-modal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Attachments</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="attachment-upload">
+                <div class="input-group mb-1">
+                  <input type="file" class="form-control" id="inputGroupFile02"
+                    accept=".pdf,.ppt,.jpeg,.xlsx,.doc,.docx">
+                  <!-- <label class="input-group-text" for="inputGroupFile02">Upload</label> -->
+                </div>
+                <div class="mb-3 form-text">Supported file type (jpeg,pdf,pptx,xlsx,docx)</div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-sm table-bordered align-center" id="">
+                  <thead>
+                    <tr>
+                      <th class="text-center">Sr. No.</th>
+                      <th class="text-center">File Name</th>
+                      <th class="text-center">Uploaded On</th>
+                      <th class="text-center">Size</th>
+                      <th class="text-center">Type</th>
+                      <th class="text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-center">1</td>
+                      <td class="text-center">File Name</td>
+                      <td class="text-center">23, Nov 2024</td>
+                      <td class="text-center">100kb</td>
+                      <td class="text-center">Jpeg</td>
+                      <td class="text-center align-middle">
+                        <div class="table-actions justify-content-center ">
+                          <a href="" class="btn btn-sm btn-icon">
+                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete">
+                              <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </span>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-center">2</td>
+                      <td class="text-center">File Name</td>
+                      <td class="text-center">23, Nov 2024</td>
+                      <td class="text-center">100kb</td>
+                      <td class="text-center">Jpeg</td>
+                      <td class="text-center align-middle">
+                        <div class="table-actions justify-content-center ">
+                          <a href="" class="btn btn-sm btn-icon">
+                            <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete">
+                              <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </span>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary" value="Save">Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal custom-modal fade" id="attendess-list" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Users</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body d-grid gap-3">
+          <div class="attendees-search">
+            <div>
+              <div class="form-check cusom-check">
+                <input class="form-check-input" type="checkbox" value="" id="allusers">
+                <label class="form-check-label" for="allusers">
+                  All Users
+                </label>
+              </div>
+            </div>
+            <div class="search">
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control" placeholder="Recipient's username"
+                  aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                  <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="list-group add-attendees">
+            <div class="list-group-item attendee">
+              <div class="form-check cusom-check form-check-reverse">
+                <input class="form-check-input" type="checkbox" name="attendees" id="attendees1">
+                <label class="form-check-label" for="attendees1">
+                  <span class="image">
+                    <img src="assets/images/icons/speaker-1.svg" alt="Chris" width="18" height="18">
+                  </span>
+                  <span class="name">Chris</span>
+
+                </label>
+              </div>
+            </div>
+            <div class="list-group-item attendee">
+              <div class="form-check cusom-check form-check-reverse">
+                <input class="form-check-input" type="checkbox" name="attendees" id="attendees2">
+                <label class="form-check-label" for="attendees2">
+                  <span class="image">
+                    <img src="assets/images/icons/speaker.svg" alt="Kevin" width="18" height="18">
+                  </span>
+                  <span class="name">Kevin</span>
+
+                </label>
+              </div>
+            </div>
+            <div class="list-group-item attendee">
+              <div class="form-check cusom-check form-check-reverse">
+                <input class="form-check-input" type="checkbox" name="attendees" id="attendees3">
+                <label class="form-check-label" for="attendees3">
+
+                  <span class="image">
+                    <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                  </span>
+                  <span class="name">Richard</span>
+                </label>
+              </div>
+            </div>
+            <div class="list-group-item attendee">
+              <div class="form-check cusom-check form-check-reverse">
+                <input class="form-check-input" type="checkbox" name="attendees" id="attendees4">
+                <label class="form-check-label" for="attendees4">
+
+                  <span class="image">
+                    <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                  </span>
+                  <span class="name">Stark</span>
+                </label>
+              </div>
+            </div>
+            <div class="list-group-item attendee">
+              <div class="form-check cusom-check form-check-reverse">
+                <input class="form-check-input" type="checkbox" name="attendees" id="attendees5">
+                <label class="form-check-label" for="attendees5">
+
+                  <span class="image">
+                    <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                  </span>
+                  <span class="name">Warner</span>
+                </label>
+              </div>
+            </div>
+            <div class="list-group-item attendee">
+              <div class="form-check cusom-check form-check-reverse">
+                <input class="form-check-input" type="checkbox" name="attendees" id="attendees6">
+                <label class="form-check-label" for="attendees6">
+                  <span class="image">
+                    <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                  </span>
+                  <span class="name">Williamson</span>
+
+                </label>
+              </div>
+            </div>
+            <div class="list-group-item attendee">
+              <div class="form-check cusom-check form-check-reverse">
+                <input class="form-check-input" type="checkbox" name="attendees" id="attendees7">
+                <label class="form-check-label" for="attendees7">
+                  <span class="image">
+                    <img src="assets/images/icons/speaker.svg" alt="" width="18" height="18">
+                  </span>
+                  <span class="name">Zara</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+  <div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Templates</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card custom-card border-0">
+            <div class="card-body">
+              <form id="menuForm">
+                <div class="grid gap-3">
+                  <div class="g-col-12">
+                    <div class="form-group">
+                      <label for="menuName" class="form-label">Name</label>
+
+                      <input type="text" class="form-control" id="menuName" placeholder="Enter Name" required>
+                    </div>
+                  </div>
+                  <div class="g-col-12 g-col-md-6">
+                    <div class="form-group">
+                      <label for="pageType" class="form-label">Page Type</label>
+
+                      <select id="pageType" class="form-select" required>
+                        <option value="">Select Page Type</option>
+                        <option value="Plan">Plan</option>
+                        <option value="Measure">Measure</option>
+                        <option value="Execute">Execute</option>
+                        <option value="Govern">Govern</option>
+                        <option value="Meet">Meet</option>
+                        <option value="Report">Report</option>
+                        <option value="Masters">Masters</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="g-col-12 g-col-md-6">
+                    <div class="form-group">
+                      <label for="boardType" class="form-label">Board Type</label>
+                      <select id="boardType" class="form-select" required>
+                        <option value="">Select Board Type</option>
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary" id="saveMenuBtn">Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- create-template END -->
+
+  <!-- Notification Offcanvas for Mobile -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvas"
+    aria-labelledby="notificationOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title" id="notificationOffcanvasLabel">Notifications</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <div class="list-group list-group-flush">
+        <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+          <div class="d-flex align-items-start">
+            <span class="icon mt-1 d-flex align-items-center justify-content-center"
+              style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+              <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="fw-medium">New message from John Smith</div>
+              <small class="text-muted">Risk approval required for Phase 2</small>
+              <div class="text-muted small mt-1">2 minutes ago</div>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+          <div class="d-flex align-items-start">
+            <span class="icon mt-1 d-flex align-items-center justify-content-center"
+              style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+              <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="fw-medium">System Maintenance Alert</div>
+              <small class="text-muted">Scheduled maintenance on Sunday at 2:00 AM</small>
+              <div class="text-muted small mt-1">1 hour ago</div>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+          <div class="d-flex align-items-start">
+            <span class="icon mt-1 d-flex align-items-center justify-content-center"
+              style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+              <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="fw-medium">Task Completed</div>
+              <small class="text-muted">Data backup process finished successfully</small>
+              <div class="text-muted small mt-1">3 hours ago</div>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+          <div class="d-flex align-items-start">
+            <span class="icon mt-1 d-flex align-items-center justify-content-center"
+              style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+              <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="fw-medium">New Team Member</div>
+              <small class="text-muted">Sarah Johnson joined the Marketing team</small>
+              <div class="text-muted small mt-1">1 day ago</div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="p-3 border-top text-center">
+        <a href="#" class="btn btn-sm btn-outline-primary">View All Notifications</a>
+      </div>
+    </div>
+  </div>
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="editForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Menu Text</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="editInput" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Context Menu -->
+  <div id="contextMenu" class="custom-context-menu">
+    <button id="editItem" data-translate="actions.edit">Edit</button>
+    <button id="deleteItem" data-translate="actions.delete">Delete</button>
+    <button id="moveUpItem" data-translate="actions.moveUp">Move Up</button>
+    <button id="moveDownItem" data-translate="actions.moveDown">Move Down</button>
+  </div>
+
+
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/datatables/1.13.6/jquery.dataTables.min.js"></script>
+  <script src="assets/datatables/1.13.6/dataTables.bootstrap5.min.js"></script>
+  <script src="assets/sortablejs/1.15.0/sortable.min.js"></script>
+  <script src="assets/js/lucide.js"></script>
+
+
+  <link href="assets/css/jquery-ui.min.css" rel="stylesheet">
+  <script src="assets/js/jquery-ui.min.js"></script>
+
+
+  <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/knockout-3.5.0.js"></script>
+  <script src="assets/js/daterangepicker.min.js"></script>
+
+  <link href="assets/css/select2.min.css" rel="stylesheet" />
+  <script src="assets/js/select2.min.js"></script>
+
+
+  <script src="assets/js/paging.js"></script>
+
+  <link href="assets/css/pickr.min.css" rel="stylesheet">
+  <script src="assets/js/pickr.es5.min.js"></script>
+  <script src="assets/js/widgets.js"></script>
+
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="assets/flatpickr/flatpickr.min.css">
+  <script src="assets/flatpickr/flatpickr.js"></script>
+
+  <script src="assets/js/main.js"></script>
+
+
+  <script src="assets/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="assets/jspdf/3.5.27/jspdf.plugin.autotable.min.js"></script>
+  <script src="assets/js/generate-universal-incident-registry-pdf.js"></script>
+
+
+  <script>
+    $('.modal-custom-select').each(function () {
+      let $this = $(this);
+      $this.select2({
+        width: "100%",
+        dropdownParent: $this.closest('.modal')
+      });
+    });
+
+    document.querySelectorAll('.date-range-picker').forEach(function (el) {
+      const pickerId = el.getAttribute('id'); // Find the element's ID
+      flatpickr(`#${pickerId}`, {
+        mode: "range",
+        dateFormat: "M j, Y",
+        // defaultDate: ["2025-08-12", "2025-08-13"],
+        onClose: function (selectedDates, dateStr, instance) {
+          if (selectedDates.length === 2) {
+            const start = instance.formatDate(selectedDates[0], "M j, Y");
+            const end = instance.formatDate(selectedDates[1], "M j, Y");
+            el.value = `${start} to ${end}`; // Set formatted value in input
+          }
+        }
+      });
+    });
+    document.querySelectorAll('.date-time-picker').forEach(function (el) {
+      const pickerId = el.getAttribute('id'); // Find the element's ID
+      flatpickr(`#${pickerId}`, {
+        enableTime: true,       // enable time selection
+        dateFormat: "M j, Y h:i K", // date + time format
+        allowInput: true,           // let user type too
+        onReady: function (selectedDates, dateStr, instance) {
+          const okButton = document.createElement("button");
+          okButton.textContent = "OK";
+          okButton.type = "button";
+          okButton.className = "flatpickr-ok-btn btn btn-sm btn-primary mt-2 w-100";
+          instance.calendarContainer.appendChild(okButton);
+          okButton.addEventListener("click", function () {
+            instance.close();
+          });
+        },
+        // defaultDate: "2025-08-31 14:30", // optional: default datetime
+        onClose: function (selectedDates, dateStr, instance) {
+          if (selectedDates.length === 1) {
+            const formatted = instance.formatDate(selectedDates[0], "M j, Y h:i K");
+            el.value = formatted; // Set formatted value in input
+          }
+        }
+      });
+    });
+    document.querySelectorAll('.date-picker').forEach(function (el) {
+      const pickerId = el.getAttribute('id'); // Get the elementâ€™s ID
+      flatpickr(`#${pickerId}`, {
+        dateFormat: "M j, Y",  // Example: Oct 23, 2025
+        allowInput: true
+      });
+    });
+  </script>
+  <script>
+    const ProjectCategories = [
+      "Operational Lapse", "System Failure", "Cyber Threat", "Equipment Failure"
+    ];
+
+    const initiativeCategoryPopoverTrigger = document.getElementById('popoverFilterProjectPlanningCategory');
+
+    let initiativeCategoryPopover;
+
+    const createRiskCategoryContent = () => {
+      const content = document.createElement('div');
+      content.innerHTML = `
+      <div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="h6 mb-0">
+            Filter Initiatives Category
+          </h5>
+          <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <button class="btn btn-sm btn-light select-all-risk">Select All</button>
+          <button class="btn btn-sm btn-light deselect-all-risk">Deselect All</button>
+        </div>
+        <div class="d-flex flex-column gap-2 pageViewOption" style="max-height: 300px; overflow-y: auto;">
+          ${ProjectCategories.map(category => `
+            <div class="form-check">
+              <input class="form-check-input filter-risk" id="rc-${category.replace(/\s+/g, '')}" type="checkbox" value="${category}" checked>
+              <label class="form-check-label" for="rc-${category.replace(/\s+/g, '')}">${category}</label>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+      return content;
+    };
+
+    if (initiativeCategoryPopoverTrigger) {
+      initiativeCategoryPopover = new bootstrap.Popover(initiativeCategoryPopoverTrigger, {
+        html: true,
+        placement: 'bottom',
+        content: createRiskCategoryContent,
+        sanitize: false,
+        container: 'body',
+        trigger: 'manual'
+      });
+    }
+
+    // Open popover on button click
+    if (initiativeCategoryPopoverTrigger) initiativeCategoryPopoverTrigger.addEventListener('click', () => {
+      initiativeCategoryPopover.toggle();
+    });
+
+    function filterKpiCardsByInitiative() {
+      const checked = Array.from(document.querySelectorAll('.filter-risk:checked')).map(cb => cb.value);
+      const allChecked = checked.length === ProjectCategories.length;
+      const cards = document.querySelectorAll('.card.meeting-card');
+
+      cards.forEach(card => {
+        const riskText = card.querySelector('.rootCauseCategory')?.textContent.trim();
+        card.style.display = (allChecked || checked.includes(riskText)) ? '' : 'none';
+      });
+    }
+    // Bind events
+
+    // filterKpiCardsByInitiative();
+    // Delegate interactions
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.btn-close')) {
+        initiativeCategoryPopover.hide();
+      }
+      document.querySelectorAll('.filter-risk').forEach(cb => {
+        cb.addEventListener('change', filterKpiCardsByInitiative);
+      });
+      if (e.target.classList.contains('select-all-risk')) {
+        document.querySelectorAll('.filter-risk').forEach(cb => cb.checked = true);
+        filterKpiCardsByInitiative();
+      }
+      if (e.target.classList.contains('deselect-all-risk')) {
+        document.querySelectorAll('.filter-risk').forEach(cb => cb.checked = false);
+        filterKpiCardsByInitiative();
+      }
+    });
+  </script>
+
+  <script>
+    // ===== CATEGORIES (10) =====
+    const CATEGORIES = [
+      { id: 'safety', label: 'Safety', color: '#c0392b', bg: '#ffedd5' },
+      { id: 'it', label: 'IT', color: '#1a56a0', bg: '#dbeafe' },
+      { id: 'security', label: 'Security', color: '#4c1d95', bg: '#ede9fe' },
+      { id: 'environmental', label: 'Environmental', color: '#14532d', bg: '#dcfce7' },
+      { id: 'hr', label: 'HR', color: '#9c2863', bg: '#fce7f3' },
+      { id: 'compliance', label: 'Compliance', color: '#78350f', bg: '#fef3c7' },
+      { id: 'quality', label: 'Quality', color: '#0f4e47', bg: '#ccfbf1' },
+      { id: 'facilities', label: 'Facilities', color: '#374151', bg: '#f3f4f6' },
+      { id: 'finance', label: 'Finance', color: '#1e3a8a', bg: '#dbeafe' },
+      { id: 'legal', label: 'Legal', color: '#701a75', bg: '#fae8ff' }
+    ];
+
+    // ===== INCIDENTS (25) =====
+    const INCIDENTS = [
+      { id: 'INC-2025-0012', cat: 'safety', title: 'Forklift collision in Warehouse B', sev: 'High', status: 'Under Investigation', dept: 'Plant A – Warehouse B', root: 'Operational Lapse', rby: 'Mark Lewis', ato: 'John Smith', idate: '2025-10-29T15:15', rdate: '2025-10-29' },
+      { id: 'INC-2025-0013', cat: 'it', title: 'Server downtime – HRMS system outage', sev: 'Medium', status: 'Closed', dept: 'HQ – Data Center', root: 'System Failure', rby: 'Rina Patel', ato: 'IT Ops Team', idate: '2025-10-30T09:20', rdate: '2025-10-30' },
+      { id: 'INC-2025-0014', cat: 'security', title: 'Unauthorized access attempt on server room', sev: 'Critical', status: 'Escalated', dept: 'HQ – Server Room', root: 'Cyber Threat', rby: 'Security Bot', ato: '&mdash;', idate: '2025-10-31T01:40', rdate: '2025-10-31' },
+      { id: 'INC-2025-0015', cat: 'environmental', title: 'Chemical spill in Lab C – dilute acid leak', sev: 'Medium', status: 'In Review', dept: 'Plant B – Lab C', root: 'Equipment Failure', rby: 'Dr. Chen', ato: 'HSE Officer', idate: '2025-10-31T11:10', rdate: '2025-10-31' },
+      { id: 'INC-2025-0016', cat: 'hr', title: 'Workplace harassment complaint – Floor 3', sev: 'High', status: 'Under Investigation', dept: 'HR – HQ Floor 3', root: 'Policy Violation', rby: 'Priya Sharma', ato: 'HR Manager', idate: '2025-11-01T10:00', rdate: '2025-11-01' },
+      { id: 'INC-2025-0017', cat: 'it', title: 'Ransomware attack on finance workstations', sev: 'Critical', status: 'Escalated', dept: 'Finance – HQ Floor 5', root: 'Cyber Threat', rby: 'IT Ops Team', ato: 'CISO', idate: '2025-11-01T14:30', rdate: '2025-11-01' },
+      { id: 'INC-2025-0018', cat: 'safety', title: 'Slip and fall near loading dock – Site D', sev: 'Low', status: 'Closed', dept: 'Facilities – Site D', root: 'Operational Lapse', rby: 'Tom Wilson', ato: 'Safety Officer', idate: '2025-11-02T08:45', rdate: '2025-11-02' },
+      { id: 'INC-2025-0019', cat: 'quality', title: 'Batch defect – Product line QX-7 substandard coating', sev: 'High', status: 'In Review', dept: 'Quality – Plant C', root: 'Process Gap', rby: 'Arjun Mehta', ato: 'QA Lead', idate: '2025-11-02T12:00', rdate: '2025-11-02' },
+      { id: 'INC-2025-0020', cat: 'compliance', title: 'GDPR data breach – customer PII exposed', sev: 'Critical', status: 'Escalated', dept: 'HQ – Data Center', root: 'System Failure', rby: 'System Auto Log', ato: 'DPO', idate: '2025-11-02T23:55', rdate: '2025-11-03' },
+      { id: 'INC-2025-0021', cat: 'facilities', title: 'HVAC system failure – Plant A Block 2', sev: 'Medium', status: 'Under Investigation', dept: 'Plant A – Warehouse B', root: 'Equipment Failure', rby: 'Tom Wilson', ato: 'Facilities Manager', idate: '2025-11-03T07:00', rdate: '2025-11-03' },
+      { id: 'INC-2025-0022', cat: 'environmental', title: 'Effluent discharge exceeding permissible limits', sev: 'High', status: 'In Review', dept: 'Plant B – Lab C', root: 'Process Gap', rby: 'Dr. Chen', ato: 'HSE Officer', idate: '2025-11-03T15:00', rdate: '2025-11-03' },
+      { id: 'INC-2025-0023', cat: 'legal', title: 'Contractual breach – Vendor non-delivery', sev: 'Medium', status: 'New', dept: 'Legal – HQ Floor 6', root: 'Third-Party Failure', rby: 'Sarah Okafor', ato: 'Legal Counsel', idate: '2025-11-04T09:00', rdate: '2025-11-04' },
+      { id: 'INC-2025-0024', cat: 'finance', title: 'Duplicate payment processing error – ERP glitch', sev: 'High', status: 'Under Investigation', dept: 'Finance – HQ Floor 5', root: 'System Failure', rby: 'Rina Patel', ato: 'Finance Controller', idate: '2025-11-04T11:30', rdate: '2025-11-04' },
+      { id: 'INC-2025-0025', cat: 'safety', title: 'Electrical arc flash – Switchgear Room 1', sev: 'Critical', status: 'Escalated', dept: 'Facilities – Site D', root: 'Equipment Failure', rby: 'Tom Wilson', ato: 'Safety Officer', idate: '2025-11-04T16:15', rdate: '2025-11-04' },
+      { id: 'INC-2025-0026', cat: 'hr', title: 'Unauthorized overtime approvals – Ops team', sev: 'Low', status: 'Closed', dept: 'Operations – Distribution', root: 'Policy Violation', rby: 'Mark Lewis', ato: 'HR Manager', idate: '2025-11-05T09:00', rdate: '2025-11-05' },
+      { id: 'INC-2025-0027', cat: 'it', title: 'Phishing campaign – 14 employees clicked malicious link', sev: 'High', status: 'Under Investigation', dept: 'HQ – Server Room', root: 'Human Error', rby: 'IT Ops Team', ato: 'CISO', idate: '2025-11-05T10:45', rdate: '2025-11-05' },
+      { id: 'INC-2025-0028', cat: 'quality', title: 'Customer complaint – contamination in Batch QX-9', sev: 'Critical', status: 'Escalated', dept: 'Quality – Plant C', root: 'Process Gap', rby: 'Arjun Mehta', ato: 'QA Lead', idate: '2025-11-05T14:00', rdate: '2025-11-05' },
+      { id: 'INC-2025-0029', cat: 'security', title: 'Tailgating incident – R&D restricted access zone', sev: 'Medium', status: 'New', dept: 'HQ – Server Room', root: 'Operational Lapse', rby: 'Security Bot', ato: 'Security Manager', idate: '2025-11-06T08:15', rdate: '2025-11-06' },
+      { id: 'INC-2025-0030', cat: 'compliance', title: 'SOX audit finding – missing approval trail', sev: 'High', status: 'In Review', dept: 'Finance – HQ Floor 5', root: 'Process Gap', rby: 'Sarah Okafor', ato: 'Compliance Officer', idate: '2025-11-06T11:00', rdate: '2025-11-06' },
+      { id: 'INC-2025-0031', cat: 'environmental', title: 'Asbestos discovered during Building C renovation', sev: 'Critical', status: 'New', dept: 'Facilities – Site D', root: 'Natural Cause', rby: 'Tom Wilson', ato: 'HSE Officer', idate: '2025-11-06T13:30', rdate: '2025-11-06' },
+      { id: 'INC-2025-0032', cat: 'facilities', title: 'Roof leak causing archive room damage', sev: 'Low', status: 'Closed', dept: 'Facilities – Site D', root: 'Equipment Failure', rby: 'Tom Wilson', ato: 'Facilities Manager', idate: '2025-11-06T15:00', rdate: '2025-11-06' },
+      { id: 'INC-2025-0033', cat: 'legal', title: 'IP infringement claim filed by competitor', sev: 'High', status: 'Under Investigation', dept: 'Legal – HQ Floor 6', root: 'Third-Party Failure', rby: 'Sarah Okafor', ato: 'Legal Counsel', idate: '2025-11-07T10:00', rdate: '2025-11-07' },
+      { id: 'INC-2025-0034', cat: 'hr', title: 'Data privacy breach – employee health records accessed', sev: 'Critical', status: 'Escalated', dept: 'HR – HQ Floor 3', root: 'Human Error', rby: 'Priya Sharma', ato: 'DPO', idate: '2025-11-07T14:00', rdate: '2025-11-07' },
+      { id: 'INC-2025-0035', cat: 'finance', title: 'Petty cash discrepancy – Operations site', sev: 'Low', status: 'Closed', dept: 'Operations – Distribution', root: 'Human Error', rby: 'Rina Patel', ato: 'Finance Controller', idate: '2025-11-07T16:00', rdate: '2025-11-07' },
+      { id: 'INC-2025-0036', cat: 'it', title: 'Cloud storage misconfiguration – public bucket exposed', sev: 'Critical', status: 'Under Investigation', dept: 'HQ – Data Center', root: 'Human Error', rby: 'System Auto Log', ato: 'CISO', idate: '2025-11-08T06:00', rdate: '2025-11-08' }
+    ];
+
+    let currentFilter = '';
+
+    // ===== helpers =====
+    function getCat(id) { return CATEGORIES.find(c => c.id === id) || { label: id, color: '#888', bg: '#f0f0f0' }; }
+
+    function getSevBadge(sv) {
+      const cls = sv === 'Critical' ? 'sv-critical' : sv === 'High' ? 'sv-high' : sv === 'Medium' ? 'sv-medium' : 'sv-low';
+      return `<span class="inc-badge ${cls}">${sv}</span>`;
+    }
+    function getStatusBadge(st) {
+      let cls = 's-new';
+      if (st === 'Under Investigation') cls = 's-inv';
+      else if (st === 'In Review') cls = 's-review';
+      else if (st === 'Closed') cls = 's-closed';
+      else if (st === 'Escalated') cls = 's-esc';
+      return `<span class="inc-badge ${cls}">${st}</span>`;
+    }
+    function initials(n) { return n.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase(); }
+    function fmtDate(d) { try { return new Date(d).toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }).replace(',', ''); } catch (e) { return d; } }
+    function fmtDateTime(d) { try { return new Date(d).toLocaleString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }).replace(',', ', '); } catch (e) { return d; } }
+
+    // ===== switchMain =====
+    function switchMain(t, navEl) {
+      document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+      document.querySelectorAll('#registryTabs .nav-link').forEach(n => n.classList.remove('active'));
+      document.getElementById('screen-' + t).style.display = 'block';
+      if (t === 'detail') {
+        document.getElementById('tab-list').classList.add('active');
+      } else if (navEl) {
+        navEl.classList.add('active');
+      }
+      if (t === 'list') renderList();
+      if (t === 'cat') renderCatDashboard();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ===== filterType =====
+    function filterType(t) { currentFilter = t; renderList(); }
+
+    // ===== renderList =====
+    function renderList() {
+      // Stats
+      document.getElementById('cnt-total-header').innerText = INCIDENTS.length;
+      document.getElementById('cnt-all').innerText = INCIDENTS.length;
+      document.getElementById('cnt-open').innerText = INCIDENTS.filter(i => i.status !== 'Closed').length;
+      document.getElementById('cnt-crit').innerText = INCIDENTS.filter(i => i.sev === 'Critical').length;
+      document.getElementById('cnt-closed').innerText = INCIDENTS.filter(i => i.status === 'Closed').length;
+
+      // Chips
+      const allChip = `<div class="chip ${currentFilter === '' ? 'active' : ''}" onclick="filterType('')">All</div>`;
+      const catChips = CATEGORIES.map(c => {
+        const cnt = INCIDENTS.filter(i => i.cat === c.id).length;
+        if (!cnt) return '';
+        return `<div class="chip ${currentFilter === c.id ? 'active' : ''}" onclick="filterType('${c.id}')">${c.label} <span style="opacity:.65">${cnt}</span></div>`;
+      }).join('');
+      document.getElementById('cat-chips').innerHTML = allChip + catChips;
+
+      const term = document.getElementById('search-input').value.toLowerCase();
+      const sort = document.getElementById('sort-sel').value;
+
+      let arr = INCIDENTS.filter(i =>
+        (currentFilter === '' || i.cat === currentFilter) &&
+        (!term || i.title.toLowerCase().includes(term) || i.id.toLowerCase().includes(term) || i.dept.toLowerCase().includes(term) || i.rby.toLowerCase().includes(term))
+      );
+
+      if (sort === 'sev') { const o = { Critical: 0, High: 1, Medium: 2, Low: 3 }; arr.sort((a, b) => o[a.sev] - o[b.sev]); }
+      else if (sort === 'id') { arr.sort((a, b) => b.id.localeCompare(a.id)); }
+      else { arr.sort((a, b) => new Date(b.idate) - new Date(a.idate)); }
+
+      if (!arr.length) {
+        document.getElementById('incident-list').innerHTML = '<div class="col-12"><div class="empty" style="text-align:center;padding:36px 20px;color:#aaa;font-size:13px;">No incidents match your search.</div></div>';
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      let html = '';
+      arr.forEach(i => {
+        const cat = getCat(i.cat);
+        const abbr = initials(i.rby);
+        const diffDays = Math.ceil(Math.abs(new Date() - new Date(i.idate)) / (1000 * 60 * 60 * 24));
+        const unassigned = i.ato === '&mdash;';
+        const openText = i.status === 'Closed' ? 'Closed' : unassigned ? '&#9888; Unassigned' : diffDays + ' days open';
+        const openColor = i.status === 'Closed' ? '#1e6e36' : unassigned ? '#c0392b' : diffDays > 2 ? '#9c6200' : '#1e6e36';
+
+        const svClass = i.sev === 'Critical' ? 'sv-critical' : i.sev === 'High' ? 'sv-high' : i.sev === 'Medium' ? 'sv-medium' : 'sv-low';
+        const stClass = i.status === 'Under Investigation' ? 's-inv' : i.status === 'In Review' ? 's-review' : i.status === 'Closed' ? 's-closed' : i.status === 'Escalated' ? 's-esc' : 's-new';
+
+        html += `
+        <div class="col-lg-4">
+          <div class="inc-card" onclick="openDetail('${i.id}')">
+            <div class="card-header">
+              <div class="inc-id" style="background:${cat.color}">${i.id} &middot; ${cat.label}</div>
+              <div class="card-acts">
+                <a href="#" class="action-btn" onclick="event.stopPropagation(); openDetail('${i.id}')" title="View"><i data-lucide="eye" style="width:14px;height:14px;"></i></a>
+                <a href="#" class="action-btn" onclick="event.stopPropagation()" title="Attach"><i data-lucide="paperclip" style="width:14px;height:14px;"></i></a>
+                <div class="dropdown m-0 p-0" style="display:inline-flex;">
+                  <a class="action-btn" data-bs-toggle="dropdown" onclick="event.stopPropagation()" title="More"><i data-lucide="more-horizontal" style="width:14px;height:14px;"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                    <li><a class="dropdown-item" href="#">Delete</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-title">${i.title}</div>
+              <div class="card-grid">
+                <div><div class="f-label">STATUS</div><div class="f-val"><span class="inc-badge ${stClass}">${i.status}</span></div></div>
+                <div><div class="f-label">SEVERITY</div><div class="f-val"><span class="inc-badge ${svClass}">${i.sev}</span></div></div>
+                <div><div class="f-label">DEPARTMENT</div><div class="f-val">${i.dept}</div></div>
+                <div><div class="f-label">ROOT CAUSE</div><div class="f-val">${i.root || '-'}</div></div>
+                <div><div class="f-label">DATE REPORTED</div><div class="f-val">${fmtDate(i.rdate)}</div></div>
+                <div><div class="f-label">INCIDENT DATE</div><div class="f-val">${fmtDateTime(i.idate)}</div></div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="meta-row">
+                <div class="avatar" style="background:${cat.bg};color:${cat.color};">${abbr}</div>
+                <span>${i.rby}</span>
+              </div>
+              <div class="meta-row gap-2">
+                <span class="d-flex align-items-center gap-1"><i data-lucide="paperclip" style="width:12px;height:12px;"></i> 3</span>
+                <span class="d-flex align-items-center gap-1"><i data-lucide="message-square" style="width:12px;height:12px;"></i> 4</span>
+                <span class="d-flex align-items-center gap-1" style="color:#1e6e36;"><i data-lucide="check-square" style="width:12px;height:12px;"></i> 2</span>
+              
+              </div>
+              <div class="meta-row" style="gap:10px;">               
+                <span style="color:${openColor};font-weight:600;margin-left:5px;">${openText}</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      });
+
+      document.getElementById('incident-list').innerHTML = html;
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ===== renderCatDashboard =====
+    function renderCatDashboard() {
+      const total = INCIDENTS.length;
+      const hexToRgba = (hex, alpha) => {
+        let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r},${g},${b},${alpha})`;
+      };
+
+      document.getElementById('cat-dashboard').innerHTML = CATEGORIES.map(c => {
+        const items = INCIDENTS.filter(i => i.cat === c.id);
+        if (!items.length) return '';
+        const crit = items.filter(i => i.sev === 'Critical').length;
+        const pct = Math.round(items.length / total * 100);
+
+        const rows = items.map(i => `<tr onclick="openDetail('${i.id}')" style="cursor:pointer">
+          <td><span style="color:${c.color};font-weight:600">${i.id}</span></td>
+          <td style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.title}</td>
+          <td>${getSevBadge(i.sev)}</td>
+          <td>${getStatusBadge(i.status)}</td>
+        </tr>`).join('');
+
+        return `<div class="col-12"><div class="cat-section">
+          <div class="cat-header-row" style="background:${hexToRgba(c.color, 0.08)};border-color:${hexToRgba(c.color, 0.18)}">
+            <div class="cat-dot" style="background:${c.color}"></div>
+            <span class="cat-name">${c.label}</span>
+            <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${c.color}"></div></div>
+            <span class="cat-count">${items.length} incidents</span>
+            ${crit ? `<span class="inc-badge sv-critical" style="margin-left:4px;font-size:10px;">${crit} critical</span>` : ''}
+          </div>
+          <div class="mini-table-wrap mt-0">
+            <table class="mini-table table table-hover w-100 nowrap">
+              <thead><tr><th>ID</th><th>Title</th><th>Severity</th><th>Status</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div></div>`;
+      }).join('');
+
+      setTimeout(() => {
+        if ($.fn.DataTable) {
+          $('.mini-table').DataTable({
+            // destroy: true,
+            // lengthChange: false,
+            // autoWidth: false,
+            responsive: true,
+            scrollX: true,
+            info: false,
+            dom: 't'
+          });
+        }
+      }, 0);
+    }
+
+    // ===== openDetail =====
+    function openDetail(id) {
+      const i = INCIDENTS.find(x => x.id === id);
+      if (!i) return;
+      const cat = getCat(i.cat);
+      const rdateFmt = fmtDate(i.rdate);
+      const diffDays = Math.ceil(Math.abs(new Date() - new Date(i.idate)) / (1000 * 60 * 60 * 24));
+      const openText = i.status === 'Closed' ? 'Closed' : diffDays + ' days open';
+
+      document.getElementById('detail-content').innerHTML = `
+    <div class="detail-header mb-4 p-4 rounded text-white shadow-sm" style="background: var(--stratroom-primary, #7B2D8B);">
+      <div class="d-flex align-items-start justify-content-between gap-3">
+        <div>
+          <div class="text-white-50 small mb-1" style="font-size:11px; font-weight:600; letter-spacing:0.5px;">
+            ${i.id} &middot; ${cat.label}
+          </div>
+          <h3 class="mb-0 text-white fw-bold" style="font-size: 20px;">${i.title}</h3>
+        </div>
+        ${getSevBadge(i.sev)}
+      </div>
+      <div class="d-flex gap-3 flex-wrap mt-3 align-items-center">
+        ${getStatusBadge(i.status)}
+        <span class="text-white-50 d-flex align-items-center gap-1" style="font-size:12px;">
+          <i data-lucide="clock" style="width:14px;height:14px;"></i> Reported ${rdateFmt}
+        </span>
+        <span class="text-white-50" style="font-size:12px;">&middot;</span>
+        <span class="text-white-50" style="font-size:12px;">${openText}</span>
+      </div>
+    </div>
+    
+    <!-- openDetail Tab -->
+    <ul class="nav nav-tabs gap-2 mb-4 border-bottom" id="dtab-nav">
+      <li class="nav-item">
+        <button class="nav-link active px-4 fw-medium" data-dtab="tab-overview" onclick="setDtab(this)" style="color: var(--stratroom-primary, #7B2D8B); background: transparent; border-bottom: 2px solid var(--stratroom-primary, #7B2D8B); border-color: transparent transparent var(--stratroom-primary, #7B2D8B) transparent;">Overview</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link px-4 fw-medium text-muted border-0" data-dtab="tab-actions" onclick="setDtab(this)" style="background: transparent;">Actions / Tasks</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link px-4 fw-medium text-muted border-0" data-dtab="tab-attachments" onclick="setDtab(this)" style="background: transparent;">Attachments</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link px-4 fw-medium text-muted border-0" data-dtab="tab-comments" onclick="setDtab(this)" style="background: transparent;">Comments</button>
+      </li>
+    </ul>
+
+   
+   
+    <div class="row g-4 mb-4">
+      <div class="col-lg-8">
+         <!-- ===== TAB: Overview ===== -->
+         <div class="dtab-panel" id="tab-overview">
+        <div class="card custom-card h-100">
+          <div class="card-body p-4">
+            <h6 class="card-title text-uppercase fw-bold mb-4" style="font-size:12px; letter-spacing:0.5px; color: var(--stratroom-primary, #7B2D8B);">
+               Incident Details
+            </h6>
+            <div class="grid gap-3 g-4">
+              <div class="g-col-12">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Observations / Description</div>
+                <div class="fw-normal" style="font-size:13px; color:var(--stratroom-body-color); line-height:1.5;">${i.desc || 'No detailed description provided.'}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Location / Site</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.location || '-'}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Witnesses</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.witnesses || 'None'}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Incident Type</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${cat.label}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Severity</div>
+                <div>${getSevBadge(i.sev)}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Department / Site</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.dept}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Root Cause Category</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.root || '-'}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Impact Level</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.impact || 'Not assessed'}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Regulatory Flag</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.regflag || 'None'}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Incident Date / Time</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${fmtDateTime(i.idate)}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Date Reported</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${rdateFmt}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Due Date (Actions)</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.due ? fmtDate(i.due) : '-'}</div>
+              </div>
+              <div class="g-col-12 g-col-md-6">
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Escalation Contact</div>
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.esc || 'None'}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+<!-- ===== TAB: Actions / Tasks ===== -->
+    <div class="dtab-panel" id="tab-actions" style="display:none;">
+      <div class="card custom-card">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="card-title text-uppercase fw-bold mb-0" style="font-size:12px; letter-spacing:0.5px; color: var(--stratroom-primary, #7B2D8B);">Actions / Tasks</h6>
+            <button class="btn btn-sm btn-primary d-flex align-items-center gap-1" onclick="addDetailTask()"><i data-lucide="plus" style="width:14px;height:14px;"></i> Add Task</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle" id="detail-tasks-table">
+              <thead>
+                <tr>
+                  <th class="text-center text-uppercase" style="font-size:11px; letter-spacing:0.5px;">Actions / Tasks</th>
+                  <th class="text-center text-uppercase" style="font-size:11px; letter-spacing:0.5px; width:120px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="detail-tasks-body">
+                <tr>
+                  <td>
+                    <textarea class="form-control" placeholder="Tasks" rows="3" style="resize:vertical;"></textarea>
+                  </td>
+                  <td class="text-center">
+                    <div class="table-actions justify-content-center">
+                      <a class="btn btn-sm btn-icon" onclick="removeDetailTask(this)">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <textarea class="form-control" placeholder="Tasks" rows="3" style="resize:vertical;"></textarea>
+                  </td>
+                  <td class="text-center">
+                    <div class="table-actions justify-content-center">
+                      <a class="btn btn-sm btn-icon" onclick="addDetailTask()">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add"><i data-lucide="plus" style="width:16px;height:16px;"></i></span>
+                      </a>
+                      <a class="btn btn-sm btn-icon" onclick="removeDetailTask(this)">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button class="btn btn-sm btn-label-secondary" onclick="switchMain('detail')">Cancel</button>
+            <button class="btn btn-sm btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: Attachments ===== -->
+    <div class="dtab-panel" id="tab-attachments" style="display:none;">
+      <div class="card custom-card">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="card-title text-uppercase fw-bold mb-0" style="font-size:12px; letter-spacing:0.5px; color: var(--stratroom-primary, #7B2D8B);">Attachments</h6>
+            <button class="btn btn-sm btn-primary d-flex align-items-center gap-1" onclick="addDetailAttachment()"><i data-lucide="plus" style="width:14px;height:14px;"></i> Add Attachment</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle" id="detail-attachments-table">
+              <thead>
+                <tr>
+                  <th class="text-center text-uppercase" style="font-size:11px; letter-spacing:0.5px;">Attachments</th>
+                  <th class="text-center text-uppercase" style="font-size:11px; letter-spacing:0.5px; width:120px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="detail-attachments-body">
+                <tr>
+                  <td>
+                    <input type="file" class="form-control" accept=".pdf,.ppt,.pptx,.jpeg,.jpg,.png,.xlsx,.doc,.docx">
+                  </td>
+                  <td class="text-center">
+                    <div class="table-actions justify-content-center">
+                      <a class="btn btn-sm btn-icon" onclick="removeDetailAttachment(this)">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="file" class="form-control" accept=".pdf,.ppt,.pptx,.jpeg,.jpg,.png,.xlsx,.doc,.docx">
+                  </td>
+                  <td class="text-center">
+                    <div class="table-actions justify-content-center">
+                      <a class="btn btn-sm btn-icon" onclick="addDetailAttachment()">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add"><i data-lucide="plus" style="width:16px;height:16px;"></i></span>
+                      </a>
+                      <a class="btn btn-sm btn-icon" onclick="removeDetailAttachment(this)">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button class="btn btn-sm btn-label-secondary" onclick="switchMain('detail')">Cancel</button>
+            <button class="btn btn-sm btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: Comments ===== -->
+    <div class="dtab-panel" id="tab-comments" style="display:none;">
+      <div class="card custom-card">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="card-title text-uppercase fw-bold mb-0" style="font-size:12px; letter-spacing:0.5px; color: var(--stratroom-primary, #7B2D8B);">Comments</h6>
+            <button class="btn btn-sm btn-primary d-flex align-items-center gap-1" onclick="addDetailComment()"><i data-lucide="plus" style="width:14px;height:14px;"></i> Add Comment</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle" id="detail-comments-table">
+              <thead>
+                <tr>
+                  <th class="text-center text-uppercase" style="font-size:11px; letter-spacing:0.5px;">Comments</th>
+                  <th class="text-center text-uppercase" style="font-size:11px; letter-spacing:0.5px; width:120px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="detail-comments-body">
+                <tr>
+                  <td>
+                    <textarea class="form-control" placeholder="Comments" rows="3" style="resize:vertical;"></textarea>
+                  </td>
+                  <td class="text-center">
+                    <div class="table-actions justify-content-center">
+                      <a class="btn btn-sm btn-icon" onclick="removeDetailComment(this)">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <textarea class="form-control" placeholder="Comments" rows="3" style="resize:vertical;"></textarea>
+                  </td>
+                  <td class="text-center">
+                    <div class="table-actions justify-content-center">
+                      <a class="btn btn-sm btn-icon" onclick="addDetailComment()">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add"><i data-lucide="plus" style="width:16px;height:16px;"></i></span>
+                      </a>
+                      <a class="btn btn-sm btn-icon" onclick="removeDetailComment(this)">
+                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button class="btn btn-sm btn-label-secondary" onclick="switchMain('detail')">Cancel</button>
+            <button class="btn btn-sm btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      </div>
+
+      <div class="col-lg-4 d-flex flex-column gap-4">
+        <div class="card custom-card">
+          <div class="card-body p-4">
+            <h6 class="card-title text-uppercase fw-bold mb-4" style="font-size:12px; letter-spacing:0.5px; color: var(--stratroom-primary, #7B2D8B);">
+              People
+            </h6>
+            <div class="d-flex flex-column gap-4">
+              <div>
+                <div class="text-uppercase text-muted mb-2" style="font-size:10px; letter-spacing:0.3px;">Reported By</div>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar avatar-sm d-flex align-items-center justify-content-center rounded-circle" style="background:${cat.bg};color:${cat.color};width:28px;height:28px;font-size:11px;font-weight:600;">${initials(i.rby)}</div>
+                  <span class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color);">${i.rby}</span>
+                </div>
+              </div>
+              <div>
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Assigned To</div>
+                <div class="fw-semibold mb-2" style="font-size:13px; color:var(--stratroom-body-color);">${i.ato || '-'}</div>
+                ${i.team && i.team.length > 0 ? `
+                <div class="text-uppercase text-muted mb-1" style="font-size:10px; letter-spacing:0.3px;">Team Members</div>
+                <div class="d-flex flex-wrap gap-1">
+                  ${i.team.map(t => `<span class="badge bg-light text-dark border" style="font-size:10px; font-weight:500;">${t}</span>`).join('')}
+                </div>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card custom-card flex-fill">
+          <div class="card-body p-4">
+            <h6 class="card-title text-uppercase fw-bold mb-4" style="font-size:12px; letter-spacing:0.5px; color: var(--stratroom-primary, #7B2D8B);">
+              Activity Timeline
+            </h6>
+            
+            <div class="d-flex gap-3 mb-0 position-relative">
+              <div class="d-flex flex-column align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center z-1" style="width:28px;height:28px;background:#fee2e2;color:#ef4444;"><i data-lucide="alert-triangle" style="width:14px;height:14px;"></i></div>
+                <div style="width:1.5px; min-height:40px; background:#e5e7eb; margin-top:-4px; margin-bottom:-4px;"></div>
+              </div>
+              <div class="pb-4">
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color); margin-top:4px;">Incident reported</div>
+                <div class="text-muted mt-1" style="font-size:11px;">${i.rby} &middot; ${rdateFmt}</div>
+              </div>
+            </div>
+
+            ${i.ato && i.ato !== '&mdash;' ? `
+            <div class="d-flex gap-3 mb-0 position-relative">
+              <div class="d-flex flex-column align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center z-1" style="width:28px;height:28px;background:#f3f4f6;color:#6b7280;"><i data-lucide="user" style="width:14px;height:14px;"></i></div>
+                <div style="width:1.5px; min-height:40px; background:#e5e7eb; margin-top:-4px; margin-bottom:-4px;"></div>
+              </div>
+              <div class="pb-4">
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color); margin-top:4px;">Assigned to ${i.ato}</div>
+                <div class="text-muted mt-1" style="font-size:11px;">System &middot; ${rdateFmt}</div>
+              </div>
+            </div>
+            ` : ''}
+
+            ${i.status !== 'New' ? `
+            <div class="d-flex gap-3 position-relative">
+              <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 z-1" style="width:28px;height:28px;background:#ede9fe;color:#8b5cf6;"><i data-lucide="check-circle" style="width:14px;height:14px;"></i></div>
+              <div class="pb-1">
+                <div class="fw-semibold" style="font-size:13px; color:var(--stratroom-body-color); margin-top:4px;">Status changed to ${i.status}</div>
+                <div class="text-muted mt-1" style="font-size:11px;">System &middot; ${rdateFmt}</div>
+              </div>
+            </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+      if (window.lucide) { lucide.createIcons(); }
+      switchMain('detail');
+    }
+
+    function setDtab(el) {
+      // Remove active styling from all tabs
+      document.querySelectorAll('#dtab-nav .nav-link').forEach(t => {
+        t.classList.remove('active');
+        t.classList.add('text-muted');
+        t.style.color = '';
+        t.style.borderBottom = '';
+        t.style.borderColor = 'transparent';
+      });
+      // Set active styling on clicked tab
+      el.classList.add('active');
+      el.classList.remove('text-muted');
+      el.style.color = 'var(--stratroom-primary, #7B2D8B)';
+      el.style.borderBottom = '2px solid var(--stratroom-primary, #7B2D8B)';
+      el.style.borderColor = 'transparent transparent var(--stratroom-primary, #7B2D8B) transparent';
+      // Show/hide tab panels
+      const targetId = el.getAttribute('data-dtab');
+      document.querySelectorAll('.dtab-panel').forEach(p => p.style.display = 'none');
+      const targetPanel = document.getElementById(targetId);
+      if (targetPanel) targetPanel.style.display = 'block';
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ===== Detail tab helper functions =====
+    function addDetailTask() {
+      const tbody = document.getElementById('detail-tasks-body');
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `<td><textarea class="form-control" placeholder="Tasks" rows="3" style="resize:vertical;"></textarea></td>
+        <td class="text-center"><div class="table-actions justify-content-center">
+          <a class="btn btn-sm btn-icon" onclick="addDetailTask()"><span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add"><i data-lucide="plus" style="width:16px;height:16px;"></i></span></a>
+          <a class="btn btn-sm btn-icon" onclick="removeDetailTask(this)"><span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span></a>
+        </div></td>`;
+      tbody.appendChild(newRow);
+      if (window.lucide) lucide.createIcons();
+    }
+    function removeDetailTask(btn) {
+      const row = btn.closest('tr');
+      const tbody = document.getElementById('detail-tasks-body');
+      if (tbody.rows.length > 1) row.remove();
+      else row.querySelector('textarea').value = '';
+    }
+
+    function addDetailAttachment() {
+      const tbody = document.getElementById('detail-attachments-body');
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `<td><input type="file" class="form-control" accept=".pdf,.ppt,.pptx,.jpeg,.jpg,.png,.xlsx,.doc,.docx"></td>
+        <td class="text-center"><div class="table-actions justify-content-center">
+          <a class="btn btn-sm btn-icon" onclick="addDetailAttachment()"><span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add"><i data-lucide="plus" style="width:16px;height:16px;"></i></span></a>
+          <a class="btn btn-sm btn-icon" onclick="removeDetailAttachment(this)"><span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span></a>
+        </div></td>`;
+      tbody.appendChild(newRow);
+      if (window.lucide) lucide.createIcons();
+    }
+    function removeDetailAttachment(btn) {
+      const row = btn.closest('tr');
+      const tbody = document.getElementById('detail-attachments-body');
+      if (tbody.rows.length > 1) row.remove();
+      else row.querySelector('input[type="file"]').value = '';
+    }
+
+    function addDetailComment() {
+      const tbody = document.getElementById('detail-comments-body');
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `<td><textarea class="form-control" placeholder="Comments" rows="3" style="resize:vertical;"></textarea></td>
+        <td class="text-center"><div class="table-actions justify-content-center">
+          <a class="btn btn-sm btn-icon" onclick="addDetailComment()"><span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add"><i data-lucide="plus" style="width:16px;height:16px;"></i></span></a>
+          <a class="btn btn-sm btn-icon" onclick="removeDetailComment(this)"><span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></span></a>
+        </div></td>`;
+      tbody.appendChild(newRow);
+      if (window.lucide) lucide.createIcons();
+    }
+    function removeDetailComment(btn) {
+      const row = btn.closest('tr');
+      const tbody = document.getElementById('detail-comments-body');
+      if (tbody.rows.length > 1) row.remove();
+      else row.querySelector('textarea').value = '';
+    }
+
+    // function closeInc(id) {
+    //   const i = INCIDENTS.find(x => x.id === id);
+    //   if (i) { i.status = 'Closed'; }
+    //   renderList();
+    //   switchMain('list', document.getElementById('tab-list'));
+    // }
+
+    // ===== Form wizard methods =====
+    let currentStep = 1;
+    let selectedImpact = '';
+    let extraAssignees = [];
+    let fakeAttachments = [];
+    const FAKE_FILES = ['incident_photo.jpg', 'CCTV_clip.mp4', 'initial_report.pdf', 'equipment_log.xlsx', 'witness_statement.docx'];
+
+    function openForm() {
+      currentStep = 1;
+      selectedImpact = '';
+      extraAssignees = [];
+      fakeAttachments = [];
+      document.getElementById('att-list').innerHTML = '';
+      document.querySelectorAll('#extra-assignees .assignee-chip').forEach(c => c.classList.remove('selected'));
+      ['f-title', 'f-desc', 'f-idate', 'f-rdate', 'f-location', 'f-witnesses', 'f-type', 'f-sev', 'f-dept', 'f-root', 'f-status', 'f-regflag', 'f-rby', 'f-ato', 'f-esc', 'f-due'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.value = el.tagName === 'SELECT' && el.options[0] ? el.options[0].value : ''; }
+      });
+      document.getElementById('f-status').value = 'New';
+      document.getElementById('ca-items').innerHTML = '<div class="ca-row"><input type="text" placeholder="Describe corrective action&hellip;"/><button class="ca-remove" onclick="removeCA(this)">&times;</button></div>';
+      ['notif-1', 'notif-2'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = true; });
+      ['notif-3', 'notif-4'].forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
+      document.getElementById('confirm-check').checked = false;
+      document.getElementById('btn-final-save').disabled = true;
+      document.getElementById('success-banner').classList.remove('show');
+      document.querySelectorAll('.prog-step').forEach(s => { s.classList.remove('active', 'done'); });
+      document.querySelectorAll('.prog-line').forEach(l => l.classList.remove('done'));
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('pstep-1').classList.add('active');
+      document.getElementById('step-1').classList.add('active');
+      switchMain('form', document.getElementById('tab-form'));
+    }
+
+    function setImpact(btn, val) {
+      selectedImpact = val;
+      document.querySelectorAll('.impact-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function toggleAssignee(el, name) {
+      el.classList.toggle('selected');
+      if (el.classList.contains('selected')) { if (!extraAssignees.includes(name)) extraAssignees.push(name); }
+      else { extraAssignees = extraAssignees.filter(n => n !== name); }
+    }
+
+    function fakeAttach() {
+      if (fakeAttachments.length >= 3) return;
+      const f = FAKE_FILES[fakeAttachments.length];
+      fakeAttachments.push(f);
+      const list = document.getElementById('att-list');
+      const tag = document.createElement('div'); tag.className = 'att-tag';
+      tag.innerHTML = `&#128196; ${f} <button onclick="removeAtt(this,'${f}')">&times;</button>`;
+      list.appendChild(tag);
+    }
+    function removeAtt(btn, name) {
+      fakeAttachments = fakeAttachments.filter(f => f !== name);
+      btn.parentElement.remove();
+    }
+
+    function addCA() {
+      const row = document.createElement('div'); row.className = 'ca-row';
+      row.innerHTML = '<input type="text" placeholder="Describe corrective action&hellip;"/><button class="ca-remove" onclick="removeCA(this)">&times;</button>';
+      document.getElementById('ca-items').appendChild(row);
+    }
+    function removeCA(btn) {
+      const rows = document.querySelectorAll('#ca-items .ca-row');
+      if (rows.length > 1) btn.parentElement.remove();
+      else btn.parentElement.querySelector('input').value = '';
+    }
+
+    function saveDraft() {
+      const title = document.getElementById('f-title').value.trim() || 'Untitled Incident';
+      alert('Draft saved: "' + title + '"');
+    }
+    function cancelForm() { switchMain('list', document.getElementById('tab-list')); }
+
+    function showError(id, show) {
+      const el = document.getElementById(id);
+      if (el) { el.classList.toggle('show', show); }
+    }
+    function markField(id, err) {
+      const el = document.getElementById(id);
+      if (el) { el.classList.toggle('field-error', err); }
+    }
+
+    function validateStep(s) {
+      let ok = true;
+      if (s === 1) {
+        const t = document.getElementById('f-title').value.trim();
+        const id = document.getElementById('f-idate').value;
+        const rd = document.getElementById('f-rdate').value;
+        showError('err-title', !t); markField('f-title', !t);
+        showError('err-idate', !id); markField('f-idate', !id);
+        showError('err-rdate', !rd); markField('f-rdate', !rd);
+        ok = t && id && rd;
+      } else if (s === 2) {
+        const ty = document.getElementById('f-type').value;
+        const sv = document.getElementById('f-sev').value;
+        const dp = document.getElementById('f-dept').value;
+        showError('err-type', !ty); markField('f-type', !ty);
+        showError('err-sev', !sv); markField('f-sev', !sv);
+        showError('err-dept', !dp); markField('f-dept', !dp);
+        ok = ty && sv && dp;
+      } else if (s === 3) {
+        const rb = document.getElementById('f-rby').value;
+        const at = document.getElementById('f-ato').value;
+        showError('err-rby', !rb); markField('f-rby', !rb);
+        showError('err-ato', !at); markField('f-ato', !at);
+        ok = rb && at;
+      }
+      return ok;
+    }
+
+    function goStep(to) {
+      if (to > currentStep && !validateStep(currentStep)) return;
+      document.getElementById('step-' + currentStep).classList.remove('active');
+      document.getElementById('pstep-' + currentStep).classList.remove('active');
+      if (to > currentStep) {
+        document.getElementById('pstep-' + currentStep).classList.add('done');
+        let dot = document.getElementById('pdot-' + currentStep);
+        if (dot) dot.innerHTML = '&#10003;';
+        for (let i = currentStep; i < to; i++) {
+          const line = document.getElementById('pline-' + i);
+          if (line) line.classList.add('done');
+        }
+      } else {
+        document.getElementById('pstep-' + currentStep).classList.remove('done');
+        let dot = document.getElementById('pdot-' + currentStep);
+        if (dot) dot.textContent = currentStep;
+        for (let i = to; i < currentStep; i++) {
+          const line = document.getElementById('pline-' + i);
+          if (line) line.classList.remove('done');
+        }
+      }
+      currentStep = to;
+      document.getElementById('pstep-' + currentStep).classList.add('active');
+      document.getElementById('pstep-' + currentStep).classList.remove('done');
+      let ndot = document.getElementById('pdot-' + currentStep);
+      if (ndot) ndot.textContent = currentStep;
+      document.getElementById('step-' + currentStep).classList.add('active');
+      if (to === 4) buildReview();
+      try { document.getElementById('screen-form').scrollTop = 0; } catch (e) { }
+    }
+
+    function buildReview() {
+      const v = id => document.getElementById(id)?.value || '';
+      const title = v('f-title');
+      const desc = v('f-desc');
+      const idate = v('f-idate').replace('T', ' ');
+      const rdate = v('f-rdate');
+      const location = v('f-location');
+      const witnesses = v('f-witnesses');
+      const type = v('f-type');
+      const sev = v('f-sev');
+      const dept = v('f-dept');
+      const root = v('f-root');
+      const regflag = v('f-regflag') || 'None';
+      const status = v('f-status');
+      const rby = v('f-rby');
+      const ato = v('f-ato');
+      const due = v('f-due');
+      const esc = v('f-esc') || 'None';
+
+      const eln1 = document.getElementById('notif-1');
+      const n1 = eln1 ? eln1.checked : false;
+      const eln2 = document.getElementById('notif-2');
+      const n2 = eln2 ? eln2.checked : false;
+      const eln3 = document.getElementById('notif-3');
+      const n3 = eln3 ? eln3.checked : false;
+      const eln4 = document.getElementById('notif-4');
+      const n4 = eln4 ? eln4.checked : false;
+
+      const caActions = [...document.querySelectorAll('#ca-items input')].map(i => i.value.trim()).filter(Boolean);
+      const sevColors = { Critical: '#c0392b', High: '#9c3400', Medium: '#78350f', Low: '#1e6e36' };
+      const sevBg = { Critical: '#fee2e2', High: '#ffedd5', Medium: '#fef3c7', Low: '#dcfce7' };
+      const em = t => `<span class="rv-val empty">${t || 'Not specified'}</span>`;
+      const rv = (label, val) => `<div><div class="rv-label">${label}</div>${val ? `<div class="rv-val">${val}</div>` : em('')}</div>`;
+      document.getElementById('review-body').innerHTML = `
+        <div class="review-section">
+          <div class="review-section-title">Basic Information</div>
+          <div style="margin-bottom:8px"><div class="rv-label">Incident Title</div>${title ? `<div class="rv-val" style="font-size:13px">${title}</div>` : em('')}</div>
+          ${desc ? `<div style="margin-bottom:8px"><div class="rv-label">Description</div><div class="rv-val" style="font-weight:400;line-height:1.5;color:#444">${desc}</div></div>` : ''}
+          <div class="review-grid">
+            ${rv('Incident Date / Time', idate)}
+            ${rv('Date Reported', rdate)}
+            ${rv('Location', location)}
+            ${rv('Witnesses', witnesses)}
+          </div>
+        </div>
+        <div class="review-section">
+          <div class="review-section-title">Classification</div>
+          <div class="review-grid">
+            ${rv('Incident Type', type)}
+            <div><div class="rv-label">Severity</div>${sev ? `<span class="badge" style="background:${sevBg[sev]};color:${sevColors[sev]};font-size:11px">${sev}</span>` : em('')}</div>
+            ${rv('Department / Site', dept)}
+            ${rv('Root Cause', root)}
+            ${rv('Impact Level', selectedImpact)}
+            ${rv('Regulatory Flag', regflag)}
+            ${rv('Initial Status', status)}
+            <div><div class="rv-label">Attachments</div><div class="rv-val">${fakeAttachments.length ? fakeAttachments.length + ' file(s)' : 'None'}</div></div>
+          </div>
+          ${fakeAttachments.length ? `<div class="ca-preview">${fakeAttachments.map(f => `<span class="ca-tag">&#128196; ${f}</span>`).join('')}</div>` : ''}
+        </div>
+        <div class="review-section">
+          <div class="review-section-title">Assignment</div>
+          <div class="review-grid">
+            ${rv('Reported By', rby)}
+            ${rv('Primary Assignee', ato)}
+            ${rv('Due Date', due)}
+            ${rv('Escalation Contact', esc)}
+          </div>
+          ${extraAssignees.length ? `<div style="margin-top:8px"><div class="rv-label">Additional Assignees</div><div class="ca-preview">${extraAssignees.map(a => `<span class="ca-tag">&#128100; ${a}</span>`).join('')}</div></div>` : ''}
+          ${caActions.length ? `<div style="margin-top:8px"><div class="rv-label">Corrective Actions (${caActions.length})</div><div class="ca-preview">${caActions.map(a => `<span class="ca-tag">&#10003;… ${a}</span>`).join('')}</div></div>` : ''}
+          <div style="margin-top:10px"><div class="rv-label">Notifications Enabled</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">
+            ${n1 ? '<span class="ca-tag" style="background:#dbeafe;color:#1e40af">&#128231; Email assignee</span>' : ''}
+            ${n2 ? '<span class="ca-tag" style="background:#fef3c7;color:#78350f">&#9888; Mgmt alert</span>' : ''}
+            ${n3 ? '<span class="ca-tag" style="background:#dcfce7;color:#14532d">&#128203; Daily digest</span>' : ''}
+            ${n4 ? '<span class="ca-tag" style="background:#ede9fe;color:#4c1d95">&#128172; Slack/Teams</span>' : ''}
+            ${!n1 && !n2 && !n3 && !n4 ? '<span class="rv-val empty">None enabled</span>' : ''}
+          </div></div>
+        </div>`;
+    }
+
+    function saveIncident() {
+      const catMap = { Safety: 'safety', IT: 'it', Security: 'security', Environmental: 'environmental', HR: 'hr', Compliance: 'compliance', Quality: 'quality', Facilities: 'facilities', Finance: 'finance', Legal: 'legal' };
+      const type = document.getElementById('f-type').value;
+      const title = document.getElementById('f-title').value.trim();
+      const sev = document.getElementById('f-sev').value;
+      const newId = 'INC-2025-' + (37 + INCIDENTS.filter(i => i.id.startsWith('INC-2025')).length).toString().padStart(4, '0');
+      INCIDENTS.unshift({
+        id: newId, cat: catMap[type] || 'safety', title, sev,
+        status: document.getElementById('f-status').value || 'New',
+        dept: document.getElementById('f-dept').value || '&mdash;',
+        root: document.getElementById('f-root').value || '&mdash;',
+        rby: document.getElementById('f-rby').value || 'Unknown',
+        ato: document.getElementById('f-ato').value || '&mdash;',
+        idate: document.getElementById('f-idate').value || new Date().toISOString(),
+        rdate: document.getElementById('f-rdate').value || new Date().toISOString().slice(0, 10),
+        desc: document.getElementById('f-desc').value || '',
+        location: document.getElementById('f-location').value || '',
+        witnesses: document.getElementById('f-witnesses').value || '',
+        impact: selectedImpact || 'Not assessed',
+        regflag: document.getElementById('f-regflag').value || 'None',
+        team: [...extraAssignees],
+        due: document.getElementById('f-due').value || '',
+        esc: document.getElementById('f-esc').value || 'None'
+      });
+      renderList();
+      try { renderCatDashboard(); } catch (e) { }
+      document.getElementById('success-banner').classList.add('show');
+      document.getElementById('success-id').textContent = 'Incident ID: ' + newId + ' has been created and assigned.';
+      const act = document.querySelector('#step-4 .form-actions');
+      if (act) act.style.display = 'none';
+      if (document.getElementById('review-body')) document.getElementById('review-body').style.display = 'none';
+      const conf = document.querySelector('.review-confirm');
+      if (conf) conf.style.display = 'none';
+      document.getElementById('pstep-4').classList.add('done');
+      document.getElementById('pstep-4').classList.remove('active');
+      let pdot = document.getElementById('pdot-4');
+      if (pdot) pdot.innerHTML = '&#10003;';
+    }
+
+    window.onload = function () {
+      renderList();
+
+      // Initialize Select2 for form wizard
+      $('#screen-form select').select2({
+        width: '100%',
+        minimumResultsForSearch: 6,
+        dropdownParent: $('#screen-form')
+      });
+
+      // Initialize Flatpickr for form wizard
+      if (typeof flatpickr !== 'undefined') {
+        flatpickr('#f-idate', { enableTime: true, dateFormat: "M j, Y h:i K" });
+        flatpickr('#f-rdate, #f-due', { dateFormat: "M j, Y" });
+      }
+    };
+  </script>
+</body>
+
+</html>

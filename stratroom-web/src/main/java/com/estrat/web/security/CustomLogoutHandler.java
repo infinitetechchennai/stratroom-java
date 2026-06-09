@@ -15,18 +15,19 @@
 package com.estrat.web.security;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.log4j.Logger;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 public class CustomLogoutHandler
 implements LogoutHandler {
-    private static final Logger LOGGER = Logger.getLogger(CustomLogoutHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomLogoutHandler.class);
 
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         LOGGER.debug("Start of logout() method");

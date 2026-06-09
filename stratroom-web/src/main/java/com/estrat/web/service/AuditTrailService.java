@@ -52,13 +52,13 @@ public class AuditTrailService {
 
     public List<AuditDTO> findAuditDetails(FindDTO findDTO) {
         String url = this.serviceUrl + "/auditTrail";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, findDTO, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<String> findAuditTrailActionList() {
         String url = this.serviceUrl + "/auditTrailActionList";
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 

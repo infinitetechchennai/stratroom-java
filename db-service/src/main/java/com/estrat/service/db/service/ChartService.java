@@ -27,13 +27,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChartService {
-    private Logger log = Logger.getLogger(PestelAnalysisService.class);
+    private Logger log = LoggerFactory.getLogger(PestelAnalysisService.class);
     @Autowired
     protected ChartRepository chartRepository;
     @Autowired

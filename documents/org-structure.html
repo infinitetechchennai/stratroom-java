@@ -1,0 +1,4157 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stratroom - Org Structure</title>
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/css/basic.css?v0.009" rel="stylesheet">
+  <link href="assets/css/main.css?v0.005" rel="stylesheet">
+  <link href="assets/css/responsive.css" rel="stylesheet">
+  <link href="assets/css/file-upload.css" rel="stylesheet">
+
+  <!-- Font Awsome Icons -->
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+
+
+
+
+  <style>
+    /* Custom Tab Styling for Add Group Modal */
+    #add-group .nav-tabs {
+      border-bottom: 2px solid #e9ecef;
+      gap: 1rem;
+    }
+
+    #add-group .nav-tabs .nav-link {
+      border: none;
+      color: #8c9097;
+      font-weight: 500;
+      padding: 0.75rem 1rem;
+      background: transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+    }
+
+    #add-group .nav-tabs .nav-link:hover {
+      color: var(--stratroom-primary);
+    }
+
+    #add-group .nav-tabs .nav-link.active {
+      color: var(--stratroom-primary);
+      border-bottom: 2px solid var(--stratroom-primary);
+      background: transparent;
+    }
+  </style>
+</head>
+
+<body data-bs-theme="light" data-page="orgstructure">
+  <!-- <div class="page-loader">
+    <div class="d-flex flex-column justify-content-center gap-1">
+      <div class="circle-loader">
+        <img class="centre-logo" src="assets/images/logo-icon.svg" alt="startroom" width="62" height="62">
+      </div>
+      <h5 class="loader-title" data-translate="loaderTitle">“While we load, grab your espresso and stay caffeinated.” <i
+          class="fas fa-coffee text-primary"></i></h5>
+      <p class="loader-description" data-translate="loaderDescription"> “it takes 42 beans for a single shot. StratRoom
+        uses countless data points to deliver powerful insights!”</p>
+      <p class="loader-text"><span data-translate="pageloading">Loading</span> <span id="percent">0%</span></p>
+    </div>
+  </div> -->
+  <header id="header" class="header shadow-sm sticky-top">
+    <div class="navbar-topbar">
+      <div class="container-lg d-flex flex-wrap justify-content-between">
+        <div class="menu-controls d-flex">
+          <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="Org Structure" data-translate="topbar.orgStructure">
+            <span class="icon network">
+              <i data-lucide="network" style="width: 18px; height: 18px;"></i>
+            </span>
+          </a>
+          <a class="control-link " href="#create-template" data-bs-toggle="modal" onclick="return false;">
+            <span class="icon layout-template" data-bs-toggle="tooltip" data-bs-placement="bottom"
+              data-bs-title="Templates" data-translate="topbar.templates">
+              <i data-lucide="layout-template" style="width: 18px; height: 18px;"></i>
+            </span>
+          </a>
+
+          <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="ETL" data-translate="topbar.etl">
+            <span class="icon layout-grid">
+              <i data-lucide="layout-grid" style="width: 18px; height: 18px;"></i>
+            </span>
+          </a>
+          <div class="nav-item dropdown dropdown-top-header">
+            <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false" data-translate="topbar.masters"></a>
+            <ul class="dropdown-menu dropdown-menu-start border-0 shadow-sm" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.products"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.process"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.vitalRecords"></a>
+              </li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.technology"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.facilities"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.personal"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.iso"></a></li>
+              <li><a class="dropdown-item" href="masters.html" data-translate="topbar.mastersItems.budget"></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="menu-controls d-flex flex-wrap ms-auto">
+          <div class="top-date-picker">
+            <input class="top_datepicker form-control form-control-sm" id="datePickerHeader" />
+
+          </div>
+        </div>
+        <div class="menu-controls d-flex flex-wrap">
+
+          <div class="nav-item dropdown">
+            <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+                <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+              </span>
+              <span id="currentLanguage">EN</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="languageDropdown">
+              <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+              <li><a class="dropdown-item" href="#" data-lang="ar">Arabic</a></li>
+            </ul>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-light">
+      <div class="container-lg gap-2 gap-md-3">
+        <div class="position-relative logo me-auto">
+          <a href="landing.html" class="logo-preview" id="logoPreview">
+            <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+          </a>
+
+        </div>
+
+
+
+        <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+          aria-labelledby="mobileMenuLabel">
+          <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <div class="navbar-collapse">
+
+
+              <ul class="navbar-nav p-0 ms-md-auto">
+
+                <!-- 1) Plan -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.plan"></a>
+
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" data-menu="plan"
+                    aria-labelledby="planningDropdown">
+                    <li data-id="strategy-planner">
+                      <a class="dropdown-item" href="strategy-planner.html"
+                        data-translate="menu.planItems.strategyPlanner"></a>
+                    </li>
+                    <li data-id="swot">
+                      <a class="dropdown-item" href="swot.html" data-translate="menu.planItems.swot"></a>
+                    </li>
+                    <li data-id="pestel">
+                      <a class="dropdown-item" href="pestel.html" data-translate="menu.planItems.pestel"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 2) Measure -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="measureDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.measure"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="measureDropdown">
+                    <li data-id="scorecard">
+                      <a class="dropdown-item" href="scorecard.html" data-translate="menu.measureItems.scorecard"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 3) Execute -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="executeDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.execute"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="executeDropdown">
+                    <li data-id="initiatives">
+                      <a class="dropdown-item" href="initiatives-projects.html"
+                        data-translate="menu.executeItems.initiatives"></a>
+                    </li>
+                    <li data-id="tasks">
+                      <a class="dropdown-item" href="tasks.html" data-translate="menu.executeItems.tasks"></a>
+                    </li>
+                    <li data-id="budget-approval">
+                      <a class="dropdown-item" href="budget-approval.html"
+                        data-translate="menu.executeItems.budgetApproval"></a>
+                    </li>
+                    <li data-id="budgets">
+                      <a class="dropdown-item" href="budgets.html" data-translate="menu.executeItems.budgets"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 4) Govern -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="governDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.govern"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="governDropdown">
+                    <li data-id="risk-register">
+                      <a class="dropdown-item" href="risk-register.html"
+                        data-translate="menu.governItems.riskRegister"></a>
+                    </li>
+                    <li data-id="risk-approval">
+                      <a class="dropdown-item" href="risk-approval.html"
+                        data-translate="menu.governItems.riskApproval"></a>
+                    </li>
+                    <li data-id="compliance">
+                      <a class="dropdown-item" href="compliance.html" data-translate="menu.governItems.compliance"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 5) Meet -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="meetDropdown" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false" data-translate="menu.meet"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="meetDropdown">
+                    <li data-id="meetings">
+                      <a class="dropdown-item" href="meetings.html" data-translate="menu.meetItems.meetings"></a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- 6) Report -->
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.report"></a>
+                  <ul class="dropdown-menu border-0 shadow-sm submenu" aria-labelledby="reportDropdown">
+                    <li data-id="my-cockpit">
+                      <a class="dropdown-item" href="my-cockpit.html" data-translate="menu.reportItems.myCockpit"></a>
+                    </li>
+                    <li data-id="my-performance">
+                      <a class="dropdown-item" href="my-performance.html"
+                        data-translate="menu.reportItems.myPerformance"></a>
+                    </li>
+                    <li data-id="whiteboard">
+                      <a class="dropdown-item" href="whiteboard.html" data-translate="menu.reportItems.whiteboard"></a>
+                    </li>
+                  </ul>
+                </li>
+
+              </ul>
+
+
+
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-controls global-control  d-flex flex-wrap">
+
+          <div class="nav-item dropdown">
+            <a class="control-link" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false" data-bs-placement="bottom" data-bs-title="Notification">
+              <span class="icon">
+                <i data-lucide="bell-dot" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-notification-menu dropdown-menu-icon border-0 shadow-sm"
+              aria-labelledby="notificationDropdown" data-bs-auto-close="outside"
+              style="width: 350px; max-width: calc(100vw - 2rem); max-height: 400px; overflow-y: auto;">
+
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">New message from John Smith</div>
+                    <small class="text-muted">Risk approval required for Phase 2</small>
+                    <div class="text-muted small">2 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">System maintenance scheduled</div>
+                    <small class="text-muted">Server will be down for 30 minutes</small>
+                    <div class="text-muted small">1 day ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Template review deadline</div>
+                    <small class="text-muted">Document template needs approval by EOD</small>
+                    <div class="text-muted small">3 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Audit report generated</div>
+                    <small class="text-muted">Monthly compliance report is ready</small>
+                    <div class="small" class="text-muted small">5 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Meeting reminder</div>
+                    <small class="text-muted">Weekly team standup in 30 minutes</small>
+                    <div class="text-muted small">30 min ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 50%; color: #333;">
+                    <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Task completed</div>
+                    <small class="text-muted">Database backup completed successfully</small>
+                    <div class="text-muted small">1 hour ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 50%; color: #333;">
+                    <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">New user registered</div>
+                    <small class="text-muted">Sarah Johnson joined the platform</small>
+                    <div class="text-muted small">6 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); border-radius: 50%; color: #333;">
+                    <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Security update</div>
+                    <small class="text-muted">Password policy has been updated</small>
+                    <div class="text-muted small">2 days ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); border-radius: 50%; color: #333;">
+                    <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Download ready</div>
+                    <small class="text-muted">Export file generation completed</small>
+                    <div class="text-muted small">3 hours ago</div>
+                  </div>
+                </a></li>
+              <li><a class="dropdown-item d-flex align-items-start p-3" href="#">
+                  <span class="icon mt-1 d-flex align-items-center justify-content-center"
+                    style="width: 32px; height: 32px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; color: white;">
+                    <i data-lucide="clipboard-check" style="width: 16px; height: 16px;"></i>
+                  </span>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">Audit report generated</div>
+                    <small class="text-muted">Monthly compliance report is ready</small>
+                    <div class="small" class="text-muted small">5 hours ago</div>
+                  </div>
+                </a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-center py-2" href="#">
+                  <small class="text-primary fw-medium">View all notifications</small>
+                </a></li>
+            </ul>
+          </div>
+
+          <div class="nav-item dropdown">
+
+
+            <a class="control-link" href="#" id="controlPanelDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+                <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+              aria-labelledby="controlPanelDropdown">
+              <li><a class="dropdown-item" href="control-panel.html"
+                  data-translate="topbar.settingsItems.controlPanel"></a></li>
+              <li><a class="dropdown-item" href="audit-trail.html" data-translate="topbar.settingsItems.auditTrail"></a>
+              </li>
+              <li><a class="dropdown-item" href="user-role.html" data-translate="topbar.settingsItems.userRoles"></a>
+              </li>
+            </ul>
+
+
+            </ul>
+          </div>
+
+          <div class="nav-item dropdown">
+
+
+            <a class="control-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <span class="icon">
+                <i data-lucide="user" style="width: 18px; height: 18px;"></i>
+              </span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-icon dropdown-menu-end border-0 shadow-sm"
+              aria-labelledby="userDropdown">
+              <li><a class="dropdown-item profile-card" href="#">
+
+                  <span class="icon circle-user-round">
+                    <i data-lucide="circle-user-round" style="width: 32px; height: 32px;"></i>
+                  </span>
+
+
+                  <div class="">
+                    <h4><span data-translate="topbar.hi">Hi</span> John </h4>
+                    <small data-translate="topbar.welcomeToPortal"></small>
+                  </div>
+                </a></li>
+
+
+              <li><a class="dropdown-item profile-card" href="#" data-translate="topbar.profileItems.myProfile"></a>
+              </li>
+              <li><a class="dropdown-item" href="manual.html" data-translate="topbar.profileItems.myForms"></a></li>
+              <li><a class="dropdown-item" href="performance-contract.html"
+                  data-translate="topbar.profileItems.performanceContract"></a></li>
+              <li>
+                <a class="dropdown-item" href="performance-improvement-plan.html"
+                  data-translate="topbar.profileItems.performanceImprovementPlan" style="cursor: pointer;">
+
+                  Performance improvement Plan</a>
+              </li>
+              <li><a class="dropdown-item" href="audit-trail.html" data-translate="topbar.profileItems.auditTrail"></a>
+              </li>
+              <li><a class="dropdown-item" href="user-role.html" data-translate="topbar.profileItems.logout"></a></li>
+
+
+            </ul>
+
+          </div>
+          <!-- <a class="control-link" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="User">
+                    <img src="assets/images/icons/user-i.svg" width="18" height="18" alt="">
+                </a> -->
+        </div>
+        <div class="hamburger is-md" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+          <div class="hamburger-icon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </div>
+        </div>
+
+
+    </nav>
+  </header>
+
+
+  <main class="pt-2 pb-2 d-flex flex-column ">
+
+    <div class="container-lg">
+      <div class="page-header grid gap-2 pb-1">
+        <div class="g-col-12 g-col-sm-4 d-flex align-items-center">
+          <h4 class="title">
+            <span class="icon">
+              <i data-lucide="network" style="width: 18px; height: 18px;"></i>
+            </span>
+            <span data-translate="page.orgstructure.title">Org Structure</span>
+          </h4>
+        </div>
+        <div class="load-page page-actions g-col-12 g-col-sm-8 flex-wrap">
+
+
+
+          <div class="input-group input-group-sm">
+            <input type="text" class="form-control" placeholder="Search" data-translate="actions.search"
+              aria-label="Search" aria-describedby="button-search" id="search-input">
+            <button class="btn btn-outline-secondary" type="button" id="button-search">
+              <i data-lucide="search" style="width: 14px; height: 14px;"></i></button>
+          </div>
+
+
+
+          <!-- Period Select -->
+          <select class="form-select form-select-sm" id="period-select" style="width: 120px;">
+            <option value="current">Current</option>
+            <option value="2025-02">Feb 2025</option>
+            <option value="2025-01">Jan 2025</option>
+            <option value="2024-12">Dec 2024</option>
+          </select>
+
+          <!-- Group Select -->
+          <select class="form-select form-select-sm" id="group-select" style="width: 120px;">
+            <option value="All">All</option>
+            <option value="Group 1">Group 1</option>
+            <option value="Group 2">Group 2</option>
+            <option value="Group 3">Group 3</option>
+            <option value="Group 4">Group 4</option>
+          </select>
+
+          <div class="page-icons">
+            <ul>
+              <li>
+                <a href="#add-group" data-bs-toggle="modal">
+
+                  <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Create Group"
+                    title="Create Group">
+
+                    <i data-lucide="user-plus" class="org-view-icon" style="width:16px;height:16px;"></i>
+                  </span>
+
+                </a>
+
+              </li>
+              <!-- <li>
+                <a href="#add-group" id="btn-manage-groups">
+                  <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Manage Groups"
+                    title="Manage Groups">
+                    <i data-lucide="users" class="org-view-icon" style="width:16px;height:16px;"></i>
+                  </span>
+                </a>
+              </li> -->
+              <li>
+                <a href="javascript:void(0)" class="toggle-org-view" data-view="tree">
+
+                  <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Switch to Grid View"
+                    title="Switch to Grid View">
+
+                    <i data-lucide="list-tree" class="org-view-icon" style="width:16px;height:16px;"></i>
+                  </span>
+
+                </a>
+
+              </li>
+              <li>
+                <a href="#org-view" data-bs-toggle="modal">
+                  <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-translate="actions.view"
+                    data-bs-title="View">
+                    <i data-lucide="eye" style="width: 14px; height: 14px;"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="#org-import" data-bs-toggle="modal">
+                  <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-translate="actions.import"
+                    data-bs-title="Import">
+                    <i data-lucide="import" style="width: 14px; height: 14px;"></i>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg py-2">
+      <div id="tree-view-container" class="org-tree-container">
+        <div class="card custom-card org-structure-card org-tree-container w-100">
+          <div class="card-header">
+            <div class="c-header-left">
+              <h5 class="card-title me-auto">
+
+                <strong editable="true" contenteditable="true" onkeypress="return (this.innerText.length <= 36)">Org
+                  Structure Tree View</strong>
+              </h5>
+            </div>
+            <div class="text-end">
+              <!-- Action Buttons -->
+              <div class="btn-group">
+                <button class="btn btn-sm btn-warning fetch-tree">
+                  <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Reload
+                </button>
+                <button class="btn btn-sm btn-success save-tree">
+                  <i data-lucide="save" style="width: 14px; height: 14px;"></i> Save
+                </button>
+
+                <button class="btn btn-sm btn-danger reset">
+                  <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Reset
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Tree View -->
+            <div class="org-structure-card w-100">
+              <div style="overflow: auto;">
+                <ul class="list-unstyled tree" id="org-tree">
+                  <!-- Tree content loaded dynamically -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="grid-view-container" class="d-none">
+        <div class="card custom-card org-structure-card org-tree-container w-100">
+          <div class="card-header">
+            <div class="c-header-left">
+              <h5 class="card-title me-auto">
+
+                <strong editable="true" contenteditable="true" onkeypress="return (this.innerText.length <= 36)">Org
+                  Structure
+                  Grid View</strong>
+              </h5>
+            </div>
+
+          </div>
+          <div class="card-body">
+            <!-- Grid View -->
+            <div class="grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));" id="org-grid">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+  </main>
+  <footer class="col-12 text-center py-2 copyright">
+    <p data-translate="footer.copyright" class="mb-0">Copyright &copy; <span id="year"></span>
+      <strong>StratRoom</strong>
+    </p>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+  </footer>
+
+
+
+  <!--  org-group modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <div class="modal custom-modal fade" id="add-group" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+      <div class="modal-content" style="min-height: 320px;">
+        <div class="modal-header pb-0">
+          <!-- <h4 class="modal-title" data-translate="page.orgstructure.create_group">Group Management</h4> -->
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" id="groupTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="create-tab" data-bs-toggle="tab" data-bs-target="#create-group-pane"
+                type="button" role="tab" aria-controls="create-group-pane" aria-selected="true">Create Group</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="manage-tab" data-bs-toggle="tab" data-bs-target="#manage-group-pane"
+                type="button" role="tab" aria-controls="manage-group-pane" aria-selected="false">Manage Groups</button>
+            </li>
+          </ul>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+
+          <!-- Tab panes -->
+          <div class="tab-content" id="groupTabsContent">
+            <div class="tab-pane fade show active" id="create-group-pane" role="tabpanel" aria-labelledby="create-tab">
+
+              <form class="card custom-card border-0">
+                <div class="card-body">
+                  <div class="grid gap-3">
+
+
+                    <div class="g-col-12 g-col-md-6">
+                      <div class="form-group">
+                        <label for="sub_initative_progress" class="form-label"
+                          data-translate="page.orgstructure.form_items.group_name">Group Name</label>
+                        <input type="text" class="form-control browser-default" name="" id="group-name"
+                          data-translate="page.orgstructure.form_items.group_name" placeholder="Group Name">
+                      </div>
+                    </div>
+                    <div class="g-col-12">
+                      <label for="page.orgstructure.form_items.description" class="form-label"
+                        data-translate="page.orgstructure.form_items.description">Description</label>
+                      <textarea class="form-control" id="group-desc" placeholder="Description" rows="3"></textarea>
+                    </div>
+
+                    <div class="g-col-12 g-col-md-6">
+                      <label class="form-label">Owner</label>
+
+                      <div class="d-flex align-items-start">
+                        <ul class="list-unstyled d-flex align-items-center avatar-group mb-0" id="owner-avatars">
+                          <!-- Avatars will be rendered here by JS -->
+                          <li class="avatar avatar-xs" id="btn-select-owner" style="cursor: pointer;">
+                            <span class="avatar-initial rounded-circle bg-light text-primary"><i
+                                class="fas fa-plus"></i></span>
+                          </li>
+                        </ul>
+                      </div>
+
+                    </div>
+                    <div class="g-col-12 g-col-md-6">
+                      <label class="form-label">Members</label>
+
+                      <div class="d-flex align-items-start">
+                        <ul class="list-unstyled d-flex align-items-center avatar-group mb-0" id="member-avatars">
+                          <!-- Avatars will be rendered here by JS -->
+                          <li class="avatar avatar-xs" id="btn-select-members" style="cursor: pointer;">
+                            <span class="avatar-initial rounded-circle bg-light text-primary"><i
+                                class="fas fa-plus"></i></span>
+                          </li>
+                        </ul>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </div>
+              </form>
+              <div class="mt-3 text-end">
+                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close"
+                  data-translate="actions.cancel">Cancel</button>
+                <button class="btn btn-primary" id="btn-save-group" value="Save"
+                  data-translate="actions.save">Save</button>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="manage-group-pane" role="tabpanel" aria-labelledby="manage-tab">
+              <div id="group-list-container">
+                <!-- Groups will be rendered here -->
+              </div>
+              <div class="mt-3 text-center">
+                <button type="button" class="btn btn-outline-primary" id="btn-add-more-group">
+                  <i class="fas fa-plus me-1"></i> Add More Group
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!--  org-add modal :::::::::::::::::::::::::::::::::::::::: -->
+
+
+  <div class="modal custom-modal fade" id="attendess-list" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Users</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body d-grid gap-3">
+          <div class="attendees-search">
+            <div>
+              <div class="form-check cusom-check">
+                <input class="form-check-input" type="checkbox" value="" id="allusers">
+                <label class="form-check-label" for="allusers">
+                  All Users
+                </label>
+              </div>
+            </div>
+            <div class="search">
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control" id="user-search-input" placeholder="Search Users"
+                  aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                  <i class="fas fa-search" data-toggle="tooltip" data-placement="bottom" title=""
+                    data-original-title="Files"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="list-group add-attendees" id="user-selection-list">
+            <!-- Users will be rendered here by JS -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btn-save-users">Select</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!--  org-add modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <div class="modal custom-modal fade" id="add-org" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" data-translate="page.orgstructure.create_orgstructure">Create Org</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="card custom-card border-0">
+            <div class="card-body">
+              <div class="grid gap-3">
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.attachment">Attachment</label>
+                    <div class="attachment-upload">
+                      <div class="input-group mb-1">
+                        <input type="file" class="form-control" id="inputGroupFile02"
+                          accept=".pdf,.ppt,.jpeg,.xlsx,.doc,.docx">
+                        <!-- <label class="input-group-text" for="inputGroupFile02">Upload</label> -->
+                      </div>
+                      <div class="form-text" data-translate="page.orgstructure.form_items.supported_file_types">
+                        Supported file type (jpeg,pdf,pptx,xlsx,docx)</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.department">Department</label>
+                    <input type="text" class="form-control browser-default" name="" id=""
+                      data-translate="page.orgstructure.form_items.department" placeholder="Department">
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.department_id">Department ID</label>
+                    <input type="text" class="form-control browser-default" name="" id=""
+                      data-translate="page.orgstructure.form_items.department_id" placeholder="Department ID">
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="boardTypeCreate" class="form-label"
+                      data-translate="page.orgstructure.form_items.owner">Owner</label>
+
+
+                    <select class="form-select select-dropdown-add-org w-100" name="boardTypeCreate"
+                      id="boardTypeCreate" data-placeholder="Select Board Type">
+                      <option value="" disabled selected hidden>
+                        Select Board Type
+                      </option>
+
+
+                      <option>Chris</option>
+                      <option>Kevin</option>
+                      <option>Richard</option>
+                      <option>Dhoni</option>
+                      <option>Zampa</option>
+                      <option>Stark</option>
+                      <option>Warner</option>
+                      <option>Williamson</option>
+                      <option>Finch</option>
+                      <option>Zara</option>
+                      <option>Rayn</option>
+                      <option>Roger</option>
+                      <option>Rahul</option>
+                      <option>Sandeep</option>
+                      <option>Roshan</option>
+                      <option>Andrea</option>
+                      <option>Nevil</option>
+                      <option>Antony</option>
+                      <option>Wazim</option>
+                      <option>Akram</option>
+                      <option>Raza</option>
+                      <option>Anderson</option>
+                      <option>Rodan</option>
+                      <option>Nortch</option>
+                      <option>Azeem</option>
+                      <option>Kim</option>
+                      <option>Rocket</option>
+                      <option>gig</option>
+                      <option>Zayn</option>
+                      <option>Harish</option>
+                      <option>Mervin</option>
+                      <option>Kiran</option>
+                      <option>Rohan</option>
+                      <option>Fin</option>
+                      <option>Adharsh</option>
+                      <option>Franck</option>
+                      <option>Oscar</option>
+                      <option>Alex</option>
+                      <option>Brunt</option>
+                      <option>Ghosh</option>
+                      <option>verma</option>
+                      <option>kaur</option>
+                      <option>capsey</option>
+                      <option>Glenncy</option>
+                      <option>Neo</option>
+                      <option>magesh</option>
+                      <option>matt</option>
+                      <option>joseph</option>
+                      <option>zendaya</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.email">Email</label>
+                    <input type="text" class="form-control browser-default" name="" id=""
+                      data-translate="page.orgstructure.form_items.email" placeholder="Email">
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.members">Members</label>
+                    <input type="text" class="form-control browser-default" name="" id=""
+                      data-translate="page.orgstructure.form_items.members" placeholder="Members">
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_desc" class="form-label"
+                      data-translate="page.orgstructure.form_items.scorecard">Scorecard</label>
+                    <select class="form-select select-dropdown-add-org w-100" name="scorecardCreate"
+                      id="scorecardCreate" data-placeholder="Select Initiative">
+                      <option value="" disabled selected hidden>
+                        Select Scorecard
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="initiativeCreate" class="form-label"
+                      data-translate="page.orgstructure.form_items.initiative">Initiative</label>
+                    <select class="form-select select-dropdown-add-org w-100" name="initiativeCreate"
+                      id="initiativeCreate" data-placeholder="Select Initiative">
+                      <option value="" disabled selected hidden>
+                        Select Initiative
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_desc" class="form-label"
+                      data-translate="page.orgstructure.form_items.kpi">KPI</label>
+                    <select class="form-select select-dropdown-add-org w-100" name="KPICreate" id="KPICreate"
+                      data-placeholder="Select Board Type">
+                      <option value="" disabled selected hidden>
+                        Select KPI
+                      </option>
+
+                    </select>
+
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_desc" class="form-label"
+                      data-translate="page.orgstructure.form_items.risk">Risk</label>
+
+                    <select class="form-select select-dropdown-add-org w-100" name="riskCreate" id="riskCreate"
+                      data-placeholder="Select Board Type">
+                      <option value="" disabled selected hidden>
+                        Select Risk
+                      </option>
+                    </select>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close"
+            data-translate="actions.cancel">
+            Cancel
+          </button>
+          <button class="btn btn-primary" value="Save" data-translate="actions.save">Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  org-add modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <!--  org-edit modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <div class="modal custom-modal fade" id="edit-org" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" data-translate="page.orgstructure.edit_orgstructure">Edit Org</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="card custom-card border-0">
+            <div class="card-body">
+              <div class="grid gap-3">
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress"
+                      data-translate="page.orgstructure.form_items.attachment">Attachment</label>
+                    <div class="attachment-upload">
+                      <div class="input-group mb-1">
+                        <input type="file" class="form-control" id="inputGroupFile02"
+                          accept=".pdf,.ppt,.jpeg,.xlsx,.doc,.docx">
+                        <!-- <label class="input-group-text" for="inputGroupFile02">Upload</label> -->
+                      </div>
+                      <div data-translate="page.orgstructure.form_items.supported_file_types">Supported file type
+                        (jpeg,pdf,pptx,xlsx,docx)</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.department">Department</label>
+                    <input type="text" class="form-control browser-default" name="" id=""
+                      data-translate="page.orgstructure.form_items.department" placeholder="Department">
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.department_id">Department ID</label>
+                    <input type="text" class="form-control browser-default" name="" id=""
+                      data-translate="page.orgstructure.form_items.department_id" placeholder="Department ID">
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="boardTypeEdit" class="form-label"
+                      data-translate="page.orgstructure.form_items.owner">Owner</label>
+                    <select class="form-select select-dropdown-edit-org w-100" name="boardTypeCreate" id="boardTypeEdit"
+                      data-placeholder="Select Board Type">
+                      <option value="" disabled selected hidden>
+                        Select Board Type
+                      </option>
+                      <option>Select Board Type</option>
+                      <option>Chris</option>
+                      <option>Kevin</option>
+                      <option>Richard</option>
+                      <option>Dhoni</option>
+                      <option>Zampa</option>
+                      <option>Stark</option>
+                      <option>Warner</option>
+                      <option>Williamson</option>
+                      <option>Finch</option>
+                      <option>Zara</option>
+                      <option>Rayn</option>
+                      <option>Roger</option>
+                      <option>Rahul</option>
+                      <option>Sandeep</option>
+                      <option>Roshan</option>
+                      <option>Andrea</option>
+                      <option>Nevil</option>
+                      <option>Antony</option>
+                      <option>Wazim</option>
+                      <option>Akram</option>
+                      <option>Raza</option>
+                      <option>Anderson</option>
+                      <option>Rodan</option>
+                      <option>Nortch</option>
+                      <option>Azeem</option>
+                      <option>Kim</option>
+                      <option>Rocket</option>
+                      <option>gig</option>
+                      <option>Zayn</option>
+                      <option>Harish</option>
+                      <option>Mervin</option>
+                      <option>Kiran</option>
+                      <option>Rohan</option>
+                      <option>Fin</option>
+                      <option>Adharsh</option>
+                      <option>Franck</option>
+                      <option>Oscar</option>
+                      <option>Alex</option>
+                      <option>Brunt</option>
+                      <option>Ghosh</option>
+                      <option>verma</option>
+                      <option>kaur</option>
+                      <option>capsey</option>
+                      <option>Glenncy</option>
+                      <option>Neo</option>
+                      <option>magesh</option>
+                      <option>matt</option>
+                      <option>joseph</option>
+                      <option>zendaya</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.email">Email</label>
+                    <input type="text" class="form-control browser-default" name="" id=""
+                      data-translate="page.orgstructure.form_items.email" placeholder="Email">
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="sub_initative_progress" class="form-label"
+                      data-translate="page.orgstructure.form_items.members">Members</label>
+                    <input type="text" class="form-control browser-default" name="" id=""
+                      data-translate="page.orgstructure.form_items.members" placeholder="Members">
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="ScorecardEdit" class="form-label"
+                      data-translate="page.orgstructure.form_items.scorecard">Scorecard</label>
+                    <select class="form-select select-dropdown-edit-org w-100" name="ScorecardEdit" id="ScorecardEdit"
+                      data-placeholder="Select Scorecard">
+                      <option value="" disabled selected hidden>
+                        Select Scorecard
+                      </option>
+
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="InitiativeEdit" class="form-label"
+                      data-translate="page.orgstructure.form_items.initiative">Initiative</label>
+                    <select class="form-select select-dropdown-edit-org w-100" name="InitiativeEdit" id="InitiativeEdit"
+                      data-placeholder="Select Initiative">
+                      <option value="" disabled selected hidden>
+                        Select Initiative
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="KPIEdit" class="form-label"
+                      data-translate="page.orgstructure.form_items.kpi">KPI</label>
+                    <select class="form-select select-dropdown-edit-org w-100" name="KPIEdit" id="KPIEdit"
+                      data-placeholder="Select KPI">
+                      <option value="" disabled selected hidden>
+                        Select KPI
+                      </option>
+                    </select>
+
+                  </div>
+                </div>
+                <div class="g-col-12 g-col-md-6">
+                  <div class="form-group">
+                    <label for="RiskEdit" class="form-label"
+                      data-translate="page.orgstructure.form_items.risk">Risk</label>
+                    <select class="form-select select-dropdown-edit-org w-100" name="RiskEdit" id="RiskEdit"
+                      data-placeholder="Select Risk">
+                      <option value="" disabled selected hidden>
+                        Select Risk
+                      </option>
+                    </select>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close"
+            data-translate="actions.cancel">
+            Cancel
+          </button>
+          <button class="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  org-edit modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <!--  delete modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <div class="modal custom-modal custom-delete-modal fade" id="delete-modal" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="--stratroom-modal-width:320px">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="card custom-card delete-card border-0">
+            <div class="card-body">
+
+              <div class="delete-box">
+                <h4 class="title" data-translate="page.orgstructure.delete_confirmation">Do you really want to delete?
+                </h4>
+                <div class="btn-wrap">
+                  <button type="button" class="btn btn-sm btn-label-secondary rounded-pill" data-bs-dismiss="modal"
+                    aria-label="Close" data-translate="actions.cancel">
+                    Cancel
+                  </button>
+                  <button class="btn btn-sm btn-danger rounded-pill" value="Yes"
+                    data-translate="actions.delete">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--  delete modal :::::::::::::::::::::::::::::::::::::::: -->
+
+
+  <!--  org-view modal :::::::::::::::::::::::::::::::::::::::: -->
+
+  <div class="modal custom-modal fade" id="org-view" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xl-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" data-translate="page.orgstructure.organisation_tracker">Organisation Tracker</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card controlpanel-container org-structure-tab-container">
+            <div class="grid gap-0 control-panel-tabs org-structure-tabs">
+
+              <div id="dropdownMenuButtonWrap" class="dropdown control-panel-wrap  g-col-12 g-col-lg-3">
+                <button class="btn btn-dark dropdown-toggle d-lg-none" type="button" id="dropdownMenuButton"
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  data-translate="page.orgstructure.organisation_tracker_list.ceo">
+                  CEO
+                </button>
+
+                <!-- <ul class="nav flex-column nav-pills control-panel-tab dropdown-menu" id="v-pills-tab" role="tablist" aria-orientation="vertical"> -->
+                <ul class="dropdown-menu" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+                  <button class="card nav-link active" id="v-pills-general-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-general" type="button" role="tab" aria-controls="v-pills-general"
+                    aria-selected="true">
+                    <span class="nav-text" data-translate="page.orgstructure.organisation_tracker_list.ceo">CEO</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-theme-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-theme" type="button" role="tab" aria-controls="v-pills-theme"
+                    aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.zimra">ZIMRA</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-license-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-license" type="button" role="tab" aria-controls="v-pills-license"
+                    aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.customer_services">Customer
+                      Service</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-notifications-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-notifications" type="button" role="tab"
+                    aria-controls="v-pills-notifications" aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.marketing">Marketing</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-security-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-security" type="button" role="tab" aria-controls="v-pills-security"
+                    aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.operations">Operations</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-scheduler-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-scheduler" type="button" role="tab" aria-controls="v-pills-scheduler"
+                    aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.project_services">Project
+                      Services</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-device-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-device" type="button" role="tab" aria-controls="v-pills-device"
+                    aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.compliance">Compliance</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-backup-restore-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-backup-restore" type="button" role="tab"
+                    aria-controls="v-pills-backup-restore" aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.product">Product</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-scorecard-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-scorecard" type="button" role="tab" aria-controls="v-pills-scorecard"
+                    aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.india">India</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-okr-tab" data-bs-toggle="pill" data-bs-target="#v-pills-okr"
+                    type="button" role="tab" aria-controls="v-pills-okr" aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.kenya">Kenya</span>
+                  </button>
+                  <button class="card nav-link" id="v-pills-risk-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-risk" type="button" role="tab" aria-controls="v-pills-risk"
+                    aria-selected="false">
+                    <span class="nav-text"
+                      data-translate="page.orgstructure.organisation_tracker_list.south_africa">South Africa</span>
+                  </button>
+                </ul>
+
+              </div>
+
+              <div class="tab-content g-col-12 g-col-lg-9" id="v-pills-tabContent">
+                <!-- general :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade show active" id="v-pills-general" role="tabpanel"
+                  aria-labelledby="v-pills-general-tab" tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.ceo">CEO</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <table class="table table-bordered organisationTracker" style="width: 100%;">
+                        <thead class="text-center">
+                          <tr>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.department">Department</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>CEO Scorecard</td>
+                            <td>19/10/2022</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>My Meetings</td>
+                            <td>08/11/2022</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>PESTEL</td>
+                            <td>08/11/2022</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>SWOT</td>
+                            <td>08/11/2022</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Raza Page</td>
+                            <td>10/11/2022</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Strategy Formulation</td>
+                            <td>28/01/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Project Planning</td>
+                            <td>03/02/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>RIsk Plan</td>
+                            <td>08/02/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>TIMB PESTEL</td>
+                            <td>07/03/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>TIMB SWOT</td>
+                            <td>07/03/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>TIMB Initiatives</td>
+                            <td>08/03/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>TIMB RISK</td>
+                            <td>08/03/2023</td>
+                            <td>13/07/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Project Trial</td>
+                            <td>13/04/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Esg score card</td>
+                            <td>11/05/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Esg initiatives</td>
+                            <td>12/05/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Esg risk</td>
+                            <td>12/05/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Esg cockpit</td>
+                            <td>12/05/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>28/07/2023</td>
+                            <td>25/07/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Cockpit Layer</td>
+                            <td>15/08/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Charts Layer</td>
+                            <td>15/08/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>initiative test</td>
+                            <td>20/09/2023</td>
+                            <td>19/03/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>charts test</td>
+                            <td>21/09/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>charts new</td>
+                            <td>21/09/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Berhan Reports</td>
+                            <td>21/09/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>meetings</td>
+                            <td>25/09/2023</td>
+                            <td>19/03/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>kleen heat</td>
+                            <td>11/11/2023</td>
+                            <td>19/03/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Scorecard new test1</td>
+                            <td>02/01/2024</td>
+                            <td>02/01/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>LTD SCORECARD</td>
+                            <td>15/04/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>LTD SCORECARD</td>
+                            <td>15/04/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>new</td>
+                            <td>13/05/2024</td>
+                            <td>04/07/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>VGN Reports</td>
+                            <td>24/05/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>STRATEMAP2024</td>
+                            <td>30/05/2024</td>
+                            <td>04/07/2024</td>
+                          </tr>
+                          <tr>
+                            <td>CEO</td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Risk new</td>
+                            <td>11/07/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>New Risk</td>
+                            <td>12/07/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>RPO New</td>
+                            <td>12/07/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Impact Survey</td>
+                            <td>12/07/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Process Enabaler</td>
+                            <td>12/07/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Performance Cockpit</td>
+                            <td>13/07/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>KRA risk</td>
+                            <td>13/07/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>25/07/2024</td>
+                            <td>03/09/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>intiative</td>
+                            <td>29/07/2024</td>
+                            <td>31/07/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Kpi drilldown report</td>
+                            <td>01/08/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>Financial scorecard</td>
+                            <td>01/08/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>03/09/2024</td>
+                            <td>20/09/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>raza approval page </td>
+                            <td>12/09/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>20/09/2024</td>
+                            <td>23/09/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>23/09/2024</td>
+                            <td>24/09/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>24/09/2024</td>
+                            <td>24/09/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>24/09/2024</td>
+                            <td>24/09/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>24/09/2024</td>
+                            <td>24/09/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>24/09/2024</td>
+                            <td>24/09/2024</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td></td>
+                            <td>24/09/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>CEO Strategy Map</td>
+                            <td>17/10/2024</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>Raza</td>
+                            <td>CEO</td>
+                            <td>Roman@demo.com</td>
+                            <td>All Initiatives View</td>
+                            <td>17/10/2024</td>
+                            <td>Present</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <!-- general END:::::::::::::::::::::::::::: -->
+
+                <!-- theme :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-theme" role="tabpanel" aria-labelledby="v-pills-theme-tab"
+                  tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.zimra">ZIMRA</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <table class="table table-bordered organisationTracker" style="width: 100%;">
+                        <thead class="text-center">
+                          <tr>
+
+                            <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.department">Department</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                            <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>MOF</td>
+                            <td>Chris</td>
+                            <td>ZIMRA</td>
+                            <td></td>
+                            <td>Sales Scorecard</td>
+                            <td>19/10/2022</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td>MOF</td>
+                            <td>Chris</td>
+                            <td>ZIMRA</td>
+                            <td></td>
+                            <td>Sales Initiatives</td>
+                            <td>27/10/2022</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td>MOF</td>
+                            <td>Chris</td>
+                            <td>ZIMRA</td>
+                            <td></td>
+                            <td>Chris Space</td>
+                            <td>24/11/2022</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td>MOF</td>
+                            <td>Chris</td>
+                            <td>ZIMRA</td>
+                            <td></td>
+                            <td>charts</td>
+                            <td>19/04/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td>MOF</td>
+                            <td>Chris</td>
+                            <td>ZIMRA</td>
+                            <td></td>
+                            <td>cockpit</td>
+                            <td>19/04/2023</td>
+                            <td>Present</td>
+                          </tr>
+                          <tr>
+                            <td>MOF</td>
+                            <td>Chris</td>
+                            <td>ZIMRA</td>
+                            <td></td>
+                            <td></td>
+                            <td>03/08/2023</td>
+                            <td>25/07/2024</td>
+                          </tr>
+                          <tr>
+                            <td>MOF</td>
+                            <td>Chris</td>
+                            <td>ZIMRA</td>
+                            <td></td>
+                            <td></td>
+                            <td>25/07/2024</td>
+                            <td>Present</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+
+                </div>
+                <!-- theme END:::::::::::::::::::::::::::: -->
+
+                <!-- license :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-license" role="tabpanel" aria-labelledby="v-pills-license-tab"
+                  tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.customer_services">Customer
+                        Services</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Kevin</td>
+                              <td>Customer Services</td>
+                              <td></td>
+                              <td>Customer Services Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Kevin</td>
+                              <td>Customer Services</td>
+                              <td></td>
+                              <td></td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Kevin</td>
+                              <td>Customer Services</td>
+                              <td></td>
+                              <td>Customer initiative</td>
+                              <td>27/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- <nav aria-label="Page navigation example" class="mt-3 paginations">
+                        <ul class="pagination justify-content-end pagination-sm mb-0">
+                          <li class="page-item disabled">
+                            <a class="page-link"><i class="fas fa-arrow-left"></i></a>
+                          </li>
+                          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                          <li class="page-item"><a class="page-link" href="#">2</a></li>
+                          <li class="page-item"><a class="page-link" href="#">3</a></li>
+                          <li class="page-item">
+                            <a class="page-link" href="#"><i class="fas fa-arrow-right"></i></a>
+                          </li>
+                        </ul>
+                      </nav> -->
+                    </div>
+                  </div>
+                </div>
+                <!-- license END:::::::::::::::::::::::::::: -->
+
+                <!-- notifications :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-notifications" role="tabpanel"
+                  aria-labelledby="v-pills-notifications-tab" tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.marketing">Marketing</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Kevin</td>
+                              <td>Customer Services</td>
+                              <td></td>
+                              <td>Customer Services Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Kevin</td>
+                              <td>Customer Services</td>
+                              <td></td>
+                              <td></td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Kevin</td>
+                              <td>Customer Services</td>
+                              <td></td>
+                              <td>Customer initiative</td>
+                              <td>27/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- notifications END:::::::::::::::::::::::::::: -->
+
+                <!-- security :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-security" role="tabpanel" aria-labelledby="v-pills-security-tab"
+                  tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.operations">Operations</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Dhoni</td>
+                              <td>Operations</td>
+                              <td>Dhoni@demo.com</td>
+                              <td>Operations Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Dhoni</td>
+                              <td>Operations</td>
+                              <td>Dhoni@demo.com</td>
+                              <td>Operations Initiative</td>
+                              <td>28/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>Board of directors</td>
+                              <td>Dhoni</td>
+                              <td>Operations</td>
+                              <td>Dhoni@demo.com</td>
+                              <td>Tobacco Industry Operations Scorecard</td>
+                              <td>30/11/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>Ministry of Agriculture</td>
+                              <td>Dhoni</td>
+                              <td>Operations</td>
+                              <td>Dhoni@demo.com</td>
+                              <td></td>
+                              <td>06/12/2022</td>
+                              <td>06/02/2024</td>
+                            </tr>
+                            <tr>
+                              <td>Ministry of Agriculture</td>
+                              <td>Dhoni</td>
+                              <td>Operations</td>
+                              <td>Dhoni@demo.com</td>
+                              <td>My Space</td>
+                              <td>09/03/2023</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>Ministry of Agriculture</td>
+                              <td>Zampa</td>
+                              <td>Operations</td>
+                              <td>Dhoni@demo.com</td>
+                              <td></td>
+                              <td>06/02/2024</td>
+                              <td>06/02/2024</td>
+                            </tr>
+                            <tr>
+                              <td>Public Service Commission</td>
+                              <td>Zampa</td>
+                              <td>Operations</td>
+                              <td>Dhoni@demo.com</td>
+                              <td></td>
+                              <td>06/02/2024</td>
+                              <td>Present</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- security END:::::::::::::::::::::::::::: -->
+
+                <!-- scheduler :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-scheduler" role="tabpanel"
+                  aria-labelledby="v-pills-scheduler-tab" tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.project_services">Project Services
+                      </h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Zampa</td>
+                              <td>Project Services</td>
+                              <td>Zampa@demo.com</td>
+                              <td>Project Services Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Zampa</td>
+                              <td>Project Services</td>
+                              <td>Zampa@demo.com</td>
+                              <td>ScoreCard</td>
+                              <td>06/12/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>Digital Sales</td>
+                              <td>Zampa</td>
+                              <td>Project Services</td>
+                              <td>Zampa@demo.com</td>
+                              <td></td>
+                              <td>01/09/2023</td>
+                              <td>Present</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- scheduler END:::::::::::::::::::::::::::: -->
+
+                <!-- device :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-device" role="tabpanel" aria-labelledby="v-pills-device-tab"
+                  tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.compliance">Compliance</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Stark</td>
+                              <td>Compliance</td>
+                              <td></td>
+                              <td>Compliance Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Stark</td>
+                              <td>Compliance</td>
+                              <td></td>
+                              <td></td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Stark</td>
+                              <td>Compliance</td>
+                              <td></td>
+                              <td>PSOB Compliance Scorecard</td>
+                              <td>06/11/2022</td>
+                              <td>Present</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- device END:::::::::::::::::::::::::::: -->
+
+                <!-- backup-restore:::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-backup-restore" role="tabpanel"
+                  aria-labelledby="v-pills-backup-restore-tab" tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5>Product</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Zara</td>
+                              <td>Product</td>
+                              <td></td>
+                              <td>Product Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>MOF</td>
+                              <td>Zara</td>
+                              <td>Product</td>
+                              <td></td>
+                              <td></td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- backup-restore END:::::::::::::::::::::::::::: -->
+
+                <!-- scorecard :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-scorecard" role="tabpanel"
+                  aria-labelledby="v-pills-scorecard-tab" tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.india">India</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Country Sales</td>
+                              <td>Roshan</td>
+                              <td>India</td>
+                              <td></td>
+                              <td>India Sales Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>Country Sales</td>
+                              <td>Roshan</td>
+                              <td>India</td>
+                              <td></td>
+                              <td></td>
+                              <td>19/10/2022</td>
+                              <td>27/03/2024</td>
+                            </tr>
+                            <tr>
+                              <td>Country Sales</td>
+                              <td>Roshan</td>
+                              <td>India</td>
+                              <td></td>
+                              <td></td>
+                              <td>27/03/2024</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>Country Sales</td>
+                              <td>Roshan</td>
+                              <td>India</td>
+                              <td></td>
+                              <td>India Scorecard</td>
+                              <td>24/09/2024</td>
+                              <td>24/09/2024</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- scorecard END:::::::::::::::::::::::::::: -->
+
+                <!-- okr :::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-okr" role="tabpanel" aria-labelledby="v-pills-okr-tab"
+                  tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.kenya">Kenya</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Country Sales</td>
+                              <td>Andrea</td>
+                              <td>Kenya</td>
+                              <td></td>
+                              <td>Kenya Sales Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>Country Sales</td>
+                              <td>Andrea</td>
+                              <td>Kenya</td>
+                              <td></td>
+                              <td></td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- okr END:::::::::::::::::::::::::::: -->
+
+                <!-- risk END:::::::::::::::::::::::::::: -->
+                <div class="tab-pane fade" id="v-pills-risk" role="tabpanel" aria-labelledby="v-pills-risk-tab"
+                  tabindex="0">
+                  <div class="control-panel-content">
+                    <div class="mb-2 section-title">
+                      <h5 data-translate="page.orgstructure.organisation_tracker_list.south_africa">South Africa</h5>
+                    </div>
+                    <div class="org-structure-table">
+                      <!-- <div class="table-responsive"> -->
+                      <div>
+                        <table class="table table-bordered organisationTracker" style="width: 100%;">
+                          <thead class="text-center">
+                            <tr>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.parent">Parent</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.owner">Owner</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.department">Department
+                              </th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.email">Email</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.pages">Pages</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.from_date">From Date</th>
+                              <th data-translate="page.orgstructure.organisation_tracker_items.to_date">To Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Country Sales</td>
+                              <td>Nevil</td>
+                              <td>South Africa</td>
+                              <td></td>
+                              <td>South Africa Sales Scorecard</td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                            <tr>
+                              <td>Country Sales</td>
+                              <td>Nevil</td>
+                              <td>South Africa</td>
+                              <td></td>
+                              <td></td>
+                              <td>19/10/2022</td>
+                              <td>Present</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- risk END:::::::::::::::::::::::::::: -->
+
+
+              </div>
+              <!-- TAB CONTENT END:::::::::::::::::::::::::::: -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- org-view END -->
+
+  <!-- File Validate Form -->
+  <div class="modal custom-modal fade" id="org-import" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1"
+    aria-hidden="true">
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" data-translate="page.orgstructure.file_upload">File Upload</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card-header-progress">
+            <ul class="form-progressbar w-100">
+              <li data-translate="page.orgstructure.form_items.upload">Upload</li>
+              <li data-translate="page.orgstructure.form_items.validation">Validation</li>
+              <li data-translate="page.orgstructure.form_items.import">Import</li>
+            </ul>
+          </div>
+
+
+          <div id="file-upload" class="card custom-card">
+            <div class="card-body grid gap-3">
+
+              <div class="g-col-12">
+                <div class="form-group">
+                  <label for="importCategory" class="form-label"
+                    data-translate="page.orgstructure.form_items.import_category">Import Category</label>
+                  <select class="form-select select-dropdown-file-upload w-100" name="importCategory"
+                    id="importCategory" data-placeholder="Select Import Category">
+                    <option value="" disabled selected hidden>
+                      Select Import Category
+                    </option>
+                    <option value="Organisation Import">Organisation</option>
+                    <option value="ETLUpload">Data Upload</option>
+                    <option value="XLSUpload">Excel File Upload</option>
+                    <option value="Scorecard Import">Scorecard</option>
+                    <option value="InitiativeDataLoad">Initiatives Data Load</option>
+                    <option value="InitiativeBudgetLoad">Initiatives Budget Load</option>
+                    <option value="Initiative Import">Initiatives & Projects</option>
+                    <option value="Risk Import">Risk</option>
+                  </select>
+                </div>
+              </div>
+              <div class="g-col-12">
+                <div class="form-group">
+                  <label for="" class="form-label" data-translate="page.orgstructure.form_items.upload_file">Upload
+                    File</label>
+                  <label for="login" class="upload-label upload-box">
+                    <div class="upload" data-translate="page.orgstructure.form_items.choose_file">Choose a file or drag
+                      it here.</div>
+                    <input type="file" id="login">
+                  </label>
+                </div>
+
+
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-between form-line">
+                <button class="btn btn-primary initative_save_btn ms-auto" id="next-btn-1"
+                  data-translate="actions.next">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card custom-card" id="file-validate" style="display: none">
+            <div class="card-body grid gap-3">
+              <div class="g-col-12 img-center">
+                <!-- <img
+                    src="assets/images/verified.png"
+                    alt="Verified"
+                  /> -->
+                <img src="assets/images/not-verified.png" alt="Not-Verified" />
+                <div class="error-div">
+                  <table class="error-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 150px" data-translate="page.orgstructure.form_items.row">Row</th>
+                        <th data-translate="page.orgstructure.form_items.error">Error</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style="width: 150px">1</td>
+                        <td>Contain Special Character</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 150px">3</td>
+                        <td>Contain Special Character</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 150px">5</td>
+                        <td>Contain Special Character</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 150px">8</td>
+                        <td>Contain Special Character</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 150px">10</td>
+                        <td>Contain Special Character</td>
+                      </tr>
+                      <tr>
+                        <td style="width: 150px">19</td>
+                        <td>Contain Special Character</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-between form-line">
+                <button type="button" class="btn btn-label-secondary btn-default1" data-translate="actions.previous"
+                  id="prev-btn1">
+                  Previous
+                </button>
+                <button class="btn btn-primary initative_save_btn" id="next-btn-2" data-translate="actions.next">
+                  Next
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card custom-card" id="file-save" style="display: none">
+            <div class="card-body grid gap-3">
+              <div class="g-col-12">
+                <div class="text-center">
+                  <img src="assets/images/success.png" alt="Verified" width="140" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="d-flex justify-content-between form-line">
+                <button type="button" class="btn btn-label-secondary" data-translate="actions.previous" id="prev-btn2">
+                  Previous
+                </button>
+                <button class="btn btn-primary initative_save_btn" data-translate="actions.done" id="done-btn"
+                  data-dismiss="modal" aria-label="Close">
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END File Validate Form -->
+
+
+
+
+  <!-- Notification Offcanvas for Mobile -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationOffcanvas"
+    aria-labelledby="notificationOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title" id="notificationOffcanvasLabel" data-translate="notifications.title">Notifications
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <div class="list-group list-group-flush">
+        <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+          <div class="d-flex align-items-start">
+            <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+              style="width: 32px; height: 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; color: white;">
+              <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="fw-medium">New message from John Smith</div>
+              <small class="text-muted">Project approval required for Phase 2</small>
+              <div class="text-muted small mt-1">2 minutes ago</div>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+          <div class="d-flex align-items-start">
+            <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+              style="width: 32px; height: 32px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; color: white;">
+              <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="fw-medium">System Maintenance Alert</div>
+              <small class="text-muted">Scheduled maintenance on Sunday at 2:00 AM</small>
+              <div class="text-muted small mt-1">1 hour ago</div>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+          <div class="d-flex align-items-start">
+            <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+              style="width: 32px; height: 32px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; color: white;">
+              <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="fw-medium">Task Completed</div>
+              <small class="text-muted">Data backup process finished successfully</small>
+              <div class="text-muted small mt-1">3 hours ago</div>
+            </div>
+          </div>
+        </a>
+        <a href="#" class="list-group-item list-group-item-action border-0 p-3">
+          <div class="d-flex align-items-start">
+            <span class="icon me-3 mt-1 d-flex align-items-center justify-content-center"
+              style="width: 32px; height: 32px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; color: white;">
+              <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+            </span>
+            <div class="flex-grow-1">
+              <div class="fw-medium">New Team Member</div>
+              <small class="text-muted">Sarah Johnson joined the Marketing team</small>
+              <div class="text-muted small mt-1">1 day ago</div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="p-3 border-top text-center">
+        <a href="#" class="btn btn-sm btn-outline-primary">View All Notifications</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!--  create-template modal :::::::::::::::::::::::::::::::::::::::: -->
+  <div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Templates</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card custom-card border-0">
+            <div class="card-body">
+              <form id="menuForm">
+                <div class="grid gap-3">
+                  <div class="g-col-12">
+                    <div class="form-group">
+                      <label for="menuName" class="form-label">Name</label>
+
+                      <input type="text" class="form-control" id="menuName" placeholder="Enter Name" required>
+                    </div>
+                  </div>
+                  <div class="g-col-12 g-col-md-6">
+                    <div class="form-group">
+                      <label for="pageType" class="form-label">Page Type</label>
+
+                      <select id="pageType" class="form-select" required>
+                        <option value="">Select Page Type</option>
+                        <option value="Plan">Plan</option>
+                        <option value="Measure">Measure</option>
+                        <option value="Execute">Execute</option>
+                        <option value="Govern">Govern</option>
+                        <option value="Meet">Meet</option>
+                        <option value="Report">Report</option>
+                        <option value="Masters">Masters</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="g-col-12 g-col-md-6">
+                    <div class="form-group">
+                      <label for="boardType" class="form-label">Board Type</label>
+                      <select id="boardType" class="form-select" required>
+                        <option value="">Select Board Type</option>
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
+            Cancel
+          </button>
+          <button class="btn btn-primary" id="saveMenuBtn">Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- create-template END -->
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="editForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Menu Text</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="editInput" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Context Menu -->
+  <div id="contextMenu" class="custom-context-menu">
+    <button id="editItem" data-translate="actions.edit">Edit</button>
+    <button id="deleteItem" data-translate="actions.delete">Delete</button>
+    <button id="moveUpItem" data-translate="actions.move_up">Move Up</button>
+    <button id="moveDownItem" data-translate="actions.move_down">Move Down</button>
+  </div>
+
+
+  <script src="assets/js/jquery-3.7.1.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/sortablejs/1.15.0/sortable.min.js"></script>
+  <script src="assets/js/lucide.js"></script>
+
+
+  <link href="assets/css/jquery-ui.min.css" rel="stylesheet">
+  <script src="assets/js/jquery-ui.min.js"></script>
+
+  <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+  <script src="assets/js/moment.js"></script>
+  <script src="assets/js/knockout-3.5.0.js"></script>
+  <script src="assets/js/daterangepicker.min.js"></script>
+
+  <link href="assets/css/file-upload.css" rel="stylesheet">
+  <script src="assets/js/file-upload.js"></script>
+
+  <link href="assets/css/pickr.min.css" rel="stylesheet">
+  <script src="assets/js/pickr.es5.min.js"></script>
+  <script src="assets/js/widgets.js"></script>
+  <link href="assets/css/select2.min.css" rel="stylesheet" />
+  <script src="assets/js/select2.min.js"></script>
+
+
+  <!-- jQuery & DataTables JS -->
+  <script src="assets/datatables/1.13.6/jquery.dataTables.min.js"></script>
+  <script src="assets/datatables/1.13.6/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
+
+
+  <script>
+    $(document).ready(function () {
+      $(".select-dropdown-add-org").select2({
+        // allowClear: true,
+        width: "100%",
+        dropdownParent: $('#add-org')
+      });
+      $(".select-dropdown-edit-org").select2({
+        // allowClear: true,
+        width: "100%",
+        dropdownParent: $('#edit-org')
+      });
+      $(".select-dropdown-file-upload").select2({
+        // allowClear: true,
+        width: "100%",
+        dropdownParent: $('#org-import')
+      });
+    });
+  </script>
+
+
+  <!-- Responisve tabs :::::::::::::::::::::::::::::::: -->
+  <script>
+    $(document).ready(function () {
+      $('#v-pills-tab .nav-link').on('click', function () {
+        var selectedText = $(this).find('.nav-text').text();
+        $('#dropdownMenuButton').text(selectedText);
+      });
+    });
+  </script>
+
+
+  <script>
+    $(document).ready(function () {
+      let initializedTables = {}; // Store initialized tables
+      let organisationTracker = $('.organisationTracker').DataTable({
+        "lengthChange": false,
+        "paging": true,
+        "pagingType": "simple_numbers",
+        "searching": false,
+        "ordering": false,
+        "info": false,
+        "responsive": false,
+        "scrollX": true,
+        "language": {
+          "paginate": {
+            "previous": "<i class='fas fa-arrow-left'></i>",
+            "next": "<i class='fas fa-arrow-right'></i>"
+          }
+        },
+        "drawCallback": function () {
+          $('.dataTables_paginate').addClass('d-flex justify-content-end');
+        }
+
+
+
+      });
+
+      function initializeDataTable(tableId) {
+        if (!initializedTables[tableId]) {
+          $('#' + tableId).DataTable({
+            "pagingType": "simple_numbers",
+            "lengthChange": false, // Hide "Show X entries" dropdown
+            "drawCallback": function () {
+              $('.dataTables_paginate').addClass('d-flex justify-content-end');
+            }
+          });
+          initializedTables[tableId] = true; // Mark as initialized
+        }
+      }
+
+      // Initialize the first table (active tab)
+      initializeDataTable('organisationTracker');
+
+      $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+        let targetTabId = $(e.target).attr("data-bs-target"); // Get the tab target
+        if (targetTabId) {
+          targetTabId = targetTabId.replace('#', ''); // Remove '#' from ID
+          // console.log('Active Tab:', targetTabId);
+          initializeDataTable(targetTabId.replace('v-pills-', 'organisationTracker')); // Map tab ID to table ID
+          $('.organisationTracker ').DataTable().columns.adjust().draw();
+        }
+      });
+
+      // Handle modal DataTable initialization when modal is opened
+      $('#org-view').on('shown.bs.modal', function () {
+        initializeDataTable('modalTable');
+        $('.organisationTracker ').DataTable().columns.adjust().draw(); // Adjust table columns
+      });
+    });
+  </script>
+
+  <script>
+    $(function () {
+      // Default JSON data
+      let orgData = [
+        {
+          id: 1,
+          name: "Sophia Williams",
+          department: "Executive",
+          designation: "Chief Executive Officer",
+          location: "New York",
+          group: "Executive Team",
+          image: "assets/images/user/usrbig1.jpg",
+          children: [
+            {
+              id: 2,
+              name: "Liam Johnson",
+              department: "Technology",
+              designation: "Chief Technology Officer",
+              location: "San Francisco",
+              group: "Executive Team",
+              image: "assets/images/user/usrbig9.jpg",
+              children: [
+                {
+                  id: 3,
+                  name: "Noah Wilson",
+                  department: "Engineering",
+                  designation: "VP of Engineering",
+                  location: "San Francisco",
+                  group: "Product Development",
+                  image: "assets/images/user/usrbig6.jpg",
+                  children: [
+                    {
+                      id: 4,
+                      name: "Oliver Smith",
+                      department: "Engineering",
+                      designation: "Engineering Manager",
+                      location: "San Francisco",
+                      group: "Product Development",
+                      image: "assets/images/user/usrbig6.jpg",
+                      children: [
+                        {
+                          id: 5,
+                          name: "Elijah Brown",
+                          department: "Engineering",
+                          designation: "Senior Frontend Dev",
+                          location: "Remote",
+                          group: "Product Development",
+                          image: "assets/images/user/usrbig6.jpg",
+                          children: []
+                        },
+                        {
+                          id: 6,
+                          name: "James Jones",
+                          department: "Engineering",
+                          designation: "Frontend Developer",
+                          location: "Remote",
+                          group: "Product Development",
+                          image: "assets/images/user/usrbig6.jpg",
+                          children: []
+                        }
+                      ]
+                    },
+                    {
+                      id: 7,
+                      name: "William Davis",
+                      department: "Engineering",
+                      designation: "Engineering Manager",
+                      location: "London",
+                      group: "Product Development",
+                      image: "assets/images/user/usrbig9.jpg",
+                      children: [
+                        {
+                          id: 8,
+                          name: "Benjamin Miller",
+                          department: "Engineering",
+                          designation: "Senior Backend Dev",
+                          location: "London",
+                          group: "Product Development",
+                          image: "assets/images/user/usrbig8.jpg",
+                          children: []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  id: 9,
+                  name: "Emma Davis",
+                  department: "Product",
+                  designation: "VP of Product",
+                  location: "New York",
+                  group: "Product Development",
+                  image: "assets/images/user/usrbig9.jpg",
+                  children: [
+                    {
+                      id: 10,
+                      name: "Lucas Garcia",
+                      department: "Product",
+                      designation: "Product Manager",
+                      location: "New York",
+                      group: "Product Development",
+                      image: "assets/images/user/usrbig10.jpg",
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 11,
+              name: "James Anderson",
+              department: "Finance",
+              designation: "Chief Financial Officer",
+              location: "London",
+              group: "Executive Team",
+              image: "assets/images/user/usrbig9.jpg",
+              children: [
+                {
+                  id: 12,
+                  name: "Olivia Brown",
+                  department: "Finance",
+                  designation: "Finance Manager",
+                  location: "London",
+                  group: "Sales Force",
+                  image: "assets/images/user/usrbig9.jpg",
+                  children: [
+                    {
+                      id: 13,
+                      name: "Alexander Wilson",
+                      department: "Finance",
+                      designation: "Senior Accountant",
+                      location: "London",
+                      group: "Sales Force",
+                      image: "assets/images/user/usrbig9.jpg",
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 14,
+              name: "Ava Martinez",
+              department: "Marketing",
+              designation: "Chief Marketing Officer",
+              location: "New York",
+              group: "Executive Team",
+              image: "assets/images/user/usrbig9.jpg",
+              children: [
+                {
+                  id: 15,
+                  name: "William Taylor",
+                  department: "Marketing",
+                  designation: "Marketing Director",
+                  location: "New York",
+                  group: "Marketing Squad",
+                  image: "assets/images/user/usrbig9.jpg",
+                  children: [
+                    {
+                      id: 16,
+                      name: "Isabella Thomas",
+                      department: "Marketing",
+                      designation: "Marketing Manager",
+                      location: "New York",
+                      group: "Marketing Squad",
+                      image: "assets/images/user/usrbig9.jpg",
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 17,
+              name: "Lucas Garcia",
+              department: "Operations",
+              designation: "Chief Operating Officer",
+              location: "Chicago",
+              group: "Executive Team",
+              image: "assets/images/user/usrbig9.jpg",
+              children: [
+                {
+                  id: 18,
+                  name: "Isabella Rodriguez",
+                  department: "Human Resources",
+                  designation: "HR Director",
+                  location: "Chicago",
+                  group: "Support Team",
+                  image: "assets/images/user/usrbig9.jpg",
+                  children: [
+                    {
+                      id: 19,
+                      name: "Mason White",
+                      department: "Human Resources",
+                      designation: "HR Manager",
+                      location: "Chicago",
+                      group: "Support Team",
+                      image: "assets/images/user/usrbig9.jpg",
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+
+      // State variables
+      let currentView = 'tree';
+      let currentFilter = {
+        searchText: '',
+        field: 'all',
+        period: 'current'
+      };
+
+      // Initialize the application
+      function init() {
+        // Load from localStorage if available
+        const savedData = localStorage.getItem('orgTreeData');
+        if (savedData) {
+          try {
+            orgData = JSON.parse(savedData);
+            console.log('Loaded saved data from localStorage');
+          } catch (e) {
+            console.error('Error parsing saved data:', e);
+          }
+        }
+
+        // Initialize views
+        loadTreeView(orgData);
+        loadGridView(orgData);
+
+        // Set up event listeners
+        setupEventListeners();
+
+        // Initialize to tree view
+        // switchView('tree');
+      }
+
+      // ============ TREE VIEW FUNCTIONS ============
+
+      function generateNodeHTML(node, highlightText = '') {
+        const hasChildren = node.children && node.children.length > 0;
+        const collapsedClass = hasChildren ? 'collapsed' : '';
+
+        // Highlight search text
+        const highlight = (text) => {
+          if (!highlightText) return text;
+          const regex = new RegExp(`(${escapeRegExp(highlightText)})`, 'gi');
+          return text.replace(regex, '<span class="search-highlight">$1</span>');
+        };
+
+        let html = `
+      <li class="${collapsedClass}" 
+          data-id="${node.id}"
+          data-name="${node.name}"
+          data-department="${node.department}"
+          data-designation="${node.designation}"
+          data-location="${node.location}"
+          data-image="${node.image}">
+        <div class="card org-box child">
+          <div class="org-section">
+            <div class="drag-point" title="Drag to reorder">
+              <i data-lucide="grip" style="width: 16px; height: 16px;"></i>
+            </div>
+            <div class="org-content">
+              <div class="image">
+                <img src="${node.image}" loading="lazy" width="26" height="26" alt="${node.name}" />
+              </div>
+              <div class="content">
+                <p class="org-label"><strong data-translate="page.orgstructure.orgstructure_list_items.name">Name</strong>  - <span>${highlight(node.name)}</span></p>
+                <p class="org-label"><strong data-translate="page.orgstructure.orgstructure_list_items.department">Department</strong> - <span>${highlight(node.department)}</span></p>
+                <p class="org-label"><strong data-translate="page.orgstructure.orgstructure_list_items.designation">Designation</strong> - <span>${highlight(node.designation)}</span></p>
+                <p class="org-label"><strong data-translate="page.orgstructure.orgstructure_list_items.location">Location</strong> - <span>${highlight(node.location)}</span></p>
+              </div>
+              <div class="org-action">
+                <div class="action-list">
+                  <a target="_blank" href="scorecard.html" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Scorecard" data-translate="actions.scorecard">
+                    <span class="icon">S</span>
+                  </a>
+                  <a target="_blank" href="initiatives-projects.html" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Initiatives & Projects" data-translate="actions.initiatives_projects">
+                    <span class="icon">I</span>
+                  </a>
+                  <a target="_blank" href="kpi.html" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="KPI" data-translate="actions.kpi">
+                    <span class="icon">K</span>
+                  </a>
+                  <a target="_blank" href="risk.html" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Risk" data-translate="actions.risk">
+                    <span class="icon">R</span>
+                  </a>
+                </div>
+                <div class="list-unstyled action-list">
+                  <a href="#add-org" data-bs-toggle="modal" data-node-id="${node.id}">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add" data-translate="actions.add">
+                      <i data-lucide="plus" style="width: 12px; height: 12px;"></i>
+                    </span>
+                  </a>
+                  <a href="#edit-org" data-bs-toggle="modal" data-node-id="${node.id}">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit" data-translate="actions.edit">
+                      <i data-lucide="pencil" style="width: 12px; height: 12px;"></i>
+                    </span>
+                  </a>
+                  <a href="#delete-modal" data-bs-toggle="modal" data-node-id="${node.id}">
+                    <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete" data-translate="actions.delete">
+                      <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+    `;
+
+        if (hasChildren) {
+          html += `<ul class="children list-unstyled">`;
+          node.children.forEach(child => {
+            html += generateNodeHTML(child, highlightText);
+          });
+          html += `</ul>`;
+        }
+
+        html += `</div></li>`;
+        return html;
+      }
+
+      function loadTreeView(data, highlightText = '') {
+        const treeContainer = $('#org-tree');
+        treeContainer.html('');
+
+        if (data.length === 0) {
+          treeContainer.addClass('nodatafound');
+          treeContainer.html('<li class="text-center p-3 text-muted">No data found</li>');
+          return;
+        }
+
+        treeContainer.removeClass('nodatafound');
+
+        data.forEach(node => {
+          treeContainer.append(generateNodeHTML(node, highlightText));
+        });
+
+        // Reinitialize icons and tooltips
+        initIconsAndTooltips();
+
+        // Initialize sortable/droppable and toggles
+        setTimeout(() => {
+          ensureChildULs();
+          bindDroppables();
+          updateToggles();
+          // Ensure initial state
+          refreshToggleIcons();
+        }, 100);
+      }
+
+      // ============ GRID VIEW FUNCTIONS ============
+
+      function flattenTree(nodes, depth = 0, parentId = null) {
+        let result = [];
+
+        nodes.forEach(node => {
+          result.push({
+            id: node.id,
+            name: node.name,
+            department: node.department,
+            designation: node.designation,
+            location: node.location,
+            image: node.image,
+            depth: depth,
+            parentId: parentId,
+            hasChildren: node.children && node.children.length > 0
+          });
+
+          if (node.children && node.children.length > 0) {
+            result = result.concat(flattenTree(node.children, depth + 1, node.id));
+          }
+        });
+
+        return result;
+      }
+
+      function generateGridRow(item, highlightText = '') {
+        const highlight = (text) => {
+          if (!highlightText) return text;
+          const regex = new RegExp(`(${escapeRegExp(highlightText)})`, 'gi');
+          return text.replace(regex, '<span class="search-highlight">$1</span>');
+        };
+
+        return `
+      <div class="card org-card" 
+     data-id="${item.id}" 
+     data-depth="${item.depth}">
+
+  <div class="card-body p-2 org-card-details d-flex flex-column gap-2">
+  
+
+      <!-- LEFT: Image + Name -->
+      <div class="org-card-header d-flex align-items-center gap-2">
+
+        ${item.depth > 0
+            ? `<i data-lucide="corner-down-right" 
+                style="width:12px;height:12px" 
+                class="d-none text-muted"></i>`
+            : ''}
+
+        <img src="${item.image}" 
+             width="32" 
+             height="32" 
+             class="rounded-circle border"
+             alt="${item.name}">
+
+        <div class="d-flex flex-column">
+          <span class="fw-semibold">${highlight(item.name)}</span>
+         
+          <p class="org-label">                             
+                            <span>${highlight(item.designation)}</span>
+                           </p>
+        </div>
+      </div>
+
+      <!-- CENTER: Details -->
+      <div class="content">
+
+<p class="org-label">
+                            <strong >Department</strong> - 
+                            <span>${highlight(item.department)}</span>
+                           </p>
+
+                           <p class="org-label">
+                            <strong >Location</strong> - 
+                            <span>${highlight(item.location)}</span>
+                           </p>
+
+      
+      </div>
+
+      <!-- RIGHT: Actions -->
+      <div class="d-flex justify-content-between gap-1 flex-shrink-0 org-action border-top pt-2">
+
+          <div class="action-list">
+                                    <a target="_blank" href="scorecard.html" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Scorecard" data-translate="actions.scorecard">
+                                        <span class="icon">S</span>
+                                    </a>
+                                    <a target="_blank" href="initiatives-projects.html" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Initiatives & Projects" data-translate="actions.initiatives_projects">
+                                        <span class="icon">I</span>
+                                    </a>
+                                    <a target="_blank" href="kpi.html" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="KPI" data-translate="actions.kpi">
+                                        <span class="icon">K</span>
+                                    </a>
+                                    <a target="_blank" href="risk.html" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Risk" data-translate="actions.risk">
+                                        <span class="icon">R</span>
+                                    </a>
+                                </div>
+                                <div class="list-unstyled action-list justify-content-end">
+                                    <a href="#add-org" data-bs-toggle="modal">
+                                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Add" data-translate="actions.add">
+                                            <i data-lucide="plus" style="width: 12px; height: 12px;"></i>
+                                        </span>
+                                    </a>
+                                    <a href="#edit-org" data-bs-toggle="modal">
+                                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit" data-translate="actions.edit">
+                                            <i data-lucide="pencil" style="width: 12px; height: 12px;"></i>
+                                        </span>
+                                    </a>
+                                    <a href="#delete-modal" data-bs-toggle="modal">
+                                        <span class="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Delete" data-translate="actions.delete">
+                                            <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
+                                        </span>
+                                    </a>
+                                </div>
+
+      
+    </div>
+  </div>
+</div>
+
+    `;
+      }
+
+      function loadGridView(data, highlightText = '') {
+        const flatData = flattenTree(data);
+        const tbody = $('#org-grid');
+        tbody.html('');
+
+        if (flatData.length === 0) {
+          tbody.html('<div class="g-col-12 text-center p-3 text-muted">No data found</div>');
+          return;
+        }
+
+        flatData.forEach(item => {
+          tbody.append(generateGridRow(item, highlightText));
+        });
+
+        initIconsAndTooltips();
+      }
+
+      // ============ DATA PARSING FUNCTIONS ============
+
+      function cleanText(text, label) {
+        // Remove the label and any HTML tags, then trim
+        return text.replace(new RegExp(`${label}\\s*-\\s*`, 'i'), '')
+          .replace(/<[^>]*>/g, '')
+          .trim();
+      }
+
+      function getCurrentTreeJSON() {
+        function parseNode($li) {
+          // First, update data attributes from displayed text
+          const $content = $li.find('.org-content .content').first();
+
+          // Extract clean text from display
+          const name = cleanText($content.find('p.org-label:nth-child(1)').text(), 'Name');
+          const department = cleanText($content.find('p.org-label:nth-child(2)').text(), 'Department');
+          const designation = cleanText($content.find('p.org-label:nth-child(3)').text(), 'Designation');
+          const location = cleanText($content.find('p.org-label:nth-child(4)').text(), 'Location');
+
+          // Update data attributes
+          $li.data('name', name);
+          $li.data('department', department);
+          $li.data('designation', designation);
+          $li.data('location', location);
+
+          const node = {
+            id: $li.data('id') || Date.now(),
+            name: name || 'Unnamed',
+            department: department || 'N/A',
+            designation: designation || 'N/A',
+            location: location || 'N/A',
+            image: $li.find('img').attr('src') || 'assets/images/user/usrbig6.jpg',
+            children: []
+          };
+
+          // Only get direct children
+          const $childUl = $li.children("ul.children");
+          if ($childUl.length && $childUl.children("li").length) {
+            $childUl.children("li").each(function () {
+              node.children.push(parseNode($(this)));
+            });
+          }
+
+          return node;
+        }
+
+        const treeData = [];
+        $('#org-tree > li').each(function () {
+          treeData.push(parseNode($(this)));
+        });
+
+        return treeData;
+      }
+
+      // ============ SORTABLE/DRAGGABLE & TOGGLE FUNCTIONS ============
+
+      function initSortable($ul) {
+        if ($ul.data("ui-sortable")) {
+          $ul.sortable("refresh");
+          return;
+        }
+        $ul.sortable({
+          items: "> li",
+          connectWith: ".tree, .tree ul",
+          handle: ".drag-point",
+          placeholder: "placeholder",
+          tolerance: "pointer",
+          scroll: true,
+          forcePlaceholderSize: true,
+          start: function (e, ui) {
+            ui.placeholder.height(ui.helper.outerHeight());
+          },
+          stop: function () {
+            ensureChildULs();
+            bindDroppables();
+            updateToggles();
+          }
+        }).disableSelection();
+      }
+
+      function ensureChildULs() {
+        $(".tree").find("li").each(function () {
+          const $li = $(this);
+
+          if ($li.children("ul.children").length === 0) {
+            $li.append('<ul class="children list-unstyled"></ul>');
+          }
+
+          const $childUl = $li.children("ul.children");
+          if ($childUl.children("li").length === 0) {
+            $childUl.addClass("empty-ul");
+          } else {
+            $childUl.removeClass("empty-ul");
+          }
+        });
+
+        $(".tree, .tree ul").each(function () {
+          initSortable($(this));
+        });
+        $(".tree, .tree ul").sortable("refresh");
+      }
+
+      function bindDroppables() {
+        $(".tree li > div").each(function () {
+          if ($(this).data("ui-droppable")) {
+            $(this).droppable("destroy");
+          }
+        });
+
+        $(".tree li > div").droppable({
+          accept: "li",
+          hoverClass: "drop-inside",
+          greedy: true,
+          tolerance: "pointer",
+          drop: function (event, ui) {
+            const $parentLi = $(this).closest("li");
+            const $childUl = $parentLi.children("ul.children");
+            if (ui.draggable[0] === $parentLi[0] || $parentLi.has(ui.draggable).length) return;
+            ui.draggable.appendTo($childUl);
+            initSortable($childUl);
+            $(".tree, .tree ul").sortable("refresh");
+            bindDroppables();
+            updateToggles();
+          }
+        });
+      }
+
+      function updateToggles() {
+        $(".tree li").each(function () {
+          const $li = $(this);
+          const $childUl = $li.children("ul.children");
+
+          if ($childUl.length && $childUl.children("li").length > 0) {
+            // Check if toggle already exists
+            let $toggle = $li.find('> .toggle');
+
+            if ($toggle.length === 0) {
+              // Add toggle button
+              const toggleHtml = `<span class="toggle"><i class="fas fa-caret-down"></i></span>`;
+              $li.prepend(toggleHtml);
+            }
+
+            // Update icon based on collapsed state
+            const $icon = $li.find('> .toggle i');
+            if ($li.hasClass("collapsed")) {
+              $icon.removeClass("fa-caret-down").addClass("fa-caret-up");
+            } else {
+              $icon.removeClass("fa-caret-up").addClass("fa-caret-down");
+            }
+          } else {
+            // Remove toggle if no children
+            $li.find('> .toggle').remove();
+          }
+        });
+
+        // Remove previous event handlers to avoid duplicates
+        $(".tree").off("click", ".toggle");
+
+        // Add click handler for toggles
+        $(".tree").on("click", ".toggle", function (e) {
+          e.stopPropagation();
+          const $li = $(this).closest("li");
+          $li.toggleClass("collapsed");
+
+          // Update icon
+          const $icon = $(this).find("i");
+          if ($li.hasClass("collapsed")) {
+            $icon.removeClass("fa-caret-down").addClass("fa-caret-up");
+          } else {
+            $icon.removeClass("fa-caret-up").addClass("fa-caret-down");
+          }
+        });
+      }
+
+      // Function to refresh toggle icons after initialization
+      function refreshToggleIcons() {
+        $(".tree li").each(function () {
+          const $li = $(this);
+          const $toggle = $li.find('> .toggle');
+
+          if ($toggle.length > 0) {
+            const $icon = $toggle.find("i");
+            if ($li.hasClass("collapsed")) {
+              $icon.removeClass("fa-caret-down").addClass("fa-caret-up");
+            } else {
+              $icon.removeClass("fa-caret-up").addClass("fa-caret-down");
+            }
+          }
+        });
+      }
+
+      // ============ SAVE/LOAD FUNCTIONS ============
+
+      function saveTreeData() {
+        const currentData = getCurrentTreeJSON();
+        localStorage.setItem('orgTreeData', JSON.stringify(currentData, null, 2));
+        orgData = currentData;
+
+        // Update grid view with new data
+        loadGridView(currentData);
+
+        // Show success message
+        showToast('Tree structure saved successfully!', 'success');
+
+        return currentData;
+      }
+
+      function exportTreeData() {
+        const data = saveTreeData();
+        const dataStr = JSON.stringify(data, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', 'organization-structure.json');
+        linkElement.click();
+
+        showToast('JSON file exported successfully!', 'info');
+      }
+
+      function loadFromJSONFile() {
+        $.getJSON('data/organization.json', function (data) {
+          orgData = data;
+          localStorage.setItem('orgTreeData', JSON.stringify(data, null, 2));
+          applyCurrentFilter();
+          showToast('Data loaded from JSON file!', 'success');
+        }).fail(function () {
+          console.log("Could not load JSON file, using current data");
+          showToast('Could not load JSON file. Using current data.', 'warning');
+        });
+      }
+
+      function resetToDefault() {
+        // Clear search
+        $('#search-input').val('');
+
+        $('.clear-search').remove();
+        $('.search-results-count').remove();
+
+        // Reset filter state
+        currentFilter = {
+          searchText: '',
+          field: 'all',
+          period: 'current'
+        };
+
+        // Reset to original data
+        orgData = [
+          {
+            id: 1,
+            name: "Raza 01",
+            department: "Corporate",
+            designation: "Manager",
+            location: "Head Office",
+            image: "assets/images/user/usrbig6.jpg",
+            children: [
+              {
+                id: 2,
+                name: "Raza 0122",
+                department: "Corporate",
+                designation: "Assistant Manager",
+                location: "Head Office",
+                image: "assets/images/user/usrbig6.jpg",
+                children: []
+              }
+            ]
+          },
+          {
+            id: 3,
+            name: "Raza 01",
+            department: "HR",
+            designation: "HR Manager",
+            location: "Main Branch",
+            image: "assets/images/user/usrbig6.jpg",
+            children: []
+          },
+          {
+            id: 4,
+            name: "Raza 01",
+            department: "HR",
+            designation: "HR Executive",
+            location: "Remote",
+            image: "assets/images/user/usrbig6.jpg",
+            children: []
+          },
+          {
+            id: 5,
+            name: "Raza 01",
+            department: "Finance",
+            designation: "Executive",
+            location: "Head Office",
+            image: "assets/images/user/usrbig6.jpg",
+            children: []
+          }
+        ];
+
+        localStorage.removeItem('orgTreeData');
+        applyCurrentFilter();
+        showToast('Reset to default data!', 'info');
+      }
+
+      // ============ SEARCH & FILTER FUNCTIONS ============
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function filterTreeData(data, searchText, field) {
+        if (!searchText) return data;
+
+        const searchLower = searchText.toLowerCase();
+
+        function filterNode(node) {
+          // Check if node matches search criteria
+          const matches =
+            (field === 'all' || field === 'name') && node.name.toLowerCase().includes(searchLower) ||
+            (field === 'all' || field === 'department') && node.department.toLowerCase().includes(searchLower) ||
+            (field === 'all' || field === 'designation') && node.designation.toLowerCase().includes(searchLower) ||
+            (field === 'all' || field === 'location') && node.location.toLowerCase().includes(searchLower);
+
+          // Filter children
+          let filteredChildren = [];
+          if (node.children && node.children.length > 0) {
+            node.children.forEach(child => {
+              const filteredChild = filterNode(child);
+              if (filteredChild) {
+                filteredChildren.push(filteredChild);
+              }
+            });
+          }
+
+          // Include node if it matches or has matching children
+          if (matches || filteredChildren.length > 0) {
+            return {
+              ...node,
+              children: filteredChildren
+            };
+          }
+
+          return null;
+        }
+
+        return data.map(node => filterNode(node)).filter(node => node !== null);
+      }
+
+      function performSearch() {
+        const searchText = $('#search-input').val().trim();
+
+        currentFilter.searchText = searchText;
+
+        let filteredData = orgData;
+
+        if (searchText) {
+          filteredData = filterTreeData(orgData, searchText, currentFilter.field);
+        }
+
+        // Update current view
+        if (currentView === 'tree') {
+          loadTreeView(filteredData, searchText);
+        } else {
+          loadGridView(filteredData, searchText);
+        }
+
+        updateSearchResultsCount(filteredData, searchText);
+      }
+
+      function updateSearchResultsCount(filteredData, searchText) {
+        $('.search-results-count').remove();
+
+
+      }
+
+      function countNodes(nodes) {
+        let count = 0;
+
+        function countNode(node) {
+          count++;
+          if (node.children && node.children.length > 0) {
+            node.children.forEach(child => countNode(child));
+          }
+        }
+
+        nodes.forEach(node => countNode(node));
+        return count;
+      }
+
+      // ============ VIEW TOGGLE FUNCTIONS ============
+
+      // function switchView(view) {
+      //   currentView = view;
+
+      //   // Update button states
+      //   if (view === 'tree') {
+      //     $('#tree-view-btn').addClass('active btn-primary').removeClass('btn-outline-primary');
+      //     $('#grid-view-btn').removeClass('active btn-primary').addClass('btn-outline-primary');
+      //     $('#tree-view-container').removeClass('d-none');
+      //     $('#grid-view-container').addClass('d-none');
+      //   } else {
+      //     $('#grid-view-btn').addClass('active btn-primary').removeClass('btn-outline-primary');
+      //     $('#tree-view-btn').removeClass('active btn-primary').addClass('btn-outline-primary');
+      //     $('#grid-view-container').removeClass('d-none');
+      //     $('#tree-view-container').addClass('d-none');
+      //   }
+
+      //   // Apply current filter
+      //   applyCurrentFilter();
+      // }
+
+
+
+      // Simple standalone toggle button handler
+      $(document).on('click', '.toggle-org-view', function () {
+        // Get current view from data attribute or default to 'tree'
+        let currentViewState = $(this).data('view') || 'tree';
+
+        // Toggle the view
+        currentViewState = currentViewState === 'tree' ? 'grid' : 'tree';
+
+        // Update the data attribute
+        $(this).data('view', currentViewState);
+        currentView = currentViewState;
+
+        if (currentViewState === 'tree') {
+          // Show tree view, hide grid view
+          $('#tree-view-container').removeClass('d-none');
+          $('#grid-view-container').addClass('d-none');
+
+          // Update tooltip
+          $(this).find('span')
+            .attr('data-bs-title', 'Switch to Grid View')
+            .attr('title', 'Switch to Grid View');
+
+          // Update icon
+          $(this).find('.org-view-icon')
+            .attr('data-lucide', 'list-tree');
+
+        } else {
+          // Show grid view, hide tree view
+          $('#grid-view-container').removeClass('d-none');
+          $('#tree-view-container').addClass('d-none');
+
+          // Update tooltip
+          $(this).find('span')
+            .attr('data-bs-title', 'Switch to Tree View')
+            .attr('title', 'Switch to Tree View');
+
+          // Update icon
+          $(this).find('.org-view-icon')
+            .attr('data-lucide', 'layout-grid');
+        }
+
+        // Reinitialize Lucide icons
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+
+        // Reinitialize Bootstrap tooltips
+        $(this).find('span').each(function () {
+          const tooltip = bootstrap.Tooltip.getInstance(this);
+          if (tooltip) {
+            tooltip.dispose();
+          }
+          new bootstrap.Tooltip(this);
+        });
+
+        // If you have filter logic, apply it
+        if (typeof applyCurrentFilter === 'function') {
+          applyCurrentFilter();
+        }
+      });
+
+
+
+      function applyCurrentFilter() {
+        let filteredData = orgData;
+        const searchText = currentFilter.searchText;
+
+        if (searchText) {
+          filteredData = filterTreeData(orgData, searchText, currentFilter.field);
+        }
+
+        if (currentView === 'tree') {
+          loadTreeView(filteredData, searchText);
+        } else {
+          loadGridView(filteredData, searchText);
+        }
+
+        updateSearchResultsCount(filteredData, searchText);
+      }
+
+      // ============ HELPER FUNCTIONS ============
+
+      function initIconsAndTooltips() {
+        // Initialize Lucide icons
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+
+        // Initialize Bootstrap tooltips
+        $('[data-bs-toggle="tooltip"]').each(function () {
+          new bootstrap.Tooltip(this);
+        });
+      }
+
+      function showToast(message, type = 'info') {
+        // Remove existing toasts
+        $('.toast').remove();
+
+        const toastHtml = `
+      <div class="toast align-items-center text-bg-${type} border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    `;
+
+        $('body').append(toastHtml);
+        const toast = new bootstrap.Toast($('.toast').last()[0]);
+        toast.show();
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          $('.toast').remove();
+        }, 3000);
+      }
+
+      function setupEventListeners() {
+        // Search input events
+        $('#search-input').on('input', function (e) {
+          performSearch();
+
+          // Clear button logic
+          const $parent = $(this).parent();
+          const clearBtn = $parent.find('.clear-search');
+
+          if ($(this).val() && clearBtn.length === 0) {
+            const clearButton = $('<button class="btn btn-outline-secondary clear-search" type="button" style="border-left: 0;"><i data-lucide="x" style="width: 12px; height: 12px;"></i></button>');
+            $parent.append(clearButton);
+            if (window.lucide) lucide.createIcons();
+
+            clearButton.on('click', function () {
+              $('#search-input').val('').trigger('input');
+              // performSearch(); // Triggered by input
+              $(this).remove();
+            });
+          } else if (!$(this).val() && clearBtn.length > 0) {
+            clearBtn.remove();
+          }
+        });
+
+        $('#button-search').on('click', performSearch);
+
+
+
+        // Period select change
+        $('#period-select').on('change', function () {
+          currentFilter.period = $(this).val();
+          console.log('Period changed to:', currentFilter.period);
+          showToast(`Period changed to ${$(this).find('option:selected').text()}`, 'info');
+        });
+
+        // View toggle buttons
+        // $('#tree-view-btn').on('click', () => switchView('tree'));
+        // $('#grid-view-btn').on('click', () => switchView('grid'));
+
+        // Action buttons
+        $('.fetch-tree').on('click', loadFromJSONFile);
+        $('.save-tree').on('click', saveTreeData);
+        $('.export-json').on('click', exportTreeData);
+        $('.export').on('click', function () {
+          const data = getCurrentTreeJSON();
+          const jsonStr = JSON.stringify(data, null, 2);
+
+          // Create modal to show JSON
+          const modalHtml = `
+        <div class="modal fade" id="json-viewer-modal" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Current Tree Data (JSON)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <pre style="max-height: 500px; overflow-y: auto;">${jsonStr}</pre>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="navigator.clipboard.writeText('${jsonStr.replace(/'/g, "\\'")}')">Copy to Clipboard</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+          $('body').append(modalHtml);
+          const modal = new bootstrap.Modal($('#json-viewer-modal'));
+          modal.show();
+
+          // Remove modal after hide
+          $('#json-viewer-modal').on('hidden.bs.modal', function () {
+            $(this).remove();
+          });
+        });
+
+        $('.reset').on('click', resetToDefault);
+
+
+
+        // Modal events
+        $('#add-org, #edit-org, #delete-modal').on('show.bs.modal', function (e) {
+          const button = $(e.relatedTarget);
+          const nodeId = button.data('node-id');
+          const modalType = $(this).attr('id');
+
+          // You can add specific logic for each modal here
+          console.log(`${modalType} modal opened for node:`, nodeId);
+
+          // For delete modal, you might want to set up confirmation
+          if (modalType === 'delete-modal') {
+            const nodeName = button.closest('li').data('name') || 'this item';
+            $('#delete-modal .modal-body p').text(`Are you sure you want to delete "${nodeName}"?`);
+
+            // Set up delete button action
+            $('#delete-modal .btn-danger').off('click').on('click', function () {
+              // Add your delete logic here
+              console.log('Deleting node:', nodeId);
+              // You would need to remove the node from the tree and update views
+              $('#delete-modal').modal('hide');
+              showToast('Item deleted!', 'success');
+            });
+          }
+        });
+
+        // Sortstop event
+        $(document).on("sortstop", function () {
+          ensureChildULs();
+          bindDroppables();
+          updateToggles();
+        });
+      }
+
+      // Initialize everything
+      init();
+
+      // Setup Group Filtering
+      setupGroupFilter();
+
+      function setupGroupFilter() {
+        $('#group-select').on('change', function () {
+          const selectedGroup = $(this).val();
+          console.log('Group selected:', selectedGroup);
+
+          if (selectedGroup === 'All') {
+            // Show all data (root)
+            if (currentView === 'tree') {
+              loadTreeView(orgData);
+            } else {
+              loadGridView(orgData);
+            }
+            return;
+          }
+
+          // Filter data to find roots matching the group
+          const filteredRoots = findGroupRoots(orgData, selectedGroup);
+
+          if (currentView === 'tree') {
+            loadTreeView(filteredRoots);
+          } else {
+            loadGridView(filteredRoots);
+          }
+        });
+      }
+
+      function findGroupRoots(nodes, groupName) {
+        let roots = [];
+        nodes.forEach(node => {
+          if (node.group === groupName) {
+            roots.push(node);
+          } else if (node.children && node.children.length > 0) {
+            roots = roots.concat(findGroupRoots(node.children, groupName));
+          }
+        });
+        return roots;
+      }
+    });
+  </script>
+
+
+
+
+
+
+  <script src="assets/js/org-structure-groups.js"></script>
+
+</body>
+
+</html>

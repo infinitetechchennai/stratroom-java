@@ -58,7 +58,7 @@ public class BudgetDetailService {
     public List<BudgetDTO> findAllBYEmpId(Long empId) {
         String stUrl = this.dbUrl + "/budgets";
         String url = String.join((CharSequence)"/", stUrl, String.valueOf(empId));
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(url, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
@@ -66,14 +66,14 @@ public class BudgetDetailService {
         String stUrl = this.dbUrl + "/budgetsList";
         String url = String.join((CharSequence)"/", stUrl, String.valueOf(pageId));
         String finalurl = UriComponentsBuilder.fromHttpUrl((String)url).queryParam("status", new Object[]{status}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalurl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 
     public List<BudgetDTO> findByAllchangeId(Long changeId) {
         String stUrl = this.dbUrl + "/budgetsListview";
         String finalurl = UriComponentsBuilder.fromHttpUrl((String)stUrl).queryParam("changeId", new Object[]{changeId}).toUriString();
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (List)this.commonRestTemplate.getForObject(finalurl, (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }

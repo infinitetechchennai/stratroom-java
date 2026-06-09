@@ -20,9 +20,10 @@ import com.estrat.service.db.bean.po.BatchDetailsPo;
 import com.estrat.service.db.dto.KPIDetailsDTO;
 import com.estrat.service.db.resource.util.UserThreadLocal;
 import java.time.LocalDateTime;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.apache.log4j.Logger;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class BatchDAO {
-    private Logger log = Logger.getLogger(BatchDAO.class);
+    private Logger log = LoggerFactory.getLogger(BatchDAO.class);
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @PersistenceContext

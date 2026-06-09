@@ -37,7 +37,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +52,7 @@ public class CommentService {
     protected CommentsMappingService commentsMappingService;
     @Autowired
     private DBCache dbCache;
-    private Logger log = Logger.getLogger(CommentService.class);
+    private Logger log = LoggerFactory.getLogger(CommentService.class);
 
     public Optional<Comments> findById(long id) {
         return this.commentsRepository.findById(id);

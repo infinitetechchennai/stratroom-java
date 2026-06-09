@@ -13,13 +13,14 @@ package com.estrat.web.service;
 
 import com.estrat.web.dto.LicenseResponseDTO;
 import com.estrat.web.service.EmployeeService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LicenseService {
-    private static final Logger log = Logger.getLogger(LicenseService.class);
+    private static final Logger log = LoggerFactory.getLogger(LicenseService.class);
     @Autowired
     private EmployeeService employeeService;
 

@@ -39,13 +39,14 @@ import java.util.Map;
 import java.util.UUID;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LicenseService {
-    private Logger log = Logger.getLogger(LicenseService.class);
+    private Logger log = LoggerFactory.getLogger(LicenseService.class);
     @Autowired
     protected LicenseRepository licenseRepository;
     @Autowired
@@ -108,7 +109,7 @@ public class LicenseService {
             }
             return licenseResponseDTO;
         }
-        this.log.error((Object)("License details not found for given license key " + licenseObj.getLicenseSaltKey()));
+        this.log.error("License details not found for given license key " + licenseObj.getLicenseSaltKey());
         LicenseResponseDTO licenseResponseDTO = new LicenseResponseDTO();
         licenseResponseDTO.setValidationSuccess(false);
         licenseResponseDTO.setValidationMesssage("License details not found for given license key");

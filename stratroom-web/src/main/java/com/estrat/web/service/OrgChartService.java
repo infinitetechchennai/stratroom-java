@@ -31,7 +31,7 @@ public class OrgChartService {
     private String orgChartUrl;
 
     public Employee fetchOrgChartDetails(String empId) throws RequestException {
-        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference() {};
+        org.springframework.core.ParameterizedTypeReference parameterizedTypeReference = new org.springframework.core.ParameterizedTypeReference<Object>() {};
         return (Employee)this.restTemplate.getForObject(this.orgChartUrl + empId + "/employeeList", (ParameterizedTypeReference)parameterizedTypeReference);
     }
 }
