@@ -1,0 +1,88 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.backend.scorecard.dto.FormulationRiskActivitiesDTO
+ *  com.estrat.backend.scorecard.dto.FormulationSubRiskDTO
+ */
+package com.estrat.backend.scorecard.dto;
+
+import com.estrat.backend.scorecard.dto.FormulationSubRiskDTO;
+import java.time.LocalDateTime;
+import java.util.Map;
+
+public class FormulationRiskActivitiesDTO {
+    private long id;
+    private Map<String, Object> activityValue;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
+    private long createdBy;
+    private long updatedBy;
+    private long subRiskId;
+    private FormulationSubRiskDTO subRiskDTO;
+
+    public FormulationSubRiskDTO getSubRiskDTO() {
+        return this.subRiskDTO;
+    }
+
+    public void setSubRiskDTO(FormulationSubRiskDTO subRiskDTO) {
+        this.subRiskDTO = subRiskDTO;
+    }
+
+    public long getSubRiskId() {
+        return this.subRiskId;
+    }
+
+    public void setSubRiskId(long subRiskId) {
+        this.subRiskId = subRiskId;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return this.updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public long getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public long getUpdatedBy() {
+        return this.updatedBy;
+    }
+
+    public void setUpdatedBy(long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Map<String, Object> getActivityValue() {
+        return this.activityValue;
+    }
+
+    public void setActivityValue(Map<String, Object> activityValue) {
+        this.activityValue = activityValue;
+    }
+}
+

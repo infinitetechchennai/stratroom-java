@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { forgotPasswordApi, fetchLoginTheme } from '../../api/authApi'
+import logoWhite from '../../assets/login/logo-w.svg'
 import styles from './LoginPage.module.css'
 
 export default function LoginPage() {
@@ -38,7 +39,7 @@ export default function LoginPage() {
           setLoginLogo(theme.loginTheme)
         }
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [])
 
   const validate = () => {
@@ -72,7 +73,7 @@ export default function LoginPage() {
         localStorage.removeItem('saved_remember')
       }
       await login(form.email, form.password)
-      navigate('/home', { replace: true })
+      navigate('/landing', { replace: true })
     } catch (err) {
       if (err.response) {
         const data = err.response.data
@@ -123,33 +124,30 @@ export default function LoginPage() {
     }
   }
 
-  const leftStyle = loginBg
+  const innerStyle = loginBg
     ? { backgroundImage: `url(${loginBg})` }
     : undefined
 
   return (
     <div className={styles.wrap}>
-      {/* Left panel — brand */}
-      <div className={styles.leftPanel} style={leftStyle}>
-        <div className={styles.leftInner}>
+      {/* Left panel — brand (login-content) */}
+      <div className={styles.leftPanel}>
+        <div className={styles.leftInner} style={innerStyle}>
           <div className={styles.brandCard}>
-            <p className={styles.brandSub}>Welcome to your Integrated</p>
+            <h4 className={styles.brandSub}>Welcome to your Integrated</h4>
             <h1 className={styles.brandTitle}>Multi-Governance</h1>
             <h2 className={styles.brandAccent}>Gateway</h2>
             <div className={styles.poweredBy}>
               <span>Powered by</span>
               <div className={styles.logo}>
-                {loginLogo
-                  ? <img src={loginLogo} alt="StratRoom" style={{ width: '100%' }} />
-                  : <StratroomLogo />
-                }
+                <img src={loginLogo || logoWhite} alt="StratRoom" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Right panel — login form */}
+      {/* Right panel — login form (login-box) */}
       <div className={styles.rightPanel}>
         <div className={styles.formWrapper}>
           <div className={styles.formCard}>
@@ -218,10 +216,14 @@ export default function LoginPage() {
                   />
                   <span>Save Password</span>
                 </label>
-                <button type="button" className={styles.forgotLink} onClick={() => setShowForgot(true)}>
-                  Forgot password?
-                </button>
               </div>
+
+              <p className={styles.forgotRow}>
+                Did you{' '}
+                <button type="button" className={styles.forgotLink} onClick={() => setShowForgot(true)}>
+                  forget your password?
+                </button>
+              </p>
 
               <div className={styles.actions}>
                 <button
@@ -236,7 +238,7 @@ export default function LoginPage() {
                   )}
                 </button>
 
-                <div className={styles.orDivider}><span>OR</span></div>
+                <p className={styles.orDivider}>OR</p>
 
                 <button type="button" className={styles.ssoBtn} disabled={loading}>
                   Sign in with SSO
@@ -313,16 +315,6 @@ function EyeOffIcon() {
       <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
       <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
       <line x1="1" y1="1" x2="23" y2="23" />
-    </svg>
-  )
-}
-
-function StratroomLogo() {
-  return (
-    <svg viewBox="0 0 180 35" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="StratRoom">
-      <text x="0" y="26" fontFamily="Inter, sans-serif" fontWeight="600" fontSize="22" fill="white" letterSpacing="1">
-        StratRoom
-      </text>
     </svg>
   )
 }

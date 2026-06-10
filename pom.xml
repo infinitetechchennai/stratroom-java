@@ -21,12 +21,14 @@
     </properties>
 
     <modules>
-        <module>authservice</module>
-        <module>db-service</module>
-        <module>etl-service</module>
-        <module>scorecard-service</module>
-        <module>stratroom-web</module>
-        <module>licenseservice</module>
-        <module>userservice</module>
+        <module>stack-service/authservice</module>
+        <module>stack-service/db-service</module>
+        <module>stack-service/etl-service</module>
+        <module>stack-service/scorecard-service</module>
+        <module>stack-service/stratroom-web</module>
+        <module>stack-service/licenseservice</module>
+        <module>stack-service/userservice</module>
+        <!-- Merged single backend application -->
+        <module>stack-service/stratroom-backend</module>
     </modules>
 </project>

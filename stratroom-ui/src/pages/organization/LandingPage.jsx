@@ -1,191 +1,465 @@
-import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import axiosClient from '../../api/axiosClient'
-import styles from './LandingPage.module.css'
+import { useLandingPageData } from '../../hooks/useLandingPageData'
+import { LANDING_PAGE_TYPE_OPTIONS } from './landingPageConfig'
+import {
+  formatDueDate,
+  getDisplayName,
+  getInitials,
+  getKpiTrendColor,
+  getProgressClass,
+  getRiskBadgeClass,
+  getRiskDotClass,
+  getTrendIconClass
+} from './landingPageUtils'
+import './LandingPage.css'
 
 export default function LandingPage() {
   const { user } = useAuth()
-  const [departments, setDepartments] = useState([])
-  const [selectedDept, setSelectedDept] = useState('')
-  const [selectedPageType, setSelectedPageType] = useState('')
-  const [stats, setStats] = useState({ meetings: 0, tasks: 0, completedTasks: 0, inProgressTasks: 0 })
-  const [loading, setLoading] = useState(true)
+  const empId = user?.empId ?? user?.id
+  const {
+    loading,
+    error,
+    userProfile,
+    departments,
+    selectedDeptId,
+    selectedPageType,
+    selectedPageId,
+    filterPages,
+    dashboard,
+    setSelectedDeptId,
+    setSelectedPageType,
+    setSelectedPageId
+  } = useLandingPageData(empId)
 
-  const displayName = user?.firstName
-    ? `${user.firstName} ${user.lastName || ''}`.trim()
-    : user?.emailAddress || 'User'
+  const displayName = getDisplayName(userProfile || user)
+  const initials = getInitials(displayName)
+  const departmentName = userProfile?.departmentList?.[0]?.name || ''
 
-  const initials = displayName
-    .split(' ')
-    .slice(0, 2)
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-
-  const fetchLandingData = useCallback(async () => {
-    if (!user?.empId) return
-    setLoading(true)
-    try {
-      const [deptRes, statsRes] = await Promise.allSettled([
-        axiosClient.get(`/stratroom/departmentReportees/${user.empId}`),
-        axiosClient.get(`/stratroom/landingPageStats/${user.empId}`)
-      ])
-      if (deptRes.status === 'fulfilled') {
-        setDepartments(Array.isArray(deptRes.value.data) ? deptRes.value.data : [])
-      }
-      if (statsRes.status === 'fulfilled' && statsRes.value.data) {
-        setStats(statsRes.value.data)
-      }
-    } catch {
-      // best-effort
-    } finally {
-      setLoading(false)
+  const handlePageSelect = (pageId) => {
+    setSelectedPageId(pageId)
+    const page = filterPages.find((p) => String(p.id) === String(pageId))
+    if (page?.createdBy && page?.id) {
+      window.location.href = `/dashboard/${page.createdBy}?pageId=${page.id}`
     }
-  }, [user?.empId])
-
-  useEffect(() => { fetchLandingData() }, [fetchLandingData])
-
-  const PAGE_TYPES = [
-    { value: 'STRATEGYMAP', label: 'Strategy Map' },
-    { value: 'INITIATIVEMAP', label: 'Initiative Map' },
-    { value: 'RADAR', label: 'Risk Radar' },
-    { value: 'SCORECARDDASHBOARD', label: 'Scorecard Dashboard' },
-    { value: 'RISKDASHBOARD', label: 'Risk Dashboard' },
-    { value: 'INITIATIVEDASHBOARD', label: 'Initiative Dashboard' },
-    { value: 'COMPLIANCEDASHBOARD', label: 'Compliance Dashboard' },
-    { value: 'AUDITDASHBOARD', label: 'Audit Dashboard' },
-  ]
+  }
 
   return (
-    <div className={styles.page}>
-      {/* Hero Section */}
-      <section className={styles.heroSection}>
-        <div className={styles.blurOverlay} />
-        <div className={styles.heroContent}>
-          <div className={styles.heroLeft}>
-            <div className={styles.heroCard}>
-              <div className={styles.heroAvatar}>
-                <div className={styles.initialsAvatar}>{initials}</div>
+    <>
+      <main className="landing-page-main">
+        <section className="py-3 hero-section theme-default">
+          <div
+            className="blur-overlay hero-bg"
+            style={{
+              backgroundImage: 'url(/images/landing-bg.jpg), linear-gradient(135deg, #2d1b36 0%, #4a3f55 40%, #8b7355 100%)'
+            }}
+          />
+
+          <div className="container-lg">
+            <div className="d-flex flex-wrap justify-content-between align-items-start">
+              <div className="hero-content hero-card mb-3">
+                <div className="user-image user-active">
+                  <div className="profileInitials_top">{initials}</div>
+                </div>
+                <div>
+                  <h4>Hi <span>{displayName}</span></h4>
+                  <small>welcome to your Multi-Governance Portal</small>
+                </div>
               </div>
-              <div className={styles.heroText}>
-                <h4>Hi {displayName}</h4>
-                <small>welcome to your Multi-Governance Portal</small>
+
+              <div className="d-flex gap-1 hero-header-action align-items-center flex-wrap">
+                <select
+                  className="form-select"
+                  value={selectedDeptId}
+                  onChange={(e) => setSelectedDeptId(e.target.value)}
+                  disabled={loading && !departments.length}
+                  style={selectStyle}
+                >
+                  <option value="">Choose department</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.id}>
+                      {dept.name}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  className="form-select"
+                  value={selectedPageType}
+                  onChange={(e) => setSelectedPageType(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="">Choose pageType</option>
+                  {LANDING_PAGE_TYPE_OPTIONS.map((pt) => (
+                    <option key={pt.value} value={pt.value}>{pt.label}</option>
+                  ))}
+                </select>
+
+                <select
+                  className="form-select"
+                  value={selectedPageId}
+                  onChange={(e) => handlePageSelect(e.target.value)}
+                  disabled={!selectedPageType || !filterPages.length}
+                  style={selectStyle}
+                >
+                  <option value="">Choose Pages</option>
+                  {filterPages.map((page) => (
+                    <option key={page.id} value={page.id}>
+                      {page.pageName}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="ai-border">
+                  <a
+                    href="https://aidemo.stratroom.io/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ai-btn"
+                  >
+                    <i className="fas fa-wand-magic-sparkles" style={{ width: 16, height: 16 }} />
+                    AI Mode
+                  </a>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn btn-sm btn-light rounded-pill"
+                  data-bs-toggle="modal"
+                  data-bs-target="#profileModal"
+                  title="Profile"
+                >
+                  <i className="fas fa-user-circle" style={{ width: 16, height: 16 }} />
+                </button>
+
+                <button
+                  type="button"
+                  className="btn btn-sm btn-light rounded-pill"
+                  title="About Me"
+                >
+                  <i className="fas fa-bullseye" style={{ width: 16, height: 16 }} />
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <div className="alert alert-warning py-2 mb-2" role="alert">
+                {error}
+              </div>
+            )}
+
+            <div className="row">
+              <div className="col-12 col-lg-9">
+                <div className="card card-priorities custom-card bg-transparent shadow-none">
+                  <div className="card-header bg-transparent border-0 px-0">
+                    <h5 className="card-title text-white">My Priorities</h5>
+                  </div>
+                  <div className="card-body px-0">
+                    <div className="d-flex flex-column gap-2">
+                      <OverviewSection loading={loading} dashboard={dashboard} />
+
+                      <InitiativesSection loading={loading} initiatives={dashboard.initiatives} />
+
+                      <RisksSection loading={loading} risks={dashboard.risks} />
+
+                      <KpisSection loading={loading} kpis={dashboard.kpis} />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className={styles.heroRight}>
-            <select
-              className={styles.heroSelect}
-              value={selectedDept}
-              onChange={(e) => setSelectedDept(e.target.value)}
-            >
-              <option value="">Choose department</option>
-              {departments.map((d) => (
-                <option key={d.id || d.deptId} value={d.id || d.deptId}>
-                  {d.deptName || d.name}
-                </option>
-              ))}
-            </select>
-            <select
-              className={styles.heroSelect}
-              value={selectedPageType}
-              onChange={(e) => setSelectedPageType(e.target.value)}
-            >
-              <option value="">Choose pageType</option>
-              {PAGE_TYPES.map((pt) => (
-                <option key={pt.value} value={pt.value}>{pt.label}</option>
-              ))}
-            </select>
+        </section>
+
+        <div className="modal custom-modal fade" id="profileModal" tabIndex="-1" aria-hidden="true">
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h4 className="modal-title">Profile</h4>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+              </div>
+              <div className="modal-body">
+                <div className="card border-0">
+                  <div className="card-body p-0">
+                    <div
+                      className="d-flex flex-column justify-content-center text-center gap-2 p-3 bg-primary rounded mb-3"
+                      style={{ '--stratroom-bg-opacity': '0.1' }}
+                    >
+                      <div className="user-card justify-content-center">
+                        <div className="user-imageprofile user-active">
+                          <div className="profileInitials_top">{initials}</div>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="mb-0 text-muted">{displayName}</p>
+                        <p className="mb-0 text-muted">{departmentName}</p>
+                        {userProfile?.emailAddress && (
+                          <p className="mb-0 text-muted">{userProfile.emailAddress}</p>
+                        )}
+                        {userProfile?.designation && (
+                          <p className="mb-0 text-muted">{userProfile.designation}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
+      </main>
 
-      {/* Priority Cards */}
-      <div className={styles.prioritiesSection}>
-        <div className={styles.sectionHeader}>
-          <h5>My Priorities</h5>
-        </div>
-        <div className={styles.cardGrid}>
-          <PriorityCard
-            icon={<TrophyIcon />}
-            title="Meetings"
-            value={stats.meetings}
-            loading={loading}
-          />
-          <PriorityCard
-            icon={<TaskIcon />}
-            title="Total Task"
-            value={stats.tasks}
-            subtitle={stats.completedTasks > 0 ? `${stats.completedTasks} completed` : null}
-            loading={loading}
-          />
-          <PriorityCard
-            icon={<InitiativeIcon />}
-            title="Initiatives"
-            value={stats.initiatives || 0}
-            loading={loading}
-          />
-          <PriorityCard
-            icon={<RiskIcon />}
-            title="Risks"
-            value={stats.risks || 0}
-            loading={loading}
-          />
-        </div>
+      <footer className="col-12 text-center py-2 copyright">
+        <p className="mb-0">
+          Copyright &copy; {new Date().getFullYear()}{' '}
+          <strong>StratRoom</strong>
+        </p>
+      </footer>
+    </>
+  )
+}
+
+const selectStyle = {
+  borderRadius: '5px',
+  border: '1px solid #dddd',
+  appearance: 'none',
+  WebkitAppearance: 'none',
+  MozAppearance: 'none',
+  backgroundImage: 'none',
+  width: '161px'
+}
+
+function OverviewSection({ loading, dashboard }) {
+  const { meetings, tasks, meetingPageUrl, taskPageUrl } = dashboard
+
+  return (
+    <div className="overview-section" dir="ltr">
+      <div className="d-flex gap-3 flex-wrap">
+        <PriorityCard
+          iconClass="fas fa-users"
+          title="Meetings"
+          value={meetings}
+          loading={loading}
+          actionUrl={meetingPageUrl}
+        />
+        <PriorityCard
+          iconClass="fas fa-check-square"
+          title="Total Task"
+          value={tasks.total}
+          loading={loading}
+          actionUrl={taskPageUrl}
+          subtitle={
+            !loading && (tasks.completed > 0 || tasks.inProgress > 0)
+              ? (
+                <>
+                  {tasks.completed > 0 && <span>Completed: {tasks.completed}</span>}
+                  {tasks.inProgress > 0 && <span className="ms-2">InProgress: {tasks.inProgress}</span>}
+                </>
+              )
+              : null
+          }
+        />
       </div>
     </div>
   )
 }
 
-function PriorityCard({ icon, title, value, subtitle, loading }) {
+function PriorityCard({ iconClass, title, value, loading, subtitle, actionUrl }) {
+  const handleAction = () => {
+    if (actionUrl) window.location.href = actionUrl
+  }
+
   return (
-    <div className={styles.priorityCard}>
-      <div className={styles.priorityCardHeader}>
-        <div className={styles.priorityIcon}>{icon}</div>
+    <div className="card text-start text-card text-card-main border shadow-sm" style={{ width: '250px' }}>
+      <div className="card-header border-0 bg-transparent pb-0 px-2 gap-1 d-flex align-items-center justify-content-between">
+        <div className="icon">
+          <i className={`${iconClass} text-muted`} style={{ width: '18px', height: '18px' }} />
+        </div>
       </div>
-      <div className={styles.priorityCardBody}>
-        <h4 className={styles.priorityTitle}>{title}</h4>
-        <h5 className={styles.priorityAmount}>
-          {loading ? <span className={styles.smallSpinner} /> : value}
+      <div className="card-body p-2 d-flex flex-column">
+        <h4 className="card-title fs-6">{title}</h4>
+        <h5 className="amount mb-1">
+          {loading ? <span className="spinner-border spinner-border-sm" role="status" /> : value}
         </h5>
-        {subtitle && <div className={styles.priorityTrend}>{subtitle}</div>}
+        {subtitle && <div className="d-flex gap-2 amount-trend">{subtitle}</div>}
+        <div className="d-flex gap-1 ms-auto mt-auto">
+          <span
+            className="icon goal"
+            style={{ cursor: actionUrl ? 'pointer' : 'default', opacity: actionUrl ? 1 : 0.5 }}
+            onClick={handleAction}
+            onKeyDown={(e) => e.key === 'Enter' && handleAction()}
+            role={actionUrl ? 'button' : undefined}
+            tabIndex={actionUrl ? 0 : undefined}
+          >
+            <img width="24" height="24" src="/images/risk-red-i.svg" alt="" />
+          </span>
+        </div>
       </div>
     </div>
   )
 }
 
-function TrophyIcon() {
+function InitiativesSection({ loading, initiatives }) {
+  if (!loading && initiatives.length === 0) return null
+
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-      <path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-    </svg>
+    <div className="initiative-section mt-3" dir="ltr">
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="row g-3">
+          {initiatives.map((item) => (
+            <InitiativeCard key={item.id} item={item} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
-function TaskIcon() {
+function InitiativeCard({ item }) {
+  const val = item.initiativeValue || {}
+  const progress = parseFloat(val.progressval) || 0
+  const statusClass = getProgressClass(val.statusIndicator)
+  const dueDate = formatDueDate(val)
+  const badgeText = val.categoryType || 'N/A'
+
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-    </svg>
+    <div className="col-md-3">
+      <div className="card shadow-sm h-100">
+        <div className="card-body p-2 d-flex flex-column">
+          <div className="d-flex justify-content-between mb-2">
+            <i className="far fa-lightbulb text-muted" />
+            <span className={`badge ${statusClass.bar} rounded-pill px-2`} style={{ fontSize: '10px' }}>
+              {badgeText}
+            </span>
+          </div>
+          <h6 className="mb-3" style={{ fontSize: '13px' }}>{val.name || 'Untitled Initiative'}</h6>
+          <div className="mt-auto">
+            <div className="d-flex justify-content-between align-items-center mb-1">
+              <div className="progress w-75" style={{ height: '4px' }}>
+                <div
+                  className={`progress-bar ${statusClass.bar}`}
+                  style={{ width: `${Math.min(progress, 100)}%` }}
+                />
+              </div>
+              <span className="fw-bold" style={{ fontSize: '12px' }}>{progress}%</span>
+            </div>
+            {dueDate && (
+              <div className="d-flex justify-content-between text-muted" style={{ fontSize: '10px' }}>
+                <span>Due Date: {dueDate}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
-function InitiativeIcon() {
+function RisksSection({ loading, risks }) {
+  if (!loading && risks.length === 0) return null
+
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2v20M2 12h20" /><circle cx="12" cy="12" r="10" />
-    </svg>
+    <div className="risk-section mt-3" dir="ltr">
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="row g-3">
+          {risks.map((risk) => (
+            <RiskCard key={risk.id} risk={risk} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
-function RiskIcon() {
+function RiskCard({ risk }) {
+  const val = risk.riskValue || {}
+  const category = val.riskcategory || 'N/A'
+  const nextAssessment = val.ch_nextAssessment || val.nextAssessment || ''
+  const badgeClass = getRiskBadgeClass(category)
+  const dotClass = getRiskDotClass(val.riskStatus)
+
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-      <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
+    <div className="col-md-3">
+      <div className="card shadow-sm h-100">
+        <div className="card-body p-2 d-flex flex-column">
+          <div className="d-flex justify-content-between mb-2">
+            <i className="fas fa-exclamation-triangle text-muted" />
+            <span className={`badge ${badgeClass} rounded-pill px-2`} style={{ fontSize: '10px' }}>
+              {category}
+            </span>
+          </div>
+          <h6 className="mb-3" style={{ fontSize: '13px' }}>{val.name || 'Untitled Risk'}</h6>
+          <div className="mt-auto">
+            <div className="d-flex justify-content-between text-muted align-items-center" style={{ fontSize: '10px' }}>
+              {nextAssessment && <span>Next Assessment: {nextAssessment}</span>}
+              <i className={`far fa-dot-circle ${dotClass} fs-6`} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function KpisSection({ loading, kpis }) {
+  if (!loading && kpis.length === 0) return null
+
+  return (
+    <div className="kpi-section mt-3" dir="ltr">
+      {loading ? (
+        <LoadingRow />
+      ) : (
+        <div className="row g-3">
+          {kpis.map((kpi) => (
+            <KpiCard key={kpi.id} kpi={kpi} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function KpiCard({ kpi }) {
+  const trendColor = getKpiTrendColor(kpi.actual, kpi.target)
+  const trendIcon = getTrendIconClass(kpi.trend)
+
+  return (
+    <div className="col-md-3">
+      <div className="card shadow-sm h-100">
+        <div className="card-body p-2 d-flex flex-column">
+          <div className="d-flex justify-content-between mb-2">
+            <i className="fas fa-bullseye text-muted" />
+          </div>
+          <h6 className="mb-3" style={{ fontSize: '13px' }}>{kpi.name}</h6>
+          <div className="mt-auto">
+            <div className="d-flex justify-content-between text-muted align-items-center" style={{ fontSize: '10px' }}>
+              <div className="d-flex flex-column">
+                <div className="d-flex gap-3 fw-bold">
+                  <span>Actual</span>
+                  <span>Target</span>
+                </div>
+                <div className="d-flex gap-3">
+                  <span className="fw-bold" style={{ color: trendColor }}>{kpi.actual}</span>
+                  <span>{kpi.target}</span>
+                </div>
+              </div>
+              <i className={`${trendIcon} fs-6`} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LoadingRow() {
+  return (
+    <div className="text-white-50 py-2">
+      <span className="spinner-border spinner-border-sm me-2" role="status" />
+      Loading...
+    </div>
   )
 }

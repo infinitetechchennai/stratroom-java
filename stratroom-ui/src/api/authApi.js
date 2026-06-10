@@ -6,8 +6,12 @@ const authAxios = axios.create({
   timeout: 30000
 })
 
+// Login flow is wired to the consolidated backend (stratroom-backend) at /api.
+// Other features (loginTheme, forgotPassword) still live in the legacy web layer
+// and will be migrated in a later phase; they fail gracefully until then.
+
 export const loginApi = async ({ userName, passWord }) => {
-  const response = await authAxios.post('/authservice/login', {
+  const response = await authAxios.post('/api/login', {
     userName,
     passWord,
     ssoLogin: false
@@ -16,7 +20,7 @@ export const loginApi = async ({ userName, passWord }) => {
 }
 
 export const validateTokenApi = async (token, userInfo) => {
-  const response = await authAxios.get('/authservice/validateToken', {
+  const response = await authAxios.get('/api/validateToken', {
     headers: {
       Authorization: `Bearer ${token}`,
       USER_INFO: userInfo
@@ -26,7 +30,7 @@ export const validateTokenApi = async (token, userInfo) => {
 }
 
 export const refreshTokenApi = async (refreshToken, userInfo) => {
-  const response = await authAxios.get('/authservice/generateToken', {
+  const response = await authAxios.get('/api/generateToken', {
     headers: {
       REFRESH_TOKEN: refreshToken,
       USER_INFO: userInfo
@@ -46,5 +50,5 @@ export const fetchLoginTheme = async () => {
 }
 
 export const postPreAuditTrail = async (data) => {
-  await authAxios.post('/stratroom/preAuditTrail', data)
+  await authAxios.post('/api/preAuditTrail', data)
 }

@@ -1,0 +1,139 @@
+.login-bg {
+  background: url(../images/login-bg.svg) no-repeat left top #fff;
+  background-size: 55%;
+  background-attachment: fixed;
+}
+
+.login-content .inner {
+  width: min(1000px, 100%);
+  margin-left: auto;
+}
+
+.login-box {
+  border-left: 1px dashed rgba(0, 0, 0, 0.1);
+}
+.login-box .inner {
+  width: min(400px, 100%);
+  margin-left: auto;
+}
+.login-box .inner h1 {
+  color: var(--dark-gray);
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  font-family: "Outfit", sans-serif;
+}
+.login-box .inner h1 span {
+  display: block;
+  align-self: center;
+}
+.login-box .inner h1 span::after {
+  content: "";
+  display: flex;
+  height: 3px;
+  background: rgb(254, 182, 71);
+  /* background: linear-gradient(90deg, rgb(254, 182, 71) 0%, rgb(227, 114, 196) 100%); */
+  background-color: var(--primary-gray);
+  margin-top: 10px;
+}
+.login-box .form-floating .form-control {
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  background: transparent;
+}
+.login-box .form-floating .form-control:not(:placeholder-shown) ~ label {
+  transform: scale(0.85) translateY(-0.5rem) translateX(0);
+}
+.login-box .form-floating .form-control:not(:placeholder-shown) ~ label::after {
+  display: none;
+}
+.login-box .form-floating .form-control:focus ~ label::after {
+  display: none;
+}
+.login-box .form-floating > label {
+  padding-left: 0;
+}
+
+.copyright {
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+.copyright p {
+  font-size: 14px;
+}
+
+.btn-primary {
+  --stratroom-btn-color: var(--stratroom-white);
+  --stratroom-btn-hover-color:var(--stratroom-white);
+  --stratroom-btn-active-color:var(--stratroom-white);
+  /* background: linear-gradient(165deg, rgb(227, 114, 196) 50%, rgb(66, 118, 217) 80%); */
+  background-color: var(--primary-color);
+  border: 0;
+  height: 48px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--stratroom-white);
+}
+
+.btn-primary:hover,.btn-primary:focus, .btn-primary:active  {
+background-color: var(--secondary-color) !important;
+color:var(--stratroom-white) !important;
+}
+
+.btn-link {
+  height: 48px;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+.btn-link:hover, .btn-link:focus, .btn-link:active {
+  text-decoration: underline;
+  color: var(--primary-color);
+}
+
+.login-content h2.h2 {
+  font-family: "Outfit", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  line-height: 41px;
+}
+
+.login-content h2.h3 {
+  font-family: "Outfit", sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.login-powered-by {
+  text-align: center;
+}
+
+.login-powered-by p {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+.login-powered-by .logo {
+  width: 165px;
+  margin: 0 auto;
+}
+
+.login-powered-by .logo img {
+  width: 100%;
+}
+
+p.login-option {
+  text-align: center;
+  margin: 0;
+  padding-top: 16px;
+}
+
+.special-text {
+  color: var( --primary-color);
+  font-size: 47px;
+}

@@ -1,11 +1,14 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import LoginPage from '../pages/auth/LoginPage'
-import AppLayout from '../layout/AppLayout'
+import StratroomShell from '../layout/StratroomShell'
 import LandingRedirect from '../pages/LandingRedirect'
 import Dashboard from '../pages/dashboard/Dashboard'
 import Whiteboard from '../pages/dashboard/Whiteboard'
 import OrgStructureNew from '../pages/organization/OrgStructureNew'
+import Orgtracker from '../pages/organization/Orgtracker'
+import OrgStructureKpi from '../pages/organization/OrgStructureKpi'
+import OrgStructureKpiEdit from '../pages/organization/OrgStructureKpiEdit'
 import LandingPage from '../pages/organization/LandingPage'
 import Controlpanel from '../pages/organization/Controlpanel'
 import Audittrailpage from '../pages/organization/Audittrailpage'
@@ -21,7 +24,7 @@ function PrivateRoute({ children }) {
 function PublicRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
   if (loading) return <PageLoader />
-  return isAuthenticated ? <Navigate to="/home" replace /> : children
+  return isAuthenticated ? <Navigate to="/landing" replace /> : children
 }
 
 function PageLoader() {
@@ -54,12 +57,15 @@ export default function AppRoutes() {
 
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
 
-      <Route element={<PrivateRoute><AppLayout /></PrivateRoute>}>
+      <Route element={<PrivateRoute><StratroomShell /></PrivateRoute>}>
         {/* Post-login landing resolver — fetches homePagePreferences and redirects */}
         <Route path="/home" element={<LandingRedirect />} />
 
         {/* Landing pages matching MemberController.login() routing */}
         <Route path="/org-structure" element={<OrgStructureNew />} />
+        <Route path="/org-tracker" element={<Orgtracker />} />
+        <Route path="/org-structure-kpi" element={<OrgStructureKpi />} />
+        <Route path="/org-structure-kpi-edit" element={<OrgStructureKpiEdit />} />
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard-page" element={<Dashboard />} />

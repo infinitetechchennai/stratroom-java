@@ -1,0 +1,27 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.backend.db.bean.po.RiskConsequenceDetails
+ *  com.estrat.backend.db.dao.RiskConsequenceRepository
+ *  org.springframework.data.jpa.repository.JpaRepository
+ *  org.springframework.data.jpa.repository.Query
+ *  org.springframework.data.repository.query.Param
+ */
+package com.estrat.backend.db.dao;
+
+import com.estrat.backend.db.bean.po.RiskConsequenceDetails;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+public interface RiskConsequenceRepository
+extends JpaRepository<RiskConsequenceDetails, Long> {
+    @Query(value="SELECT r FROM RiskConsequenceDetails r WHERE r.causeConqId = :conqId")
+    public List<RiskConsequenceDetails> findAllByCauseAndConqId(@Param(value="conqId") Long var1);
+
+    @Query(value="SELECT r FROM RiskConsequenceDetails r WHERE r.changeId = :changeId")
+    public List<RiskConsequenceDetails> findByChangeId(@Param(value="changeId") Long var1);
+}
+

@@ -12,12 +12,23 @@ export function PermissionsProvider({ children }) {
   const [loading, setLoading] = useState(false)
 
   const loadPermissionsAndPages = useCallback(async () => {
-    if (!user?.empId) return
+    const empId = user?.empId ?? user?.id
+    if (!empId) return
+
+    const storedPerms = localStorage.getItem('userPermissions')
+    if (storedPerms) {
+      try {
+        setPermissions(JSON.parse(storedPerms))
+      } catch {
+        /* ignore malformed cache */
+      }
+    }
+
     setLoading(true)
     try {
       const [permsRes, pagesRes] = await Promise.all([
-        axiosClient.get(`/userservice/user/permissions/${user.empId}`),
-        getPageList(user.empId)
+        axiosClient.get(`/api/user/permissions/${empId}`),
+        getPageList(empId)
       ])
       setPermissions(permsRes.data || {})
       setPages(pagesRes || [])
@@ -26,16 +37,17 @@ export function PermissionsProvider({ children }) {
     } finally {
       setLoading(false)
     }
-  }, [user?.empId])
+  }, [user?.empId, user?.id])
 
   useEffect(() => {
-    if (isAuthenticated && user?.empId) {
+    const empId = user?.empId ?? user?.id
+    if (isAuthenticated && empId) {
       loadPermissionsAndPages()
     } else {
       setPermissions({})
       setPages([])
     }
-  }, [isAuthenticated, user?.empId, loadPermissionsAndPages])
+  }, [isAuthenticated, user?.empId, user?.id, loadPermissionsAndPages])
 
   const hasPermission = (moduleName, privilege = 'View') => {
     const perms = permissions[moduleName]

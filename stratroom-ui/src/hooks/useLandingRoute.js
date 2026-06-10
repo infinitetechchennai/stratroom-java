@@ -24,7 +24,7 @@ export default function useLandingRoute() {
       const prefs = await getHomePreferences(empId)
 
       if (!prefs || (!prefs.pageId && !prefs.pageName)) {
-        setLandingPath('/org-structure')
+        setLandingPath('/landing')
         setLoading(false)
         return
       }
@@ -62,10 +62,10 @@ export default function useLandingRoute() {
           setLandingPath('/user-role-management')
           break
         default:
-          setLandingPath('/org-structure')
+          setLandingPath('/landing')
       }
     } catch {
-      setLandingPath('/org-structure')
+      setLandingPath('/landing')
     } finally {
       setLoading(false)
     }

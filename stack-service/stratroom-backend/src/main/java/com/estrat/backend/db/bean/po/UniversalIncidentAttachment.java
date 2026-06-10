@@ -1,0 +1,158 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.backend.db.bean.po.UniversalIncidentAttachment
+ *  com.estrat.backend.db.dto.UniversalIncidentAttachmentDTO
+ *  javax.persistence.Column
+ *  javax.persistence.Entity
+ *  javax.persistence.GeneratedValue
+ *  javax.persistence.GenerationType
+ *  javax.persistence.Id
+ *  javax.persistence.Table
+ */
+package com.estrat.backend.db.bean.po;
+
+import com.estrat.backend.db.dto.UniversalIncidentAttachmentDTO;
+import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="universal_incident_attachment", schema="orgstructure")
+public class UniversalIncidentAttachment {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="id")
+    private long id;
+    @Column(name="created_by", updatable=false)
+    private long createdBy;
+    @Column(name="updated_by")
+    private long updatedBy;
+    @Column(name="name")
+    private String name;
+    @Column(name="size")
+    private String size;
+    @Column(name="type")
+    private String type;
+    @Column(name="filename")
+    private String file;
+    @Column(name="uniquereference")
+    private String uniqueFileReference;
+    @Column(name="created_time", updatable=false)
+    private LocalDateTime createdTime;
+    @Column(name="updated_time")
+    private LocalDateTime updatedTime;
+    @Column(name="incident_id")
+    private Long incidentId;
+
+    public UniversalIncidentAttachment() {
+    }
+
+    public UniversalIncidentAttachment(UniversalIncidentAttachmentDTO incidentAttachmentDto) {
+        this.id = incidentAttachmentDto.getId();
+        this.createdBy = incidentAttachmentDto.getCreatedBy();
+        this.createdTime = incidentAttachmentDto.getCreatedTime();
+        this.name = incidentAttachmentDto.getName();
+        this.size = incidentAttachmentDto.getSize();
+        this.type = incidentAttachmentDto.getType();
+        this.file = incidentAttachmentDto.getName();
+        this.updatedBy = incidentAttachmentDto.getUpdatedBy();
+        this.updatedTime = incidentAttachmentDto.getUpdatedTime();
+        this.incidentId = incidentAttachmentDto.getIncidentId();
+        this.uniqueFileReference = incidentAttachmentDto.getUniqueFileReference();
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public long getUpdatedBy() {
+        return this.updatedBy;
+    }
+
+    public void setUpdatedBy(long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSize() {
+        return this.size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getFile() {
+        return this.file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public String getUniqueFileReference() {
+        return this.uniqueFileReference;
+    }
+
+    public void setUniqueFileReference(String uniqueFileReference) {
+        this.uniqueFileReference = uniqueFileReference;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return this.updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public Long getIncidentId() {
+        return this.incidentId;
+    }
+
+    public void setIncidentId(Long incidentId) {
+        this.incidentId = incidentId;
+    }
+}
+

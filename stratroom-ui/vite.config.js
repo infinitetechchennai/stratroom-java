@@ -6,6 +6,14 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
+      // Consolidated backend (stratroom-backend) — single app on 8085, context-path /api.
+      // Migration is incremental: the login flow uses this; other modules still use the
+      // per-service proxies below until they are migrated module by module.
+      '/api': {
+        target: 'http://localhost:8085',
+        changeOrigin: true,
+        secure: false
+      },
       '/authservice': {
         target: 'http://localhost:8081',
         changeOrigin: true,

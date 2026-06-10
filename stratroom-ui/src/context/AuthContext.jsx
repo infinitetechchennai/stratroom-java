@@ -50,7 +50,9 @@ export function AuthProvider({ children }) {
       try {
         const result = await validateTokenApi(token, userInfo)
         if (result.validationSuccess && !result.tokenExpired) {
-          setUser(JSON.parse(profile))
+          const parsed = JSON.parse(profile)
+          if (!parsed.empId && parsed.id) parsed.empId = parsed.id
+          setUser(parsed)
         } else {
           clearSession()
         }
@@ -95,6 +97,9 @@ export function AuthProvider({ children }) {
     localStorage.setItem('sidebar_option', 'side-closed submenu-closed')
 
     const profile = data.profile || {}
+    if (!profile.empId && profile.id) {
+      profile.empId = profile.id
+    }
     localStorage.setItem(SESSION_KEYS.PROFILE, JSON.stringify(profile))
     setUser(profile)
 
