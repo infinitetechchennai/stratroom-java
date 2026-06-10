@@ -56,15 +56,15 @@ export default function MainNavigation() {
         >
           <img
             className="applogofinal"
-            width="180"
-            height="30"
-            src="/images/stratroom-logo.svg"
+            height="32"
+            style={{ width: 'auto', maxHeight: 32 }}
+            src="/images/logo.png"
             alt="StratRoom"
             onError={(e) => { e.currentTarget.src = '/images/logo-icon.svg' }}
           />
         </a>
 
-        <div className="navbar-collapse">
+        <div className="collapse navbar-collapse" id="mainNavbar">
           <ul className="navbar-nav ms-auto menulistaccess">
             {NAV_MODULES.map(({ key, label }) => {
               if (!isModuleVisible(key === 'Report' ? 'Reports' : key)) return null

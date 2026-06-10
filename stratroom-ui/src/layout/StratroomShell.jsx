@@ -13,9 +13,9 @@ export default function StratroomShell() {
       <header id="header" className="header shadow-sm">
         <MainNavigation />
       </header>
-      <div className={isLanding ? 'stratroom-landing-outlet' : 'stratroom-page-outlet'}>
+      <main className={isLanding ? 'stratroom-landing-outlet' : 'stratroom-page-outlet'}>
         <Outlet />
-      </div>
+      </main>
     </div>
   )
 }

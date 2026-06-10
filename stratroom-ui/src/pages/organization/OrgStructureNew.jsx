@@ -712,11 +712,7 @@ export default function OrgStructureNew() {
   const showSearch = search.trim().length > 0
   const displayTree = showSearch ? filterTree(tree, search.toLowerCase()) : tree
 
-  const viewIcons = [
-    {
-      id: 'add', title: 'Add Person', onClick: () => handleAdd(-1),
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>,
-    },
+  const VIEW_BTNS = [
     {
       id: 'tree', title: 'Tree View', onClick: () => setView('tree'),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
@@ -729,6 +725,10 @@ export default function OrgStructureNew() {
       id: 'grid', title: 'Grid View', onClick: () => setView('grid'),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
     },
+    {
+      id: 'add', title: 'Add Person', onClick: () => handleAdd(-1),
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>,
+    },
   ]
 
   return (
@@ -738,12 +738,7 @@ export default function OrgStructureNew() {
         <div className={styles.pageHeaderInner}>
           <div className={styles.pageTitle}>
             <div className={styles.pageTitleIcon}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round">
-                <rect x="2" y="2" width="6" height="6" rx="1"/><rect x="16" y="2" width="6" height="6" rx="1"/>
-                <rect x="9" y="16" width="6" height="6" rx="1"/>
-                <path d="M5 8v4c0 1.1.9 2 2 2h10a2 2 0 0 0 2-2V8"/>
-                <line x1="12" y1="14" x2="12" y2="16"/>
-              </svg>
+              <img src="/images/org-structure-i.svg" width="16" height="16" alt="" style={{ filter: 'brightness(0) invert(1)' }} />
             </div>
             <div>
               <h1 className={styles.pageTitleText}>Org Structure</h1>
@@ -759,8 +754,25 @@ export default function OrgStructureNew() {
               value={search} onChange={e => setSearch(e.target.value)} />
           </div>
 
+          <select className={styles.headerSelect} defaultValue="current">
+            <option value="current">Current</option>
+            <option value="ytd">YTD</option>
+            <option value="q1">Q1</option>
+            <option value="q2">Q2</option>
+            <option value="q3">Q3</option>
+            <option value="q4">Q4</option>
+          </select>
+
+          <select className={styles.headerSelect} defaultValue="">
+            <option value="">All Groups</option>
+          </select>
+
+          <select className={styles.headerSelect} defaultValue="">
+            <option value="">All Departments</option>
+          </select>
+
           <div className={styles.pageIcons}>
-            {viewIcons.map(vi => (
+            {VIEW_BTNS.map(vi => (
               <button key={vi.id}
                 className={`${styles.pageIconBtn}${view === vi.id ? ' ' + styles.active : ''}`}
                 title={vi.title} onClick={vi.onClick}>

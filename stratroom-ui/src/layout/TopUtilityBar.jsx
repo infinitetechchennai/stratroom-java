@@ -15,8 +15,8 @@ export default function TopUtilityBar() {
 
   return (
     <div className="navbar-topbar">
-      <div className="container-lg d-flex flex-wrap justify-content-between">
-        <div className="menu-controls d-flex">
+      <div className="container-lg d-flex flex-wrap justify-content-between align-items-stretch" style={{ minHeight: 38 }}>
+        <div className="menu-controls d-flex align-items-stretch">
           <a
             className="control-link"
             href="/org-structure"
