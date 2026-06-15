@@ -1,0 +1,18 @@
+/* Global box-sizing — does not override Bootstrap Reboot or basic.css */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* App shell min-height */
+#root {
+  min-height: 100dvh;
+}
+
+/* React app custom tokens (used by CSS modules) */
+:root {
+  --primary: #883B71;
+  --primary-dark: #702f5b;
+  --primary-light: #a04d87;
+  --danger: #dc2626;
+  --success: #16a34a;
+}

@@ -1,0 +1,261 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.editBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #883b71;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.editBtn:hover { background: #6d2f5b; }
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.content {
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+
+.treeWrap {
+  min-width: max-content;
+}
+
+.loader, .empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.empty h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 6px;
+}
+
+.empty p { font-size: 13px; margin: 0; }
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(136, 59, 113, 0.2);
+  border-top-color: #883b71;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tree */
+.tree {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.treeNested {
+  margin-left: 48px;
+  border-left: 2px solid #e5e7eb;
+  padding-left: 16px;
+  margin-top: 6px;
+}
+
+.treeItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.nodeWrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.caret {
+  flex-shrink: 0;
+  margin-top: 14px;
+  width: 18px;
+  height: 18px;
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 11px;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.caret::after {
+  content: '▶';
+  font-size: 8px;
+  transition: transform 0.2s;
+}
+
+.caretDown::after {
+  transform: rotate(90deg);
+}
+
+.caret:hover {
+  background: #f3f4f6;
+}
+
+.caretPlaceholder {
+  flex-shrink: 0;
+  width: 18px;
+  margin-top: 14px;
+}
+
+/* KPI Card */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 220px;
+  max-width: 280px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #faf5f8;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #883b71;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.cardInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardName {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardDesc {
+  font-size: 11px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.kpiRow {
+  display: flex;
+  align-items: stretch;
+}
+
+.kpiCell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px;
+  gap: 2px;
+}
+
+.kpiDivider {
+  width: 1px;
+  background: #e5e7eb;
+  margin: 6px 0;
+}
+
+.kpiLabel {
+  font-size: 10px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.kpiValue {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.kpiActual { color: #16a34a; }
+.kpiTarget { color: #883b71; }
+.kpiGap    { color: #d97706; }

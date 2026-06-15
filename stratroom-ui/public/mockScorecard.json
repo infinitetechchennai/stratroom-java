@@ -1,0 +1,404 @@
+[
+  {
+    "pageTitle": "Scorecard",
+    "overallScore": "88%",
+    "userName": "Sajin",
+    "period": "3/01/2025 - 3/22/2025",
+    "tab": [
+      {
+        "title": "Financial",
+        "totalScore": "92%",
+        "tabledata": [
+          {
+            "flag": [
+              {
+                "status": "green"
+              }
+            ],
+            "id": "F1",
+            "url": "kpi.html",
+            "name": "Maximize Profitability",
+            "period": "Year",
+            "trend": [
+              {
+                "status": "up"
+              }
+            ],
+            "score": "92%",
+            "baseline": "85%",
+            "actual": "$5.2M",
+            "target": "$5.0M",
+            "risk": [
+              {
+                "status": "green"
+              }
+            ],
+            "actions": "",
+            "children": [
+              {
+                "flag": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "id": "F1.1",
+                "url": "kpi.html",
+                "name": "Net Profit Margin",
+                "period": "Quarter",
+                "trend": [
+                  {
+                    "status": "up"
+                  }
+                ],
+                "score": "95%",
+                "baseline": "15%",
+                "actual": "18.5%",
+                "target": "18.0%",
+                "risk": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "actions": "",
+                "children": [
+                  {
+                    "flag": [
+                      {
+                        "status": "yellow"
+                      }
+                    ],
+                    "id": "F1.1.1",
+                    "url": "kpi.html",
+                    "name": "Operating Cost Reduction",
+                    "period": "Month",
+                    "trend": [
+                      {
+                        "status": "down"
+                      }
+                    ],
+                    "score": "80%",
+                    "baseline": "5%",
+                    "actual": "4.2%",
+                    "target": "6.0%",
+                    "risk": [
+                      {
+                        "status": "yellow"
+                      }
+                    ],
+                    "actions": ""
+                  }
+                ]
+              },
+              {
+                "flag": [
+                  {
+                    "status": "yellow"
+                  }
+                ],
+                "id": "F1.2",
+                "url": "kpi.html",
+                "name": "Revenue Growth",
+                "period": "Quarter",
+                "trend": [
+                  {
+                    "status": "up"
+                  }
+                ],
+                "score": "88%",
+                "baseline": "10%",
+                "actual": "12%",
+                "target": "15%",
+                "risk": [
+                  {
+                    "status": "yellow"
+                  }
+                ],
+                "actions": "",
+                "children": []
+              }
+            ]
+          },
+          {
+            "flag": [
+              {
+                "status": "green"
+              }
+            ],
+            "id": "F2",
+            "url": "kpi.html",
+            "name": "Optimize Operational Costs",
+            "period": "Year",
+            "trend": [
+              {
+                "status": "up"
+              }
+            ],
+            "score": "90%",
+            "baseline": "80%",
+            "actual": "$1.2M",
+            "target": "$1.5M",
+            "risk": [
+              {
+                "status": "green"
+              }
+            ],
+            "actions": "",
+            "children": [
+              {
+                "flag": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "id": "F2.1",
+                "url": "kpi.html",
+                "name": "Reduce Supply Chain Costs",
+                "period": "Quarter",
+                "trend": [
+                  {
+                    "status": "up"
+                  }
+                ],
+                "score": "92%",
+                "baseline": "$400K",
+                "actual": "$380K",
+                "target": "$350K",
+                "risk": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "actions": "",
+                "children": []
+              },
+              {
+                "flag": [
+                  {
+                    "status": "yellow"
+                  }
+                ],
+                "id": "F2.2",
+                "url": "kpi.html",
+                "name": "Decrease Overhead Expenses",
+                "period": "Quarter",
+                "trend": [
+                  {
+                    "status": "down"
+                  }
+                ],
+                "score": "82%",
+                "baseline": "$200K",
+                "actual": "$190K",
+                "target": "$150K",
+                "risk": [
+                  {
+                    "status": "yellow"
+                  }
+                ],
+                "actions": "",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Customer",
+        "totalScore": "84%",
+        "tabledata": [
+          {
+            "flag": [
+              {
+                "status": "yellow"
+              }
+            ],
+            "id": "C1",
+            "url": "kpi.html",
+            "name": "Enhance Customer Loyalty",
+            "period": "Year",
+            "trend": [
+              {
+                "status": "up"
+              }
+            ],
+            "score": "84%",
+            "baseline": "80%",
+            "actual": "82%",
+            "target": "90%",
+            "risk": [
+              {
+                "status": "yellow"
+              }
+            ],
+            "actions": "",
+            "children": [
+              {
+                "flag": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "id": "C1.1",
+                "url": "kpi.html",
+                "name": "Customer Satisfaction (CSAT)",
+                "period": "Month",
+                "trend": [
+                  {
+                    "status": "up"
+                  }
+                ],
+                "score": "90%",
+                "baseline": "75%",
+                "actual": "88%",
+                "target": "85%",
+                "risk": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "actions": "",
+                "children": [
+                  {
+                    "flag": [
+                      {
+                        "status": "green"
+                      }
+                    ],
+                    "id": "C1.1.1",
+                    "url": "kpi.html",
+                    "name": "Positive Survey Responses",
+                    "period": "Month",
+                    "trend": [
+                      {
+                        "status": "up"
+                      }
+                    ],
+                    "score": "95%",
+                    "baseline": "80%",
+                    "actual": "92%",
+                    "target": "90%",
+                    "risk": [
+                      {
+                        "status": "green"
+                      }
+                    ],
+                    "actions": ""
+                  }
+                ]
+              },
+              {
+                "flag": [
+                  {
+                    "status": "red"
+                  }
+                ],
+                "id": "C1.2",
+                "url": "kpi.html",
+                "name": "Net Promoter Score (NPS)",
+                "period": "Quarter",
+                "trend": [
+                  {
+                    "status": "down"
+                  }
+                ],
+                "score": "60%",
+                "baseline": "40",
+                "actual": "38",
+                "target": "50",
+                "risk": [
+                  {
+                    "status": "red"
+                  }
+                ],
+                "actions": "",
+                "children": []
+              }
+            ]
+          },
+          {
+            "flag": [
+              {
+                "status": "green"
+              }
+            ],
+            "id": "C2",
+            "url": "kpi.html",
+            "name": "Increase Market Share",
+            "period": "Year",
+            "trend": [
+              {
+                "status": "up"
+              }
+            ],
+            "score": "95%",
+            "baseline": "12%",
+            "actual": "16%",
+            "target": "15%",
+            "risk": [
+              {
+                "status": "green"
+              }
+            ],
+            "actions": "",
+            "children": [
+              {
+                "flag": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "id": "C2.1",
+                "url": "kpi.html",
+                "name": "New Customer Acquisition",
+                "period": "Quarter",
+                "trend": [
+                  {
+                    "status": "up"
+                  }
+                ],
+                "score": "100%",
+                "baseline": "500",
+                "actual": "750",
+                "target": "600",
+                "risk": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "actions": "",
+                "children": []
+              },
+              {
+                "flag": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "id": "C2.2",
+                "url": "kpi.html",
+                "name": "Brand Awareness Score",
+                "period": "Quarter",
+                "trend": [
+                  {
+                    "status": "up"
+                  }
+                ],
+                "score": "90%",
+                "baseline": "60%",
+                "actual": "72%",
+                "target": "70%",
+                "risk": [
+                  {
+                    "status": "green"
+                  }
+                ],
+                "actions": "",
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
