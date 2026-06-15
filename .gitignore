@@ -4,6 +4,7 @@ logs/
 target/
 */target/
 */*/target/
+bin/
 *.class
 .metadata/
 .settings/
