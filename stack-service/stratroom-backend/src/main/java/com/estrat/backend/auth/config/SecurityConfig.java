@@ -69,7 +69,8 @@ public class SecurityConfig {
         http.cors(cors -> cors.and());
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/generateToken", "/validateToken", "/v3/api-docs", "/v3/api-docs/**",
+                .requestMatchers("/login", "/generateToken", "/validateToken", "/preAuditTrail", "/loginTheme",
+                        "/v3/api-docs", "/v3/api-docs/**",
                         "/swagger-resources/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**")
                 .permitAll()
                 .anyRequest().hasAuthority("ROLE_USER")

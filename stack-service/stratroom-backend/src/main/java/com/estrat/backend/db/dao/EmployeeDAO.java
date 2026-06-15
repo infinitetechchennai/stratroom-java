@@ -409,7 +409,12 @@ public class EmployeeDAO {
     }
 
     public OrgDetails getOrgDetails(String orgName) {
-        return null;
+        try {
+            return this.orgDetailsRepo.findByName(orgName, "Active");
+        } catch (Exception e) {
+            this.log.error("getOrgDetails failed for name=" + orgName + ": " + e.getMessage());
+            return null;
+        }
     }
 
     public Long getOrgUserCount(long orgId) {

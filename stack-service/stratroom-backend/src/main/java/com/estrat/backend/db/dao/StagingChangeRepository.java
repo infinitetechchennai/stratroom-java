@@ -26,7 +26,7 @@ extends JpaRepository<StagingChange, Long> {
     public List<StagingChange> findAllBySubmittedBy(@Param(value="submittedBy") Long var1);
 
     @Query(value="SELECT s FROM StagingChange s WHERE s.workflowId=:workflowId")
-    public List<StagingChange> findAllByWorkflowId(Long var1);
+    public List<StagingChange> findAllByWorkflowId(@Param("workflowId") Long var1);
 
     @Query(value="SELECT s FROM StagingChange s WHERE s.tableName=:table AND s.status=:status AND s.submittedBy=:empId")
     public List<StagingChange> findAllByStatusAndTable(@Param(value="table") String var1, @Param(value="status") String var2, @Param(value="empId") Long var3);

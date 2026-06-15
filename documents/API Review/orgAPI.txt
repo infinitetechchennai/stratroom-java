@@ -1,0 +1,172 @@
+# Organisation Module APIs
+
+> Base URL: `http://localhost:8085/api`  
+> All endpoints require `Authorization: Bearer <token>` header except where noted.
+
+---
+
+## 1. Org Structure — Employee / Hierarchy
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/employeeDetails/{empId}` | Get single employee details |
+| GET | `/employeeDetailsList` | List all employees |
+| GET | `/{empId}/employeeList` | Employee tree under empId |
+| GET | `/reporteeList/{empId}` | All reportees of empId |
+| GET | `/immediatereporteeList/{empId}` | Immediate reportees only |
+| GET | `/allReporteeList/{empId}` | Full hierarchy under empId |
+| GET | `/allDeptReporteeList/{empId}` | All department reportees |
+| GET | `/organization/employeeList` | Org-wide employee list |
+| GET | `/organization/employeeList/{empId}` | Org employee list from empId |
+| GET | `/org/employeeList` | Org employee list (alternate) |
+| GET | `/getProfileDetails/{empId}` | Get employee profile |
+| GET | `/checkEmail` | Check if email exists |
+| GET | `/checkParentEmployee/{orgId}` | Check if org has a parent employee |
+| GET | `/findProfileByName` | Find profile by name |
+| GET | `/{empId}/removeEmployee` | Remove employee |
+| GET | `/deleteEmployee/{empId}` | Delete employee |
+| GET | `/createUser` | Create user credentials |
+| POST | `/createEmployee` | Create new employee |
+| POST | `/creatBulkEmployee` | Bulk create employees |
+| POST | `/updateEmployee` | Update employee |
+| POST | `/resetPassword` | Reset employee password |
+| POST | `/updateParentEmpId` | Update parent in hierarchy |
+| POST | `/validateUser` | Validate user credentials |
+| POST | `/getEmployeeId` | Get employee ID by details |
+
+---
+
+## 2. Org Chart
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/orgchart/{empId}/employeeList` | Org chart tree data for employee |
+| GET | `/orgchart/validateLicense` | Check org chart license |
+
+---
+
+## 3. Org Details — Organisation Master
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/org_details` | List all organisations |
+| GET | `/org_details/{id}` | Get organisation by ID |
+| GET | `/organizationList` | Organisation list |
+| GET | `/getOrgUserCount` | Count of users in org |
+| POST | `/org_details` | Create organisation |
+| DELETE | `/org_details/{id}` | Delete organisation |
+
+---
+
+## 4. Org Groups
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/orgGroupList` | List all org groups |
+| GET | `/orgGroup/{id}` | Get group by ID |
+| POST | `/orgGroup` | Create group |
+| PUT | `/orgGroup` | Update group |
+| DELETE | `/orgGroup/{id}` | Delete group |
+
+---
+
+## 5. Org Tracker
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/orgTrackList` | Tracker list for logged-in user |
+| GET | `/orgTrackAllList` | All tracker records |
+| GET | `/orgTrackSearchList` | Search tracker records |
+| DELETE | `/clearOrgTrack/{id}` | Clear tracker entry |
+
+---
+
+## 6. Department
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/allDepartmentList` | All departments |
+| GET | `/departmentListByOrgId` | Departments by org |
+| GET | `/allDepartmentListByOrgId` | All departments by org |
+| GET | `/allDepartmentListByLoginUser` | Departments visible to logged-in user |
+| GET | `/findByDeptName` | Find department by name |
+| GET | `/findByDeptUniqueId` | Find department by unique ID |
+| GET | `/findByDeptId/{deptId}` | Find department by ID |
+| GET | `/departmentList` | Department list |
+| GET | `/departmentReportees` | Reportees in department |
+| GET | `/departmentimmedReportees/{deptId}` | Immediate reportees in department |
+| GET | `/findOwnerByDeptId` | Department owner |
+| GET | `/findEmpOwnerByDeptId/{deptId}` | Employee who owns department |
+| GET | `/orgDepartmentList` | Org department list |
+| GET | `/designationList` | Designation / title list |
+| GET | `/ownerMappingDepartmentList` | Owner mapping department list |
+| GET | `/checkDept` | Check if department exists |
+| GET | `/checkDeptEmail` | Check department email |
+| GET | `/deleteOrgDept/{deptId}` | Delete department |
+| GET | `/checkDepartmentChart/{orgId}` | Check department chart for org |
+| POST | `/departmentDetails` | Create department |
+| PUT | `/departmentDetails` | Update department |
+
+---
+
+## 7. Department Mapping
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/getDeptIdwithEmpId/{empId}` | Get department of employee |
+| GET | `/getDepartmentMapping/{deptId}` | Get department mapping |
+| GET | `/deleteDepartmentMapping/{deptId}` | Delete department mapping |
+| GET | `/departmentByEmployeeList/{deptId}` | Employees in department |
+| GET | `/{empId}/departmentByEmployeeList` | Departments of employee |
+| GET | `/childtrackerlist` | Child tracker list |
+| POST | `/addDepartmentMapping` | Add department mapping |
+| POST | `/createBulkDeptMapping` | Bulk department mapping |
+| PUT | `/addDepartmentMapping` | Update department mapping |
+| PUT | `/updateDepartmentParentId/{deptId}` | Update department parent |
+
+---
+
+## 8. User Role Management
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/userList` | All users |
+| GET | `/searchUser` | Search users |
+| GET | `/findByUser` | Find user |
+| GET | `/userRole/{id}` | Get role by ID |
+| POST | `/userRole` | Create role |
+| POST | `/createBulkUser` | Bulk create users |
+| PUT | `/userRole` | Update role |
+| DELETE | `/userRole/{id}` | Delete role |
+
+---
+
+## 9. Miscellaneous (Org-related)
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/validateLicense` | Validate org license |
+| GET | `/years` | Get available years |
+| GET | `/getPreferences` | Get employee preferences |
+| GET | `/orgdetails/{id}` | Get org details by ID |
+| GET | `/orgdetails` | List org details |
+| POST | `/orgdetails` | Create org details |
+| POST | `/employeePreference` | Save employee preference |
+| DELETE | `/orgdetails/{id}` | Delete org details |
+
+---
+
+## Summary
+
+| Group | Total Endpoints |
+|-------|----------------|
+| Org Structure / Employee | 24 |
+| Org Chart | 2 |
+| Org Details | 6 |
+| Org Groups | 5 |
+| Org Tracker | 4 |
+| Department | 21 |
+| Department Mapping | 10 |
+| User Role Management | 8 |
+| Miscellaneous | 8 |
+| **Total** | **88** |

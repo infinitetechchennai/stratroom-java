@@ -29,6 +29,7 @@ import com.estrat.backend.db.bean.po.DepartmentDetails;
 import com.estrat.backend.db.bean.po.EmployeeDepartmentMapping;
 import com.estrat.backend.db.bean.po.OrgDetails;
 import com.estrat.backend.db.dto.UserDTO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,6 +50,7 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name="employee_details", schema="orgstructure")
+@JsonIgnoreProperties(value={"hibernateLazyInitializer", "handler"})
 public class EmployeeProfilePo
 implements Serializable {
     @Id

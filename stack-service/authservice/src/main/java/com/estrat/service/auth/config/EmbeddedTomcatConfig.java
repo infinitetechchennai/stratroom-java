@@ -41,9 +41,17 @@ public class EmbeddedTomcatConfig {
         return this.secret;
     }
 
-    @Value(value="${jwt.secret:123456}")
+    @Value(value="${jwt.secret}")
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    @jakarta.annotation.PostConstruct
+    public void validateSecret() {
+        if (this.secret == null || this.secret.getBytes().length < 32) {
+            throw new IllegalStateException(
+                "jwt.secret must be supplied via the JWT_SECRET environment variable and be at least 32 bytes (256 bits)");
+        }
     }
 
     public long getTokenValidity() {

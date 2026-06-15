@@ -24,10 +24,10 @@ import org.springframework.stereotype.Repository;
 public interface InitiativeTrackerRepository
 extends JpaRepository<InitiativesTracker, Long> {
     @Query(value="SELECT o.* FROM orgstructure.initiatives_tracker o WHERE  o.initiative_id=:initiative and o.end_date <=:endDate and o.org_id=:orgId order by o.end_date desc", nativeQuery=true)
-    public List<InitiativesTracker> findByInitiativeIdwDate(@Param(value="initiative") String var1, @Param(value="endDate") Date var2, @Param(value="orgId") Long var3);
+    public List<InitiativesTracker> findByInitiativeIdwDate(@Param(value="initiative") String var1, @Param(value="endDate") LocalDateTime var2, @Param(value="orgId") Long var3);
 
     @Query(value="SELECT o.* FROM orgstructure.initiatives_tracker o WHERE  (o.initiative_id=:initiative OR o.initiative_id=:initiativeid) and o.end_date <=:endDate and o.org_id=:orgId order by o.end_date desc", nativeQuery=true)
-    public List<InitiativesTracker> findByInitiativeIdwDate(@Param(value="initiative") String var1, @Param(value="initiativeid") String var2, @Param(value="endDate") Date var3, @Param(value="orgId") Long var4);
+    public List<InitiativesTracker> findByInitiativeIdwDate(@Param(value="initiative") String var1, @Param(value="initiativeid") String var2, @Param(value="endDate") LocalDateTime var3, @Param(value="orgId") Long var4);
 
     @Query(value="SELECT o.* FROM orgstructure.initiatives_tracker o WHERE  o.initiative_id=:initiative and  o.end_date BETWEEN :startDate AND :endDate and o.org_id=:orgId order by o.end_date desc", nativeQuery=true)
     public List<InitiativesTracker> findByInitiativeIdbtwDate(@Param(value="initiative") String var1, @Param(value="orgId") Long var2, @Param(value="startDate") LocalDateTime var3, @Param(value="endDate") LocalDateTime var4);

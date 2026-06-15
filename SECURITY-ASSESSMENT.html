@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Security Assessment — Stratroom-Source</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1f2933;
+    line-height: 1.55;
+    font-size: 11pt;
+    max-width: 100%;
+  }
+  h1 {
+    font-size: 22pt;
+    color: #0b3d66;
+    border-bottom: 3px solid #0b3d66;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+  }
+  h2 {
+    font-size: 15pt;
+    color: #0b3d66;
+    margin-top: 28px;
+    border-bottom: 1px solid #c9d6e0;
+    padding-bottom: 4px;
+  }
+  h3 {
+    font-size: 12.5pt;
+    color: #243b53;
+    margin-top: 20px;
+  }
+  p, li { font-size: 11pt; }
+  code {
+    background: #f0f3f7;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9.5pt;
+    color: #b03060;
+  }
+  pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 12px 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 9.5pt;
+    line-height: 1.4;
+  }
+  pre code { background: none; color: #e2e8f0; padding: 0; }
+  table {
+    border-collapse: collapse;
+    margin: 14px 0;
+    width: auto;
+  }
+  th, td {
+    border: 1px solid #c9d6e0;
+    padding: 6px 14px;
+    text-align: left;
+    font-size: 10.5pt;
+  }
+  th { background: #0b3d66; color: #fff; }
+  tr:nth-child(even) td { background: #f5f8fb; }
+  hr { border: none; border-top: 1px solid #dce3ea; margin: 22px 0; }
+  .meta { color: #52606d; font-size: 10pt; }
+  .finding { page-break-inside: avoid; }
+  .crit { color: #c0392b; }
+  .high { color: #d97706; }
+  .med  { color: #b7950b; }
+  strong { color: #102a43; }
+  .footer { color: #829ab1; font-size: 9pt; font-style: italic; margin-top: 30px; }
+</style>
+</head>
+<body>
+
+<h1>Security Assessment — Stratroom-Source</h1>
+<p class="meta">
+  <strong>Date:</strong> 2026-06-13<br>
+  <strong>Scope:</strong> <code>stack-service</code> (authservice, db-service, stratroom-backend) — Spring Boot microservices<br>
+  <strong>Assessment type:</strong> Static source-code review (defensive)
+</p>
+
+<h2>Executive Summary</h2>
+<p>The application's security is undermined by a single recurring pattern: <strong>secrets are hardcoded in plaintext with weak, guessable default values</strong>, repeated across JWT signing, database access, Jasypt encryption, SMTP, and LDAP. The most severe consequence is that the JWT signing secret (<code>123456</code>) allows <strong>any attacker to forge valid authentication tokens for any user</strong>, defeating the entire authentication system.</p>
+<p>A second major risk is the <strong>"Lite" controller</strong>, which grants every caller full Super-Admin permissions with no authentication. If deployed outside local demos, it is a complete authorization bypass.</p>
+
+<table>
+  <tr><th>Severity</th><th>Count</th></tr>
+  <tr><td class="crit">🔴 Critical</td><td>3</td></tr>
+  <tr><td class="high">🟠 High</td><td>3</td></tr>
+  <tr><td class="med">🟡 Medium</td><td>3</td></tr>
+</table>
+
+<h2 class="crit">🔴 Critical Findings</h2>
+
+<div class="finding">
+<h3>C-1. Hardcoded, trivially-guessable JWT signing secret → full authentication bypass</h3>
+<p><strong>Location:</strong> <code>authservice/.../config/EmbeddedTomcatConfig.java:44</code>, <code>stratroom-backend/.../application.properties:46</code></p>
+<pre><code>jwt.secret=123456</code></pre>
+<p>Tokens are signed with <code>HMAC256(secret)</code> (<code>JwtTokenUtil.java:29</code>). With a secret of <code>123456</code>, an attacker can forge a valid JWT for any user and access every protected endpoint.</p>
+<p><strong>Impact:</strong> Complete authentication bypass; full account/data compromise.<br>
+<strong>Fix:</strong> Use a long (≥256-bit) random secret injected via environment variable or secrets manager. Remove the weak default. Rotate immediately.</p>
+</div>
+
+<div class="finding">
+<h3>C-2. "Lite" controller grants full Super-Admin access to everyone</h3>
+<p><strong>Location:</strong> <code>db-service/.../DbServiceLiteController.java:23-99</code></p>
+<ul>
+  <li><code>validateLicense</code> → always returns <code>validationSuccess=true</code></li>
+  <li><code>getUserRole</code> → always returns <code>"Super Admin"</code></li>
+  <li><code>getUserPermissions</code> → returns View/Create/Update/Delete on <strong>every module</strong> for any <code>empId</code>, with no authentication.</li>
+</ul>
+<p><strong>Impact:</strong> If this lite build reaches a real environment (just a different main class), it is a total authorization bypass.<br>
+<strong>Fix:</strong> Guard the controller behind a Spring profile (<code>@Profile("lite")</code>) so it cannot load in production; never deploy lite builds externally.</p>
+</div>
+
+<div class="finding">
+<h3>C-3. Database credentials in plaintext, using <code>root</code></h3>
+<p><strong>Location:</strong> <code>db-service/db-service.properties:8-9</code>, <code>stratroom-backend/.../application.properties:15-16</code></p>
+<pre><code>spring.datasource.username=root
+spring.datasource.password=123456   # and "1234"</code></pre>
+<p><strong>Impact:</strong> DB superuser with a weak password committed to source. Any config/repo leak exposes the entire database.<br>
+<strong>Fix:</strong> Use a non-<code>root</code>, least-privilege DB user with a strong password. Move credentials to environment variables / secrets manager.</p>
+</div>
+
+<h2 class="high">🟠 High Findings</h2>
+
+<div class="finding">
+<h3>H-1. Weak Jasypt encryption with guessable password</h3>
+<p><strong>Location:</strong> <code>authservice/.../config/EmbeddedTomcatConfig.java:26,35</code></p>
+<pre><code>auth.jasypt.algorithm=PBEWithMD5AndDes   # MD5 + single DES — cryptographically broken
+auth.jasypt.password=123456</code></pre>
+<p><strong>Impact:</strong> Anything encrypted (e.g. the <code>userInfo</code> payload) can be decrypted or forged.<br>
+<strong>Fix:</strong> Use <code>PBEWITHHMACSHA512ANDAES_256</code> (or stronger) with a strong, externalized password.</p>
+</div>
+
+<div class="finding">
+<h3>H-2. Unencrypted database traffic + MITM password leak</h3>
+<p><strong>Location:</strong> <code>stratroom-backend/.../application.properties:13</code></p>
+<pre><code>useSSL=false&allowPublicKeyRetrieval=true</code></pre>
+<p><strong>Impact:</strong> DB traffic is cleartext; <code>allowPublicKeyRetrieval=true</code> lets a man-in-the-middle capture the MySQL password.<br>
+<strong>Fix:</strong> Set <code>useSSL=true</code> with proper certificate verification; remove <code>allowPublicKeyRetrieval=true</code>.</p>
+</div>
+
+<div class="finding">
+<h3>H-3. Additional plaintext secrets committed</h3>
+<p><strong>Location:</strong> <code>stratroom-backend/.../application.properties:59</code> (SMTP), <code>:38</code> (LDAP bind password)</p>
+<p>The LDAP bind password is consumed directly in <code>db-service/.../config/LdapConfig.java:36</code>.</p>
+<p><strong>Impact:</strong> SMTP and LDAP credentials exposed in source control.<br>
+<strong>Fix:</strong> Externalize all secrets; rotate any that have been committed.</p>
+</div>
+
+<h2 class="med">🟡 Medium Findings</h2>
+
+<div class="finding">
+<h3>M-1. Exception details leaked to caller</h3>
+<p><strong>Location:</strong> <code>authservice/.../oauth/CustomAuthenticationProvider.java:94</code></p>
+<pre><code>throw new RuntimeException("Authentication failed: " + exp.getMessage());</code></pre>
+<p><strong>Impact:</strong> Internal error/stack details surfaced to clients (information disclosure).<br>
+<strong>Fix:</strong> Log internally; return a generic authentication-failure message.</p>
+</div>
+
+<div class="finding">
+<h3>M-2. No token revocation; long refresh window</h3>
+<p><strong>Location:</strong> <code>authservice/.../jwt/JwtTokenUtil.java:20</code></p>
+<p>Refresh tokens last 7200s with no denylist/revocation. A stolen or forged token is valid until expiry.<br>
+<strong>Fix:</strong> Add token revocation (denylist or short-lived access tokens + rotating refresh tokens).</p>
+</div>
+
+<div class="finding">
+<h3>M-3. Machine-specific absolute path in config</h3>
+<p><strong>Location:</strong> <code>db-service/db-service.properties:14</code></p>
+<pre><code>license.file.path=C:/Users/sibi/Desktop/Stratroom-Source/license.txt</code></pre>
+<p><strong>Impact:</strong> Leaks a developer username; breaks portability (config smell).<br>
+<strong>Fix:</strong> Use a relative or environment-configured path.</p>
+</div>
+
+<h2>Recommended Remediation Order</h2>
+<ol>
+  <li><strong>Replace <code>jwt.secret</code></strong> with a long random value via environment variable — remove the <code>123456</code> default. <em>(C-1)</em></li>
+  <li><strong>Gate the Lite controller</strong> behind <code>@Profile("lite")</code>; never deploy lite builds externally. <em>(C-2)</em></li>
+  <li><strong>Externalize all credentials</strong> (DB, JWT, Jasypt, SMTP, LDAP) to env vars / secrets manager; use a non-<code>root</code> DB user. <em>(C-3, H-3)</em></li>
+  <li><strong>Enable TLS</strong> for DB connections and <strong>upgrade Jasypt</strong> to an AES-256 algorithm. <em>(H-1, H-2)</em></li>
+  <li><strong>Stop echoing exception messages</strong> to clients. <em>(M-1)</em></li>
+</ol>
+
+<h3>Root cause</h3>
+<p>The dominant structural problem is <strong>secrets committed in plaintext with weak default values</strong>, repeated across every subsystem. Fixing this one habit — externalize and rotate all secrets — closes most of the critical attack surface.</p>
+
+<hr>
+<p class="footer">This document reflects a static review of the source as of the assessment date. It does not include dynamic/runtime testing.</p>
+
+</body>
+</html>

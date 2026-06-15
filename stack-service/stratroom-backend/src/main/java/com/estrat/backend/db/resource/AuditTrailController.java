@@ -68,7 +68,13 @@ public class AuditTrailController {
 
     @PostMapping(value={"/preAuditTrail"})
     public ResponseEntity<AuditDTO> savePreAuditTrail(@RequestBody AuditDTO auditDTO, HttpServletRequest request) throws RequestException {
-        return new ResponseEntity((Object)this.auditDetailsService.save(auditDTO), HttpStatus.OK);
+        // Pre-login audit logging is best-effort: a failure here (e.g. no matching
+        // employee profile yet) must never break the login page.
+        try {
+            return new ResponseEntity((Object)this.auditDetailsService.save(auditDTO), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity((Object)auditDTO, HttpStatus.OK);
+        }
     }
 
     public void updateAuditTrail(AuditDTO auditDTO) {

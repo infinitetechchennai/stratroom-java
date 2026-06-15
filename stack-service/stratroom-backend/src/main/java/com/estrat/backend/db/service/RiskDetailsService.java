@@ -228,7 +228,9 @@ public class RiskDetailsService {
                     throw new RuntimeException(e);
                 }
             }
-            dbList = this.riskDetailsRepository.findAllByEmpIdANDDate(Long.valueOf(empId), 0, firstDate, secondDate);
+            LocalDateTime firstDateLDT = firstDate != null ? firstDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            LocalDateTime secondDateLDT = secondDate != null ? secondDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            dbList = this.riskDetailsRepository.findAllByEmpIdANDDate(Long.valueOf(empId), 0, firstDate, secondDate, firstDateLDT, secondDateLDT);
         } else {
             dbList = this.riskDetailsRepository.findAllByEmpId(Long.valueOf(empId), 0);
         }
@@ -321,7 +323,9 @@ public class RiskDetailsService {
                     throw new RuntimeException(e);
                 }
             }
-            dbList = this.riskDetailsRepository.findAllByEmpIdANDDate(idList, 0, firstDate, secondDate);
+            LocalDateTime firstDateLDT = firstDate != null ? firstDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            LocalDateTime secondDateLDT = secondDate != null ? secondDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            dbList = this.riskDetailsRepository.findAllByEmpIdANDDate(idList, 0, firstDate, secondDate, firstDateLDT, secondDateLDT);
         } else {
             dbList = this.riskDetailsRepository.findAllByEmpId(idList, 0);
         }
@@ -411,7 +415,9 @@ public class RiskDetailsService {
                     throw new RuntimeException(e);
                 }
             }
-            dbList = this.riskDetailsRepository.findByRiskIdsANDDateRanges(Lists.transform(Arrays.asList(riskIds.split("\\,")), (Function)Longs.stringConverter()), 0, firstDate, secondDate);
+            LocalDateTime firstDateLDT = firstDate != null ? firstDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            LocalDateTime secondDateLDT = secondDate != null ? secondDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            dbList = this.riskDetailsRepository.findByRiskIdsANDDateRanges(Lists.transform(Arrays.asList(riskIds.split("\\,")), (Function)Longs.stringConverter()), 0, firstDate, secondDate, firstDateLDT, secondDateLDT);
         }
         List<RiskDTO> riskList = dbList.stream().map(dbValue -> {
             RiskDTO riskDTO = new RiskDTO(dbValue, false);
@@ -468,7 +474,9 @@ public class RiskDetailsService {
                     throw new RuntimeException(e);
                 }
             }
-            dbList = pageId != null && !pageId.isEmpty() ? this.riskDetailsRepository.findAllByPageANDDate(0, Long.valueOf(pageId), firstDate, secondDate) : this.riskDetailsRepository.findAllByEmpIdANDDate(Long.valueOf(empId), 0, firstDate, secondDate);
+            LocalDateTime firstDateLDT = firstDate != null ? firstDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            LocalDateTime secondDateLDT = secondDate != null ? secondDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            dbList = pageId != null && !pageId.isEmpty() ? this.riskDetailsRepository.findAllByPageANDDate(0, Long.valueOf(pageId), firstDate, secondDate, firstDateLDT, secondDateLDT) : this.riskDetailsRepository.findAllByEmpIdANDDate(Long.valueOf(empId), 0, firstDate, secondDate, firstDateLDT, secondDateLDT);
         } else {
             dbList = pageId != null && StringUtils.isNotEmpty((CharSequence)pageId) ? this.riskDetailsRepository.findAllByPageId(0, Long.valueOf(pageId)) : this.riskDetailsRepository.findAllByEmpId(Long.valueOf(empId), 0);
         }
@@ -517,8 +525,10 @@ public class RiskDetailsService {
                     throw new RuntimeException(e);
                 }
             }
+            LocalDateTime firstDateLDT = firstDate != null ? firstDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            LocalDateTime secondDateLDT = secondDate != null ? secondDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
             if (pageId != null && !pageId.isEmpty()) {
-                dbList = this.riskDetailsRepository.findAllByPageANDDate(0, Long.valueOf(pageId), firstDate, secondDate);
+                dbList = this.riskDetailsRepository.findAllByPageANDDate(0, Long.valueOf(pageId), firstDate, secondDate, firstDateLDT, secondDateLDT);
             }
         } else if (pageId != null && StringUtils.isNotEmpty((CharSequence)pageId)) {
             dbList = this.riskDetailsRepository.findAllByPageId(0, Long.valueOf(pageId));
@@ -867,7 +877,9 @@ public class RiskDetailsService {
                     throw new RuntimeException(e);
                 }
             }
-            eventList = this.riskDetailsRepository.findAllByPageIdsANDDateRanges(0, pagIds, firstDate, secondDate);
+            java.time.LocalDateTime firstDateLDT = firstDate == null ? null : java.time.LocalDateTime.ofInstant(firstDate.toInstant(), java.time.ZoneId.systemDefault());
+            java.time.LocalDateTime secondDateLDT = secondDate == null ? null : java.time.LocalDateTime.ofInstant(secondDate.toInstant(), java.time.ZoneId.systemDefault()).toLocalDate().atTime(23, 59, 59);
+            eventList = this.riskDetailsRepository.findAllByPageIdsANDDateRanges(0, pagIds, firstDate, secondDate, firstDateLDT, secondDateLDT);
         } else {
             eventList = this.riskDetailsRepository.findAllByPageIds(pagIds, 0);
         }
@@ -904,7 +916,9 @@ public class RiskDetailsService {
                     throw new RuntimeException(e);
                 }
             }
-            eventList = this.riskDetailsRepository.findAllByPageIdsANDDateRanges(0, Lists.transform(Arrays.asList(pageIds.split("\\,")), (Function)Longs.stringConverter()), firstDate, secondDate);
+            java.time.LocalDateTime firstDateLDT = firstDate == null ? null : java.time.LocalDateTime.ofInstant(firstDate.toInstant(), java.time.ZoneId.systemDefault());
+            java.time.LocalDateTime secondDateLDT = secondDate == null ? null : java.time.LocalDateTime.ofInstant(secondDate.toInstant(), java.time.ZoneId.systemDefault()).toLocalDate().atTime(23, 59, 59);
+            eventList = this.riskDetailsRepository.findAllByPageIdsANDDateRanges(0, Lists.transform(Arrays.asList(pageIds.split("\\,")), (Function)Longs.stringConverter()), firstDate, secondDate, firstDateLDT, secondDateLDT);
         }
         return eventList.stream().map(dbValue -> {
             RiskDTO riskDTO = new RiskDTO(dbValue, true);

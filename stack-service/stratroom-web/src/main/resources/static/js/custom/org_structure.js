@@ -828,21 +828,57 @@ function loadOrgChart(year) {
         $(function($) {
 
 
-			$.ajax({
-				type: "GET",
-				url: "/stratroom/org/years",
-				dataType: "json",
-				success: function(years) {
-					var yearSelector = $("#yearSelector");
-					years.forEach(function(year) {
-						if (year !== 0) {
-							yearSelector.append($('<option>', {
-								value: year,
-								text: 'Oct ' + year
-							}));
-						}
-					});
+			// --- Org Structure aggregate loader: one call for years, departmentList,
+			// modulePermissions and employeeList. Cached for the session and
+			// memoized so concurrent callers share a single in-flight request. ---
+			var orgAggregateCache = null;
+			var orgAggregateInflight = null;
+			function loadOrgStructureAggregate() {
+				if (orgAggregateCache) {
+					return $.Deferred().resolve(orgAggregateCache).promise();
 				}
+				if (orgAggregateInflight) {
+					return orgAggregateInflight;
+				}
+				var moduleNames = encodeURIComponent("Scorecard,Risk,Initiatives & Projects");
+				orgAggregateInflight = $.ajax({
+					type: "GET",
+					url: "/stratroom/org/structure/aggregate?moduleNames=" + moduleNames,
+					dataType: "json"
+				}).then(function(data) {
+					orgAggregateCache = data || {};
+					orgAggregateInflight = null;
+					return orgAggregateCache;
+				}, function(err) {
+					orgAggregateInflight = null;
+					return $.Deferred().reject(err).promise();
+				});
+				return orgAggregateInflight;
+			}
+
+			function fillYearSelector(years) {
+				var yearSelector = $("#yearSelector");
+				(years || []).forEach(function(year) {
+					if (year !== 0) {
+						yearSelector.append($('<option>', {
+							value: year,
+							text: 'Oct ' + year
+						}));
+					}
+				});
+			}
+
+			loadOrgStructureAggregate().done(function(agg) {
+				fillYearSelector(agg.years);
+			}).fail(function() {
+				$.ajax({
+					type: "GET",
+					url: "/stratroom/org/years",
+					dataType: "json",
+					success: function(years) {
+						fillYearSelector(years);
+					}
+				});
 			});
         	
         	if(jQuery.inArray("Create", orgstructurePermission) !== -1){
@@ -879,54 +915,51 @@ function loadOrgChart(year) {
 			}
 			
         	
-			$.ajax({
-				type : "GET",
-				url : "user/modulePermissions?moduleName=Scorecard",
-				dataType : "json",
-				success : function(data) {
-					if(data.Scorecard !=	undefined && !jQuery.isEmptyObject(data.Scorecard)){
-						if(data.Scorecard.Scorecard.privilegeCreate !=	undefined && data.Scorecard.Scorecard.privilegeCreate == "FALSE"){	
-							$("#uploadcategory option[value='Scorecard Import']").remove()
-						}
-					}
-					if(data.Scorecard !=	undefined && jQuery.isEmptyObject(data.Scorecard)){
+			function _applyScorecardImportPerm(data) {
+				data = data || {};
+				if (data.Scorecard != undefined && !jQuery.isEmptyObject(data.Scorecard)) {
+					if (data.Scorecard.Scorecard.privilegeCreate != undefined && data.Scorecard.Scorecard.privilegeCreate == "FALSE") {
 						$("#uploadcategory option[value='Scorecard Import']").remove()
 					}
 				}
-			});
-			var encodeval	=	encodeURIComponent("Initiatives & Projects");
-			$.ajax({
-				type : "GET",
-				url : "user/modulePermissions?moduleName="+encodeval,
-				success : function(data) {
-					
-					$.each(data,function(forindex,fordata){
-						if(forindex	==	"Initiatives & Projects"){
-							$.each(fordata,function(forindex1,fordata1){
-								if(forindex1	==	"Initiatives"){
-									if(fordata1.privilegeCreate !=	undefined && fordata1.privilegeCreate == "FALSE"){	
-										$("#uploadcategory option[value='Initiative Import']").remove()
-									}
-								}
-							});
-						}
-					});
+				if (data.Scorecard != undefined && jQuery.isEmptyObject(data.Scorecard)) {
+					$("#uploadcategory option[value='Scorecard Import']").remove()
 				}
-			});
-            $.ajax({
-				type : "GET",
-				url : "user/modulePermissions?moduleName=Risk",
-				dataType : "json",
-				success : function(data) {
-					if(data.Risk !=	undefined && !jQuery.isEmptyObject(data.Risk)){
-						if(data.Risk.Risk.privilegeCreate !=	undefined && data.Risk.Risk.privilegeCreate == "FALSE"){	
-							$("#uploadcategory option[value='Risk Import']").remove()
-						}
+			}
+			function _applyInitiativeImportPerm(data) {
+				$.each(data || {}, function(forindex, fordata) {
+					if (forindex == "Initiatives & Projects") {
+						$.each(fordata, function(forindex1, fordata1) {
+							if (forindex1 == "Initiatives") {
+								if (fordata1.privilegeCreate != undefined && fordata1.privilegeCreate == "FALSE") {
+									$("#uploadcategory option[value='Initiative Import']").remove()
+								}
+							}
+						});
 					}
-					if(data.Risk !=	undefined && jQuery.isEmptyObject(data.Risk)){
+				});
+			}
+			function _applyRiskImportPerm(data) {
+				data = data || {};
+				if (data.Risk != undefined && !jQuery.isEmptyObject(data.Risk)) {
+					if (data.Risk.Risk.privilegeCreate != undefined && data.Risk.Risk.privilegeCreate == "FALSE") {
 						$("#uploadcategory option[value='Risk Import']").remove()
 					}
 				}
+				if (data.Risk != undefined && jQuery.isEmptyObject(data.Risk)) {
+					$("#uploadcategory option[value='Risk Import']").remove()
+				}
+			}
+			var encodeval = encodeURIComponent("Initiatives & Projects");
+			loadOrgStructureAggregate().done(function(agg) {
+				var perms = agg.modulePermissions || {};
+				_applyScorecardImportPerm(perms["Scorecard"]);
+				_applyInitiativeImportPerm(perms["Initiatives & Projects"]);
+				_applyRiskImportPerm(perms["Risk"]);
+			}).fail(function() {
+				$.ajax({ type: "GET", url: "user/modulePermissions?moduleName=Scorecard", dataType: "json", success: function(data) { _applyScorecardImportPerm(data); } });
+				$.ajax({ type: "GET", url: "user/modulePermissions?moduleName=" + encodeval, success: function(data) { _applyInitiativeImportPerm(data); } });
+				$.ajax({ type: "GET", url: "user/modulePermissions?moduleName=Risk", dataType: "json", success: function(data) { _applyRiskImportPerm(data); } });
 			});
 			var nodeList;
 			
@@ -1069,6 +1102,13 @@ function loadOrgChart(year) {
 			function populateOwnerDropdownorg(elementId,elementId2) {
 				var numberOfOptions = $(elementId + ' > option').length;
 				if (jQuery.isEmptyObject(reporteelist)) {
+					if (orgAggregateCache && orgAggregateCache.employeeList) {
+						reporteelist = orgAggregateCache.employeeList;
+						$.each(reporteelist, function(index, reportee) {
+							addOption(elementId, reportee.name, reportee.id,reportee.email)
+							addOption(elementId2, reportee.name, reportee.id,reportee.email)
+						});
+					} else {
 					$.ajax({
 						url : "/stratroom/org/employeeList",
 						async:false,
@@ -1080,6 +1120,7 @@ function loadOrgChart(year) {
 							});
 						}
 					});
+					}
 				} else if (numberOfOptions < 2) {
 					$.each(reporteelist, function(index, reportee) {
 						addOption(elementId, reportee.name, reportee.id,reportee.email)
@@ -1090,6 +1131,11 @@ function loadOrgChart(year) {
 			
 			function departmentpopulateOwnerDropdownorg(elementId) {
 				$(elementId).empty();
+				if (orgAggregateCache && orgAggregateCache.employeeList) {
+					$.each(orgAggregateCache.employeeList, function(index, reportee) {
+						addOption(elementId, reportee.name, reportee.id,reportee.email)
+					});
+				} else {
 				$.ajax({
 					url : "/stratroom/org/employeeList",
 					async:false,
@@ -1099,10 +1145,16 @@ function loadOrgChart(year) {
 						});
 					}
 				});
+				}
 			}
 			
 			function departmentlist(elementId){
 				$(elementId).empty();	
+				if (orgAggregateCache && orgAggregateCache.departmentList) {
+					$.each(orgAggregateCache.departmentList, function (index, reportee) {
+						addOption(elementId, reportee.name, reportee.id)
+					});
+				} else {
 				$.ajax({
 					url : "/stratroom/allDepartmentList",
 					async:false,
@@ -1112,6 +1164,7 @@ function loadOrgChart(year) {
 						});
 					}
 				});
+				}
 			}
 			
 			function populateDropdownDeptScorecard(elementId,id) {

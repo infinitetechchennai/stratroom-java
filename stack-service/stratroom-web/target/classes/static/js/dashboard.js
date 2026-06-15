@@ -1,5 +1,0 @@
-var dragAndDrop = {
-	init: function () {
-		
-	}
-}

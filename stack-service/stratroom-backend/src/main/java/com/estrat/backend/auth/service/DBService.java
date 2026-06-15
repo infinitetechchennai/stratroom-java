@@ -7,8 +7,10 @@ import com.estrat.backend.auth.dto.LoginDTO;
 import com.estrat.backend.auth.exception.RequestException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,8 +42,9 @@ public class DBService {
                 if (rs.next()) {
                     response.setUserFlag(true);
                     String dbPassword = rs.getString("password");
+                    String encodedInput = encodePassword(loginDTO.getPassWord());
 
-                    if ("123456".equals(loginDTO.getPassWord()) || (dbPassword != null && dbPassword.equals(loginDTO.getPassWord()))) {
+                    if (dbPassword != null && (loginDTO.getPassWord().equals(dbPassword) || encodedInput.equals(dbPassword))) {
                         response.setAuthoriseFlag(true);
 
                         long empId = rs.getLong("emp_id");
@@ -146,6 +149,16 @@ public class DBService {
 
     public List<Employee> getAllReporteeList(long empID) {
         return new ArrayList<>();
+    }
+
+    private static String encodePassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA");
+            md.reset();
+            return Base64.getEncoder().encodeToString(md.digest(password.getBytes())).trim();
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     private static boolean isTrue(String value) {

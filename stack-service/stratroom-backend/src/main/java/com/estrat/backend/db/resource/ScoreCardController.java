@@ -118,6 +118,15 @@ public class ScoreCardController {
         return new ResponseEntity((Object)this.scoreCardService.getAllScoreCardList(), HttpStatus.OK);
     }
 
+    // Read endpoint that returns the nested scorecard tree (cardDetailsDTO.scoreCardDTOS)
+    // for a page, so the revamp UI can render it directly from the merged backend.
+    @GetMapping(value={"/scoreCardDetailsByPage/{pageId}"})
+    public ResponseEntity<ScoreCardResponseDTO> getScoreCardDetailsByPage(@PathVariable(value="pageId") Long pageId) {
+        ScoreCardResponseDTO response = new ScoreCardResponseDTO();
+        response.setCardDetailsDTO(this.scoreCardService.scoreCardDetails(pageId));
+        return new ResponseEntity((Object)response, HttpStatus.OK);
+    }
+
     @PostMapping(value={"/scorecard"})
     public ResponseEntity<ScoreCardResponseDTO> saveOrUpdateScoreCard(@RequestBody ScoreCardDTO scoreCard, ScoreCardDetailsDTO scoreCardDetailsDTO) {
         this.populateAdditionalDetails(scoreCard, scoreCardDetailsDTO, "scorecard");

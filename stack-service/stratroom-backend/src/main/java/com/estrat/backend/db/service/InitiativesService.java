@@ -115,6 +115,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -304,10 +305,11 @@ public class InitiativesService {
     public Map<String, Long> saveBudget(List<InitiativeBudgetDTO> initiatives) {
         ArrayList<String> initiativeId = new ArrayList<String>();
         HashMap<String, Long> response = new HashMap<String, Long>();
-        ArrayList<Date> endDateList = new ArrayList<Date>();
+        ArrayList<LocalDateTime> endDateList = new ArrayList<LocalDateTime>();
         for (InitiativeBudgetDTO initiativeBudgetDTO : initiatives) {
             initiativeId.add(initiativeBudgetDTO.getInitiativeId());
-            endDateList.add(initiativeBudgetDTO.getEndDate());
+            LocalDateTime ldt = initiativeBudgetDTO.getEndDate() != null ? initiativeBudgetDTO.getEndDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            endDateList.add(ldt);
         }
         List<InitiativesBudget> initiativeBudgetResponse = this.initiativeBudgetRepository.findByListInitiativeIdwDate(initiativeId, endDateList, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
         HashMap<String, InitiativesBudget> initiativeBudgetmap = new HashMap<String, InitiativesBudget>();
@@ -552,7 +554,8 @@ public class InitiativesService {
             calendar.set(14, 999);
             endDate = calendar.getTime();
             if (initiativesDTO.getInitiativeId() != null) {
-                List initiativesTracker_list = this.initiativeTrackerRepository.findByInitiativeIdwDate(String.valueOf(initiativesDTO.getId()), initiativesDTO.getInitiativeId(), endDate, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
+                LocalDateTime endDateLDT = endDate != null ? endDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+                List initiativesTracker_list = this.initiativeTrackerRepository.findByInitiativeIdwDate(String.valueOf(initiativesDTO.getId()), initiativesDTO.getInitiativeId(), endDateLDT, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
                 if (initiativesTracker_list != null && initiativesTracker_list.size() > 0) {
                     InitiativesTracker initiativesTracker = (InitiativesTracker)initiativesTracker_list.get(0);
                     initiativesDTO.getInitiativeValue().put("actualValue", initiativesTracker.getActual());
@@ -595,7 +598,8 @@ public class InitiativesService {
             calendar.set(14, 999);
             endDate = calendar.getTime();
             if (initiativesDTO.getInitiativeId() != null) {
-                List initiativesTracker_list = this.initiativeTrackerRepository.findByInitiativeIdwDate(String.valueOf(initiativesDTO.getId()), initiativesDTO.getInitiativeId(), endDate, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
+                LocalDateTime endDateLDT = endDate != null ? endDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+                List initiativesTracker_list = this.initiativeTrackerRepository.findByInitiativeIdwDate(String.valueOf(initiativesDTO.getId()), initiativesDTO.getInitiativeId(), endDateLDT, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
                 if (initiativesTracker_list != null && initiativesTracker_list.size() > 0) {
                     InitiativesTracker initiativesTracker = (InitiativesTracker)initiativesTracker_list.get(0);
                     initiativesDTO.getInitiativeValue().put("actualValue", initiativesTracker.getActual());
@@ -657,7 +661,8 @@ public class InitiativesService {
             SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy");
             Date startDate = inputFormat.parse(daterange[0]);
             Date endDate = inputFormat.parse(daterange[1]);
-            if (initiativesDTO.getInitiativeId() != null && (initiativesBudget_list = this.initiativeBudgetRepository.findByInitiativeIdwDate(String.valueOf(initiativesDTO.getInitiativeId()), endDate, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")))) != null && initiativesBudget_list.size() > 0) {
+            LocalDateTime endDateLDT = endDate != null ? endDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null;
+            if (initiativesDTO.getInitiativeId() != null && (initiativesBudget_list = this.initiativeBudgetRepository.findByInitiativeIdwDate(String.valueOf(initiativesDTO.getInitiativeId()), endDateLDT, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")))) != null && initiativesBudget_list.size() > 0) {
                 BigDecimal total_asset_budget = new BigDecimal(0);
                 BigDecimal total_realization_asset = new BigDecimal(0);
                 BigDecimal total_liabilities_budget = new BigDecimal(0);

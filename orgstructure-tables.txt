@@ -1,0 +1,159 @@
+﻿orgstructure - Database Tables
+Generated: 2026-06-14 13:51
+Total tables: 155
+
+  1. activities_details
+  2. activities_map
+  3. audit_management
+  4. audit_trail_details
+  5. batch_details
+  6. batch_error_details
+  7. budget_detail
+  8. chart_details
+  9. child_tracker
+ 10. child_tracker_backup_20250917
+ 11. comment_mapping
+ 12. comments_details
+ 13. compliance_area
+ 14. compliance_details
+ 15. compliance_details_attachment
+ 16. control_panel_custom_performance
+ 17. control_panel_general
+ 18. control_panel_security
+ 19. control_panel_theme
+ 20. control_panel_workflow
+ 21. control_panel_workflow_history
+ 22. controlpanel_workflow_approversmapping
+ 23. currency_details
+ 24. dashboard_preferences
+ 25. department_chart_details
+ 26. department_chart_details_his
+ 27. department_details
+ 28. dept_owner_mapping
+ 29. dept_owner_mapping_his
+ 30. dept_tracker
+ 31. emp_comment_mapping
+ 32. employee_comments
+ 33. employee_credentials
+ 34. employee_department_mapping
+ 35. employee_details
+ 36. employee_documents
+ 37. employee_goals
+ 38. employee_pages_link
+ 39. employee_preferences
+ 40. formulation_initiatives
+ 41. formulation_kpi
+ 42. formulation_objectives
+ 43. formulation_risk_activities
+ 44. formulation_risk_details
+ 45. formulation_score_card
+ 46. formulation_sub_risk_mapping
+ 47. formulation_sub_risks
+ 48. formulation_subinitiative_mapping
+ 49. formulation_subinitiatives
+ 50. formulation_subkpi
+ 51. formulation_user_mapping
+ 52. home_page_pref
+ 53. impactdata
+ 54. impactsurvey
+ 55. initiative_attachment
+ 56. initiative_task
+ 57. initiatives_budget
+ 58. initiatives_details
+ 59. initiatives_tracker
+ 60. ip_address
+ 61. kpi
+ 62. kpi_comment_mapping
+ 63. kpi_comments_details
+ 64. kpi_element_details
+ 65. kpi_target_details
+ 66. kpidetail_attachment
+ 67. masters
+ 68. mastervalue
+ 69. meeting_management
+ 70. meeting_management_attachment
+ 71. meeting_user_mapping
+ 72. milestones_details
+ 73. mision_vision_value
+ 74. module_details
+ 75. module_privilege_mapping
+ 76. notification_details
+ 77. notification_details_bkp
+ 78. notification_queue
+ 79. objectives
+ 80. org_department_details
+ 81. org_department_details_his
+ 82. org_group_member_mapping
+ 83. org_group_user_mapping
+ 84. org_kpi_details
+ 85. org_kpi_entry
+ 86. org_structure_details
+ 87. org_subkpi_entry
+ 88. org_tracker
+ 89. organization_details
+ 90. orgstructure_group
+ 91. page_details
+ 92. password_reset
+ 93. performance_contract
+ 94. pestel_analysis
+ 95. pestel_analysis_attachment
+ 96. pestel_user_mapping
+ 97. preference_details
+ 98. preference_sub_detail
+ 99. privilege_details
+100. processenabler
+101. processenabler_history
+102. project_formulation
+103. project_formulation_user_mapping
+104. project_planning
+105. risk_activities
+106. risk_activities_history
+107. risk_activities_user_mapping
+108. risk_attachment
+109. risk_cause_consequence
+110. risk_cause_consequence_history
+111. risk_comment_mapping
+112. risk_comments
+113. risk_consequence
+114. risk_consequence_history
+115. risk_custom_score
+116. risk_details
+117. risk_details_history
+118. risk_event
+119. risk_event_history
+120. risk_formulation
+121. risk_formulation_user_mapping
+122. risk_monitoring
+123. risk_options
+124. risk_plan
+125. risk_plan_history
+126. risk_plan_user_mapping
+127. risk_project_planning
+128. role_details
+129. role_module_mapping
+130. role_privilege_mapping
+131. role_user_mapping
+132. roles
+133. rpo
+134. rpo_history
+135. scheduler_batch_details
+136. score_card
+137. score_card_details
+138. staging_changes
+139. strategy_formulation
+140. strategy_map
+141. sub_initiatives_details
+142. sub_initiatives_map
+143. subactivities_details
+144. subkpi
+145. swot_analysis
+146. swot_analysis_attachment
+147. swot_user_mapping
+148. task_categorys
+149. task_details
+150. task_owner_mapping
+151. task_user_mapping
+152. universal_incident
+153. universal_incident_attachment
+154. user_dept_mapping
+155. user_role_management

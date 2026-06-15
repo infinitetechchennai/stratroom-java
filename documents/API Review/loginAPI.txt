@@ -1,0 +1,190 @@
+# Login Module APIs
+
+> Base URL: `http://localhost:8085/api`  
+> Frontend file: `stratroom-ui/src/api/authApi.js`  
+> Context file:  `stratroom-ui/src/context/AuthContext.jsx`
+
+---
+
+## APIs Used in Login Flow
+
+| # | Method | Endpoint | Auth Required | When Called | Purpose |
+|---|--------|----------|---------------|-------------|---------|
+| 1 | POST | `/api/login` | No | On form submit | Authenticate user with email + password |
+| 2 | GET | `/api/validateToken` | Bearer token | On app load / page refresh | Validate existing session token |
+| 3 | GET | `/api/generateToken` | Refresh token | When access token expires | Generate new access token using refresh token |
+| 4 | POST | `/api/preAuditTrail` | No | On login success / failure / logout | Log login attempts and logout events |
+
+---
+
+## 1. POST `/api/login`
+
+**Called from:** `authApi.js → loginApi()`  
+**Triggered:** When user clicks the Continue button on login form
+
+### Request
+```json
+{
+  "userName": "mary@demo.com",
+  "passWord": "changeme",
+  "ssoLogin": false
+}
+```
+
+### Response (Success)
+```json
+{
+  "loginFlag": true,
+  "userFlag": true,
+  "profile": {
+    "id": 512,
+    "name": "James",
+    "email": "mary@demo.com",
+    "title": "Manager",
+    "dept": "Finance",
+    "image": null
+  },
+  "userPermissions": {
+    "Plan":    ["View", "Create", "Update", "Delete"],
+    "Measure": ["View"],
+    "Execute": ["View", "Create"]
+  },
+  "userInfo": "ENC(abc123...encrypted...)",
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9...",
+  "expireAt": "2026-06-11T07:27:34.000+00:00"
+}
+```
+
+### Response (Wrong Password)
+```json
+{
+  "loginFlag": false,
+  "userFlag": true
+}
+```
+
+### Response (Email Not Found)
+```json
+{
+  "loginFlag": false,
+  "userFlag": false
+}
+```
+
+---
+
+## 2. GET `/api/validateToken`
+
+**Called from:** `authApi.js → validateTokenApi()`  
+**Triggered:** Every time the app loads or page is refreshed — checks if stored token is still valid
+
+### Request Headers
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+USER_INFO:     ENC(abc123...encrypted...)
+```
+
+### Response (Valid)
+```json
+{
+  "validationSuccess": true,
+  "tokenExpired": false
+}
+```
+
+### Response (Expired)
+```json
+{
+  "validationSuccess": false,
+  "tokenExpired": true
+}
+```
+
+---
+
+## 3. GET `/api/generateToken`
+
+**Called from:** `authApi.js → refreshTokenApi()`  
+**Triggered:** When the access token expires (900 seconds / 15 minutes) — uses the refresh token to get a new access token
+
+### Request Headers
+```
+REFRESH_TOKEN: eyJhbGciOiJIUzI1NiJ9...
+USER_INFO:     ENC(abc123...encrypted...)
+```
+
+### Response
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9...new token...",
+  "expireAt": "2026-06-11T07:42:34.000+00:00"
+}
+```
+
+---
+
+## 4. POST `/api/preAuditTrail`
+
+**Called from:** `authApi.js → postPreAuditTrail()`  
+**Triggered:** On login failure (logs failed attempt) and on logout
+
+### Request (Failed Login)
+```json
+{
+  "action": "Failed Login Attempts",
+  "emailAddress": "mary@demo.com",
+  "systemIp": "192.168.1.1"
+}
+```
+
+### Request (Logout)
+```json
+{
+  "userId": 512,
+  "createdBy": 512,
+  "action": "User Logout",
+  "systemIp": "192.168.1.1"
+}
+```
+
+### Response
+```
+200 OK (no body)
+```
+
+---
+
+## Token Details
+
+| Token | Validity | Storage | Used In |
+|-------|----------|---------|---------|
+| Access Token | 900 seconds (15 min) | `localStorage → accessToken` | `Authorization: Bearer` header on every API call |
+| Refresh Token | 7200 seconds (2 hrs) | `localStorage → refreshToken` | `REFRESH_TOKEN` header on `/generateToken` |
+| User Info | Same as access token | `localStorage → userInfo` | `USER_INFO` header on `/validateToken` and `/generateToken` |
+
+---
+
+## localStorage Keys Set After Login
+
+| Key | Value |
+|-----|-------|
+| `accessToken` | JWT access token |
+| `refreshToken` | JWT refresh token |
+| `userInfo` | ENC(...) encrypted user info string |
+| `profile` | JSON — employee profile object |
+| `userPermissions` | JSON — module permissions map |
+| `expireAt` | Token expiry date |
+| `userloginid` | Logged-in email address |
+| `sidebar_option` | `side-closed submenu-closed` |
+
+---
+
+## Summary
+
+| Total APIs | 4 |
+|------------|---|
+| Login | 1 (`/api/login`) |
+| Session Validation | 1 (`/api/validateToken`) |
+| Token Refresh | 1 (`/api/generateToken`) |
+| Audit Logging | 1 (`/api/preAuditTrail`) |
