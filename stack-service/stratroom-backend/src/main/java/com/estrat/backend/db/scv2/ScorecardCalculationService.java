@@ -283,7 +283,14 @@ public class ScorecardCalculationService {
             achievement = aggregatorService.aggregate(subScores, subWeights, "WEIGHTED", null);
         } else {
             List<Map<String, Object>> hist = histByKpi.getOrDefault(kpiId, List.of());
-            Map<String, Object> current = latestInRange(hist, start, end);
+            // Prefer the latest in-range period that actually has a reported value, so a
+            // wide range (e.g. a whole financial year) surfaces the real actual instead of
+            // an empty trailing month. Fall back to the latest in-range period (for the
+            // target/baseline display) only when no value was reported within the range.
+            Map<String, Object> current = latestActualInRange(hist, start, end);
+            if (current == null) {
+                current = latestInRange(hist, start, end);
+            }
             if (current != null) {
                 actual = dec(current.get("actual_value"));
                 BigDecimal histTarget = dec(current.get("target_value"));
@@ -298,9 +305,21 @@ public class ScorecardCalculationService {
             achievement = achievementCalculator.calculate(actual, target, polarity, minTarget, maxTarget, cap);
         }
 
-        // trend vs the most recent prior period
+        // Trend: compare the two most recent reported (non-null) periods within the
+        // selected range, so the up/down arrow reflects the real movement. Falls back
+        // to the latest reported period before the range when only one value is in range.
         BigDecimal previous = null;
-        Map<String, Object> prev = previousBefore(histByKpi.getOrDefault(kpiId, List.of()), start);
+        List<Map<String, Object>> reported = new ArrayList<>();
+        for (Map<String, Object> row : histByKpi.getOrDefault(kpiId, List.of())) {
+            LocalDate ps = toLocalDate(row.get("period_start"));
+            LocalDate pe = toLocalDate(row.get("period_end"));
+            if (ps != null && pe != null && !ps.isBefore(start) && !pe.isAfter(end) && dec(row.get("actual_value")) != null) {
+                reported.add(row);
+            }
+        }
+        Map<String, Object> prev = reported.size() >= 2
+                ? reported.get(reported.size() - 2)
+                : previousBefore(histByKpi.getOrDefault(kpiId, List.of()), start);
         if (prev != null) {
             BigDecimal prevTarget = dec(prev.get("target_value"));
             previous = achievementCalculator.calculate(dec(prev.get("actual_value")),
@@ -341,6 +360,19 @@ public class ScorecardCalculationService {
             LocalDate pe = toLocalDate(row.get("period_end"));
             if (ps != null && pe != null && !ps.isBefore(start) && !pe.isAfter(end)) {
                 chosen = row; // list is ascending by period_end, so last match wins (latest)
+            }
+        }
+        return chosen;
+    }
+
+    // Latest in-range period that has a non-null reported actual value.
+    private Map<String, Object> latestActualInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end) {
+        Map<String, Object> chosen = null;
+        for (Map<String, Object> row : hist) {
+            LocalDate ps = toLocalDate(row.get("period_start"));
+            LocalDate pe = toLocalDate(row.get("period_end"));
+            if (ps != null && pe != null && !ps.isBefore(start) && !pe.isAfter(end) && dec(row.get("actual_value")) != null) {
+                chosen = row; // list is ascending by period_end, so last match wins (latest with a value)
             }
         }
         return chosen;
@@ -408,6 +440,91 @@ public class ScorecardCalculationService {
         response.put("statusLight", "unknown");
         response.put("cardDetailsDTO", cardDetails);
         return response;
+    }
+
+    /**
+     * Story-card detail for a single KPI, read from the same sc_ schema the
+     * scorecard tab uses. Returns the KPI header (legacy-compatible kpiValue
+     * shape) plus its monthly actual/target history within the requested range
+     * — the source for the Data Table, Actual-vs-Target chart and Data Drill.
+     */
+    @Transactional(readOnly = true)
+    public Map<String, Object> kpiStoryCard(Long kpiId, String dateRange) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        List<Map<String, Object>> kpiRows = jdbc.queryForList(
+                "SELECT k.id, k.name, k.code, k.polarity, k.target_value, k.min_target, k.max_target, k.weight, "
+                        + "k.data_type, k.currency_code, k.measurement_frequency, k.null_handling, k.achievement_cap, "
+                        + "k.classification_type, k.objective_id, k.description, "
+                        + "o.name AS objective_name, p.name AS perspective_name "
+                        + "FROM sc_kpis k "
+                        + "LEFT JOIN sc_objectives o ON k.objective_id = o.id "
+                        + "LEFT JOIN sc_perspectives p ON o.perspective_id = p.id "
+                        + "WHERE k.id = ? AND k.is_deleted = 0", kpiId);
+        if (kpiRows.isEmpty()) {
+            result.put("kpi", null);
+            result.put("series", new ArrayList<>());
+            return result;
+        }
+        Map<String, Object> k = kpiRows.get(0);
+        String dataType = str(k.get("data_type"));
+        String currency = str(k.get("currency_code"));
+        BigDecimal kpiTarget = dec(k.get("target_value"));
+
+        Map<String, Object> value = new LinkedHashMap<>();
+        value.put("name", str(k.get("name")));
+        value.put("target", formatValue(kpiTarget, dataType, currency));
+        value.put("kpi_measurement", str(k.get("measurement_frequency")));
+        value.put("dataType", dataType);
+        value.put("currency", currency);
+        value.put("threshold", str(k.get("classification_type")));
+        value.put("polarity", str(k.get("polarity")));
+        value.put("weight", str(k.get("weight")));
+        value.put("description", str(k.get("description")));
+        value.put("alignedPerspective", str(k.get("perspective_name")));
+        value.put("alignmentObjectives", str(k.get("objective_name")));
+
+        Map<String, Object> kpiDto = new LinkedHashMap<>();
+        kpiDto.put("id", num(k.get("id")));
+        kpiDto.put("kpiId", str(k.get("code")));
+        kpiDto.put("kpiName", str(k.get("name")));
+        kpiDto.put("kpiValue", value);
+        result.put("kpi", kpiDto);
+
+        LocalDate start = parseStart(dateRange);
+        LocalDate end = parseEnd(dateRange);
+        List<Map<String, Object>> hist = jdbc.queryForList(
+                "SELECT period_start, period_end, actual_value, target_value, baseline_value "
+                        + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end", kpiId);
+        DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
+        List<Map<String, Object>> series = new ArrayList<>();
+        BigDecimal runningActual = BigDecimal.ZERO;
+        for (Map<String, Object> h : hist) {
+            LocalDate periodEnd = toLocalDate(h.get("period_end"));
+            if (periodEnd != null && (periodEnd.isBefore(start) || periodEnd.isAfter(end))) {
+                continue;
+            }
+            BigDecimal actual = dec(h.get("actual_value"));
+            BigDecimal target = dec(h.get("target_value"));
+            if (target == null) {
+                target = kpiTarget;
+            }
+            BigDecimal gap = (actual != null && target != null) ? actual.subtract(target) : null;
+            if (actual != null) {
+                runningActual = runningActual.add(actual);
+            }
+            Map<String, Object> point = new LinkedHashMap<>();
+            point.put("period", periodEnd != null ? periodEnd.format(label) : str(h.get("period_end")));
+            point.put("actual", actual);
+            point.put("target", target);
+            point.put("gap", gap);
+            point.put("ytd", runningActual);
+            point.put("baseline", dec(h.get("baseline_value")));
+            point.put("currency", currency);
+            point.put("measureName", str(k.get("name")));
+            series.add(point);
+        }
+        result.put("series", series);
+        return result;
     }
 
     private String formatPct(BigDecimal value) {

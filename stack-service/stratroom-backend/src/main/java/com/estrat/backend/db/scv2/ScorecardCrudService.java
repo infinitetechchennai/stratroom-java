@@ -3,6 +3,10 @@ package com.estrat.backend.db.scv2;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -191,6 +195,120 @@ public class ScorecardCrudService {
                         + "ON DUPLICATE KEY UPDATE actual_value=VALUES(actual_value), calculated_at=NOW()",
                 lng(b, "subKpiId", 0L), str(b, "periodStart", null), str(b, "periodEnd", null),
                 decOrNull(b, "actualValue"));
+    }
+
+    // ---------------- Excel import (Actual/Target only) ----------------
+
+    /**
+     * Applies Actual/Target values from an uploaded scorecard Excel to the sc_
+     * schema. Each row carries a KPI code (e.g. "BOARD.1.1.1"); it's resolved to
+     * the KPI on the given page's scorecard and upserted into sc_kpi_history for
+     * the selected reporting period. Blank values are left untouched.
+     */
+    @Transactional
+    public Map<String, Object> importActuals(Long pageId, String dateRange, List<Map<String, Object>> rows) {
+        Map<String, Object> result = new HashMap<>();
+        int updated = 0;
+        int skipped = 0;
+        if (rows == null || rows.isEmpty()) {
+            result.put("updated", 0);
+            result.put("skipped", 0);
+            return result;
+        }
+        LocalDate[] range = parseRange(dateRange);
+        String periodStart = range[0].toString();
+        String periodEnd = range[1].toString();
+
+        List<Map<String, Object>> sc = jdbc.queryForList(
+                "SELECT id FROM sc_scorecards WHERE page_id = ? AND is_active = 1 AND is_deleted = 0 ORDER BY id LIMIT 1",
+                pageId);
+        if (sc.isEmpty()) {
+            result.put("error", "No scorecard found for page " + pageId);
+            result.put("updated", 0);
+            result.put("skipped", rows.size());
+            return result;
+        }
+        Long scorecardId = ((Number) sc.get(0).get("id")).longValue();
+
+        List<Map<String, Object>> kpiRows = jdbc.queryForList(
+                "SELECT k.id, k.code FROM sc_kpis k "
+                        + "JOIN sc_objectives o ON k.objective_id = o.id "
+                        + "JOIN sc_perspectives p ON o.perspective_id = p.id "
+                        + "WHERE p.scorecard_id = ? AND k.is_deleted = 0",
+                scorecardId);
+        Map<String, Long> codeToId = new HashMap<>();
+        for (Map<String, Object> kr : kpiRows) {
+            Object code = kr.get("code");
+            if (code != null) {
+                codeToId.put(code.toString().trim(), ((Number) kr.get("id")).longValue());
+            }
+        }
+
+        for (Map<String, Object> row : rows) {
+            Object codeObj = row.get("kpiId");
+            Long kpiId = codeObj == null ? null : codeToId.get(codeObj.toString().trim());
+            BigDecimal actual = parseNumber(row.get("actual"));
+            BigDecimal target = parseNumber(row.get("target"));
+            if (kpiId == null || (actual == null && target == null)) {
+                skipped++;
+                continue;
+            }
+            jdbc.update(
+                    "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value, target_value) "
+                            + "VALUES (?,?,?,?,?) "
+                            + "ON DUPLICATE KEY UPDATE "
+                            + "actual_value = COALESCE(VALUES(actual_value), actual_value), "
+                            + "target_value = COALESCE(VALUES(target_value), target_value), "
+                            + "calculated_at = NOW()",
+                    kpiId, periodStart, periodEnd, actual, target);
+            updated++;
+        }
+        result.put("updated", updated);
+        result.put("skipped", skipped);
+        result.put("periodStart", periodStart);
+        result.put("periodEnd", periodEnd);
+        return result;
+    }
+
+    private static LocalDate[] parseRange(String dateRange) {
+        LocalDate start = LocalDate.now().withDayOfMonth(1);
+        LocalDate end = LocalDate.now();
+        if (dateRange != null && dateRange.contains("-")) {
+            String[] parts = dateRange.split("-");
+            if (parts.length >= 2) {
+                start = parseOne(parts[0].trim(), start);
+                end = parseOne(parts[1].trim(), end);
+            }
+        }
+        return new LocalDate[]{start, end};
+    }
+
+    private static LocalDate parseOne(String s, LocalDate fallback) {
+        for (DateTimeFormatter f : new DateTimeFormatter[]{
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd")}) {
+            try {
+                return LocalDate.parse(s, f);
+            } catch (Exception ignore) {
+                // try next
+            }
+        }
+        return fallback;
+    }
+
+    private static BigDecimal parseNumber(Object v) {
+        if (v == null) {
+            return null;
+        }
+        String s = v.toString().replaceAll("[,%$\\s]", "").trim();
+        if (s.isEmpty()) {
+            return null;
+        }
+        try {
+            return new BigDecimal(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     // ---------------- helpers ----------------

@@ -1,9 +1,14 @@
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
-const ICONS_PATH = "/stratroom/images/icons/";
-const LOGO_URL = "/stratroom/images/logo.png";
-const COVER_URL = "/stratroom/images/scorecard-bg.jpg";
+// Brand colour — matches the scorecard UI accent (#883B71).
+const BRAND = [136, 59, 113];
+
+// Served directly by Vite from public/images (the /stratroom/* path proxies to
+// the legacy :8080 app which isn't running, so it 500s).
+const ICONS_PATH = "/images/";
+const LOGO_URL = "/images/logo.png";
+const COVER_URL = "/images/scorecard-bg.jpg";
 
 const riskImageUrls = {
     green: ICONS_PATH + "buzzer-green-i.svg",
@@ -77,7 +82,7 @@ export async function generateScorecardPDF(scorecardData) {
         const imgX = 10, imgY = 5, imgWidth = 50, imgHeight = 10;
         let cfh = 20;
         let cfhs = 10;
-        let bgColor = [120, 45, 90];
+        let bgColor = BRAND;
         let periodText = section?.period ? `Period: ${section.period}` : "Period: N/A";
         let titleText = section?.pageTitle ? `${section.pageTitle}` : "N/A";
         
@@ -147,7 +152,7 @@ export async function generateScorecardPDF(scorecardData) {
     function footer(pageNumber, totalPages) {
         let footerHeight = 20;
         let footerHeightsm = 10;
-        let bgColor = [120, 45, 90]; 
+        let bgColor = BRAND; 
 
         pdf.setFillColor(...bgColor);
         pdf.rect(0, pageHeight - footerHeightsm, pageWidth, footerHeightsm, 'F');
@@ -208,13 +213,13 @@ export async function generateScorecardPDF(scorecardData) {
                     pdf.text(`${tab.title} (Total Score: ${tab.totalScore})`, 10, y);
                     y += 5;
 
-                    pdf.autoTable({
+                    autoTable(pdf, {
                         startY: y,
                         head: [["Flag", "ID", "Name", "Period", "Score", "Trend", "Baseline", "Actual", "Target", "Risk"]],
                         body: processTableData(tab.tabledata),
                         theme: 'grid',
                         styles: { fontSize: 10, cellPadding: 2, lineColor: [201, 201, 201] },
-                        headStyles: { fillColor: [147, 69, 120], textColor: [255, 255, 255] },
+                        headStyles: { fillColor: BRAND, textColor: [255, 255, 255] },
                         margin: { top: 8, left: 10, right: 10 },
                         pageBreak: 'avoid',
                         didDrawCell: function (data) {
@@ -265,7 +270,8 @@ export async function generateScorecardPDF(scorecardData) {
         }
     }
 
-    pdf.save("report.pdf");
+    const fileBase = (scorecardData?.[0]?.pageTitle || 'Scorecard').replace(/[^\w\s-]/g, '').trim() || 'Scorecard';
+    pdf.save(`${fileBase} Report.pdf`);
 }
 
 export async function generateScorecardKpiPDF(scorecardKpiData) {
@@ -286,7 +292,7 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
     var submissionDate = new Date().toLocaleDateString();
     
     const logoUrl = await getBase64Image(LOGO_URL);
-    const coverImage = await getBase64Image("/stratroom/images/initiative-bg.jpg");
+    const coverImage = await getBase64Image("/images/initiative-bg.jpg");
     const marginLeft = 10;
     const marginRight = pageWidth - marginLeft;
 
@@ -294,7 +300,7 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
         const imgX = 10, imgY = 5, imgWidth = 50, imgHeight = 10;
         let cfh = 20;
         let cfhs = 10;
-        let bgColor = [120, 45, 90];
+        let bgColor = BRAND;
         let periodText = section?.period ? `Period: ${section.period}` : "Period: N/A";
         let titleText = section?.pageTitle ? `${section.pageTitle} Report` : "N/A";
         let sbtitleText = section?.title ? `${section.title}` : "N/A";
@@ -369,7 +375,7 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
     function footer(pageNumber, totalPages, reportTitle) {
         let footerHeight = 20;
         let footerHeightsm = 10;
-        let bgColor = [120, 45, 90];
+        let bgColor = BRAND;
 
         pdf.setFillColor(...bgColor);
         pdf.rect(0, pageHeight - footerHeightsm, pageWidth, footerHeightsm, 'F');
@@ -424,14 +430,14 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
             );
         }
 
-        pdf.autoTable({
+        autoTable(pdf, {
             startY: currentY,
             head: [],
             body: detailsRows,
             theme: 'grid',
             styles: { fontSize: 9, cellPadding: 3, lineColor: [200, 200, 200] },
             columnStyles: {
-                0: { fontStyle: 'bold', fillColor: [147, 69, 120], textColor: [255, 255, 255], cellWidth: 50 },
+                0: { fontStyle: 'bold', fillColor: BRAND, textColor: [255, 255, 255], cellWidth: 50 },
                 1: { cellWidth: 'auto' }
             },
             margin: { left: 10, right: 10, bottom: 25 }
@@ -456,13 +462,13 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
             ]);
         }
 
-        pdf.autoTable({
+        autoTable(pdf, {
             startY: currentY,
             head: [["Period", "Actual", "Target", "Gap", "YTD"]],
             body: tableRows,
             theme: 'grid',
             styles: { halign: 'center', fontSize: 8, cellPadding: 2, lineHeight: 1.8, overflow: 'linebreak' },
-            headStyles: { fillColor: [147, 69, 120], textColor: [255, 255, 255] },
+            headStyles: { fillColor: BRAND, textColor: [255, 255, 255] },
             columnStyles: {
                 0: { cellWidth: 'auto' },
                 1: { cellWidth: 'auto' },
@@ -494,10 +500,10 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
                 {
                     content: "Strategic Initiatives",
                     rowSpan: numInitiatives + 1,
-                    styles: { valign: 'middle', halign: 'center', fillColor: [147, 69, 120], textColor: [255, 255, 255], fontStyle: 'bold' }
+                    styles: { valign: 'middle', halign: 'center', fillColor: BRAND, textColor: [255, 255, 255], fontStyle: 'bold' }
                 },
-                { content: "Initiatives name", styles: { fillColor: [147, 69, 120], textColor: [255, 255, 255], fontStyle: 'bold' } },
-                { content: "progress", styles: { halign: 'center', fillColor: [147, 69, 120], textColor: [255, 255, 255], fontStyle: 'bold' } }
+                { content: "Initiatives name", styles: { fillColor: BRAND, textColor: [255, 255, 255], fontStyle: 'bold' } },
+                { content: "progress", styles: { halign: 'center', fillColor: BRAND, textColor: [255, 255, 255], fontStyle: 'bold' } }
             ]);
 
             item.strategicInitiatives.forEach((initiative) => {
@@ -508,7 +514,7 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
             });
         }
 
-        pdf.autoTable({
+        autoTable(pdf, {
             startY: currentY,
             head: [],
             body: finalInitiativeBody,
@@ -540,14 +546,14 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
             ];
         }
 
-        pdf.autoTable({
+        autoTable(pdf, {
             startY: currentY,
             head: [],
             body: successCriteriaRows,
             theme: 'grid',
             styles: { fontSize: 9, cellPadding: 3, lineColor: [200, 200, 200] },
             columnStyles: {
-                0: { fontStyle: 'bold', fillColor: [147, 69, 120], textColor: [255, 255, 255], cellWidth: 50 },
+                0: { fontStyle: 'bold', fillColor: BRAND, textColor: [255, 255, 255], cellWidth: 50 },
                 1: { cellWidth: 'auto' }
             },
             margin: { left: 10, right: 10, bottom: 25 }
@@ -570,5 +576,6 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
         footer(i - (reportStartPage - 1), reportPageCount, globalFooterTitle);
     }
 
-    pdf.save("scorecard_kpi_report.pdf");
+    const kpiFileBase = (scorecardKpiData?.[0]?.title || scorecardKpiData?.[0]?.pageTitle || 'KPI').replace(/[^\w\s-]/g, '').trim() || 'KPI';
+    pdf.save(`${kpiFileBase} KPI Report.pdf`);
 }

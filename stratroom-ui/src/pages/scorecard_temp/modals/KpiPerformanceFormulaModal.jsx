@@ -62,18 +62,18 @@ const KpiPerformanceFormulaModal = () => {
               </ul>
               <div className="tab-content" style={{ padding: '10px' }}>
                 <div className="tab-pane body active" id="formula_builder">
-                  <div className="row col-md-12">
+                  <div className="mb-3 w-100">
                     <textarea
-                      className="browser-default"
+                      className="form-control browser-default"
                       name="performanceformula"
                       id="performanceformula"
                       placeholder=""
                       cols=""
-                      rows="1"
+                      rows="3"
                       autoComplete="off"
                     ></textarea>
                   </div>
-                  <div className="row col-md-12">
+                  <div className="mb-3 w-100" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     <button
                       type="button"
                       className="opr btn btn-secondary"

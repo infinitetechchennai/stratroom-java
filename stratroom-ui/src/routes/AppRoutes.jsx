@@ -16,6 +16,7 @@ import Userrolemanagement from '../pages/organization/Userrolemanagement'
 import ApiCheckPage from '../pages/check/ApiCheckPage'
 import ScorecardPage from '../pages/scorecard/ScorecardPage'
 import KpiStoryCardPage from '../pages/scorecard/KpiStoryCardPage'
+import MyFormsPage from '../pages/my-forms/MyFormsPage'
 
 function PrivateRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
@@ -77,6 +78,8 @@ export default function AppRoutes() {
         <Route path="/user-role-management" element={<Userrolemanagement />} />
         <Route path="/scorecard" element={<ScorecardPage />} />
         <Route path="/kpi-story-card" element={<KpiStoryCardPage />} />
+        <Route path="/kpi-story-card/:kpiId" element={<KpiStoryCardPage />} />
+        <Route path="/my-forms" element={<MyFormsPage />} />
 
         <Route path="/" element={<Navigate to="/home" replace />} />
       </Route>

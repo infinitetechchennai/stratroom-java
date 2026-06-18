@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import scorecardDataFile from '../../data/scorecard.json';
 import { useScorecard } from '../../hooks/useScorecard';
+import { ScorecardSettingsProvider } from '../../hooks/useScorecardSettings';
 import { cardDetailsToTabs } from '../../utils/scorecardTransform';
 import { ScorecardHeader } from '../../components/scorecard/layout/ScorecardHeader';
 import { ScorecardTabs } from '../../components/scorecard/layout/ScorecardTabs';
@@ -34,7 +35,7 @@ const THEME_CSS_VARS = {
     '--stratroom-accordion-border-color': '#883B71',
 };
 
-const ScorecardPage = ({ pageId: pageIdProp }) => {
+const ScorecardPageContent = ({ pageIdProp }) => {
     const [searchParams] = useSearchParams();
     const pageId = pageIdProp || searchParams.get('pageId') || '1';
     const [scorecardData, setScorecardData] = useState(null);
@@ -264,5 +265,11 @@ const ScorecardPage = ({ pageId: pageIdProp }) => {
         </React.Fragment>
     );
 };
+
+const ScorecardPage = (props) => (
+    <ScorecardSettingsProvider>
+        <ScorecardPageContent {...props} />
+    </ScorecardSettingsProvider>
+);
 
 export default ScorecardPage;

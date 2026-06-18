@@ -108,8 +108,8 @@ export const SubSubKpiEditModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="esskpiPerformance" className="form-label">Performance</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="esskpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi-calculator-modal">
+                                                <input type="text" className="form-control" id="esskpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup">
                                                     KPI Calculator
                                                 </button>
                                             </div>
@@ -349,8 +349,8 @@ export const SubSubKpiViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vsskpiPerformance" className="form-label">Performance</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="vsskpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi-calculator-modal">
+                                                <input type="text" className="form-control" id="vsskpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup">
                                                     KPI Calculator
                                                 </button>
                                             </div>

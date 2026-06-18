@@ -339,56 +339,63 @@ public class ControlPanelGeneralController {
         Map stringObjectMap = controlPanelGeneralDTO.getGeneralSettingValue();
         boolean status = false;
         Map stringMap = this.controlPanelGeneralService.findCustomPerformanceByOrgId();
-        if (stringObjectMap.get("customPerformance").toString().equalsIgnoreCase("true") || stringObjectMap.get("performance").toString().equalsIgnoreCase("true")) {
-            if (stringMap.get("customPerformance").toString().equalsIgnoreCase(stringObjectMap.get("customPerformance").toString())) {
-                if (!stringMap.get("performance").toString().equalsIgnoreCase(stringObjectMap.get("performance").toString())) {
+        
+        String customPerfObj = String.valueOf(stringObjectMap.get("customPerformance"));
+        String perfObj = String.valueOf(stringObjectMap.get("performance"));
+        String customPerfDB = String.valueOf(stringMap.get("customPerformance"));
+        String perfDB = String.valueOf(stringMap.get("performance"));
+
+        if ("true".equalsIgnoreCase(customPerfObj) || "true".equalsIgnoreCase(perfObj)) {
+            if (customPerfDB.equalsIgnoreCase(customPerfObj)) {
+                if (!perfDB.equalsIgnoreCase(perfObj)) {
                     status = true;
                     return status;
                 }
-            } else if (stringMap.get("performance").toString().equalsIgnoreCase(stringObjectMap.get("performance").toString())) {
+            } else if (perfDB.equalsIgnoreCase(perfObj)) {
                 status = true;
                 return status;
             }
         }
-        if (stringObjectMap.get("performance").toString().equalsIgnoreCase("true")) {
-            if (stringMap.containsKey("threshold1") && !stringMap.get("threshold1").toString().equalsIgnoreCase(stringObjectMap.get("threshold1").toString())) {
+        if ("true".equalsIgnoreCase(perfObj)) {
+            if (stringMap.containsKey("threshold1") && !String.valueOf(stringMap.get("threshold1")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold1")))) {
                 status = true;
                 return status;
             }
-            if (stringMap.containsKey("threshold2") && !stringMap.get("threshold2").toString().equalsIgnoreCase(stringObjectMap.get("threshold2").toString())) {
+
+            if (stringMap.containsKey("threshold2") && !String.valueOf(stringMap.get("threshold2")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold2")))) {
                 status = true;
                 return status;
             }
-            if (stringMap.containsKey("threshold2") && !stringMap.get("threshold2").toString().equalsIgnoreCase(stringObjectMap.get("threshold2").toString())) {
+            if (stringMap.containsKey("threshold3") && !String.valueOf(stringMap.get("threshold3")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold3")))) {
                 status = true;
                 return status;
             }
-            if (stringMap.containsKey("threshold4") && !stringMap.get("threshold4").toString().equalsIgnoreCase(stringObjectMap.get("threshold4").toString())) {
+            if (stringMap.containsKey("threshold4") && !String.valueOf(stringMap.get("threshold4")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold4")))) {
                 status = true;
                 return status;
             }
-            if (stringMap.containsKey("threshold5") && !stringMap.get("threshold5").toString().equalsIgnoreCase(stringObjectMap.get("threshold5").toString())) {
+            if (stringMap.containsKey("threshold5") && !String.valueOf(stringMap.get("threshold5")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold5")))) {
                 status = true;
                 return status;
             }
-        } else if (stringObjectMap.get("customPerformance").toString().equalsIgnoreCase("true")) {
-            if (stringMap.containsKey("threshold1") && !stringMap.get("threshold1").toString().equalsIgnoreCase(stringObjectMap.get("threshold1").toString())) {
+        } else if ("true".equalsIgnoreCase(customPerfObj)) {
+            if (stringMap.containsKey("threshold1") && !String.valueOf(stringMap.get("threshold1")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold1")))) {
                 status = true;
                 return status;
             }
-            if (stringMap.containsKey("threshold2") && !stringMap.get("threshold2").toString().equalsIgnoreCase(stringObjectMap.get("threshold2").toString())) {
+            if (stringMap.containsKey("threshold2") && !String.valueOf(stringMap.get("threshold2")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold2")))) {
                 status = true;
                 return status;
             }
-            if (stringMap.containsKey("threshold3") && !stringMap.get("threshold3").toString().equalsIgnoreCase(stringObjectMap.get("threshold3").toString())) {
+            if (stringMap.containsKey("threshold3") && !String.valueOf(stringMap.get("threshold3")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold3")))) {
                 status = true;
                 return status;
             }
-            if (stringMap.containsKey("threshold4") && !stringMap.get("threshold4").toString().equalsIgnoreCase(stringObjectMap.get("threshold4").toString())) {
+            if (stringMap.containsKey("threshold4") && !String.valueOf(stringMap.get("threshold4")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold4")))) {
                 status = true;
                 return status;
             }
-            if (stringMap.containsKey("threshold5") && !stringMap.get("threshold5").toString().equalsIgnoreCase(stringObjectMap.get("threshold5").toString())) {
+            if (stringMap.containsKey("threshold5") && !String.valueOf(stringMap.get("threshold5")).equalsIgnoreCase(String.valueOf(stringObjectMap.get("threshold5")))) {
                 status = true;
                 return status;
             }

@@ -92,9 +92,9 @@ export const KpiAddModal = () => {
                                                 <input type="text" className="form-control" id="akpiPerformance"
                                                     data-translate="page.scorecard.scorecardItems.performance"
                                                     placeholder="Performance" aria-label=""
-                                                    aria-describedby="button-addon2" />
+                                                    aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#kpi-calculator-modal"
+                                                    data-bs-toggle="modal" data-bs-target="#kpi_formula_popup"
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
                                                     KPI Calculator
                                                 </button>
@@ -310,7 +310,7 @@ export const KpiEditModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="ekpiActual" className="form-label">Actual</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="ekpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" />
+                                                <input type="text" className="form-control" id="ekpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpiActual-calculator-modal">KPI Calculator</button>
                                             </div>
                                         </div>
@@ -319,8 +319,8 @@ export const KpiEditModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="ekpiPerformance" className="form-label">Performance</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="ekpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi-calculator-modal">KPI Calculator</button>
+                                                <input type="text" className="form-control" id="ekpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup">KPI Calculator</button>
                                             </div>
                                         </div>
                                     </div>
@@ -328,7 +328,7 @@ export const KpiEditModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="ekpiYearToDate" className="form-label">Year To Date (YTD)</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="ekpiYearToDate" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" />
+                                                <input type="text" className="form-control" id="ekpiYearToDate" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#ytd-calculator-modal">YTD Calculator</button>
                                             </div>
                                         </div>
@@ -529,7 +529,7 @@ export const KpiViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vkpiActual" className="form-label">Actual</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="vkpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" />
+                                                <input type="text" className="form-control" id="vkpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpiActual-calculator-modal">KPI Calculator</button>
                                             </div>
                                         </div>
@@ -538,8 +538,8 @@ export const KpiViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vkpiPerformance" className="form-label">Performance</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="vkpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi-calculator-modal">KPI Calculator</button>
+                                                <input type="text" className="form-control" id="vkpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup">KPI Calculator</button>
                                             </div>
                                         </div>
                                     </div>
@@ -547,7 +547,7 @@ export const KpiViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vkpiYearToDate" className="form-label">Year To Date (YTD)</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="vkpiYearToDate" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" />
+                                                <input type="text" className="form-control" id="vkpiYearToDate" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#ytd-calculator-modal">YTD Calculator</button>
                                             </div>
                                         </div>

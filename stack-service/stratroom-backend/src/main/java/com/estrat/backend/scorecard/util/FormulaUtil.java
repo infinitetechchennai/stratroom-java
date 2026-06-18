@@ -22,7 +22,8 @@ import com.estrat.backend.scorecard.dto.KPIFormula;
 import com.estrat.backend.scorecard.util.KPIThreadLocal;
 import com.estrat.backend.scorecard.util.UserThreadLocal;
 import com.udojava.evalex.Expression;
-import com.udojava.evalex.Function;
+import com.udojava.evalex.AbstractFunction;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,17 +56,69 @@ public class FormulaUtil {
     }
 
     public void addCustomizedFunction(Expression e) {
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
-        // e.addFunction(...); // Unavailable anonymous inner class - removed by fix
+        // Restored aggregation functions used by the KPI / YTD / Performance formula
+        // builders. EvalEx 2.7 already provides IF, MAX and MIN as built-ins; these add
+        // the comma-list aggregations (avg, agg, count, sum) plus min/max aliases so any
+        // formula the calculators can produce evaluates during validation.
+        e.addFunction(new AbstractFunction("sum", -1) {
+            @Override
+            public BigDecimal eval(java.util.List<BigDecimal> parameters) {
+                return sum(parameters);
+            }
+        });
+        e.addFunction(new AbstractFunction("agg", -1) {
+            @Override
+            public BigDecimal eval(java.util.List<BigDecimal> parameters) {
+                return sum(parameters);
+            }
+        });
+        e.addFunction(new AbstractFunction("avg", -1) {
+            @Override
+            public BigDecimal eval(java.util.List<BigDecimal> parameters) {
+                if (parameters.isEmpty()) {
+                    return BigDecimal.ZERO;
+                }
+                return sum(parameters).divide(new BigDecimal(parameters.size()), 20, RoundingMode.HALF_UP);
+            }
+        });
+        e.addFunction(new AbstractFunction("count", -1) {
+            @Override
+            public BigDecimal eval(java.util.List<BigDecimal> parameters) {
+                return new BigDecimal(parameters.size());
+            }
+        });
+        e.addFunction(new AbstractFunction("min", -1) {
+            @Override
+            public BigDecimal eval(java.util.List<BigDecimal> parameters) {
+                BigDecimal result = null;
+                for (BigDecimal p : parameters) {
+                    if (p == null) continue;
+                    result = (result == null || p.compareTo(result) < 0) ? p : result;
+                }
+                return result == null ? BigDecimal.ZERO : result;
+            }
+        });
+        e.addFunction(new AbstractFunction("max", -1) {
+            @Override
+            public BigDecimal eval(java.util.List<BigDecimal> parameters) {
+                BigDecimal result = null;
+                for (BigDecimal p : parameters) {
+                    if (p == null) continue;
+                    result = (result == null || p.compareTo(result) > 0) ? p : result;
+                }
+                return result == null ? BigDecimal.ZERO : result;
+            }
+        });
+    }
+
+    private static BigDecimal sum(java.util.List<BigDecimal> parameters) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (BigDecimal p : parameters) {
+            if (p != null) {
+                total = total.add(p);
+            }
+        }
+        return total;
     }
 
     public FormulaBuilder extractFormulaExpression(KPIFormula kpiFormula, KPICriteria kpiCriteria) {

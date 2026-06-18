@@ -61,7 +61,7 @@ export const ObjectiveAddModal = () => {
                                                 <input type="text" className="form-control" id="abPerformance"
                                                     data-translate="page.scorecard.scorecardItems.performance"
                                                     placeholder="Performance" aria-label=""
-                                                    aria-describedby="button-addon2" />
+                                                    aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
                                                     data-bs-toggle="modal" data-bs-target="#objective-calculator-modal"
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
@@ -189,7 +189,7 @@ export const ObjectiveEditModal = () => {
                                                 <input type="text" className="form-control" id="eodPerformance"
                                                     data-translate="page.scorecard.scorecardItems.performance"
                                                     placeholder="Performance" aria-label=""
-                                                    aria-describedby="button-addon2" />
+                                                    aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
                                                     data-bs-toggle="modal" data-bs-target="#objective-calculator-modal"
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
@@ -342,9 +342,9 @@ export const ObjectiveViewModal = () => {
                                                 <input type="text" className="form-control" id="vodPerformance"
                                                     data-translate="page.scorecard.scorecardItems.performance"
                                                     placeholder="Performance" aria-label=""
-                                                    aria-describedby="button-addon2" />
+                                                    aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#kpi-calculator-modal"
+                                                    data-bs-toggle="modal" data-bs-target="#kpi_formula_popup"
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
                                                     KPI Calculator
                                                 </button>

@@ -31,19 +31,17 @@ export const PerspectiveCard = ({ tab, isActive }) => {
                             </button>
                             <ul className="dropdown-menu dropdown-menu-end border-0 shadow">
                                 <li>
-                                    <a className="dropdown-item" href="#objective-add-modal"
-                                        data-bs-toggle="modal" data-translate="actions.add">Add</a>
+                                    <button className="dropdown-item" onClick={() => window.scorecardActions?.openAddObjective(tab.pk)} data-translate="actions.add">Add</button>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="#prespective-edit-modal"
-                                        data-bs-toggle="modal" data-translate="actions.edit">Edit</a>
+                                    <button className="dropdown-item" onClick={() => window.scorecardActions?.openEditPerspective(tab.pk)} data-translate="actions.edit">Edit</button>
                                 </li>
                                 <li>
                                     <a className="dropdown-item" href="#prespective-view-modal"
                                         data-bs-toggle="modal" data-translate="actions.view">View</a>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="#" data-translate="actions.delete">Delete</a>
+                                    <button className="dropdown-item" onClick={() => window.scorecardActions?.openDeleteModal('perspective', tab.pk)} data-translate="actions.delete">Delete</button>
                                 </li>
                             </ul>
                         </div>

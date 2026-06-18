@@ -12,9 +12,13 @@ import { ObjectiveAddModal, ObjectiveEditModal, ObjectiveViewModal } from '../..
 import { KpiAddModal, KpiEditModal, KpiViewModal } from '../../components/scorecard/modals/KpiModal';
 import { SubKpiAddModal, SubKpiEditModal, SubKpiViewModal } from '../../components/scorecard/modals/SubKpiModal';
 import { SubSubKpiEditModal, SubSubKpiViewModal } from '../../components/scorecard/modals/SubSubKpiModal';
-import { PerspectiveCalculatorModal, ObjectiveCalculatorModal, KpiCalculatorModal, KpiActualCalculatorModal, YtdCalculatorModal } from '../../components/scorecard/modals/CalculatorModals';
+import { PerspectiveCalculatorModal, ObjectiveCalculatorModal } from '../../components/scorecard/modals/CalculatorModals';
+import KpiFormulaModal from './modals/KpiFormulaModal';
+import KpiPerformanceFormulaModal from './modals/KpiPerformanceFormulaModal';
+import KpiYtdFormulaModal from './modals/KpiYtdFormulaModal';
 import { DeleteModal, ImportModal, CreateTemplateModal, EditModal } from '../../components/scorecard/modals/UtilityModals';
 import { KpiStoryCardModal } from '../../components/scorecard/modals/KpiStoryCardModal';
+import { initScorecardCalculator } from '../../utils/scorecardCalculator';
 import '../../assets/scorecard/css/bootstrap.min.css';
 import '../../assets/scorecard/css/jquery-ui.min.css';
 import '../../assets/scorecard/css/daterangepicker.min.css';
@@ -64,7 +68,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         const handleKpiSettingShow = function () { lastOpenedModal = this; };
         kpiSettingsModals.forEach(m => m.addEventListener('show.bs.modal', handleKpiSettingShow));
 
-        const calculatorIds = ['objective-calculator-modal', 'kpi-calculator-modal', 'prespective-calculator-modal'];
+        const calculatorIds = ['objective-calculator-modal', 'prespective-calculator-modal', 'kpiActual-calculator-modal', 'kpi_formula_popup', 'ytd-calculator-modal'];
         const handleCalculatorShow = () => { if (lastOpenedModal) lastOpenedModal.classList.add('modal-static'); };
         const handleCalculatorHidden = () => {
             document.querySelectorAll('.kpi_setting').forEach(el => el.classList.remove('modal-static'));
@@ -99,6 +103,19 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         return () => Object.keys(THEME_CSS_VARS).forEach(k => root.style.removeProperty(k));
     }, []);
 
+    // ── Set global IDs for legacy modal handlers ─────────────────────────────
+    useEffect(() => {
+        if (scorecardData?.scoreCardDetailsId) {
+            window._currentScoreCardDetailsId = scorecardData.scoreCardDetailsId;
+        }
+    }, [scorecardData]);
+
+    // ── KPI / Performance / YTD formula calculators ──────────────────────────
+    // Defines window.updateFormula / handleFormulaValidate / handleFormulaAdd /
+    // fieldmeasurefilter etc. that the formula-builder modals delegate to, and
+    // wires them to the backend validate / node-key endpoints.
+    useEffect(() => initScorecardCalculator(), []);
+
     // ── Icon libraries ───────────────────────────────────────────────────────
     useEffect(() => {
         if (window.lucide) window.lucide.createIcons();
@@ -116,88 +133,77 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         const handlers = {
             // ── Perspective Add ────────────────────────────────────────────
             'prespective-add-modal': () => {
-                const scoreCardDetailsId = val('apScoreCardDetailsId') || window._currentScoreCardDetailsId || '';
                 addPerspective({
-                    scoreCardValue: {
-                        name: val('apName'),
-                        description: val('apDescription'),
-                        startDate: val('apStartEndDate').split(' - ')[0] || '',
-                        endDate: val('apStartEndDate').split(' - ')[1] || '',
-                        weight: val('apWeight'),
-                        subWeight: val('apSubWeight'),
-                        status: val('apStatus'),
-                        ownerId: val('apOwner'),
-                        createdById: getEmpId(),
-                    },
-                    scoreCardDetailsId,
+                    name: val('apName'),
+                    description: val('apDescription'),
+                    startDate: val('apStartEndDate').split(' - ')[0] || '',
+                    endDate: val('apStartEndDate').split(' - ')[1] || '',
+                    weight: val('apWeight'),
+                    subWeight: val('apSubWeight'),
+                    status: val('apStatus'),
+                    ownerId: val('apOwner'),
+                    createdBy: getEmpId(),
+                    scorecardId: val('apScoreCardDetailsId') || window._currentScoreCardDetailsId || '',
                 });
             },
             // ── Perspective Edit ────────────────────────────────────────────
             'prespective-edit-modal': () => {
                 editPerspective({
                     id: val('epId') || window._editPerspectiveId,
-                    scoreCardValue: {
-                        name: val('epName'),
-                        description: val('epDescription'),
-                        startDate: val('epStartEndDate').split(' - ')[0] || '',
-                        endDate: val('epStartEndDate').split(' - ')[1] || '',
-                        weight: val('epWeight'),
-                        subWeight: val('epSubWeight'),
-                        status: val('epStatus'),
-                        ownerId: val('epOwner'),
-                    },
-                    scoreCardDetailsId: val('epScoreCardDetailsId') || window._currentScoreCardDetailsId,
+                    name: val('epName'),
+                    description: val('epDescription'),
+                    startDate: val('epStartEndDate').split(' - ')[0] || '',
+                    endDate: val('epStartEndDate').split(' - ')[1] || '',
+                    weight: val('epWeight'),
+                    subWeight: val('epSubWeight'),
+                    status: val('epStatus'),
+                    ownerId: val('epOwner'),
+                    scorecardId: val('epScoreCardDetailsId') || window._currentScoreCardDetailsId,
                 });
             },
             // ── Objective Add ────────────────────────────────────────────────
             'objective-add-modal': () => {
                 addObjective({
-                    objectivesValue: {
-                        name: val('aoName'),
-                        description: val('aoDescription'),
-                        startDate: val('aoStartEndDate').split(' - ')[0] || '',
-                        endDate: val('aoStartEndDate').split(' - ')[1] || '',
-                        weight: val('aoWeight'),
-                        subWeight: val('aoSubWeight'),
-                        status: val('aoStatus'),
-                        ownerId: val('aoOwner'),
-                        createdById: getEmpId(),
-                    },
-                    scoreCardId: val('aoScoreCardId') || window._editScoreCardId,
+                    name: val('aoName'),
+                    description: val('aoDescription'),
+                    startDate: val('aoStartEndDate').split(' - ')[0] || '',
+                    endDate: val('aoStartEndDate').split(' - ')[1] || '',
+                    weight: val('aoWeight'),
+                    subWeight: val('aoSubWeight'),
+                    status: val('aoStatus'),
+                    ownerId: val('aoOwner'),
+                    createdBy: getEmpId(),
+                    perspectiveId: val('aoPerspectiveId') || window._editPerspectiveId,
                 });
             },
             // ── Objective Edit ────────────────────────────────────────────────
             'objective-edit-modal': () => {
                 editObjective({
                     id: val('eoId') || window._editObjectiveId,
-                    objectivesValue: {
-                        name: val('eoName'),
-                        description: val('eoDescription'),
-                        startDate: val('eoStartEndDate').split(' - ')[0] || '',
-                        endDate: val('eoStartEndDate').split(' - ')[1] || '',
-                        weight: val('eoWeight'),
-                        subWeight: val('eoSubWeight'),
-                        status: val('eoStatus'),
-                        ownerId: val('eoOwner'),
-                    },
-                    scoreCardId: val('eoScoreCardId') || window._editScoreCardId,
+                    name: val('eoName'),
+                    description: val('eoDescription'),
+                    startDate: val('eoStartEndDate').split(' - ')[0] || '',
+                    endDate: val('eoStartEndDate').split(' - ')[1] || '',
+                    weight: val('eoWeight'),
+                    subWeight: val('eoSubWeight'),
+                    status: val('eoStatus'),
+                    ownerId: val('eoOwner'),
+                    perspectiveId: val('eoPerspectiveId') || window._editPerspectiveId,
                 });
             },
             // ── KPI Add ──────────────────────────────────────────────────────
             'kpi-add-modal': () => {
                 addKpi({
-                    kpiValue: {
-                        name: val('akName'),
-                        description: val('akDescription'),
-                        target: val('akTarget'),
-                        actual: val('akActual'),
-                        kpi_measurement: val('akMeasurement') || val('akFrequency'),
-                        weight: val('akWeight'),
-                        subWeight: val('akSubWeight'),
-                        status: val('akStatus'),
-                        ownerId: val('akOwner'),
-                        createdById: getEmpId(),
-                    },
+                    name: val('akName'),
+                    description: val('akDescription'),
+                    targetValue: val('akTarget'),
+                    actualValue: val('akActual'),
+                    measurementFrequency: val('akMeasurement') || val('akFrequency'),
+                    weight: val('akWeight'),
+                    subWeight: val('akSubWeight'),
+                    status: val('akStatus'),
+                    ownerId: val('akOwner'),
+                    createdBy: getEmpId(),
                     objectiveId: val('akObjectiveId') || window._editObjectiveId,
                 });
             },
@@ -205,32 +211,28 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             'kpi-edit-modal': () => {
                 editKpi({
                     id: val('ekId') || window._editKpiId,
-                    kpiValue: {
-                        name: val('ekName'),
-                        description: val('ekDescription'),
-                        target: val('ekTarget'),
-                        actual: val('ekActual'),
-                        kpi_measurement: val('ekMeasurement') || val('ekFrequency'),
-                        weight: val('ekWeight'),
-                        subWeight: val('ekSubWeight'),
-                        status: val('ekStatus'),
-                        ownerId: val('ekOwner'),
-                    },
+                    name: val('ekName'),
+                    description: val('ekDescription'),
+                    targetValue: val('ekTarget'),
+                    actualValue: val('ekActual'),
+                    measurementFrequency: val('ekMeasurement') || val('ekFrequency'),
+                    weight: val('ekWeight'),
+                    subWeight: val('ekSubWeight'),
+                    status: val('ekStatus'),
+                    ownerId: val('ekOwner'),
                     objectiveId: val('ekObjectiveId') || window._editObjectiveId,
                 });
             },
             // ── SubKPI Add ────────────────────────────────────────────────────
             'subkpi-add-modal': () => {
                 addSubKpi({
-                    subKpiValue: {
-                        subMeasureName: val('askName'),
-                        description: val('askDescription'),
-                        target: val('askTarget'),
-                        actual: val('askActual'),
-                        kpi_measurement: val('askMeasurement') || val('askFrequency'),
-                        weight: val('askWeight'),
-                        createdById: getEmpId(),
-                    },
+                    name: val('askName'),
+                    description: val('askDescription'),
+                    targetValue: val('askTarget'),
+                    actualValue: val('askActual'),
+                    measurementFrequency: val('askMeasurement') || val('askFrequency'),
+                    weight: val('askWeight'),
+                    createdBy: getEmpId(),
                     kpiId: val('askKpiId') || window._editKpiId,
                 });
             },
@@ -238,14 +240,12 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             'subkpi-edit-modal': () => {
                 editSubKpi({
                     id: val('eskId') || window._editSubKpiId,
-                    subKpiValue: {
-                        subMeasureName: val('eskName'),
-                        description: val('eskDescription'),
-                        target: val('eskTarget'),
-                        actual: val('eskActual'),
-                        kpi_measurement: val('eskMeasurement') || val('eskFrequency'),
-                        weight: val('eskWeight'),
-                    },
+                    name: val('eskName'),
+                    description: val('eskDescription'),
+                    targetValue: val('eskTarget'),
+                    actualValue: val('eskActual'),
+                    measurementFrequency: val('eskMeasurement') || val('eskFrequency'),
+                    weight: val('eskWeight'),
                     kpiId: val('eskKpiId') || window._editKpiId,
                 });
             },
@@ -294,6 +294,27 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 window._deleteTarget = { type, id };
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('delete-modal');
+                    if (el) new window.bootstrap.Modal(el).show();
+                }
+            },
+            openAddObjective: (perspectiveId) => {
+                window._editPerspectiveId = perspectiveId;
+                if (window.bootstrap?.Modal) {
+                    const el = document.getElementById('objective-add-modal');
+                    if (el) new window.bootstrap.Modal(el).show();
+                }
+            },
+            openAddKpi: (objectiveId) => {
+                window._editObjectiveId = objectiveId;
+                if (window.bootstrap?.Modal) {
+                    const el = document.getElementById('kpi-add-modal');
+                    if (el) new window.bootstrap.Modal(el).show();
+                }
+            },
+            openAddSubKpi: (kpiId) => {
+                window._editKpiId = kpiId;
+                if (window.bootstrap?.Modal) {
+                    const el = document.getElementById('subkpi-add-modal');
                     if (el) new window.bootstrap.Modal(el).show();
                 }
             },
@@ -353,6 +374,16 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         return () => { delete window.scorecardActions; };
     }, [removePerspective, removeObjective, removeKpi, removeSubKpi]);
 
+    const tabs = scorecardData?.tab || [];
+
+    useEffect(() => {
+        if (tabs.length > 0 && activeTabIndex >= tabs.length) {
+            setActiveTabIndex(Math.max(0, tabs.length - 1));
+        } else if (tabs.length === 0 && activeTabIndex !== 0) {
+            setActiveTabIndex(0);
+        }
+    }, [tabs.length, activeTabIndex]);
+
     if (!scorecardData) {
         if (liveLoading) return <div style={{ padding: 24 }}>Loading scorecard…</div>;
         if (liveError) {
@@ -368,8 +399,6 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         }
         return <div style={{ padding: 24 }}>No scorecard data for this page.</div>;
     }
-
-    const tabs = scorecardData.tab || [];
 
     return (
         <React.Fragment>
@@ -403,7 +432,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             <div className="page-grid"></div>
             <main className="pt-2 pb-2">
                 <div className="container-lg">
-                    <ScorecardHeader />
+                    <ScorecardHeader scorecardData={scorecardData} pageId={pageId} onReload={reload} />
                 </div>
 
                 <div className="container-lg py-2">
@@ -490,9 +519,9 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
 
             <PerspectiveCalculatorModal />
             <ObjectiveCalculatorModal />
-            <KpiCalculatorModal />
-            <KpiActualCalculatorModal />
-            <YtdCalculatorModal />
+            <KpiFormulaModal />
+            <KpiPerformanceFormulaModal />
+            <KpiYtdFormulaModal />
 
             <DeleteModal />
             <ImportModal />
@@ -506,6 +535,8 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
 // ─────────────────────────────────────────────────────────────
 // Outer shell — loads data, wraps in ScorecardProvider
 // ─────────────────────────────────────────────────────────────
+import { ScorecardSettingsProvider } from '../../hooks/useScorecardSettings';
+
 const ScorecardPage = ({ pageId: pageIdProp }) => {
     const [searchParams] = useSearchParams();
     const pageId = pageIdProp || searchParams.get('pageId') || '1';
@@ -526,15 +557,17 @@ const ScorecardPage = ({ pageId: pageIdProp }) => {
     }, [liveDTO, liveLoading]);
 
     return (
-        <ScorecardProvider reload={reload} pageId={pageId}>
-            <ScorecardPageInner
-                pageId={pageId}
-                scorecardData={scorecardData}
-                liveLoading={liveLoading}
-                liveError={liveError}
-                reload={reload}
-            />
-        </ScorecardProvider>
+        <ScorecardSettingsProvider>
+            <ScorecardProvider reload={reload} pageId={pageId}>
+                <ScorecardPageInner
+                    pageId={pageId}
+                    scorecardData={scorecardData}
+                    liveLoading={liveLoading}
+                    liveError={liveError}
+                    reload={reload}
+                />
+            </ScorecardProvider>
+        </ScorecardSettingsProvider>
     );
 };
 

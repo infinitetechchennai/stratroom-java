@@ -176,6 +176,127 @@ public class KPIService {
         return this.kpiRepository.findByIdAndActive(Long.valueOf(id), 0);
     }
 
+    /**
+     * Returns the real monthly actual/target series for a single KPI, used by the
+     * KPI story-card dashboard (Data Table, Actual-vs-Target chart and Data Drill).
+     *
+     * The KPI's measure node keys are resolved from kpi_element_details, then the
+     * org_kpi_details rows for those node keys within the requested DATE_PERIOD are
+     * fetched via the flat (org-wide) query so the result is independent of the
+     * per-org department/employee scoping branches. Each row is normalised to
+     * {period, actual, target, gap, ytd, budget, currency, measureName, nodeKey}.
+     */
+    public List<Map<String, Object>> getKpiActualSeries(long kpiId) {
+        List<Map<String, Object>> series = new ArrayList<Map<String, Object>>();
+        try {
+            Optional<KPI> kpiOpt = this.findById(kpiId);
+            if (!kpiOpt.isPresent()) {
+                return series;
+            }
+            KPI kpi = kpiOpt.get();
+            List<KPIElementDTO> elements = this.getkpielements(kpi.getKpiName());
+            if (elements == null || elements.isEmpty()) {
+                return series;
+            }
+            List<String> nodeKeyList = new ArrayList<String>();
+            Map<String, String> nodeKeyToMeasure = new HashMap<String, String>();
+            for (KPIElementDTO element : elements) {
+                String nk = String.valueOf(element.getNodeKey());
+                if (!nodeKeyList.contains(nk)) {
+                    nodeKeyList.add(nk);
+                }
+                nodeKeyToMeasure.put(nk, element.getMeasureName());
+            }
+            KPICriteria criteria = new KPICriteria();
+            criteria.setNodeKeyList(nodeKeyList);
+            criteria.setMetricCode("");
+            criteria.setEmployeeIds(new ArrayList<Object>());
+            criteria.setRealDates(this.resolveSeriesDateRange());
+            List<Map<String, Object>> rows = this.kpidao.getOrgKPIDetails(criteria, "SELECT org.org_kpi_id,org.metric_code,org.organization_name,org.real_date_from,org.real_date_to,org.month_year,org.financial_month,org.mtd_actual as A,org.mtd_target as T,org.rolling_12_actual as RA,org.rolling_12_budget as B,org.org_key,org.node_key,org.uploaded_by,org.TYPE AS dataType,org.currency FROM orgstructure.org_kpi_details org WHERE");
+            if (rows == null) {
+                return series;
+            }
+            for (Map<String, Object> row : rows) {
+                Object actual = row.get("A");
+                Object target = row.get("T");
+                String nodeKey = Objects.toString(row.get("node_key"), null);
+                Map<String, Object> point = new LinkedHashMap<String, Object>();
+                point.put("period", row.get("month_year"));
+                point.put("financialMonth", row.get("financial_month"));
+                point.put("actual", actual);
+                point.put("target", target);
+                point.put("gap", this.computeGap(actual, target));
+                point.put("ytd", row.get("RA"));
+                point.put("budget", row.get("B"));
+                point.put("currency", row.get("currency"));
+                point.put("nodeKey", nodeKey);
+                point.put("measureName", nodeKey != null ? nodeKeyToMeasure.get(nodeKey) : null);
+                point.put("realDateFrom", row.get("real_date_from"));
+                series.add(point);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("getKpiActualSeries failed for kpiId " + kpiId + " : " + e.getMessage());
+        }
+        return series;
+    }
+
+    private Double computeGap(Object actual, Object target) {
+        Double a = this.toDouble(actual);
+        Double t = this.toDouble(target);
+        if (a == null || t == null) {
+            return null;
+        }
+        return Double.valueOf(a.doubleValue() - t.doubleValue());
+    }
+
+    private Double toDouble(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Number) {
+            return Double.valueOf(((Number)value).doubleValue());
+        }
+        try {
+            String text = value.toString().trim().replaceAll("[,%$]", "");
+            if (text.isEmpty()) {
+                return null;
+            }
+            return Double.valueOf(Double.parseDouble(text));
+        }
+        catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private List<Object> resolveSeriesDateRange() {
+        List<Object> dates = new ArrayList<Object>();
+        String period = UserThreadLocal.get((String)"DATE_PERIOD");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        if (StringUtils.isNotEmpty((CharSequence)period) && period.contains("-")) {
+            try {
+                String[] parts = period.split("-");
+                dates.add(format.parse(parts[0].trim()));
+                dates.add(format.parse(parts[1].trim()));
+                return dates;
+            }
+            catch (Exception e) {
+                dates.clear();
+            }
+        }
+        Calendar year = Calendar.getInstance();
+        int currentYear = year.get(1);
+        Calendar start = Calendar.getInstance();
+        start.set(currentYear, 0, 1, 0, 0, 0);
+        start.set(14, 0);
+        Calendar end = Calendar.getInstance();
+        end.set(currentYear, 11, 31, 0, 0, 0);
+        end.set(14, 0);
+        dates.add(start.getTime());
+        dates.add(end.getTime());
+        return dates;
+    }
+
     public KPIDTO save(KPIDTO kpiDTO) {
         KPI kpi = new KPI(kpiDTO);
         kpi.setCreatedTime(LocalDateTime.now());
@@ -297,6 +418,124 @@ public class KPIService {
         this.logger.debug((Object)"populating retrieveNodeKeyList details into cache");
         List<KPIDetailsDTO> kpiList = this.kpidao.retrieveNodeKeyList(Long.valueOf(orgId).longValue());
         return kpiList;
+    }
+
+    // ── KPI / Performance / YTD formula validation ──────────────────────────
+    // Ported from the (component-scan-excluded) scorecard service so the active
+    // db-layer controller can serve POST /validateFormula for the calculators.
+    public String validateFormula(String formula, String type) {
+        com.estrat.backend.db.util.FormulaUtil formulaUtil = new com.estrat.backend.db.util.FormulaUtil();
+        if ("OBJECTIVE".equalsIgnoreCase(type) || "PERSPECTIVE".equalsIgnoreCase(type)) {
+            formula = StringUtils.replaceEach(formula, new String[]{"weight", "Weight", "WEIGHT"}, new String[]{"1", "1", "1"});
+            return this.validateCustomFormula(formula);
+        }
+        if ("KPIPERFORMANCE".equalsIgnoreCase(type) || "THRESSHOLD".equalsIgnoreCase(type)) {
+            formula = StringUtils.replaceEach(formula,
+                    new String[]{"actual", "Actual", "ACTUAL", "target", "Target", "TARGET", "contribution", "Contribution", "CONTRIBUTION", "%", "weight", "Weight", "WEIGHT"},
+                    new String[]{"1", "1", "1", "1", "1", "1", "1", "1", "1", "/100", "1", "1", "1"});
+            try {
+                formulaUtil.applyExpression(formula);
+            } catch (Exception e) {
+                return "Given formula incorrect " + e.getMessage();
+            }
+            return "valid";
+        }
+        if ("SCORECARDCONFIG".equalsIgnoreCase(type)) {
+            if (formula.contains(".")) {
+                return "Given formula incorrect ";
+            }
+            if (formula.contains("]") || formula.contains("[")) {
+                int s = formula.length();
+                int s1 = formula.indexOf("]");
+                int s2 = formula.indexOf("[");
+                if (s == s1 || s - 1 == s1) {
+                    String check = formula.substring(s2 + 1, s1);
+                    if (check == null || check.isEmpty()) {
+                        return "Given formula incorrect ";
+                    }
+                    return "valid";
+                }
+                return "Given formula incorrect ";
+            }
+            return "Given formula incorrect ";
+        }
+        // Default branch: KPI / YTD — measures referenced as [nodeKey]
+        java.util.regex.Matcher periodPattern = java.util.regex.Pattern.compile("\\[(.*?)\\]").matcher(formula);
+        java.util.HashSet<String> nodeKeySet = new java.util.HashSet<>();
+        while (periodPattern.find()) {
+            if (nodeKeySet.contains(periodPattern.group(1))) continue;
+            String nodeKey = periodPattern.group(1);
+            for (String nk : nodeKey.split("\\,")) {
+                if (!this.checkNodekey(nk)) {
+                    return "Given nodeKey not in database ";
+                }
+            }
+            String checkKey = nodeKey.replaceAll("\\(", "").replaceAll("\\)", "");
+            formula = formula.replace(nodeKey, checkKey);
+            if (checkKey.contains(",")) {
+                nodeKeySet.addAll(Arrays.asList(checkKey.split("\\,")));
+                continue;
+            }
+            nodeKeySet.add(checkKey);
+        }
+        if (nodeKeySet.isEmpty()) {
+            return "Please provide node keys";
+        }
+        formula = formula.replaceAll("\\|", ",");
+        if (nodeKeySet.size() == 1) {
+            formula = formula.replace(nodeKeySet.stream().findFirst().get().trim(), String.join(",", "1", "1"));
+        } else {
+            for (String nodeKey : nodeKeySet) {
+                formula = formula.replace(nodeKey, "1");
+            }
+        }
+        formula = formula.replaceAll("\\[", "(").replaceAll("\\]", ")");
+        try {
+            formulaUtil.applyExpression(formula);
+        } catch (Exception e) {
+            return "Given formula incorrect " + e.getMessage();
+        }
+        return "valid";
+    }
+
+    private String validateCustomFormula(String formula) {
+        com.estrat.backend.db.util.FormulaUtil formulaUtil = new com.estrat.backend.db.util.FormulaUtil();
+        java.util.regex.Matcher periodPattern = java.util.regex.Pattern.compile("\\[(.*?)\\]").matcher(formula);
+        java.util.LinkedHashSet<String> searchList = new java.util.LinkedHashSet<>();
+        while (periodPattern.find()) {
+            if (searchList.contains(periodPattern.group(1))) continue;
+            String nodeKey = periodPattern.group(1);
+            String checkKey = nodeKey.replaceAll("\\(", "").replaceAll("\\)", "");
+            formula = formula.replace(nodeKey, checkKey);
+            if (checkKey.contains(",")) {
+                searchList.addAll(Arrays.asList(checkKey.split("\\,")));
+                continue;
+            }
+            searchList.add(checkKey);
+        }
+        java.util.List<String> replaceList = searchList.stream().map(search -> "1").collect(Collectors.toList());
+        searchList.add("[");
+        searchList.add("]");
+        replaceList.add("(");
+        replaceList.add(")");
+        String[] searchStrArray = searchList.toArray(new String[0]);
+        String[] replaceStringArray = replaceList.toArray(new String[0]);
+        formula = StringUtils.replaceEach(formula, searchStrArray, replaceStringArray);
+        try {
+            formulaUtil.applyExpression(formula);
+        } catch (Exception e) {
+            return "Given formula incorrect " + e.getMessage();
+        }
+        return "valid";
+    }
+
+    private boolean checkNodekey(String nodeKey) {
+        List<KPIDetailsDTO> nodeKeyDataList = this.retrieveKpiDetailsList();
+        java.util.Map<String, String> nodeKeyMap = nodeKeyDataList.stream()
+                .collect(Collectors.toMap(KPIDetailsDTO::getMeasureName, KPIDetailsDTO::getNodeKey, (existingValue, newValue) -> existingValue));
+        java.util.Map<String, String> nodeKeyMapCaseinsensitive = nodeKeyMap.entrySet().stream()
+                .collect(Collectors.toMap(entry -> entry.getKey().toUpperCase(), java.util.Map.Entry::getValue, (existingValue, newValue) -> existingValue));
+        return nodeKeyMapCaseinsensitive.containsKey(nodeKey.trim().toUpperCase());
     }
 
     /*
@@ -906,8 +1145,30 @@ public class KPIService {
         }
     }
 
-    public List<KPIDTO> retrieveKpiFormDataList(long scoreCardId) {
-        List<KPI> dbList = this.kpiRepository.findByScorecardId(Long.valueOf(scoreCardId), 0);
+    public List<KPIDTO> retrieveKpiFormDataList(long pageId) {
+        return this.retrieveKpiFormDataList(pageId, null);
+    }
+
+    public List<KPIDTO> retrieveKpiFormDataList(long pageId, String dateRange) {
+        Date firstDate = null;
+        Date secondDate = null;
+        String[] dataRanges = null;
+        if (Objects.nonNull(dateRange)) {
+            String[] stringArray = dataRanges = dateRange.contains("-") ? dateRange.split("-") : dateRange.split(",");
+        }
+        if (dataRanges != null && dataRanges.length > 1) {
+            String startDate = dataRanges[0].trim();
+            String endDate = dataRanges[1].trim();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            try {
+                firstDate = dateFormat.parse(startDate);
+                secondDate = dateFormat.parse(endDate);
+            }
+            catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        List<KPI> dbList = firstDate != null && secondDate != null ? this.kpiRepository.findByPageIdAndDate(Long.valueOf(pageId), 0, firstDate, secondDate) : this.kpiRepository.findByPageId(Long.valueOf(pageId), 0);
         return dbList.stream().map(dbValue -> new KPIDTO(dbValue)).collect(Collectors.toList());
     }
 

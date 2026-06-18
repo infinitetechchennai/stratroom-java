@@ -79,3 +79,7 @@ export const deleteSubKpi = (id) => del(`${V2}/subkpi/${id}`);
 // ---------- actuals ----------
 export const recordKpiActual = (data) => post(`${V2}/kpi/actual`, data);
 export const recordSubKpiActual = (data) => post(`${V2}/subkpi/actual`, data);
+
+// Bulk Actual/Target import from an uploaded scorecard Excel (rows matched by KPI code).
+export const importScorecardActuals = (pageId, dateRange, rows) =>
+  post(`${V2}/import/actuals?pageId=${pageId}&dateRange=${encodeURIComponent(dateRange)}`, rows);

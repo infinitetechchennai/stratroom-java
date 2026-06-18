@@ -61,6 +61,7 @@ import com.estrat.backend.db.dto.EmployeeDTO;
 import com.estrat.backend.db.dto.KPIDTO;
 import com.estrat.backend.db.dto.KPIDetailsDTO;
 import com.estrat.backend.db.dto.KPIElementDTO;
+import com.estrat.backend.db.dto.KPIFormula;
 import com.estrat.backend.db.dto.KpiDetailsAttachmentsDTO;
 import com.estrat.backend.db.dto.KpiList;
 import com.estrat.backend.db.dto.RiskResponseDTO;
@@ -198,6 +199,11 @@ public class KPIController {
     @GetMapping(value={"/retrieveNodeKeyList"})
     public ResponseEntity<List<KPIDetailsDTO>> retrieveNodeKeyList() {
         return new ResponseEntity((Object)this.kpiService.retrieveKpiDetailsList(), HttpStatus.OK);
+    }
+
+    @PostMapping(value={"/validateFormula"})
+    public ResponseEntity<String> validateFormula(@RequestBody KPIFormula kpiFormula) {
+        return new ResponseEntity((Object)this.kpiService.validateFormula(kpiFormula.getFormula(), kpiFormula.getType()), HttpStatus.OK);
     }
 
     @PostMapping(value={"/retrieveOrgKPIDetails"})
@@ -363,9 +369,12 @@ public class KPIController {
     }
 
     @GetMapping(value={"/kpiFormKpiList/{scorecardId}"})
-    public ResponseEntity<List<KPIDTO>> kpiFormKpiList(@PathVariable String scorecardId, @RequestParam(value="ownerFlag", required=false) String ownerFlag) {
+    public ResponseEntity<List<KPIDTO>> kpiFormKpiList(@PathVariable String scorecardId, @RequestParam(value="ownerFlag", required=false) String ownerFlag, @RequestParam(value="dateRange", required=false) String dateRange) {
         boolean flag = ownerFlag != null ? Boolean.valueOf(ownerFlag) : false;
-        return new ResponseEntity((Object)this.kpiService.retrieveKpiFormDataList(Long.valueOf(scorecardId).longValue()), HttpStatus.OK);
+        String[] searchArray = new String[]{"%20", "%2520"};
+        String[] replaceArray = new String[]{" ", " "};
+        String date = StringUtils.replaceEach((String)dateRange, (String[])searchArray, (String[])replaceArray);
+        return new ResponseEntity((Object)this.kpiService.retrieveKpiFormDataList(Long.valueOf(scorecardId).longValue(), date), HttpStatus.OK);
     }
 
     @GetMapping(value={"/subMeasureNodeKeyList/{nodeKey}"})
@@ -442,6 +451,11 @@ public class KPIController {
     @GetMapping(value={"/kpiAttachmentList/{kpiId}"})
     public ResponseEntity<List<KpiDetailsAttachmentsDTO>> retriveAttachemnts(@PathVariable(value="kpiId") Long kpiId) {
         return new ResponseEntity((Object)this.kpiService.retriveAttachmentByKpiId(kpiId), HttpStatus.OK);
+    }
+
+    @GetMapping(value={"/kpi/actualSeries/{kpiId}"})
+    public ResponseEntity<List<Map<String, Object>>> kpiActualSeries(@PathVariable(value="kpiId") long kpiId) {
+        return new ResponseEntity((Object)this.kpiService.getKpiActualSeries(kpiId), HttpStatus.OK);
     }
 
     @GetMapping(value={"/kpiContributionPercentage/{kpiId}"})

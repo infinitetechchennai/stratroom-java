@@ -16,6 +16,7 @@ import {
   saveOrgSubKpiEntry,
   downloadKpiPdf,
   downloadKpiExcel,
+  changePerspectiveName,
 } from '../services/scorecardApi';
 
 // ─────────────────────────────────────────────────────────────
@@ -61,10 +62,22 @@ function showToast(message, type = 'success') {
 function closeModal(modalId) {
   const el = document.getElementById(modalId);
   if (!el) return;
-  if (window.bootstrap?.Modal) {
-    const m = window.bootstrap.Modal.getInstance(el);
-    m?.hide();
-  }
+  // Force manual hide to avoid Bootstrap 5 'backdrop' undefined bugs
+  // especially when React might have re-rendered the modal
+  el.classList.remove('show');
+  el.style.display = 'none';
+  el.setAttribute('aria-hidden', 'true');
+  el.removeAttribute('aria-modal');
+  el.removeAttribute('role');
+  
+  // Cleanup backdrop
+  const backdrop = document.querySelector('.modal-backdrop');
+  if (backdrop) backdrop.remove();
+  
+  // Cleanup body
+  document.body.classList.remove('modal-open');
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -72,6 +85,7 @@ function closeModal(modalId) {
 // ─────────────────────────────────────────────────────────────
 export function ScorecardProvider({ children, reload, pageId }) {
   const [saving, setSaving] = useState(false);
+  const [storyCardItem, setStoryCardItem] = useState(null);
 
   // Generic action wrapper: sets loading, calls fn, shows toast, reloads
   const act = useCallback(
@@ -105,6 +119,11 @@ export function ScorecardProvider({ children, reload, pageId }) {
 
   const removePerspective = useCallback(
     (id) => act(() => deletePerspective(id), 'Perspective deleted.', 'delete-modal'),
+    [act]
+  );
+
+  const editPerspectiveName = useCallback(
+    (id, name) => act(() => changePerspectiveName(id, name), 'Perspective name updated.'),
     [act]
   );
 
@@ -196,6 +215,7 @@ export function ScorecardProvider({ children, reload, pageId }) {
     addPerspective,
     editPerspective,
     removePerspective,
+    editPerspectiveName,
     // Objective
     addObjective,
     editObjective,
@@ -213,6 +233,8 @@ export function ScorecardProvider({ children, reload, pageId }) {
     // Download
     exportKpiPdf,
     exportKpiExcel,
+    storyCardItem,
+    setStoryCardItem,
   };
 
   return (

@@ -1,6 +1,7 @@
 package com.estrat.backend.db.scv2;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,14 @@ public class ScorecardV2Controller {
             @PathVariable("pageId") Long pageId,
             @RequestParam(value = "dateRange", required = false) String dateRange) {
         return ResponseEntity.ok(calculationService.calculateByPage(pageId, dateRange));
+    }
+
+    // KPI story-card detail (header + monthly actual/target history) from the sc_ schema
+    @GetMapping("/scorecardV2/kpi/{id}/storycard")
+    public ResponseEntity<Map<String, Object>> kpiStoryCard(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "dateRange", required = false) String dateRange) {
+        return ResponseEntity.ok(calculationService.kpiStoryCard(id, dateRange));
     }
 
     // -------- scorecard CRUD --------
@@ -138,6 +147,15 @@ public class ScorecardV2Controller {
     public ResponseEntity<Map<String, Object>> recordSubKpiActual(@RequestBody Map<String, Object> body) {
         crudService.recordSubKpiActual(body);
         return ResponseEntity.ok(okResult(true));
+    }
+
+    // Bulk Actual/Target import from an uploaded scorecard Excel (matched by KPI code).
+    @PostMapping("/scorecardV2/import/actuals")
+    public ResponseEntity<Map<String, Object>> importActuals(
+            @RequestParam("pageId") Long pageId,
+            @RequestParam(value = "dateRange", required = false) String dateRange,
+            @RequestBody List<Map<String, Object>> rows) {
+        return ResponseEntity.ok(crudService.importActuals(pageId, dateRange, rows));
     }
 
     // -------- response helpers --------

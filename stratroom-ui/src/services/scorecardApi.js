@@ -148,22 +148,22 @@ export const getPageListByType = (empId, pageType) =>
 // ============================================================
 
 export const getPerspectiveById = (id) =>
-  request(`${SC}/scorecard/${id}`);
+  request(`${SC}/scorecardV2/perspective/${id}`);
 
 export const savePerspective = (data) =>
-  request(`${SC}/scorecard`, {
+  request(`${SC}/scorecardV2/perspective`, {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
 export const updatePerspective = (data) =>
-  request(`${SC}/scorecard`, {
+  request(`${SC}/scorecardV2/perspective/${data.id || data.apId}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   });
 
 export const deletePerspective = (id) =>
-  request(`${SC}/scorecard/${id}`, { method: 'DELETE' });
+  request(`${SC}/scorecardV2/perspective/${id}`, { method: 'DELETE' });
 
 export const changePerspectiveName = (scorecardId, name) =>
   request(
@@ -198,22 +198,22 @@ export const checkScoreCardData = (empId, pageId) =>
 // ============================================================
 
 export const getObjectiveById = (id) =>
-  request(`${SC}/objectives/${id}`);
+  request(`${SC}/scorecardV2/objective/${id}`);
 
 export const saveObjective = (data) =>
-  request(`${SC}/objectives`, {
+  request(`${SC}/scorecardV2/objective`, {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
 export const updateObjective = (data) =>
-  request(`${SC}/objectives`, {
+  request(`${SC}/scorecardV2/objective/${data.id || data.obId}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   });
 
 export const deleteObjective = (id) =>
-  request(`${SC}/objectives/${id}`, { method: 'DELETE' });
+  request(`${SC}/scorecardV2/objective/${id}`, { method: 'DELETE' });
 
 export const getObjectiveList = (scoreCardId, loadFlag = true) =>
   request(`${SC}/objectivesList/${scoreCardId}?loadFlag=${loadFlag}`);
@@ -228,22 +228,22 @@ export const getObjectiveListByDate = (scoreCardId, dateRange, loadFlag = true) 
 // ============================================================
 
 export const getKpiById = (id) =>
-  request(`${SC}/kpi/${id}`);
+  request(`${SC}/scorecardV2/kpi/${id}`);
 
 export const saveKpi = (data) =>
-  request(`${SC}/kpi`, {
+  request(`${SC}/scorecardV2/kpi`, {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
 export const updateKpi = (data) =>
-  request(`${SC}/kpi`, {
+  request(`${SC}/scorecardV2/kpi/${data.id || data.kpiId}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   });
 
 export const deleteKpi = (id) =>
-  request(`${SC}/kpi/${id}`, { method: 'DELETE' });
+  request(`${SC}/scorecardV2/kpi/${id}`, { method: 'DELETE' });
 
 export const getKpiList = (empId, employeeView = false) =>
   request(`${SC}/kpiList/${empId ?? getEmpId()}?employeeView=${employeeView}`);
@@ -282,6 +282,10 @@ export const validateFormula = (formula, type) =>
     body: JSON.stringify({ formula, type }),
   });
 
+// Node keys (measures / sub-measures) used to build KPI formulas in the calculators
+export const retrieveNodeKeyList = () =>
+  request(`${SC}/retrieveNodeKeyList`);
+
 // KPI attachments
 export const getKpiAttachments = (kpiId) =>
   request(`${SC}/kpiAttachmentList/${kpiId}`);
@@ -291,22 +295,22 @@ export const getKpiAttachments = (kpiId) =>
 // ============================================================
 
 export const getSubKpiById = (id) =>
-  request(`${SC}/subKpi/${id}`);
+  request(`${SC}/scorecardV2/subkpi/${id}`);
 
 export const saveSubKpi = (data) =>
-  request(`${SC}/subKpi`, {
+  request(`${SC}/scorecardV2/subkpi`, {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
 export const updateSubKpi = (data) =>
-  request(`${SC}/subKpi`, {
+  request(`${SC}/scorecardV2/subkpi/${data.id || data.subKpiId}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   });
 
 export const deleteSubKpi = (id) =>
-  request(`${SC}/subKpi/${id}`, { method: 'DELETE' });
+  request(`${SC}/scorecardV2/subkpi/${id}`, { method: 'DELETE' });
 
 export const getSubKpiListByObjective = (objectiveId) =>
   request(`${SC}/v2/subkpiList/${objectiveId}`);

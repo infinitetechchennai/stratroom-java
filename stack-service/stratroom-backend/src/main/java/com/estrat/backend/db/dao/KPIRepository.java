@@ -62,6 +62,12 @@ extends JpaRepository<KPI, Long> {
     @Query(value="SELECT k FROM KPI k where k.objectiveId in (SELECT id FROM Objectives o where o.scoreCardId.id in (SELECT id FROM ScoreCard s where s.scoreCardDetailsId.id = :scorecardId)) AND k.active = :active")
     public List<KPI> findByScorecardId(@Param(value="scorecardId") Long var1, @Param(value="active") int var2);
 
+    @Query(value="SELECT k FROM KPI k where k.objectiveId in (SELECT id FROM Objectives o where o.scoreCardId.id in (SELECT id FROM ScoreCard s where s.scoreCardDetailsId.id in (select dtl.id from ScoreCardDetails dtl where dtl.pageId.id = :pageId))) AND k.active = :active")
+    public List<KPI> findByPageId(@Param(value="pageId") Long var1, @Param(value="active") int var2);
+
+    @Query(value="SELECT k FROM KPI k where k.objectiveId in (SELECT id FROM Objectives o where o.scoreCardId.id in (SELECT id FROM ScoreCard s where s.scoreCardDetailsId.id in (select dtl.id from ScoreCardDetails dtl where dtl.pageId.id = :pageId))) AND k.active = :active AND (((k.endDate BETWEEN :startDate AND :endDate)  OR (k.startDate BETWEEN :startDate AND :endDate)) OR ((:startDate BETWEEN k.startDate AND k.endDate)  OR (:endDate BETWEEN k.startDate AND k.endDate))  OR  ((k.endDate >= :startDate) AND (k.startDate <= :endDate)))")
+    public List<KPI> findByPageIdAndDate(@Param(value="pageId") Long var1, @Param(value="active") int var2, @Param(value="startDate") Date var3, @Param(value="endDate") Date var4);
+
     @Query(value="SELECT t FROM KPI t where t.orgId = :orgId AND t.active = 0 AND t.actType = 1")
     public List<KPI> findAllByOrgIdAndAct(@Param(value="orgId") Long var1);
 
