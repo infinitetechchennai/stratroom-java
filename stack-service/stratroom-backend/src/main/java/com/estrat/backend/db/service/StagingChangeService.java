@@ -625,14 +625,11 @@ public class StagingChangeService {
         dto.setConditionType(stagingChange.getConditionType());
         dto.setSubmittedBy(usersubmitted);
         dto.setApprovedVersion(stagingChange.getApprovedVersion());
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            Object obj = mapper.readValue(stagingChange.getNewValue(), Object.class);
-            Map riskDetailsMap = (Map)mapper.convertValue(obj, Map.class);
+            Map riskDetailsMap = com.estrat.backend.db.util.JsonUtil.parseMap(stagingChange.getNewValue());
             dto.setNewValue(riskDetailsMap);
             if (stagingChange.getOldValue() != null) {
-                Object obj2 = mapper.readValue(stagingChange.getOldValue(), Object.class);
-                Map riskDetailsMap2 = (Map)mapper.convertValue(obj2, Map.class);
+                Map riskDetailsMap2 = com.estrat.backend.db.util.JsonUtil.parseMap(stagingChange.getOldValue());
                 dto.setOldValue(riskDetailsMap2);
             }
         }

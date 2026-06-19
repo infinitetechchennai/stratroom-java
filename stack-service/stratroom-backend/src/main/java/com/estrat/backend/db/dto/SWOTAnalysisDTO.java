@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class SWOTAnalysisDTO {
@@ -60,13 +61,7 @@ public class SWOTAnalysisDTO {
             this.pageId = swotAnalysis.getPageId().getId();
             this.pageName = swotAnalysis.getPageId().getPageName();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.swotAnalysisValue = (Map)mapper.readValue(swotAnalysis.getSwotAnalysisValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.swotAnalysisValue = JsonUtil.parseMap(swotAnalysis.getSwotAnalysisValue());
         if (CollectionUtils.isNotEmpty((Collection)swotAnalysis.getEmployeeList())) {
             this.multipleOwerlist = swotAnalysis.getEmployeeList().stream().filter(employee -> Objects.nonNull(employee.getId().getEmpId().getOrgId())).map(employee -> new Employee(employee.getId().getEmpId())).collect(Collectors.toList());
         }

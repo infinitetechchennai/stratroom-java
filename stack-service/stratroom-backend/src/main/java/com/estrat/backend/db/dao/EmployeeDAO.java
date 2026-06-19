@@ -511,7 +511,7 @@ public class EmployeeDAO {
 
     public List<Long> getEmpIdList(long empId) {
         List employeeList = new ArrayList();
-        employeeList = this.datasource.equals("mysql") ? this.employeeProfilePoRepo.findEmployeeIdHierarchyByEmpIdmysql(Long.valueOf(empId)) : this.employeeProfilePoRepo.findEmployeeIdHierarchyByEmpIdsql(Long.valueOf(empId));
+        employeeList = this.employeeProfilePoRepo.findEmployeeIdHierarchyByEmpIdmysql(Long.valueOf(empId));
         return employeeList;
     }
 
@@ -521,7 +521,7 @@ public class EmployeeDAO {
 
     public List<Long> getDepartmentIdList(long deptId) {
         List departmentlist = new ArrayList();
-        departmentlist = this.datasource.equals("mysql") ? this.departmentChartMappingRepo.getAllDepartmentidByParentIdmysql(Long.valueOf(deptId)) : this.departmentChartMappingRepo.getAllDepartmentidByParentId(Long.valueOf(deptId));
+        departmentlist = this.departmentChartMappingRepo.getAllDepartmentidByParentIdmysql(Long.valueOf(deptId));
         return departmentlist;
     }
 
@@ -546,7 +546,7 @@ public class EmployeeDAO {
 
     public List<Long> getDesignationEmpIdList(long empId) {
         List<Long> employeeList = new ArrayList();
-        String query = "SELECT  emp_id  FROM (SELECT * FROM orgstructure.employee_details ORDER BY parent_emp_id, emp_id) employee_sorted, (SELECT @pv := toreplace) initialisation WHERE  find_in_set(parent_emp_id, @pv) AND length(@pv := concat(@pv, ',', emp_id))";
+        String query = "WITH RECURSIVE emp_cte AS (SELECT emp_id FROM orgstructure.employee_details WHERE parent_emp_id = toreplace UNION ALL SELECT e.emp_id FROM orgstructure.employee_details e INNER JOIN emp_cte c ON e.parent_emp_id = c.emp_id) SELECT emp_id FROM emp_cte;";
         query = query.replace("toreplace", String.valueOf(empId));
         try {
             employeeList = this.jdbcTemplate.queryForList(query.toString(), Long.class);

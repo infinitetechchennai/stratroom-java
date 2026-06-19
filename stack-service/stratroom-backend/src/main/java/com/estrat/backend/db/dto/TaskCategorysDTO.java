@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class TaskCategorysDTO {
     private long id;
@@ -49,7 +50,7 @@ public class TaskCategorysDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (taskCategorys.getTaskCategoryValue() != null) {
             try {
-                this.taskCategoryValue = (Map)mapper.readValue(taskCategorys.getTaskCategoryValue(), HashMap.class);
+                this.taskCategoryValue = JsonUtil.parseMap(taskCategorys.getTaskCategoryValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

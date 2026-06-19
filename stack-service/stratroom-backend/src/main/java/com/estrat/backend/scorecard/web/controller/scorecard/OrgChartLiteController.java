@@ -32,20 +32,20 @@ public class OrgChartLiteController {
     private static final Logger log = LoggerFactory.getLogger(OrgChartLiteController.class);
 
     // The licensed modules live in the separate stratroomlicense database.
-    @Value("${license.datasource.url:jdbc:mysql://localhost:3306/stratroomlicense?useSSL=false&serverTimezone=UTC}")
+    @Value("${license.datasource.url:jdbc:postgresql://localhost:5432/stratroomlicense}")
     private String licenseDbUrl;
     @Value("${license.datasource.username:root}")
     private String licenseDbUser;
-    @Value("${license.datasource.password:123456}")
+    @Value("${license.datasource.password:1234}")
     private String licenseDbPass;
 
     // The main app DB (employees, departments, etc.) -- defaults to the same
     // datasource that scorecard-service is already wired to.
-    @Value("${spring.datasource.url:jdbc:mysql://localhost:3306/orgstructure?useSSL=false&serverTimezone=UTC}")
+    @Value("${spring.datasource.url:jdbc:postgresql://localhost:5432/orgstructure?currentSchema=orgstructure,public}")
     private String orgDbUrl;
     @Value("${spring.datasource.username:root}")
     private String orgDbUser;
-    @Value("${spring.datasource.password:123456}")
+    @Value("${spring.datasource.password:1234}")
     private String orgDbPass;
 
     /**
@@ -61,7 +61,7 @@ public class OrgChartLiteController {
         Map<Long, List<Long>> childrenOf = new HashMap<>();
         Long orgId = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
             try (Connection con = DriverManager.getConnection(orgDbUrl, orgDbUser, orgDbPass)) {
                 // Find the org of the requested employee
                 try (PreparedStatement ps = con.prepareStatement(
@@ -178,7 +178,7 @@ public class OrgChartLiteController {
         List<String> deviceList = new ArrayList<>();
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
             try (Connection con = DriverManager.getConnection(licenseDbUrl, licenseDbUser, licenseDbPass)) {
                 // Use the most recently issued license row.
                 PreparedStatement ps = con.prepareStatement(

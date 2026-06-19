@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class ProjectPlanningDTO {
     private long id;
@@ -50,13 +51,7 @@ public class ProjectPlanningDTO {
         if (planing.getPageId() != null) {
             this.pageId = planing.getPageId().getId();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.planningValue = (Map)mapper.readValue(planing.getPlanningValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.planningValue = JsonUtil.parseMap(planing.getPlanningValue());
     }
 
     public long getId() {

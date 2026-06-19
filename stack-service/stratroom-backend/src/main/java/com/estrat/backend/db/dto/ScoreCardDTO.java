@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class ScoreCardDTO {
@@ -75,7 +76,7 @@ public class ScoreCardDTO {
         }
         ObjectMapper mapper = new ObjectMapper();
         try {
-            this.scoreCardValue = (Map)mapper.readValue(scoreCard.getScoreCardValue(), HashMap.class);
+            this.scoreCardValue = JsonUtil.parseMap(scoreCard.getScoreCardValue());
             this.perspectiveType = Objects.nonNull(this.getScoreCardValue().get("perspectiveType")) ? this.getScoreCardValue().get("perspectiveType").toString() : "";
         }
         catch (Exception e) {

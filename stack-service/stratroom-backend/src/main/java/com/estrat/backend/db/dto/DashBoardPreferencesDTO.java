@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class DashBoardPreferencesDTO {
     private long id;
@@ -47,13 +48,7 @@ public class DashBoardPreferencesDTO {
             this.pageName = dashBoardPreferences.getPageId().getPageName();
         }
         this.preferenceDetailList = dashBoardPreferences.getPreferenceDetailList() != null ? dashBoardPreferences.getPreferenceDetailList().stream().map(obj -> new PreferenceDTO(obj)).collect(Collectors.toList()) : null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.dashBoardPreferencesValue = (Map)mapper.readValue(dashBoardPreferences.getDashBoardPreferencesValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.dashBoardPreferencesValue = JsonUtil.parseMap(dashBoardPreferences.getDashBoardPreferencesValue());
     }
 
     public long getId() {

@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class RiskConsequenceDTO {
     private long id;
@@ -46,13 +47,7 @@ public class RiskConsequenceDTO {
         this.version = riskCauseAndConsequence.getVersion();
         this.status = riskCauseAndConsequence.getStatus();
         this.changeId = riskCauseAndConsequence.getChangeId();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.consequenceValue = (Map)mapper.readValue(riskCauseAndConsequence.getConsequenceValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.consequenceValue = JsonUtil.parseMap(riskCauseAndConsequence.getConsequenceValue());
     }
 
     public RiskConsequenceDTO(RiskConsequenceDetailsHistory riskConsequenceHstory) {
@@ -68,13 +63,7 @@ public class RiskConsequenceDTO {
         if (riskConsequenceHstory.getChangeId() != null) {
             this.changeId = riskConsequenceHstory.getChangeId();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.consequenceValue = (Map)mapper.readValue(riskConsequenceHstory.getConsequenceValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.consequenceValue = JsonUtil.parseMap(riskConsequenceHstory.getConsequenceValue());
     }
 
     public Map<String, Object> getConsequenceValue() {

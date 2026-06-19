@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class FormulationInitiativesDTO {
@@ -65,7 +66,7 @@ public class FormulationInitiativesDTO {
             this.subInitiativeList = formulationInitiatives.getSubInitiativeList().stream().map(initiaitve -> new FormulationSubInitiativesDTO(initiaitve)).collect(Collectors.toList());
         }
         try {
-            this.initiativeValue = (Map)mapper.readValue(formulationInitiatives.getInitiativeValue(), HashMap.class);
+            this.initiativeValue = JsonUtil.parseMap(formulationInitiatives.getInitiativeValue());
         }
         catch (Exception e) {
             throw new RuntimeException(e);

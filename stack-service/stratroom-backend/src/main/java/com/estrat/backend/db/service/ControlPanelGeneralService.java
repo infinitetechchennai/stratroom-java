@@ -33,6 +33,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.estrat.backend.db.util.JsonUtil;
 
 @Service
 public class ControlPanelGeneralService {
@@ -55,7 +56,7 @@ public class ControlPanelGeneralService {
         ObjectMapper mapper = new ObjectMapper();
         CustomPerformance customPerformance = null;
         try {
-            customPerformance = new CustomPerformance((Map)mapper.readValue(controlPanelGeneralResponse.getCustomValue(), HashMap.class));
+            customPerformance = new CustomPerformance(JsonUtil.parseMap(controlPanelGeneralResponse.getCustomValue()));
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -77,7 +78,7 @@ public class ControlPanelGeneralService {
             if (result.isPresent()) {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    return (Map)mapper.readValue(((ControlPanelCustomPerformance)result.get()).getCustomValue(), HashMap.class);
+                    return JsonUtil.parseMap(((ControlPanelCustomPerformance)result.get()).getCustomValue());
                 }
                 catch (Exception e) {
                     throw new RuntimeException(e);
@@ -95,7 +96,7 @@ public class ControlPanelGeneralService {
             if (result.isPresent()) {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    return (Map)mapper.readValue(((ControlPanelCustomPerformance)result.get()).getRisksetting(), HashMap.class);
+                    return JsonUtil.parseMap(((ControlPanelCustomPerformance)result.get()).getRisksetting());
                 }
                 catch (Exception e) {
                     throw new RuntimeException(e);
@@ -134,7 +135,7 @@ public class ControlPanelGeneralService {
         if (result.isPresent()) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                return (Map)mapper.readValue(((ControlPanelCustomPerformance)result.get()).getCustomValue(), HashMap.class);
+                return (Map)JsonUtil.parseMap(((ControlPanelCustomPerformance)result.get()).getCustomValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

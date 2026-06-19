@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class ProcessEnablerDto {
@@ -55,7 +56,7 @@ public class ProcessEnablerDto {
         ObjectMapper mapper = new ObjectMapper();
         if (processEnabler.getPosValue() != null) {
             try {
-                this.posValue = (Map)mapper.readValue(processEnabler.getPosValue(), HashMap.class);
+                this.posValue = JsonUtil.parseMap(processEnabler.getPosValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
@@ -84,7 +85,7 @@ public class ProcessEnablerDto {
                 if (jsonString.startsWith("\"") && jsonString.endsWith("\"")) {
                     jsonString = (String)mapper.readValue(jsonString, String.class);
                 }
-                this.posValue = (Map)mapper.readValue(jsonString, HashMap.class);
+                this.posValue = JsonUtil.parseMap(jsonString);
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

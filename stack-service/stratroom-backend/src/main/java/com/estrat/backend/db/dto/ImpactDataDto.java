@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class ImpactDataDto {
@@ -30,13 +31,7 @@ public class ImpactDataDto {
         this.id = impactData.getId();
         this.impact = impactData.getImpact();
         this.impactId = impactData.getImpactId();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.hoursDaysMonths = (Map)mapper.readValue(impactData.getHoursDaysMonths(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.hoursDaysMonths = (Map)JsonUtil.parseMap(impactData.getHoursDaysMonths());
     }
 
     public long getId() {

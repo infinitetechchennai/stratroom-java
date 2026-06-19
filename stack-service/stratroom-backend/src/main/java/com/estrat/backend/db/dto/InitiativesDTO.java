@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class InitiativesDTO {
@@ -105,13 +106,7 @@ public class InitiativesDTO {
             this.attachmentList = initiatives.getAttachmentList() != null ? initiatives.getAttachmentList().stream().map(obj -> new InitiativeAttachmentDto(obj)).collect(Collectors.toList()) : null;
             this.taskList = initiatives.getTaskList() != null ? initiatives.getTaskList().stream().map(obj -> new InitiativeTaskDto(obj)).collect(Collectors.toList()) : null;
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.initiativeValue = (Map)mapper.readValue(initiatives.getInitiativeValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.initiativeValue = JsonUtil.parseMap(initiatives.getInitiativeValue());
     }
 
     public Long getImpactId() {

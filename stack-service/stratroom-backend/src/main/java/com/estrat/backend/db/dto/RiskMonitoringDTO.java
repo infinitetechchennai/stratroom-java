@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class RiskMonitoringDTO {
@@ -63,13 +64,7 @@ public class RiskMonitoringDTO {
             this.ownerList = Objects.nonNull(riskMonitoring.getOwnerList()) ? riskMonitoring.getOwnerList().stream().map(owner -> new Employee(owner.getId().getEmpId())).collect(Collectors.toList()) : null;
             this.riskReviewList = riskMonitoring.getRiskActivitiesList() != null ? riskMonitoring.getRiskActivitiesList().stream().map(dbvalue -> new RiskActivitiesDTO(dbvalue, true)).collect(Collectors.toList()) : null;
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.riskMonitoringValue = (Map)mapper.readValue(riskMonitoring.getRiskPlanValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.riskMonitoringValue = JsonUtil.parseMap(riskMonitoring.getRiskPlanValue());
     }
 
     public RiskMonitoringDTO(RiskPlanHistory riskMonitoring) {
@@ -84,13 +79,7 @@ public class RiskMonitoringDTO {
         if (riskMonitoring.getChangeId() != null) {
             this.changeId = riskMonitoring.getChangeId();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.riskMonitoringValue = (Map)mapper.readValue(riskMonitoring.getRiskPlanValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.riskMonitoringValue = JsonUtil.parseMap(riskMonitoring.getRiskPlanValue());
     }
 
     public long getId() {

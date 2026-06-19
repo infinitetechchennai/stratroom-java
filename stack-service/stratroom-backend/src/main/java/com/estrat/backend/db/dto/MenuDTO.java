@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class MenuDTO {
@@ -39,13 +40,7 @@ public class MenuDTO {
         this.updatedBy = menu.getUpdatedBy();
         this.createdTime = menu.getCreatedTime();
         this.updatedTime = menu.getUpdatedTime();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.menuDetails = (Map)mapper.readValue(menu.getMenuDetails(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.menuDetails = JsonUtil.parseMap(menu.getMenuDetails());
     }
 
     public long getId() {

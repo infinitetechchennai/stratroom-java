@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class PestelAnalysisDTO {
@@ -60,13 +61,7 @@ public class PestelAnalysisDTO {
             this.pageId = pestelAnalysis.getPageId().getId();
             this.pageName = pestelAnalysis.getPageId().getPageName();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.pestelAnalysisValue = (Map)mapper.readValue(pestelAnalysis.getPestelAnalysisValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.pestelAnalysisValue = JsonUtil.parseMap(pestelAnalysis.getPestelAnalysisValue());
         if (CollectionUtils.isNotEmpty((Collection)pestelAnalysis.getEmployeeList())) {
             this.multipleOwerlist = pestelAnalysis.getEmployeeList().stream().filter(employee -> Objects.nonNull(employee.getId().getEmpId().getOrgId())).map(employee -> new Employee(employee.getId().getEmpId())).collect(Collectors.toList());
         }

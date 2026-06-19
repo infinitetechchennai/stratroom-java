@@ -78,7 +78,7 @@ implements IdentifierGenerator {
             transactionCoordinator = session.getJdbcCoordinator();
             StatementPreparer preparer = transactionCoordinator.getStatementPreparer();
             System.out.println("SQL Server process");
-            String nodeKeySql = this.datasource.equals("mysql") ? mysql : sql;
+            String nodeKeySql = this.datasource.equals("postgresql") ? sql : mysql;
             preparedStatement = preparer.prepareStatement(nodeKeySql);
             resultSetReturn = transactionCoordinator.getResultSetReturn();
             resultSet = resultSetReturn.extract(preparedStatement, nodeKeySql);

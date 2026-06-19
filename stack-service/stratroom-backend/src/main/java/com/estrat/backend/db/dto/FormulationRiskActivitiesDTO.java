@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class FormulationRiskActivitiesDTO {
     private long id;
@@ -37,13 +38,7 @@ public class FormulationRiskActivitiesDTO {
         this.updatedBy = formulationRiskActivities.getUpdatedBy();
         this.subRiskId = formulationRiskActivities.getSubRiskId().getId();
         this.subRiskDTO = new FormulationSubRiskDTO(formulationRiskActivities.getSubRiskId(), true);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.activityValue = (Map)mapper.readValue(formulationRiskActivities.getActivityValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.activityValue = JsonUtil.parseMap(formulationRiskActivities.getActivityValue());
     }
 
     public FormulationSubRiskDTO getSubRiskDTO() {

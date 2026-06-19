@@ -552,25 +552,13 @@ public class RiskDetailsService {
         System.out.println("enter in kpi id");
         String kpiIdStr = String.valueOf(kpiId);
         var dbList = this.riskDetailsRepository.findAllByEmpId(Long.valueOf(UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID")), 0);
-        ObjectMapper mapper = new ObjectMapper();
-        return dbList.stream().filter(riskDetails -> this.isKpiImpacted(this.parseRiskValue(riskDetails.getRiskValue(), mapper), kpiIdStr)).map(dbValue -> {
+        return dbList.stream().filter(riskDetails -> this.isKpiImpacted(com.estrat.backend.db.util.JsonUtil.parseMap(riskDetails.getRiskValue()), kpiIdStr)).map(dbValue -> {
             RiskDTO riskDTO = new RiskDTO(dbValue, false);
             this.riskUtil.populateAddtionalDetails(riskDTO, false);
             return riskDTO;
         }).collect(Collectors.toList());
     }
 
-    private Map<String, Object> parseRiskValue(String riskValueJson, ObjectMapper mapper) {
-        if (riskValueJson == null || riskValueJson.isEmpty()) {
-            return Collections.emptyMap();
-        }
-        try {
-            return (Map)mapper.readValue(riskValueJson, Map.class);
-        }
-        catch (Exception e) {
-            return Collections.emptyMap();
-        }
-    }
 
     private boolean isKpiImpacted(Map<String, Object> riskValue, String kpiId) {
         Object impactKpiObj = riskValue.get("impactkpiId");

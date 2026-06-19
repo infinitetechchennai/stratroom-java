@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class RiskActivitiesDTO {
@@ -55,13 +56,7 @@ public class RiskActivitiesDTO {
         this.version = riskActivities.getVersion();
         this.status = riskActivities.getStatus();
         this.changeId = riskActivities.getChangeId();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.riskActivitiesValue = (Map)mapper.readValue(riskActivities.getRiskActivitiesValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.riskActivitiesValue = JsonUtil.parseMap(riskActivities.getRiskActivitiesValue());
     }
 
     public RiskActivitiesDTO(RiskActivitiesHistory riskActivitiesHistory) {
@@ -71,13 +66,7 @@ public class RiskActivitiesDTO {
         this.version = riskActivitiesHistory.getVersion();
         this.status = riskActivitiesHistory.getStatus();
         this.changeId = riskActivitiesHistory.getChangeId();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.riskActivitiesValue = (Map)mapper.readValue(riskActivitiesHistory.getRiskActivitiesValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.riskActivitiesValue = JsonUtil.parseMap(riskActivitiesHistory.getRiskActivitiesValue());
     }
 
     public List<Employee> getOwnerList() {

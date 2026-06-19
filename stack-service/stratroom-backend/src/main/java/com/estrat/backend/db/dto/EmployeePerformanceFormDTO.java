@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class EmployeePerformanceFormDTO {
     private long id;
@@ -42,13 +43,7 @@ public class EmployeePerformanceFormDTO {
         this.totalSelf = performanceDto.getTotalSelf();
         this.totalManager = performanceDto.getTotalManager();
         this.totalConsensual = performanceDto.getTotalConsensual();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.performanceFormValue = (Map)mapper.readValue(performanceDto.getPerformanceFormValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.performanceFormValue = JsonUtil.parseMap(performanceDto.getPerformanceFormValue());
     }
 
     public long getId() {

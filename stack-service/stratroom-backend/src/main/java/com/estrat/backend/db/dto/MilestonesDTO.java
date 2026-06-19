@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class MilestonesDTO {
@@ -41,13 +42,7 @@ public class MilestonesDTO {
         this.updatedBy = milestones.getUpdatedBy();
         this.owner = milestones.getOwner();
         this.updatedTime = milestones.getUpdatedTime();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.mileStonesValue = (Map)mapper.readValue(milestones.getMilestonesValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.mileStonesValue = JsonUtil.parseMap(milestones.getMilestonesValue());
     }
 
     public long getId() {

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class OrgstructureGroupDTO {
@@ -49,13 +50,7 @@ public class OrgstructureGroupDTO {
         this.updatedBy = group.getUpdatedBy();
         this.createdTime = group.getCreatedTime();
         this.updatedTime = group.getUpdatedTime();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.groupValue = (Map)mapper.readValue(group.getGroupValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.groupValue = JsonUtil.parseMap(group.getGroupValue());
         if (CollectionUtils.isNotEmpty((Collection)group.getEmployeeList())) {
             this.multipleOwerlist = group.getEmployeeList().stream().filter(employee -> Objects.nonNull(employee.getId().getEmpId().getOrgId())).map(employee -> new Employee(employee.getId().getEmpId())).collect(Collectors.toList());
         }

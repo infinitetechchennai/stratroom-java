@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class RiskCauseAndConsequenceDTO {
@@ -61,7 +62,7 @@ public class RiskCauseAndConsequenceDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (riskCauseAndConsequence.getCauseAndConsequenceValue() != null) {
             try {
-                this.causeAndConsequenceValue = (Map)mapper.readValue(riskCauseAndConsequence.getCauseAndConsequenceValue(), HashMap.class);
+                this.causeAndConsequenceValue = JsonUtil.parseMap(riskCauseAndConsequence.getCauseAndConsequenceValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
@@ -86,7 +87,7 @@ public class RiskCauseAndConsequenceDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (riskCauseAndConsequence.getCauseAndConsequenceValue() != null) {
             try {
-                this.causeAndConsequenceValue = (Map)mapper.readValue(riskCauseAndConsequence.getCauseAndConsequenceValue(), HashMap.class);
+                this.causeAndConsequenceValue = JsonUtil.parseMap(riskCauseAndConsequence.getCauseAndConsequenceValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

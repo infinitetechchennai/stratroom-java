@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class FormulationKPIDTO {
     private long id;
@@ -54,7 +55,7 @@ public class FormulationKPIDTO {
             this.subKpiList = kpi.getSubkpiList() != null ? kpi.getSubkpiList().stream().map(newkpi -> new FormulationSubKPIDTO(newkpi)).collect(Collectors.toList()) : null;
         }
         try {
-            this.kpiValue = (Map)mapper.readValue(kpi.getKpiValue(), HashMap.class);
+            this.kpiValue = JsonUtil.parseMap(kpi.getKpiValue());
             String string = this.kpiName = Objects.nonNull(this.getKpiValue().get("name")) ? this.getKpiValue().get("name").toString() : "";
             if (this.kpiValue.get("kpiFormula") != null) {
                 this.kpiFormula = (KPIFormula)mapper.readValue(this.kpiValue.get("kpiFormula").toString(), KPIFormula.class);

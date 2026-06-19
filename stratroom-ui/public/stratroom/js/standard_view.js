@@ -9580,6 +9580,7 @@ function handleYTDFormulaEvent() {
 }
 
 function handleKpiEvent(id, action, objectiveId) {
+  window._editKpiId = id;
   const selectedLang = localStorage.getItem("selectedLang") || "en";
   console.log(selectedLang, "selectedLang")
  if (action == "add") {
@@ -9869,6 +9870,7 @@ function handleKpiEvent(id, action, objectiveId) {
   }
 }
 function handleSubKpiEvent(id, action, objectiveId) {
+  window._editKpiId = id; // when adding a subKPI from a KPI, id is the parent KPI id
   console.log(action, 'Action')
   if(action == "add"){
    $(".subKpiHeader").text("Add Sub KPI");
@@ -10128,6 +10130,7 @@ function handleSubKpiEvent(id, action, objectiveId) {
   }
 }
 function handleEditSubKpiEvent(id, action, objectiveId, kpiId, subKpiId) {
+  window._editSubKpiId = id;
 
   console.log(action, "actionData");
  if (action == "add") {
@@ -10552,6 +10555,7 @@ function handleObjectiveSave() {
 }
 
 function handleObjectiveEvent(id, action, scoreCardId) {
+  window._editObjectiveId = id;
   console.log(id, action, scoreCardId, "iddatatata");
 if (action == 'add') { 
   if (localStorage.getItem("selectedLang") == "en") {
@@ -11366,6 +11370,7 @@ function departmentWiseReportees() {
 }
 
 function handlePerspectiveEvent(id, action) {
+  window._editPerspectiveId = id;
   $("#perspectiveForm").css("display", "none");
   $("#perspectiveForm").trigger("reset");
   populateOwnerDropdownScorecard(

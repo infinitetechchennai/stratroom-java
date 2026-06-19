@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class KPIDTO {
@@ -72,7 +73,7 @@ public class KPIDTO {
         this.subKpiList = kpi.getSubKpiList() != null ? kpi.getSubKpiList().stream().map(dto -> new SubKPIDTO(dto)).collect(Collectors.toList()) : null;
         ObjectMapper mapper = new ObjectMapper();
         try {
-            this.kpiValue = (Map)mapper.readValue(kpi.getKpiValue(), HashMap.class);
+            this.kpiValue = JsonUtil.parseMap(kpi.getKpiValue());
             String string = this.kpiName = Objects.nonNull(this.getKpiValue().get("name")) ? this.getKpiValue().get("name").toString() : "";
             if (this.kpiValue.get("kpiFormula") != null && this.kpiValue.get("kpiFormula").toString() != "") {
                 this.kpiFormula = (KPIFormula)mapper.readValue(this.kpiValue.get("kpiFormula").toString(), KPIFormula.class);
@@ -101,13 +102,7 @@ public class KPIDTO {
         this.orgId = kpi.getOrgId();
         this.actType = kpi.getActType();
         this.subKpiList = kpi.getSubKpiList() != null ? kpi.getSubKpiList().stream().map(dto -> new SubKPIDTO(dto)).collect(Collectors.toList()) : null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.kpiValue = (Map)mapper.readValue(kpi.getKpiValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.kpiValue = JsonUtil.parseMap(kpi.getKpiValue());
     }
 
     public String getKpiName() {

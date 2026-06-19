@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class SubActivitiesDTO {
     private long id;
@@ -37,13 +38,7 @@ public class SubActivitiesDTO {
         this.updatedBy = subactivitiesDetails.getUpdatedBy();
         this.owner = subactivitiesDetails.getOwner();
         this.updatedTime = subactivitiesDetails.getUpdatedTime();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.activitiesValue = (Map)mapper.readValue(subactivitiesDetails.getActivitiesValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.activitiesValue = JsonUtil.parseMap(subactivitiesDetails.getActivitiesValue());
     }
 
     public long getId() {

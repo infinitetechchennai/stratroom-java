@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class RpoTableDto {
@@ -57,7 +58,7 @@ public class RpoTableDto {
         ObjectMapper mapper = new ObjectMapper();
         if (rboTable.getRpoValues() != null) {
             try {
-                this.rpoValues = (Map)mapper.readValue(rboTable.getRpoValues(), HashMap.class);
+                this.rpoValues = JsonUtil.parseMap(rboTable.getRpoValues());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
@@ -86,7 +87,7 @@ public class RpoTableDto {
                 if (jsonString.startsWith("\"") && jsonString.endsWith("\"")) {
                     jsonString = (String)mapper.readValue(jsonString, String.class);
                 }
-                this.rpoValues = (Map)mapper.readValue(jsonString, HashMap.class);
+                this.rpoValues = JsonUtil.parseMap(jsonString);
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

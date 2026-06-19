@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class TaskDetailsDTO {
     private long id;
@@ -59,7 +60,7 @@ public class TaskDetailsDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (taskdetails.getTaskValue() != null) {
             try {
-                this.taskValue = (Map)mapper.readValue(taskdetails.getTaskValue(), HashMap.class);
+                this.taskValue = JsonUtil.parseMap(taskdetails.getTaskValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

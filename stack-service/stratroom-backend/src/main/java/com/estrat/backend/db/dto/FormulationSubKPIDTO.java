@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class FormulationSubKPIDTO {
     private long id;
@@ -48,7 +49,7 @@ public class FormulationSubKPIDTO {
         this.owner = subkpi.getOwner() == null ? Long.valueOf(UserThreadLocal.get()) : subkpi.getOwner();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            this.subkpiValue = (Map)mapper.readValue(subkpi.getSubkpiValue(), HashMap.class);
+            this.subkpiValue = JsonUtil.parseMap(subkpi.getSubkpiValue());
             String string = this.subkpiName = Objects.nonNull(this.getSubkpiValue().get("name")) ? this.getSubkpiValue().get("name").toString() : "";
             if (this.subkpiValue.get("kpiFormula") != null) {
                 this.kpiFormula = (KPIFormula)mapper.readValue(this.subkpiValue.get("kpiFormula").toString(), KPIFormula.class);

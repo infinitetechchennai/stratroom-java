@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class SubInitiativesDTO {
@@ -53,13 +54,7 @@ public class SubInitiativesDTO {
         this.updatedTime = subInitiatives.getUpdatedTime();
         this.activitiesList = subInitiatives.getActivitiesList() != null ? subInitiatives.getActivitiesList().stream().map(obj -> new ActivitiesDTO(obj)).collect(Collectors.toList()) : null;
         this.subInitiativesMapDTOList = subInitiatives.getSubInitiativesMaps() != null ? subInitiatives.getSubInitiativesMaps().stream().map(obj -> new SubInitiativesMapDTO(obj)).collect(Collectors.toList()) : null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.subInitiativeValue = (Map)mapper.readValue(subInitiatives.getSubInitiativeValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.subInitiativeValue = JsonUtil.parseMap(subInitiatives.getSubInitiativeValue());
     }
 
     public long getId() {

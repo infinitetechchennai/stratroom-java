@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class MasterValueDto {
@@ -42,13 +43,7 @@ public class MasterValueDto {
         this.createdAt = masterValue.getCreatedAt();
         this.updatedAt = masterValue.getUpdatedAt();
         this.type = masterValue.getType();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.data = (Map)mapper.readValue(masterValue.getData(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.data = JsonUtil.parseMap(masterValue.getData());
     }
 
     public long getId() {

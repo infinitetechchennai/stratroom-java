@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class InitiativeTaskDto {
     private long id;
@@ -37,13 +38,7 @@ public class InitiativeTaskDto {
         this.updatedBy = initiativeTask.getUpdatedBy();
         this.owner = initiativeTask.getOwner();
         this.updatedTime = initiativeTask.getUpdatedTime();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.taskValue = (Map)mapper.readValue(initiativeTask.getTaskValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.taskValue = JsonUtil.parseMap(initiativeTask.getTaskValue());
     }
 
     public long getId() {

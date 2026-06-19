@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class MeetingManagementDTO {
@@ -67,13 +68,7 @@ public class MeetingManagementDTO {
             this.pageId = meetingManagement.getPageId().getId();
             this.pageName = meetingManagement.getPageId().getPageName();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.meetingManagementValue = (Map)mapper.readValue(meetingManagement.getMeetingManagementValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.meetingManagementValue = JsonUtil.parseMap(meetingManagement.getMeetingManagementValue());
         if (CollectionUtils.isNotEmpty((Collection)meetingManagement.getEmployeeList())) {
             this.multipleOwerlist = meetingManagement.getEmployeeList().stream().filter(employee -> Objects.nonNull(employee.getId().getEmpId().getOrgId())).map(employee -> new Employee(employee.getId().getEmpId())).collect(Collectors.toList());
         }

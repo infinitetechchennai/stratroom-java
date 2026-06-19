@@ -18,7 +18,7 @@ import { validateFormula, retrieveNodeKeyList } from '../services/scorecardApi';
 const COMPONENTS = {
   KPI: {
     modalId: 'kpiActual-calculator-modal',
-    textareaId: 'formula',
+    textareaId: 'kpiActualPerformance',
     lists: { main: 'measureNames', sub: 'kpisubmeasureNames', init: 'kpiinitiativeNames' },
   },
   KPIPERFORMANCE: {
@@ -28,8 +28,28 @@ const COMPONENTS = {
   },
   YTD: {
     modalId: 'ytd-calculator-modal',
-    textareaId: 'customYtdformula',
+    textareaId: 'ytdPerformance',
     lists: { main: 'ytdMeasureNames', sub: 'ytdsubMeasureNames', init: 'ytdinitiativeNames' },
+  },
+  SCORECARDCONFIG: {
+    modalId: 'kpi-calculator-modal',
+    textareaId: 'kpiPerformance',
+    lists: { main: 'scorecardMeasureNames' },
+  },
+  PERSPECTIVE: {
+    modalId: 'prespective-calculator-modal',
+    textareaId: 'prespectivePerformance',
+    lists: { main: 'perspectiveMeasureNames' },
+  },
+  OBJECTIVE: {
+    modalId: 'objective-calculator-modal',
+    textareaId: 'objectivePerformance',
+    lists: { main: 'objectiveMeasureNames' },
+  },
+  THRESSHOLD: {
+    modalId: 'kpi_custom_threshold_popup',
+    textareaId: 'thresholdformula',
+    lists: {},
   },
 };
 
@@ -112,15 +132,124 @@ function toast(message, ok) {
 async function loadMeasures(component) {
   const cfg = COMPONENTS[component];
   if (!cfg) return;
+
   try {
-    if (!nodeKeyCache) nodeKeyCache = await retrieveNodeKeyList();
+    const params = new URLSearchParams(window.location.search);
+    const pageId = params.get('pageId') || window.location.pathname.split('/').pop();
+    const y = new Date().getFullYear();
+    const dateRange = localStorage.getItem('customperiod') || `01/01/${y}-12/31/${y}`;
+
+    // --- Component-specific direct resolution (most reliable) ---
+    // For KPIPERFORMANCE (KPI Performance Calculator), always use the currently
+    // edited KPI's ID directly — do NOT depend on activeInput which may be null
+    // if the modal was opened by Bootstrap's data-bs-target attribute.
+    let nodeType = '';
+    let nodeId = '';
+
+    if (component === 'KPIPERFORMANCE') {
+      // The KPI Performance calculator always operates on the currently-edited KPI.
+      // Its fields-and-measures shows sub-KPIs of that KPI.
+      nodeType = 'KPI';
+      nodeId = window._editKpiId || '';
+    } else if (component === 'KPI' || component === 'YTD') {
+      // KPI Actual calculator and YTD calculator show ALL KPIs (Measures tab)
+      // and ALL Sub-KPIs (Sub Measures tab) from the entire scorecard.
+      // Pass empty nodeType/nodeId to trigger the backend's full-list fallback.
+      nodeType = '';
+      nodeId = '';
+    } else if (component === 'SCORECARDCONFIG') {
+      nodeType = 'SCORECARD';
+      nodeId = pageId;
+    } else if (component === 'PERSPECTIVE') {
+      nodeType = 'PERSPECTIVE';
+      nodeId = window._editPerspectiveId || '';
+    } else if (component === 'OBJECTIVE') {
+      nodeType = 'OBJECTIVE';
+      nodeId = window._editObjectiveId || '';
+    } else if (activeInput) {
+      // For KPI / YTD / THRESSHOLD: use activeInput to identify context
+      if (['abPerformance', 'eodPerformance', 'vodPerformance', 'objectivePerformance'].includes(activeInput.id)) {
+        nodeType = 'OBJECTIVE';
+        nodeId = window._editObjectiveId || '';
+      } else if (['apPerformance', 'epPerformance', 'vpPerformance', 'prespectivePerformance', 'perspectivePerformance'].includes(activeInput.id)) {
+        nodeType = 'PERSPECTIVE';
+        nodeId = window._editPerspectiveId || '';
+      } else if (['akpiPerformance', 'ekpiPerformance', 'vkpiPerformance', 'ekpiActual', 'vkpiActual', 'kpiPerformance', 'kpiActualPerformance'].includes(activeInput.id)) {
+        nodeType = 'KPI';
+        nodeId = window._editKpiId || '';
+      } else if (['askpiPerformance', 'eskpiPerformance', 'vskpiPerformance', 'subkpiPerformance'].includes(activeInput.id)) {
+        nodeType = 'SUBKPI';
+        nodeId = window._editSubKpiId || '';
+      } else if (['scorecard_formula'].includes(activeInput.id)) {
+        nodeType = 'SCORECARD';
+        nodeId = pageId;
+      } else {
+        // Fallback to form-based identification for Legacy jQuery / Bootstrap forms
+        const form = activeInput.closest('form');
+        if (form) {
+          if (form.id === 'kpiForm' || form.id === 'editKpiForm') {
+            nodeType = 'KPI';
+            nodeId = form.querySelector('#kpi_id')?.value || window._editKpiId || '';
+          } else if (form.id === 'objectiveForm' || form.id === 'editObjectiveForm') {
+            nodeType = 'OBJECTIVE';
+            nodeId = form.querySelector('#objective_id')?.value || window._editObjectiveId || '';
+          } else if (form.id === 'perspectiveForm' || form.id === 'editPerspectiveForm') {
+            nodeType = 'PERSPECTIVE';
+            nodeId = form.querySelector('#perspectiveId')?.value || window._editPerspectiveId || '';
+          } else if (form.id === 'scorecardForm') {
+            nodeType = 'SCORECARD';
+            nodeId = pageId;
+          } else if (form.id === 'subkpiForm' || form.id === 'editSubkpiForm') {
+            nodeType = 'SUBKPI';
+            nodeId = form.querySelector('#subkpi_id')?.value || form.querySelector('input[name="sub"]')?.value || window._editSubKpiId || '';
+          }
+        }
+      }
+    }
+
+    // (No last-resort fallback needed — KPI and YTD are handled above with intentional empty nodeType/nodeId)
+
+    // For KPI and YTD components, always call the backend regardless of empty nodeId
+    // (they intentionally use the full-scorecard fallback).
+    const isFullScorecardComponent = (component === 'KPI' || component === 'YTD');
+    const cacheKey = `${pageId}_${dateRange}_${nodeType || 'ALL'}_${nodeId || 'ALL'}`;
+    console.log('[Calculator] component:', component, 'nodeType:', nodeType || '(all)', 'nodeId:', nodeId || '(all)', 'isFullScorecardComponent:', isFullScorecardComponent);
+    if (!nodeKeyCache || nodeKeyCache.key !== cacheKey) {
+      // Only call backend when we have both nodeType AND nodeId,
+      // OR when it's a full-scorecard component (KPI/YTD) which intentionally uses the fallback.
+      const data = (nodeType && nodeId) || isFullScorecardComponent
+        ? await retrieveNodeKeyList(pageId, dateRange, nodeType || '', nodeId || '')
+        : [];
+      console.log('[Calculator] API returned', data?.length, 'items');
+      nodeKeyCache = { key: cacheKey, data };
+    } else {
+      console.log('[Calculator] Using cached data:', nodeKeyCache.data?.length, 'items');
+    }
   } catch (err) {
     console.error('retrieveNodeKeyList failed:', err);
     return;
   }
-  const list = Array.isArray(nodeKeyCache) ? nodeKeyCache : [];
+  const list = Array.isArray(nodeKeyCache?.data) ? [...nodeKeyCache.data] : [];
 
-  // clear this component's lists
+  if (component === 'KPIPERFORMANCE') {
+    list.unshift(
+      { measureName: 'Actual' },
+      { measureName: 'Target' },
+      { measureName: 'Weight' },
+      { measureName: 'Contribution' }
+    );
+  }
+
+  // Dispatch custom event for React components
+  const event = new CustomEvent('scorecardMeasuresLoaded', {
+    detail: {
+      component: component,
+      data: list
+    }
+  });
+  document.dispatchEvent(event);
+
+  // Fallback DOM manipulation for any legacy non-React modals
   Object.values(cfg.lists).forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
@@ -130,6 +259,21 @@ async function loadMeasures(component) {
     const name = nk?.measureName;
     if (!name) return;
     const type = Number(nk.measureType);
+    const elementType = nk?.elementType || '';
+
+    // For KPI and YTD calculators: the backend's full-list fallback returns perspectives,
+    // objectives, KPIs, and sub-KPIs. We only want KPIs in Measures and sub-KPIs in Sub Measures.
+    if ((component === 'KPI' || component === 'YTD') && elementType) {
+      if (elementType === 'KPI') {
+        // Goes to Measures (main list)
+      } else if (elementType === 'SUBKPI') {
+        // Goes to Sub Measures (sub list) — handled below
+      } else {
+        // Skip perspectives, objectives etc.
+        return;
+      }
+    }
+
     let listId = cfg.lists.main;
     if (type === 1 && cfg.lists.sub) listId = cfg.lists.sub;
     const ul = document.getElementById(listId);
@@ -180,13 +324,17 @@ async function runValidate(mode, component) {
 
 // ── Event handlers ────────────────────────────────────────────
 function onLaunchClick(e) {
-  const btn = e.target.closest('[data-bs-target]');
-  if (!btn) return;
-  const target = btn.getAttribute('data-bs-target') || '';
-  const id = target.replace('#', '');
-  if (!MODAL_TO_COMPONENT[id]) return;
-  const group = btn.closest('.input-group');
-  activeInput = group ? group.querySelector('input, textarea') : null;
+  // Capture clicks on any button or input that opens a modal
+  const trigger = e.target.closest('[data-bs-target], [data-target]');
+  if (!trigger) return;
+  
+  // Find the associated input field to know which element is being edited
+  const group = trigger.closest('.input-group');
+  if (group) {
+    activeInput = group.querySelector('input, textarea');
+  } else if (trigger.tagName === 'INPUT' || trigger.tagName === 'TEXTAREA') {
+    activeInput = trigger;
+  }
 }
 
 function onModalShow(e) {
@@ -216,6 +364,23 @@ export function initScorecardCalculator() {
     insertToken('performanceformula', input);
     if (desc) setDescription('KPIPERFORMANCE', input, desc);
   };
+  window.updateScorecardPerspective = (input, desc) => {
+    insertToken('formulaScoreCardPerspective', input);
+    if (desc) setDescription('SCORECARDCONFIG', input, desc);
+  };
+  window.updateCustomPerspective = (input, desc) => {
+    insertToken('formulaCustomPerspective', input);
+    if (desc) setDescription('PERSPECTIVE', input, desc);
+  };
+  window.updateCustomObjective = (input, desc) => {
+    insertToken('formulaCustomObjective', input);
+    if (desc) setDescription('OBJECTIVE', input, desc);
+  };
+  window.updateCustomThreshold = (input, desc) => {
+    insertToken('thresholdformula', input);
+    if (desc) setDescription('THRESSHOLD', input, desc);
+  };
+
   window.fieldmeasurefilter = (listId, inputId) => {
     const input = document.getElementById(inputId);
     const ul = document.getElementById(listId);
@@ -237,6 +402,10 @@ export function initScorecardCalculator() {
     delete window.updateFormula;
     delete window.updateYTDFormula;
     delete window.updatePerformance;
+    delete window.updateScorecardPerspective;
+    delete window.updateCustomPerspective;
+    delete window.updateCustomObjective;
+    delete window.updateCustomThreshold;
     delete window.fieldmeasurefilter;
     delete window.handleFormulaValidate;
     delete window.handleFormulaAdd;

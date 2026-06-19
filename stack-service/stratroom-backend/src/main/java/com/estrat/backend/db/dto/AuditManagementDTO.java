@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class AuditManagementDTO {
     private long id;
@@ -46,13 +47,7 @@ public class AuditManagementDTO {
         if (planing.getPageId() != null) {
             this.pageId = planing.getPageId().getId();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.managementValue = (Map)mapper.readValue(planing.getManagementValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.managementValue = JsonUtil.parseMap(planing.getManagementValue());
     }
 
     public long getId() {

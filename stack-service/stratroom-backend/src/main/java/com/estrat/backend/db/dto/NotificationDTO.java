@@ -15,6 +15,7 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class NotificationDTO {
     private long id;
@@ -52,13 +53,7 @@ public class NotificationDTO {
         this.status = notificationDetails.getStatus();
         this.targetValue = notificationDetails.getTargetValue();
         this.notificationType = notificationDetails.getNotificationType();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.notificationValue = (Map)mapper.readValue(notificationDetails.getNotificationValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.notificationValue = JsonUtil.parseMap(notificationDetails.getNotificationValue());
     }
 
     public LocalDateTime getMeetingTime() {

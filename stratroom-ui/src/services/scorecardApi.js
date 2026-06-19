@@ -283,8 +283,14 @@ export const validateFormula = (formula, type) =>
   });
 
 // Node keys (measures / sub-measures) used to build KPI formulas in the calculators
-export const retrieveNodeKeyList = () =>
-  request(`${SC}/retrieveNodeKeyList`);
+export const retrieveNodeKeyList = (pageId, dateRange, nodeType, nodeId) => {
+  const q = new URLSearchParams();
+  if (pageId) q.append('pageId', pageId);
+  if (dateRange) q.append('dateRange', dateRange);
+  if (nodeType) q.append('nodeType', nodeType);
+  if (nodeId) q.append('nodeId', nodeId);
+  return request(`${SC}/scorecardV2/retrieveNodeKeyList?${q.toString()}`);
+};
 
 // KPI attachments
 export const getKpiAttachments = (kpiId) =>

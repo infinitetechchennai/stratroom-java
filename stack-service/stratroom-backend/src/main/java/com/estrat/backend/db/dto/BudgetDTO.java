@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class BudgetDTO {
     private Long id;
@@ -56,7 +57,7 @@ public class BudgetDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (budget.getBudgetValues() != null) {
             try {
-                this.budgetValues = (Map)mapper.readValue(budget.getBudgetValues(), HashMap.class);
+                this.budgetValues = JsonUtil.parseMap(budget.getBudgetValues());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

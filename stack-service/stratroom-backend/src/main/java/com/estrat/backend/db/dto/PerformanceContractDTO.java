@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class PerformanceContractDTO {
     private long id;
@@ -47,13 +48,7 @@ public class PerformanceContractDTO {
         this.deptId = performanceContract.getDeptId();
         this.subKPIEntrysList = performanceContract.getSubKPIEntrysList() != null ? performanceContract.getSubKPIEntrysList().stream().map(kpi -> new SubKPIEntrysDTO(kpi)).collect(Collectors.toList()) : null;
         this.kpiEntrysList = performanceContract.getKpiEntrysList() != null ? performanceContract.getKpiEntrysList().stream().map(kpi -> new KPIEntrysDTO(kpi)).collect(Collectors.toList()) : null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.performanceValue = (Map)mapper.readValue(performanceContract.getPerformanceValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.performanceValue = JsonUtil.parseMap(performanceContract.getPerformanceValue());
     }
 
     public long getId() {

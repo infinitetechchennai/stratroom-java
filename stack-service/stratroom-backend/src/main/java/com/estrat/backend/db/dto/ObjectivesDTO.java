@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class ObjectivesDTO {
@@ -60,7 +61,7 @@ public class ObjectivesDTO {
         this.endDate = objectives.getEndDate();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            this.objectivesValue = (Map)mapper.readValue(objectives.getObjectiveValue(), HashMap.class);
+            this.objectivesValue = JsonUtil.parseMap(objectives.getObjectiveValue());
             this.objectivesName = Objects.nonNull(this.getObjectivesValue().get("name")) ? this.getObjectivesValue().get("name").toString() : "";
         }
         catch (Exception e) {

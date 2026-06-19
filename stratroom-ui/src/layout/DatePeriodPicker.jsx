@@ -358,8 +358,16 @@ export default function DatePeriodPicker() {
   const todayD = today.getDate()
 
   // Trigger label state (persisted)
-  const [appliedStart, setAppliedStart] = useState(() => new Date(todayY, todayM - 1, 1))
-  const [appliedEnd,   setAppliedEnd]   = useState(() => new Date(todayY, todayM, todayD))
+  const [appliedStart, setAppliedStart] = useState(() => {
+    const val = localStorage.getItem(STORAGE_KEY)
+    if (val && val.includes('-')) return new Date(val.split('-')[0])
+    return new Date(todayY, 0, 1)
+  })
+  const [appliedEnd, setAppliedEnd] = useState(() => {
+    const val = localStorage.getItem(STORAGE_KEY)
+    if (val && val.includes('-')) return new Date(val.split('-')[1])
+    return new Date(todayY, 11, 31)
+  })
 
   const [isOpen, setIsOpen] = useState(false)
 

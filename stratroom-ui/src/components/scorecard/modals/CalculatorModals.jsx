@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 /* ─── Shared hook ──────────────────────────────────────────────────────────── */
 function useCalculator(initialValue = '') {
@@ -28,6 +28,61 @@ function useCalculator(initialValue = '') {
   return { formula, setFormula, append, appendMeasure, appendFunction, clear, backspace };
 }
 
+const useDynamicMeasures = (componentKey, initialMeasures = []) => {
+  const [measures, setMeasures] = useState(initialMeasures);
+  useEffect(() => {
+    const handleLoaded = (e) => {
+      if (e.detail.component === componentKey) {
+        setMeasures(e.detail.data.map(nk => nk.measureName).filter(Boolean));
+      }
+    };
+    document.addEventListener('scorecardMeasuresLoaded', handleLoaded);
+    return () => document.removeEventListener('scorecardMeasuresLoaded', handleLoaded);
+  }, [componentKey]);
+  return measures;
+};
+
+const useDynamicTabsMeasures = (componentKey, defaultTabs) => {
+  const [tabs, setTabs] = useState(defaultTabs);
+  useEffect(() => {
+    const handleLoaded = (e) => {
+      if (e.detail.component === componentKey) {
+        const main = [];
+        const sub = [];
+        e.detail.data.forEach(nk => {
+          if (!nk.measureName) return;
+          const elementType = nk.elementType || '';
+          const measureType = Number(nk.measureType);
+
+          // For KPI and YTD calculators, the backend returns everything (full fallback).
+          // Filter: Measures tab = KPIs only, Sub Measures tab = Sub-KPIs only.
+          if (componentKey === 'KPI' || componentKey === 'YTD') {
+            if (elementType === 'KPI') {
+              main.push(nk.measureName);
+            } else if (elementType === 'SUBKPI') {
+              sub.push(nk.measureName);
+            }
+            // Skip PERSPECTIVE, OBJECTIVE
+          } else {
+            // For all other calculators, use measureType as before
+            if (measureType === 1) sub.push(nk.measureName);
+            else main.push(nk.measureName);
+          }
+        });
+        setTabs(prev => {
+          const newTabs = [...prev];
+          if (newTabs.length > 0) newTabs[0] = { ...newTabs[0], items: main };
+          if (newTabs.length > 1) newTabs[1] = { ...newTabs[1], items: sub };
+          return newTabs;
+        });
+      }
+    };
+    document.addEventListener('scorecardMeasuresLoaded', handleLoaded);
+    return () => document.removeEventListener('scorecardMeasuresLoaded', handleLoaded);
+  }, [componentKey]);
+  return tabs;
+};
+
 /* ─── Shared function descriptions ────────────────────────────────────────── */
 const FUNCTION_DESCRIPTIONS = {
   If:    { title: 'IF',    desc: "Returns second argument if first argument is true; Returns optional third argument if first argument is false; IF('element', 'trueCalc', 'falseCalc')" },
@@ -45,45 +100,50 @@ const FUNCTIONS = ['If', 'avg', 'agg', 'count', 'sum', 'min', 'max'];
 
 function FormulaInput({ id, name, value, onChange }) {
   return (
-    <div className="g-col-12">
-      <div className="form-group mb-0">
-        <input
-          type="text"
+    <div className="g-col-12 w-100">
+      <ul className="nav nav-underline mb-3">
+        <li className="nav-item">
+          <a className="nav-link active text-dark fw-bold text-uppercase border-bottom border-dark border-2 px-0" style={{ paddingBottom: '8px' }} href="#">
+            Formula Builder
+          </a>
+        </li>
+      </ul>
+      <div className="form-group mb-3">
+        <textarea
           className="form-control"
           name={name}
           id={id}
           placeholder="Formula"
           value={value}
+          rows="3"
           onChange={e => onChange(e.target.value)}
-        />
+        ></textarea>
       </div>
     </div>
   );
 }
 
 function Keypad({ onKey, onClear, onBackspace }) {
-  const keys = ['1','2','3','4','5','6','7','8','9','0','(',')','.','+',' - ','*','/',',' ,'==','!=','>','<','>=','<='];
-  // Use actual characters without spaces for operators
-  const keyValues = ['1','2','3','4','5','6','7','8','9','0','(',')','.','+',' - ','*','/',',' ,'==','!=','>','<','>=','<='];
+  // Use actual characters exactly as requested in Image 4
+  const keys = ['+', '-', '*', '/', '%', '(', ')', '[', ']', ':', 'AND', 'OR', 'NOT', 'IN', '==', '!=', '>', '<', '>=', '<='];
 
-  const tooltipMap = { '+': 'Addition', '-': 'Subtraction', '*': 'Multiplication', '/': 'Division', '%': 'Percentage', '(': 'Open Parenthesis', ')': 'Close Parenthesis', '[': 'Open Bracket', ']': 'Close Bracket', ':': 'Colon', 'AND': 'Logical AND', 'OR': 'Logical OR', 'NOT': 'Logical NOT', 'IN': 'Included IN', '==': 'Equals', '!=': 'Not Equals', '>': 'Greater Than', '<': 'Less Than', '>=': 'Greater Than or Equals', '<=': 'Less Than or Equals', '=<': 'Less Than or Equals' };
+  const tooltipMap = { '+': 'Addition', '-': 'Subtraction', '*': 'Multiplication', '/': 'Division', '%': 'Percentage', '(': 'Open Parenthesis', ')': 'Close Parenthesis', '[': 'Open Bracket', ']': 'Close Bracket', ':': 'Colon', 'AND': 'Logical AND', 'OR': 'Logical OR', 'NOT': 'Logical NOT', 'IN': 'Included IN', '==': 'Equals', '!=': 'Not Equals', '>': 'Greater Than', '<': 'Less Than', '>=': 'Greater Than or Equals', '<=': 'Less Than or Equals' };
 
   return (
-    <div className="g-col-12 g-col-md-4 g-start-md-9 g-row-2">
+    <div className="g-col-12 w-100 mb-4">
       <div className="d-flex flex-wrap gap-2 keypad-wrap">
-        {['1','2','3','4','5','6','7','8','9','0','(',')','.','+','-','*','/',',' ,'==','!=','>','<','>=','<='].map(k => (
+        {keys.map(k => (
           <button
             key={k}
             type="button"
-            className="btn btn-sm btn-secondary text-nowrap"
+            className="btn btn-secondary text-white rounded"
+            style={{ minWidth: '42px', fontWeight: '500', fontSize: '12px', padding: '6px 10px' }}
             onClick={() => onKey(k)}
             title={tooltipMap[k]}
           >
             {k}
           </button>
         ))}
-        <button type="button" className="btn btn-sm btn-warning text-nowrap" onClick={onBackspace} title="Backspace">⌫</button>
-        <button type="button" className="btn btn-sm btn-danger text-nowrap" onClick={onClear} title="Clear">C</button>
       </div>
     </div>
   );
@@ -99,148 +159,147 @@ function FunctionsList({ onSelect }) {
 
   return (
     <>
-      <div className="g-col-12 g-col-md-4">
-        <div className="panel panel-primary">
-          <div className="panel-heading">
-            <h6 className="panel-title">Functions:</h6>
-          </div>
-          <div className="panel-body">
-            <ul className="list-group overflow-auto" style={{ maxHeight: '240px' }}>
-              {FUNCTIONS.map(fn => (
-                <li
-                  key={fn}
-                  className={`list-group-item${selected === fn ? ' active' : ''}`}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleSelect(fn)}
-                >
-                  {fn}
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div className="col-md-4">
+        <h6 className="fw-bold mb-3" style={{ fontSize: '14px' }}>Functions:</h6>
+        <div className="border rounded" style={{ height: '220px', overflowY: 'auto' }}>
+          <ul className="list-group list-group-flush m-0">
+            {FUNCTIONS.map(fn => (
+              <li
+                key={fn}
+                className={`list-group-item list-group-item-action ${selected === fn ? 'bg-primary text-white' : ''}`}
+                style={{ cursor: 'pointer', padding: '12px 16px', fontSize: '13px' }}
+                onClick={() => handleSelect(fn)}
+              >
+                {fn}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
-      <div className="g-col-12 g-col-md-4">
-        <div className="panel panel-primary">
-          <div className="panel-heading">
-            <h6 className="panel-title">Function Description:</h6>
-          </div>
-          <div className="panel-body">
-            <h6>{FUNCTION_DESCRIPTIONS[selected]?.title}</h6>
-            <p>{FUNCTION_DESCRIPTIONS[selected]?.desc}</p>
-          </div>
+      <div className="col-md-4">
+        <h6 className="fw-bold mb-3" style={{ fontSize: '14px' }}>Function Description:</h6>
+        <div className="pt-1">
+          <h6 className="formulaheaderdesc fw-bold text-uppercase" style={{ fontSize: '14px' }}>
+            {FUNCTION_DESCRIPTIONS[selected]?.title}
+          </h6>
+          <p className="formulacontentdesc text-dark" style={{ fontSize: '14px', lineHeight: '1.6' }}>
+            {FUNCTION_DESCRIPTIONS[selected]?.desc}
+          </p>
         </div>
       </div>
     </>
   );
 }
 
-function MeasuresList({ title, items, searchId, onSelect }) {
+function MeasuresList({ title, items, searchId, onSelect, showButtons = false }) {
   const [search, setSearch] = useState('');
   const filtered = items.filter(item => item.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="g-col-12 g-col-md-4">
-      <div className="panel panel-primary">
-        <div className="panel-heading">
-          <div className="searchMeasures">
-            <h6 className="panel-title">{title}</h6>
-            <div className="input-group mb-3">
-              <input
-                id={searchId}
-                type="text"
-                className="form-control form-control-sm"
-                placeholder="Search"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
-              <button className="btn btn-outline-secondary" type="button">
-                <i data-lucide="search" style={{ width: '14px', height: '14px' }}></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="panel-body" data-spy="scroll">
-          <ul className="list-group overflow-auto" style={{ maxHeight: '180px' }}>
-            {filtered.map((item, idx) => (
-              <li
-                key={idx}
-                className="list-group-item"
-                style={{ cursor: 'pointer' }}
-                onClick={() => onSelect(item)}
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="col-md-4 d-flex flex-column">
+      <h6 className="fw-bold mb-3" style={{ fontSize: '14px' }}>{title}</h6>
+      <div className="input-group mb-3">
+        <input
+          id={searchId}
+          type="text"
+          className="form-control"
+          placeholder="Search"
+          value={search}
+          autoComplete="off"
+          onChange={e => setSearch(e.target.value)}
+        />
+        <button className="btn border bg-white" type="button">
+          <i className="fa fa-search text-muted"></i>
+        </button>
       </div>
+      <div className="border rounded flex-grow-1" style={{ height: '220px', overflowY: 'auto' }}>
+        <ul className="list-group list-group-flush m-0">
+          {filtered.map((item, idx) => (
+            <li
+              key={idx}
+              className="list-group-item"
+              style={{ cursor: 'pointer', padding: '12px 16px', fontSize: '13px' }}
+              onClick={() => onSelect(item)}
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      {showButtons && (
+        <div className="mt-4 d-flex gap-2">
+          <button name="validate" className="btn btn-secondary text-white">Validate</button>
+          <button name="add" className="btn btn-primary text-white">Add</button>
+        </div>
+      )}
     </div>
   );
 }
 
-function MeasuresWithTabs({ tabs, onSelect }) {
+function MeasuresWithTabs({ tabs, onSelect, showButtons = false }) {
   return (
-    <div className="g-col-12 g-col-md-4">
-      <div className="measuresWrap">
-        <h6 className="panel-title">Fields and measures:</h6>
-        <ul className="nav nav-pills mb-2" role="tablist">
-          {tabs.map((tab, i) => (
-            <li key={tab.id} className="nav-item">
-              <a
-                className={`nav-link rounded-0${i === 0 ? ' active' : ''}`}
-                data-bs-toggle="pill"
-                href={`#${tab.id}`}
-                role="tab"
-              >
-                {tab.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <div className="tab-content">
-          {tabs.map((tab, i) => (
-            <div
-              key={tab.id}
-              className={`tab-pane fade${i === 0 ? ' show active' : ''}`}
-              id={tab.id}
-              role="tabpanel"
+    <div className="col-md-4 d-flex flex-column">
+      <h6 className="fw-bold mb-3" style={{ fontSize: '14px' }}>Fields and measures:</h6>
+      <ul className="nav nav-pills mb-3" role="tablist">
+        {tabs.map((tab, i) => (
+          <li key={tab.id} className="nav-item">
+            <a
+              className={`nav-link rounded-0 ${i === 0 ? 'active' : ''}`}
+              style={{ padding: '6px 12px', fontSize: '13px' }}
+              data-bs-toggle="pill"
+              href={`#${tab.id}`}
+              role="tab"
             >
-              <div className="panel panel-primary">
-                <div className="panel-heading">
-                  <div className="searchMeasures">
-                    <div className="input-group mb-3">
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        placeholder="Search"
-                      />
-                      <button className="btn btn-outline-secondary" type="button">
-                        <i data-lucide="search" style={{ width: '14px', height: '14px' }}></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="panel-body">
-                  <ul className="list-group overflow-auto" style={{ maxHeight: '180px' }}>
-                    {tab.items.map((item, idx) => (
-                      <li
-                        key={idx}
-                        className="list-group-item"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => onSelect(item)}
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+              {tab.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div className="tab-content flex-grow-1">
+        {tabs.map((tab, i) => (
+          <div
+            key={tab.id}
+            className={`tab-pane fade ${i === 0 ? 'show active' : ''}`}
+            id={tab.id}
+            role="tabpanel"
+          >
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search"
+                autoComplete="off"
+              />
+              <button className="btn border bg-white" type="button">
+                <i className="fa fa-search text-muted"></i>
+              </button>
             </div>
-          ))}
-        </div>
+            <div className="border rounded" style={{ height: '170px', overflowY: 'auto' }}>
+              <ul className="list-group list-group-flush m-0">
+                {tab.items.map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="list-group-item"
+                    style={{ cursor: 'pointer', padding: '12px 16px', fontSize: '13px' }}
+                    onClick={() => onSelect(item)}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
       </div>
+
+      {showButtons && (
+        <div className="mt-4 d-flex gap-2">
+          <button name="validate" className="btn btn-secondary text-white">Validate</button>
+          <button name="add" className="btn btn-primary text-white">Add</button>
+        </div>
+      )}
     </div>
   );
 }
@@ -315,16 +374,12 @@ function CalculatorLayout({ id, title, inputId, inputName, children }) {
     >
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-xl">
         <div className="modal-content">
-          <div className="modal-header">
-            <h4 className="modal-title">{title}</h4>
+          <div className="modal-header border-0 pb-0 pt-4 px-4">
+            <h5 className="modal-title fw-bold" style={{ fontSize: '18px' }}>{title}</h5>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div className="modal-body">
-            <div className="card custom-card border-0">
-              <div className="card-body">
-                {children}
-              </div>
-            </div>
+          <div className="modal-body p-4 pt-2">
+            {children}
           </div>
         </div>
       </div>
@@ -337,25 +392,21 @@ function CalculatorLayout({ id, title, inputId, inputName, children }) {
 ══════════════════════════════════════════════════════════════════════════════ */
 export const PerspectiveCalculatorModal = () => {
   const { formula, setFormula, append, appendMeasure, appendFunction, clear, backspace } = useCalculator();
+  const measures = useDynamicMeasures('PERSPECTIVE', PERSPECTIVE_OBJECTIVES);
 
   return (
-    <CalculatorLayout id="prespective-calculator-modal" title="Perspective Calculator">
-      <div className="grid gap-3 calculator-wrap">
-        <FormulaInput id="prespectivePerformance" name="prespectivePerformance" value={formula} onChange={setFormula} />
-        <div className="grid g-col-12 gap-3 calculator-box">
-          <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
-          <MeasuresList
-            title="Objectives:"
-            searchId="prespectiveSearchMeasure"
-            items={PERSPECTIVE_OBJECTIVES}
-            onSelect={appendMeasure}
-          />
-          <FunctionsList onSelect={appendFunction} />
-        </div>
-        <div className="d-flex flex-wrap gap-2 mt-4">
-          <button name="validate" className="btn btn-sm btn-secondary">Validate</button>
-          <button name="add" className="btn btn-sm btn-primary">Add</button>
-        </div>
+    <CalculatorLayout id="prespective-calculator-modal" title="Performance Calculator">
+      <FormulaInput id="prespectivePerformance" name="prespectivePerformance" value={formula} onChange={setFormula} />
+      <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
+      <div className="row g-4 w-100 m-0">
+        <MeasuresList
+          title="Fields and measures:"
+          searchId="prespectiveSearchMeasure"
+          items={measures}
+          onSelect={appendMeasure}
+          showButtons={true}
+        />
+        <FunctionsList onSelect={appendFunction} />
       </div>
     </CalculatorLayout>
   );
@@ -366,25 +417,21 @@ export const PerspectiveCalculatorModal = () => {
 ══════════════════════════════════════════════════════════════════════════════ */
 export const ObjectiveCalculatorModal = () => {
   const { formula, setFormula, append, appendMeasure, appendFunction, clear, backspace } = useCalculator();
+  const measures = useDynamicMeasures('OBJECTIVE', OBJECTIVE_KPIS);
 
   return (
-    <CalculatorLayout id="objective-calculator-modal" title="Objective Calculator">
-      <div className="grid gap-3 calculator-wrap">
-        <FormulaInput id="objectivePerformance" name="objectivePerformance" value={formula} onChange={setFormula} />
-        <div className="grid g-col-12 gap-3 calculator-box">
-          <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
-          <MeasuresList
-            title="KPIs:"
-            searchId="objectiveSearchMeasure"
-            items={OBJECTIVE_KPIS}
-            onSelect={appendMeasure}
-          />
-          <FunctionsList onSelect={appendFunction} />
-        </div>
-        <div className="d-flex flex-wrap gap-2 mt-4">
-          <button name="validate" className="btn btn-sm btn-secondary">Validate</button>
-          <button name="add" className="btn btn-sm btn-primary">Add</button>
-        </div>
+    <CalculatorLayout id="objective-calculator-modal" title="Performance Calculator">
+      <FormulaInput id="objectivePerformance" name="objectivePerformance" value={formula} onChange={setFormula} />
+      <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
+      <div className="row g-4 w-100 m-0">
+        <MeasuresList
+          title="Fields and measures:"
+          searchId="objectiveSearchMeasure"
+          items={measures}
+          onSelect={appendMeasure}
+          showButtons={true}
+        />
+        <FunctionsList onSelect={appendFunction} />
       </div>
     </CalculatorLayout>
   );
@@ -395,25 +442,21 @@ export const ObjectiveCalculatorModal = () => {
 ══════════════════════════════════════════════════════════════════════════════ */
 export const KpiCalculatorModal = () => {
   const { formula, setFormula, append, appendMeasure, appendFunction, clear, backspace } = useCalculator();
+  const measures = useDynamicMeasures('SCORECARDCONFIG', KPI_MEASURES);
 
   return (
     <CalculatorLayout id="kpi-calculator-modal" title="KPI Calculator">
-      <div className="grid gap-3 calculator-wrap">
-        <FormulaInput id="kpiPerformance" name="kpiPerformance" value={formula} onChange={setFormula} />
-        <div className="grid g-col-12 gap-3 calculator-box">
-          <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
-          <MeasuresList
-            title="Fields and measures:"
-            searchId="kpiSearchMeasure"
-            items={KPI_MEASURES}
-            onSelect={appendMeasure}
-          />
-          <FunctionsList onSelect={appendFunction} />
-        </div>
-        <div className="d-flex flex-wrap gap-2 mt-4">
-          <button name="validate" className="btn btn-sm btn-secondary">Validate</button>
-          <button name="add" className="btn btn-sm btn-primary">Add</button>
-        </div>
+      <FormulaInput id="kpiPerformance" name="kpiPerformance" value={formula} onChange={setFormula} />
+      <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
+      <div className="row g-4 w-100 m-0">
+        <MeasuresList
+          title="Fields and measures:"
+          searchId="kpiSearchMeasure"
+          items={measures}
+          onSelect={appendMeasure}
+          showButtons={true}
+        />
+        <FunctionsList onSelect={appendFunction} />
       </div>
     </CalculatorLayout>
   );
@@ -425,25 +468,20 @@ export const KpiCalculatorModal = () => {
 export const KpiActualCalculatorModal = () => {
   const { formula, setFormula, append, appendMeasure, appendFunction, clear, backspace } = useCalculator();
 
-  const tabs = [
+  const defaultTabs = [
     { id: 'pills-actual',         label: 'Measures',     items: ACTUAL_MEASURES },
     { id: 'pills-actualSubMeasures', label: 'Sub Measures', items: ACTUAL_SUBMEASURES },
     { id: 'pills-actualInitiatives', label: 'Initiatives',  items: ACTUAL_INITIATIVES },
   ];
+  const tabs = useDynamicTabsMeasures('KPI', defaultTabs);
 
   return (
     <CalculatorLayout id="kpiActual-calculator-modal" title="Actual Calculator">
-      <div className="grid gap-3 calculator-wrap">
-        <FormulaInput id="kpiActualPerformance" name="kpiActualPerformance" value={formula} onChange={setFormula} />
-        <div className="grid g-col-12 gap-3 calculator-box">
-          <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
-          <MeasuresWithTabs tabs={tabs} onSelect={appendMeasure} />
-          <FunctionsList onSelect={appendFunction} />
-        </div>
-        <div className="d-flex flex-wrap gap-2 mt-4">
-          <button name="validate" className="btn btn-sm btn-secondary">Validate</button>
-          <button name="add" className="btn btn-sm btn-primary">Add</button>
-        </div>
+      <FormulaInput id="kpiActualPerformance" name="kpiActualPerformance" value={formula} onChange={setFormula} />
+      <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
+      <div className="row g-4 w-100 m-0">
+        <MeasuresWithTabs tabs={tabs} onSelect={appendMeasure} showButtons={true} />
+        <FunctionsList onSelect={appendFunction} />
       </div>
     </CalculatorLayout>
   );
@@ -455,25 +493,20 @@ export const KpiActualCalculatorModal = () => {
 export const YtdCalculatorModal = () => {
   const { formula, setFormula, append, appendMeasure, appendFunction, clear, backspace } = useCalculator();
 
-  const tabs = [
+  const defaultTabs = [
     { id: 'pills-measures',    label: 'Measures',     items: ACTUAL_MEASURES },
     { id: 'pills-subMeasures', label: 'Sub Measures', items: ACTUAL_SUBMEASURES },
     { id: 'pills-initiatives', label: 'Initiatives',  items: ACTUAL_INITIATIVES },
   ];
+  const tabs = useDynamicTabsMeasures('YTD', defaultTabs);
 
   return (
     <CalculatorLayout id="ytd-calculator-modal" title="YTD Calculator">
-      <div className="grid gap-3 calculator-wrap">
-        <FormulaInput id="ytdPerformance" name="ytdPerformance" value={formula} onChange={setFormula} />
-        <div className="grid g-col-12 gap-3 calculator-box">
-          <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
-          <MeasuresWithTabs tabs={tabs} onSelect={appendMeasure} />
-          <FunctionsList onSelect={appendFunction} />
-        </div>
-        <div className="d-flex flex-wrap gap-2 mt-4">
-          <button name="validate" className="btn btn-sm btn-secondary">Validate</button>
-          <button name="add" className="btn btn-sm btn-primary">Add</button>
-        </div>
+      <FormulaInput id="ytdPerformance" name="ytdPerformance" value={formula} onChange={setFormula} />
+      <Keypad onKey={append} onClear={clear} onBackspace={backspace} />
+      <div className="row g-4 w-100 m-0">
+        <MeasuresWithTabs tabs={tabs} onSelect={appendMeasure} showButtons={true} />
+        <FunctionsList onSelect={appendFunction} />
       </div>
     </CalculatorLayout>
   );

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class MissionVisionValueDto {
     private long id;
@@ -37,13 +38,7 @@ public class MissionVisionValueDto {
         this.updatedTime = mvv.getUpdatedTime();
         this.orgId = mvv.getOrgId();
         this.deptId = mvv.getDeptId();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.missionvisionvalue = (Map)mapper.readValue(mvv.getMissionvisionvalue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.missionvisionvalue = JsonUtil.parseMap(mvv.getMissionvisionvalue());
     }
 
     public long getId() {

@@ -50,6 +50,16 @@ public class ScorecardV2Controller {
         return ResponseEntity.ok(calculationService.kpiStoryCard(id, dateRange));
     }
 
+    // List of measures for the formula calculators
+    @GetMapping("/scorecardV2/retrieveNodeKeyList")
+    public ResponseEntity<List<Map<String, Object>>> retrieveNodeKeyList(
+            @RequestParam("pageId") Long pageId,
+            @RequestParam(value = "dateRange", required = false) String dateRange,
+            @RequestParam(value = "nodeType", required = false) String nodeType,
+            @RequestParam(value = "nodeId", required = false) String nodeId) {
+        return ResponseEntity.ok(calculationService.retrieveNodeKeyList(pageId, dateRange, nodeType, nodeId));
+    }
+
     // -------- scorecard CRUD --------
 
     @PostMapping("/scorecardV2/scorecard")

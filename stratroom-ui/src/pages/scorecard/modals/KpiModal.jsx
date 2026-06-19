@@ -184,9 +184,6 @@ const KpiModal = () => {
                             id="button-addon2"
                             data-bs-toggle="modal"
                             data-bs-target=".kpi_formula_popup"
-                            onClick={() => {
-                              if (window.handleFormulaEvent) window.handleFormulaEvent('KPI');
-                            }}
                           >
                             KPI Calculator
                           </button>
@@ -215,10 +212,6 @@ const KpiModal = () => {
                             type="button"
                             data-bs-toggle="modal"
                             data-bs-target=".kpi_performanceformula_popup"
-                            onClick={() => {
-                              if (window.handleFormulaEvent)
-                                window.handleFormulaEvent('KPIPERFORMANCE');
-                            }}
                           >
                             Performance Calculator
                           </button>

@@ -344,7 +344,7 @@ export const ObjectiveViewModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#kpi_formula_popup"
+                                                    data-bs-toggle="modal" data-bs-target="#objective-calculator-modal"
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
                                                     KPI Calculator
                                                 </button>

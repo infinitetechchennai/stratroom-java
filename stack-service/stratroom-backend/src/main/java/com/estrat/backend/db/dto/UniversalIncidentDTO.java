@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class UniversalIncidentDTO {
     private Long id;
@@ -46,7 +47,7 @@ public class UniversalIncidentDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (incident.getIncidentValue() != null) {
             try {
-                this.incidentValue = (Map)mapper.readValue(incident.getIncidentValue(), HashMap.class);
+                this.incidentValue = JsonUtil.parseMap(incident.getIncidentValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

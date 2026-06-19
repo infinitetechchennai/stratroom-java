@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class ComplianceDetailsDTO {
     private long id;
@@ -62,7 +63,7 @@ public class ComplianceDetailsDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (complianceDetails.getComplainValue() != null) {
             try {
-                this.complainValue = (Map)mapper.readValue(complianceDetails.getComplainValue(), HashMap.class);
+                this.complainValue = JsonUtil.parseMap(complianceDetails.getComplainValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

@@ -494,24 +494,12 @@ public class InitiativesService {
         System.out.println("enter in initive id");
         String kpiIdStr = String.valueOf(kpiId);
         List<Initiatives> dbList =this.initiativesRepository.findAllByEmpId(Long.valueOf(UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID")), 0);
-        ObjectMapper mapper = new ObjectMapper();
-        return dbList.stream().filter(initiative -> this.isKpiImpacted(this.parseRiskValue(initiative.getInitiativeValue(), mapper), kpiIdStr)).map(dbValue -> {
+        return dbList.stream().filter(initiative -> this.isKpiImpacted(com.estrat.backend.db.util.JsonUtil.parseMap(initiative.getInitiativeValue()), kpiIdStr)).map(dbValue -> {
             InitiativesDTO initiativesDTO = new InitiativesDTO(dbValue, false);
             return initiativesDTO;
         }).collect(Collectors.toList());
     }
 
-    private Map<String, Object> parseRiskValue(String initiativeValueJson, ObjectMapper mapper) {
-        if (initiativeValueJson == null || initiativeValueJson.isEmpty()) {
-            return Collections.emptyMap();
-        }
-        try {
-            return (Map)mapper.readValue(initiativeValueJson, Map.class);
-        }
-        catch (Exception e) {
-            return Collections.emptyMap();
-        }
-    }
 
     private boolean isKpiImpacted(Map<String, Object> riskValue, String kpiId) {
         Object impactKpiObj = riskValue.get("impactId");

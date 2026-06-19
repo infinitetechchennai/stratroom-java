@@ -219,10 +219,7 @@ public class KPIDAO {
     }
 
     public List<Long> getDepartmentList(long deptId, List<Long> departmentlist) {
-        String query = "with  cte (deptId) as (   select     deptId   from       orgstructure.department_chart_details   where      deptParentId = toreplace and active=0    union all   select     p.deptId   from       orgstructure.department_chart_details p   inner join cte           on p.deptParentID = cte.deptId ) select * from cte OPTION (MAXRECURSION 1000);";
-        if (this.datasource.equals("mysql")) {
-            query = "with RECURSIVE cte (deptId) as (   select     deptId   from       orgstructure.department_chart_details   where      deptParentId = toreplace and active=0    union all   select     p.deptId   from       orgstructure.department_chart_details p   inner join cte           on p.deptParentID = cte.deptId ) select * from cte ;";
-        }
+        String query = "WITH RECURSIVE cte (deptId) AS (SELECT deptId FROM orgstructure.department_chart_details WHERE deptParentId = toreplace AND active=0 UNION ALL SELECT p.deptId FROM orgstructure.department_chart_details p INNER JOIN cte ON p.deptParentId = cte.deptId) SELECT deptId FROM cte;";
         query = query.replace("toreplace", String.valueOf(deptId));
         try {
             departmentlist = this.jdbcTemplate.queryForList(query.toString(), Long.class);
@@ -240,7 +237,7 @@ public class KPIDAO {
     }
 
     public List<Long> getEmployeeList(long empId, List<Long> employeeList) {
-        String query = "SELECT  emp_id  FROM (SELECT * FROM employee_details ORDER BY parent_emp_id, emp_id) employee_sorted, (SELECT @pv := toreplace) initialisation WHERE  find_in_set(parent_emp_id, @pv) AND status='Active' AND length(@pv := concat(@pv, ',', emp_id))";
+        String query = "WITH RECURSIVE emp_cte AS (SELECT emp_id FROM orgstructure.employee_details WHERE parent_emp_id = toreplace AND status='Active' UNION ALL SELECT e.emp_id FROM orgstructure.employee_details e INNER JOIN emp_cte c ON e.parent_emp_id = c.emp_id WHERE e.status='Active') SELECT emp_id FROM emp_cte;";
         query = query.replace("toreplace", String.valueOf(empId));
         try {
             employeeList = this.jdbcTemplate.queryForList(query.toString(), Long.class);
@@ -258,7 +255,7 @@ public class KPIDAO {
     }
 
     public Map<Long, String> getDepartmentList(long deptId, String name) {
-        String query = "SELECT  deptId, dept_name as deptName, deptParentId FROM (SELECT * FROM orgstructure.department_chart_details ORDER BY deptParentId, deptId) department_sorted, (SELECT @pv := toreplace) initialisation WHERE  find_in_set(deptParentId, @pv) AND active=0 AND length(@pv := concat(@pv, ',', deptId))";
+        String query = "WITH RECURSIVE dept_cte AS (SELECT deptId, dept_name AS deptName, deptParentId FROM orgstructure.department_chart_details WHERE deptParentId = toreplace AND active=0 UNION ALL SELECT d.deptId, d.dept_name, d.deptParentId FROM orgstructure.department_chart_details d INNER JOIN dept_cte c ON d.deptParentId = c.deptId WHERE d.active=0) SELECT deptId, deptName, deptParentId FROM dept_cte;";
         query = query.replace("toreplace", String.valueOf(deptId));
         HashMap<Long, String> groupdepartment = new HashMap<Long, String>();
         try {
@@ -307,10 +304,7 @@ public class KPIDAO {
         if (cached != null) {
             return (Map)cached;
         }
-        String query = "WITH ParentChildCTE AS (SELECT child_id,parent_id,child_id AS immediateChildParentId, from_date, to_date   FROM orgstructure.child_tracker WHERE parent_id = toreplaceid and ((from_date <= 'toreplacetoDate' AND (to_date IS NULL OR to_date >= 'toreplacetoDate'))    OR (from_date >= 'toreplacefromDate' AND (to_date IS NULL OR to_date <= 'toreplacetoDate')) OR (from_date <= 'toreplacefromDate' AND (to_date IS NULL OR to_date >= 'toreplacefromDate')))  AND imp_type='Department' UNION ALL   SELECT t.child_id,t.parent_id,cte.immediateChildParentId,t.from_date,t.to_date FROM orgstructure.child_tracker t INNER JOIN ParentChildCTE cte ON t.parent_id =  cte.child_id) SELECT DISTINCT c.child_id, c.parent_id, c.from_date, c.to_date, p.child_id AS immediateChildParentId,   dpt_chart.dept_name as immediateChildParentName FROM ParentChildCTE c   LEFT JOIN orgstructure.child_tracker p ON c.immediateChildParentId = p.child_id LEFT JOIN   orgstructure.department_chart_details dpt_chart ON dpt_chart.deptId = p.child_id ORDER BY c.child_id OPTION (MAXRECURSION 1000);";
-        if (this.datasource.equals("mysql")) {
-            query = "WITH RECURSIVE ParentChildCTE AS (\n    SELECT child_id, parent_id, child_id AS immediateChildParentId, from_date, to_date, 1 AS depth\n    FROM orgstructure.child_tracker\n    WHERE parent_id = toreplaceid AND\n          (from_date <= 'toreplacetoDate' AND (to_date IS NULL OR to_date >= 'toreplacefromDate')) AND\n          imp_type = 'Department'\n          \n    UNION ALL\n    \n    -- Recursive Select with depth increment\n    SELECT t.child_id, t.parent_id, cte.immediateChildParentId, t.from_date, t.to_date, cte.depth + 1 AS depth\n    FROM orgstructure.child_tracker t\n    INNER JOIN ParentChildCTE cte ON t.parent_id = cte.child_id\n    WHERE cte.depth < 10 -- Depth limit condition\n)\nSELECT DISTINCT c.child_id, c.parent_id, c.from_date, c.to_date, p.child_id AS immediateChildParentId, \n                dpt_chart.dept_name as immediateChildParentName\nFROM ParentChildCTE c\nLEFT JOIN orgstructure.child_tracker p ON c.immediateChildParentId = p.child_id\nLEFT JOIN orgstructure.department_chart_details dpt_chart ON dpt_chart.deptId = p.child_id\nORDER BY c.child_id;";
-        }
+        String query = "WITH RECURSIVE ParentChildCTE AS (\n    SELECT child_id, parent_id, child_id AS immediateChildParentId, from_date, to_date, 1 AS depth\n    FROM orgstructure.child_tracker\n    WHERE parent_id = toreplaceid AND\n          (from_date <= 'toreplacetoDate' AND (to_date IS NULL OR to_date >= 'toreplacefromDate')) AND\n          imp_type = 'Department'\n    UNION ALL\n    SELECT t.child_id, t.parent_id, cte.immediateChildParentId, t.from_date, t.to_date, cte.depth + 1 AS depth\n    FROM orgstructure.child_tracker t\n    INNER JOIN ParentChildCTE cte ON t.parent_id = cte.child_id\n    WHERE cte.depth < 10\n)\nSELECT DISTINCT c.child_id, c.parent_id, c.from_date, c.to_date, p.child_id AS immediateChildParentId,\n                dpt_chart.dept_name as immediateChildParentName\nFROM ParentChildCTE c\nLEFT JOIN orgstructure.child_tracker p ON c.immediateChildParentId = p.child_id\nLEFT JOIN orgstructure.department_chart_details dpt_chart ON dpt_chart.deptId = p.child_id\nORDER BY c.child_id;";
         query = query.replace("toreplaceid", String.valueOf(deptId));
         query = query.replace("toreplacetoDate", String.valueOf(formattedtoDate));
         query = query.replace("toreplacefromDate", String.valueOf(formattedfromDate));
@@ -345,10 +339,7 @@ public class KPIDAO {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedfromDate = formatter.format(fromDate);
         String formattedtoDate = formatter.format(toDate);
-        String query = "WITH ParentChildCTE AS (SELECT child_id,parent_id,child_id AS immediateChildParentId, from_date, to_date   FROM orgstructure.child_tracker WHERE parent_id = toreplaceid and ((from_date <= 'toreplacetoDate' AND (to_date IS NULL OR to_date >= 'toreplacetoDate'))    OR (from_date >= 'toreplacefromDate' AND (to_date IS NULL OR to_date <= 'toreplacetoDate')) OR (from_date <= 'toreplacefromDate' AND (to_date IS NULL OR to_date >= 'toreplacefromDate'))) AND imp_type='Employee' UNION ALL   SELECT t.child_id,t.parent_id,cte.immediateChildParentId,t.from_date,t.to_date FROM orgstructure.child_tracker t INNER JOIN ParentChildCTE cte ON t.parent_id =  cte.child_id) SELECT DISTINCT c.child_id, c.parent_id, c.from_date, c.to_date, p.child_id AS immediateChildParentId,   emp_chart.first_name as immediateChildParentName FROM ParentChildCTE c   LEFT JOIN orgstructure.child_tracker p ON c.immediateChildParentId = p.child_id LEFT JOIN   orgstructure.employee_details emp_chart ON emp_chart.emp_id = p.child_id ORDER BY c.child_id";
-        if (this.datasource.equals("mysql")) {
-            query = "WITH RECURSIVE ParentChildCTE AS (\n    SELECT child_id, parent_id, child_id AS immediateChildParentId, from_date, to_date, 1 AS depth\n    FROM orgstructure.child_tracker\n    WHERE parent_id = toreplaceid AND\n          (from_date <= 'toreplacetoDate' AND (to_date IS NULL OR to_date >= 'toreplacefromDate')) AND\n          imp_type = 'Department'\n          \n    UNION ALL\n    \n    -- Recursive Select with depth increment\n    SELECT t.child_id, t.parent_id, cte.immediateChildParentId, t.from_date, t.to_date, cte.depth + 1 AS depth\n    FROM orgstructure.child_tracker t\n    INNER JOIN ParentChildCTE cte ON t.parent_id = cte.child_id\n    WHERE cte.depth < 10 -- Depth limit condition\n)\nSELECT DISTINCT c.child_id, c.parent_id, c.from_date, c.to_date, p.child_id AS immediateChildParentId, \n                dpt_chart.dept_name as immediateChildParentName\nFROM ParentChildCTE c\nLEFT JOIN orgstructure.child_tracker p ON c.immediateChildParentId = p.child_id\nLEFT JOIN orgstructure.department_chart_details dpt_chart ON dpt_chart.deptId = p.child_id\nORDER BY c.child_id;";
-        }
+        String query = "WITH RECURSIVE ParentChildCTE AS (\n    SELECT child_id, parent_id, child_id AS immediateChildParentId, from_date, to_date, 1 AS depth\n    FROM orgstructure.child_tracker\n    WHERE parent_id = toreplaceid AND\n          (from_date <= 'toreplacetoDate' AND (to_date IS NULL OR to_date >= 'toreplacefromDate')) AND\n          imp_type = 'Employee'\n    UNION ALL\n    SELECT t.child_id, t.parent_id, cte.immediateChildParentId, t.from_date, t.to_date, cte.depth + 1 AS depth\n    FROM orgstructure.child_tracker t\n    INNER JOIN ParentChildCTE cte ON t.parent_id = cte.child_id\n    WHERE cte.depth < 10\n)\nSELECT DISTINCT c.child_id, c.parent_id, c.from_date, c.to_date, p.child_id AS immediateChildParentId,\n                emp_chart.first_name as immediateChildParentName\nFROM ParentChildCTE c\nLEFT JOIN orgstructure.child_tracker p ON c.immediateChildParentId = p.child_id\nLEFT JOIN orgstructure.employee_details emp_chart ON emp_chart.emp_id = p.child_id\nORDER BY c.child_id;";
         query = query.replace("toreplaceid", String.valueOf(empId));
         query = query.replace("toreplacetoDate", String.valueOf(formattedtoDate));
         query = query.replace("toreplacefromDate", String.valueOf(formattedfromDate));
@@ -436,7 +427,7 @@ public class KPIDAO {
     }
 
     public Map<Long, String> getEmployeeList(long empId) {
-        String query = "SELECT emp_id as empId ,  first_name as empName, department as deptName, parent_emp_id as empParentId FROM (SELECT * FROM orgstructure.employee_details ORDER BY parent_emp_id, emp_id) employee_sorted, (SELECT @pv := toreplace) initialisation WHERE  find_in_set(parent_emp_id, @pv) AND status='Active' AND length(@pv := concat(@pv, ',', emp_id))";
+        String query = "WITH RECURSIVE emp_cte AS (SELECT emp_id AS empId, first_name AS empName, department AS deptName, parent_emp_id AS empParentId FROM orgstructure.employee_details WHERE parent_emp_id = toreplace AND status='Active' UNION ALL SELECT e.emp_id, e.first_name, e.department, e.parent_emp_id FROM orgstructure.employee_details e INNER JOIN emp_cte c ON e.parent_emp_id = c.empId WHERE e.status='Active') SELECT empId, empName, deptName, empParentId FROM emp_cte;";
         query = query.replace("toreplace", String.valueOf(empId));
         HashMap<Long, String> groupEmp = new HashMap<Long, String>();
         try {
@@ -1545,10 +1536,7 @@ public class KPIDAO {
     }
 
     public List<Long> getChildDepartmentList(long deptId, List<Long> departmentlist) {
-        String query = "WITH RecursiveCTE AS (\n    SELECT deptId     FROM orgstructure.department_chart_details\n    WHERE deptParentId = 'toreplace' AND active = 0\n\n    UNION ALL\n\n    SELECT d.deptId     FROM orgstructure.department_chart_details d\n    JOIN RecursiveCTE r ON d.deptParentId = r.deptId\n    WHERE d.active = 0\n)\nSELECT deptId\nFROM RecursiveCTE\nORDER BY deptId OPTION (MAXRECURSION 1000);";
-        if (this.datasource.equals("mysql")) {
-            query = "WITH RECURSIVE RecursiveCTE AS (\n    SELECT deptId     FROM orgstructure.department_chart_details\n    WHERE deptParentId = 'toreplace' AND active = 0\n\n    UNION ALL\n\n    SELECT d.deptId     FROM orgstructure.department_chart_details d\n    JOIN RecursiveCTE r ON d.deptParentId = r.deptId\n    WHERE d.active = 0\n)\nSELECT deptId\nFROM RecursiveCTE\nORDER BY deptId";
-        }
+        String query = "WITH RECURSIVE RecursiveCTE AS (\n    SELECT deptId     FROM orgstructure.department_chart_details\n    WHERE deptParentId = 'toreplace' AND active = 0\n\n    UNION ALL\n\n    SELECT d.deptId     FROM orgstructure.department_chart_details d\n    JOIN RecursiveCTE r ON d.deptParentId = r.deptId\n    WHERE d.active = 0\n)\nSELECT deptId\nFROM RecursiveCTE\nORDER BY deptId;";
         query = query.replace("toreplace", String.valueOf(deptId));
         try {
             departmentlist = this.jdbcTemplate.queryForList(query.toString(), Long.class);
@@ -1728,14 +1716,10 @@ public class KPIDAO {
     }
 
     public Map<Long, String> getEmployeeChildList(long empId) {
-        String query = "WITH RecursiveCTE AS (\n    SELECT emp_id AS empId, department AS deptName, parent_emp_id AS empParentId     FROM orgstructure.employee_details\n    WHERE parent_emp_id = 'toreplace' AND status = 'Active'\n\n    UNION ALL\n\n    SELECT e.emp_id, e.department, e.parent_emp_id     FROM orgstructure.employee_details e\n    JOIN RecursiveCTE r ON e.parent_emp_id = r.empId\n    WHERE e.status = 'Active'\n)\nSELECT empId, deptName, empParentId\nFROM RecursiveCTE\nORDER BY empParentId, empId OPTION (MAXRECURSION 1000);";
-        if (this.datasource.equals("mysql")) {
-            query = "WITH RECURSIVE RecursiveCTE AS (\n    SELECT emp_id AS empId, department AS deptName, parent_emp_id AS empParentId     FROM orgstructure.employee_details\n    WHERE parent_emp_id = 'toreplace' AND status = 'Active'\n\n    UNION ALL\n\n    SELECT e.emp_id, e.department, e.parent_emp_id     FROM orgstructure.employee_details e\n    JOIN RecursiveCTE r ON e.parent_emp_id = r.empId\n    WHERE e.status = 'Active'\n)\nSELECT empId, deptName, empParentId\nFROM RecursiveCTE\nORDER BY empParentId, empId ";
-        }
-        query = query.replace("toreplace", String.valueOf(empId));
+        String query = "WITH RECURSIVE RecursiveCTE AS (\n    SELECT emp_id AS empId, department AS deptName, parent_emp_id AS empParentId     FROM orgstructure.employee_details\n    WHERE parent_emp_id = ? AND status = 'Active'\n\n    UNION ALL\n\n    SELECT e.emp_id, e.department, e.parent_emp_id     FROM orgstructure.employee_details e\n    JOIN RecursiveCTE r ON e.parent_emp_id = r.empId\n    WHERE e.status = 'Active'\n)\nSELECT empId, deptName, empParentId\nFROM RecursiveCTE\nORDER BY empParentId, empId;";
         HashMap<Long, String> groupKey = new HashMap<Long, String>();
         try {
-            List<ChildParentEmp> empChart = this.jdbcTemplate.query(query.toString(), (RowMapper)new ChildParentEmpMapper());
+            List<ChildParentEmp> empChart = this.jdbcTemplate.query(query, new Object[]{empId}, (RowMapper)new ChildParentEmpMapper());
             for (ChildParentEmp childParent : empChart) {
                 groupKey.put(childParent.getEmpId(), childParent.getDeptName());
             }

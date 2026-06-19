@@ -33,7 +33,7 @@ public class DBService {
         response.setUserFlag(false);
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
             try (Connection con = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPass)) {
                 PreparedStatement ps = con.prepareStatement("SELECT * FROM employee_credentials WHERE email_address = ?");
                 ps.setString(1, loginDTO.getUserName());

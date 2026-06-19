@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class FormulationSubRiskDTO {
     private long id;
@@ -54,7 +55,7 @@ public class FormulationSubRiskDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (Objects.nonNull(riskDetails.getSubRiskValue())) {
             try {
-                this.subRiskValue = (Map)mapper.readValue(riskDetails.getSubRiskValue(), HashMap.class);
+                this.subRiskValue = JsonUtil.parseMap(riskDetails.getSubRiskValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

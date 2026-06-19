@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
+import com.estrat.backend.db.util.JsonUtil;
 
 @Component
 public class CommentsConverter {
@@ -39,7 +40,7 @@ public class CommentsConverter {
         commentsDTO.setCommentType(comments.getCommentType());
         ObjectMapper mapper = new ObjectMapper();
         try {
-            commentsDTO.setCommentsValue((Map)mapper.readValue(comments.getCommentsValue(), HashMap.class));
+            commentsDTO.setCommentsValue(JsonUtil.parseMap(comments.getCommentsValue()));
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -85,7 +86,7 @@ public class CommentsConverter {
         commentsDTO.setCommentsParendId(comments.getCommentsParendId());
         ObjectMapper mapper = new ObjectMapper();
         try {
-            commentsDTO.setCommentsValue((Map)mapper.readValue(comments.getCommentsValue(), HashMap.class));
+            commentsDTO.setCommentsValue(JsonUtil.parseMap(comments.getCommentsValue()));
         }
         catch (Exception e) {
             throw new RuntimeException(e);

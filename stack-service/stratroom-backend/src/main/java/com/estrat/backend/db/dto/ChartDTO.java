@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class ChartDTO {
@@ -49,13 +50,7 @@ public class ChartDTO {
             this.pageId = chartDetails.getPageId().getId();
             this.pageName = chartDetails.getPageId().getPageName();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.chartValue = (Map)mapper.readValue(chartDetails.getChartValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.chartValue = JsonUtil.parseMap(chartDetails.getChartValue());
     }
 
     public long getId() {

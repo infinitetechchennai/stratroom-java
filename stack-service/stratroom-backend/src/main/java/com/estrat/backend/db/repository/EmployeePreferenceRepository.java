@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeePreferenceRepository
 extends JpaRepository<EmployeePreferences, Long> {
-    @Query(value="SELECT e.* FROM orgstructure.employee_preferences e WHERE e.id=:pageId AND e.emp_id=:empId AND e.page_name=:pageName", nativeQuery=true)
+    @Query(value="SELECT e.* FROM orgstructure.employee_preferences e WHERE e.id=:pageId AND e.emp_id=CAST(:empId AS bigint) AND e.page_name=:pageName", nativeQuery=true)
     public EmployeePreferences findPreferencesByEmpIdAndName(@Param(value="pageId") long var1, @Param(value="empId") String var3, @Param(value="pageName") String var4);
 }
 

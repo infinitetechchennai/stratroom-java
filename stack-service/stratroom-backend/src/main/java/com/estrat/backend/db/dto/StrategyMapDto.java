@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class StrategyMapDto {
     private long id;
@@ -46,13 +47,7 @@ public class StrategyMapDto {
             this.pageId = strategyMap.getPageId().getId();
             this.pageName = strategyMap.getPageId().getPageName();
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.setting = (Map)mapper.readValue(strategyMap.getSetting(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.setting = JsonUtil.parseMap(strategyMap.getSetting());
     }
 
     public long getId() {

@@ -12,6 +12,7 @@ import com.estrat.backend.db.bean.po.PreferenceSubDetail;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class PreferenceDTO {
     private long id;
@@ -37,7 +38,7 @@ public class PreferenceDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (preferenceDetail.getPreferenceValue() != null) {
             try {
-                this.preferenceValue = (Map)mapper.readValue(preferenceDetail.getPreferenceValue(), HashMap.class);
+                this.preferenceValue = JsonUtil.parseMap(preferenceDetail.getPreferenceValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

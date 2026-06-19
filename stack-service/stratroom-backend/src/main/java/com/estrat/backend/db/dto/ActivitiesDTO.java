@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class ActivitiesDTO {
@@ -55,13 +56,7 @@ public class ActivitiesDTO {
         this.subInitiativeId = activitiesDetails.getSubInitiativeId();
         this.activitiesMapDTOList = activitiesDetails.getActivitiesMaps() != null ? activitiesDetails.getActivitiesMaps().stream().map(obj -> new ActivitiesMapDTO(obj)).collect(Collectors.toList()) : null;
         this.subActivityList = activitiesDetails.getSubActivityList() != null ? activitiesDetails.getSubActivityList().stream().map(kpi -> new SubActivitiesDTO(kpi)).collect(Collectors.toList()) : null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.activitiesValue = (Map)mapper.readValue(activitiesDetails.getActivitiesValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.activitiesValue = JsonUtil.parseMap(activitiesDetails.getActivitiesValue());
     }
 
     public long getId() {

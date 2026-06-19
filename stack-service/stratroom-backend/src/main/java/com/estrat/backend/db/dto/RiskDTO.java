@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
@@ -106,7 +107,7 @@ public class RiskDTO {
         ObjectMapper mapper = new ObjectMapper();
         if (riskDetails.getRiskValue() != null) {
             try {
-                this.riskValue = (Map)mapper.readValue(riskDetails.getRiskValue(), HashMap.class);
+                this.riskValue = JsonUtil.parseMap(riskDetails.getRiskValue());
             }
             catch (Exception e) {
                 throw new RuntimeException(e);

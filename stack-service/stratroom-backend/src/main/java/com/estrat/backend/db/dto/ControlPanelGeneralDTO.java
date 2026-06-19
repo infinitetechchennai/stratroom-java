@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class ControlPanelGeneralDTO {
     private String siteName;
@@ -60,13 +61,7 @@ public class ControlPanelGeneralDTO {
         this.implementationType = controlPanelGeneral.getImplementationType();
         this.startMonth = controlPanelGeneral.getStartMonth();
         this.endMonth = controlPanelGeneral.getEndMonth();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.generalSettingValue = (Map)mapper.readValue(controlPanelGeneral.getGeneralSettingValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.generalSettingValue = JsonUtil.parseMap(controlPanelGeneral.getGeneralSettingValue());
     }
 
     public String getSiteName() {

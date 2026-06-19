@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import com.estrat.backend.db.util.JsonUtil;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class FormulationSubInitiativesDTO {
@@ -48,13 +49,7 @@ public class FormulationSubInitiativesDTO {
         this.updatedBy = formulationSubInitiatives.getUpdatedBy();
         this.initiativeId = formulationSubInitiatives.getInitiativeId().getId();
         this.type = formulationSubInitiatives.getType();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.subInitiativeValue = (Map)mapper.readValue(formulationSubInitiatives.getSubInitiativeValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.subInitiativeValue = JsonUtil.parseMap(formulationSubInitiatives.getSubInitiativeValue());
         if (CollectionUtils.isNotEmpty((Collection)formulationSubInitiatives.getSubInitiativesUserList())) {
             this.employeeList = formulationSubInitiatives.getSubInitiativesUserList().stream().filter(employee -> Objects.nonNull(employee.getId().getEmpId().getOrgId())).map(employee -> new Employee(employee.getId().getEmpId())).collect(Collectors.toList());
         }

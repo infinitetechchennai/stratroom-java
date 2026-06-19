@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class SubKPIDTO {
     private long id;
@@ -65,7 +66,7 @@ public class SubKPIDTO {
         this.objectiveId = subKpi.getObjectiveId();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            this.subKpiValue = (Map)mapper.readValue(subKpi.getSubKpiValue(), HashMap.class);
+            this.subKpiValue = JsonUtil.parseMap(subKpi.getSubKpiValue());
             String string = this.subKpiName = Objects.nonNull(this.getSubKpiValue().get("subMeasureName")) ? this.getSubKpiValue().get("subMeasureName").toString() : "";
             if (this.subKpiValue.get("kpiFormula") != null && this.subKpiValue.get("kpiFormula").toString() != "") {
                 this.kpiFormula = (KPIFormula)mapper.readValue(this.subKpiValue.get("kpiFormula").toString(), KPIFormula.class);
@@ -96,13 +97,7 @@ public class SubKPIDTO {
         this.kpiId = subKpi.getKpiId();
         this.objectiveId = subKpi.getObjectiveId();
         this.subKpiName = subKpi.getSubKpiName();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.subKpiValue = (Map)mapper.readValue(subKpi.getSubKpiValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.subKpiValue = JsonUtil.parseMap(subKpi.getSubKpiValue());
     }
 
     public long getId() {

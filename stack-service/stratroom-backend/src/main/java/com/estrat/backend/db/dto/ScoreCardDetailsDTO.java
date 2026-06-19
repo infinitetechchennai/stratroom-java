@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class ScoreCardDetailsDTO {
     private long id;
@@ -58,13 +59,7 @@ public class ScoreCardDetailsDTO {
         this.startDate = scoreCardDetails.getStartDate();
         this.endDate = scoreCardDetails.getEndDate();
         this.scoreCardDTOS = scoreCardDetails.getScoreCardList() != null ? scoreCardDetails.getScoreCardList().stream().map(obj -> new ScoreCardDTO(obj, true)).collect(Collectors.toList()) : null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.scoreCardDetailsValue = (Map)mapper.readValue(scoreCardDetails.getScoreCardDetailsValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.scoreCardDetailsValue = JsonUtil.parseMap(scoreCardDetails.getScoreCardDetailsValue());
     }
 
     public ScoreCardDetailsDTO(ScoreCardDetails scoreCardDetails, boolean flag) {
@@ -88,13 +83,7 @@ public class ScoreCardDetailsDTO {
         if (flag) {
             this.scoreCardDTOS = scoreCardDetails.getScoreCardList() != null ? scoreCardDetails.getScoreCardList().stream().map(obj -> new ScoreCardDTO(obj, true)).collect(Collectors.toList()) : null;
         }
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.scoreCardDetailsValue = (Map)mapper.readValue(scoreCardDetails.getScoreCardDetailsValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.scoreCardDetailsValue = JsonUtil.parseMap(scoreCardDetails.getScoreCardDetailsValue());
     }
 
     public long getId() {

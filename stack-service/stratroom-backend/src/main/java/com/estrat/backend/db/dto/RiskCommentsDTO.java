@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.estrat.backend.db.util.JsonUtil;
 
 public class RiskCommentsDTO {
     private long id;
@@ -54,13 +55,7 @@ public class RiskCommentsDTO {
             this.commentsParendId = riskComments.getCommentsParendId();
         }
         this.commentType = riskComments.getCommentType();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            this.riskCommentsValue = (Map)mapper.readValue(riskComments.getRiskCommentsValue(), HashMap.class);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.riskCommentsValue = JsonUtil.parseMap(riskComments.getRiskCommentsValue());
     }
 
     public long getId() {
