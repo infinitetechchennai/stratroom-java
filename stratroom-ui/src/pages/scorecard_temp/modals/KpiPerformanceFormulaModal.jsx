@@ -74,140 +74,140 @@ const KpiPerformanceFormulaModal = () => {
                     ></textarea>
                   </div>
                   <div className="mb-3 w-100" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    <button
+                    <button title="Addition"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('+')}
                     >
                       +
                     </button>
-                    <button
+                    <button title="Subtraction"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('-')}
                     >
                       -
                     </button>
-                    <button
+                    <button title="Multiplication"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('*')}
                     >
                       *
                     </button>
-                    <button
+                    <button title="Division"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('/')}
                     >
                       /
                     </button>
-                    <button
+                    <button title="Percentage"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('%')}
                     >
                       %
                     </button>
-                    <button
+                    <button title="Open Parenthesis"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('(')}
                     >
                       (
                     </button>
-                    <button
+                    <button title="Close Parenthesis"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance(')')}
                     >
                       )
                     </button>
-                    <button
+                    <button title="Open Bracket"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('[')}
                     >
                       [
                     </button>
-                    <button
+                    <button title="Close Bracket"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance(']')}
                     >
                       ]
                     </button>
-                    <button
+                    <button title="Colon"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance(':')}
                     >
                       :
                     </button>
-                    <button
+                    <button title="Logical AND"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('AND')}
                     >
                       AND
                     </button>
-                    <button
+                    <button title="Logical OR"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('OR')}
                     >
                       OR
                     </button>
-                    <button
+                    <button title="Logical NOT"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('NOT')}
                     >
                       NOT
                     </button>
-                    <button
+                    <button title="Included IN"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('IN')}
                     >
                       IN
                     </button>
-                    <button
+                    <button title="Equals"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('==')}
                     >
                       ==
                     </button>
-                    <button
+                    <button title="Not Equals"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('!=')}
                     >
                       !=
                     </button>
-                    <button
+                    <button title="Greater Than"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('>')}
                     >
                       &gt;
                     </button>
-                    <button
+                    <button title="Less Than"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('<')}
                     >
                       &lt;
                     </button>
-                    <button
+                    <button title="Greater Than or Equals"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('>=')}
                     >
                       &gt;=
                     </button>
-                    <button
+                    <button title="Less Than or Equals"
                       type="button"
                       className="opr btn btn-secondary"
                       onClick={() => window.updatePerformance && window.updatePerformance('<=')}

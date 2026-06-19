@@ -61,40 +61,6 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
     } = useScorecardContext();
 
 
-    // ── Bootstrap modal stacking (calculator over kpi_setting modals) ───────
-    useEffect(() => {
-        let lastOpenedModal = null;
-        const kpiSettingsModals = document.querySelectorAll('.kpi_setting');
-        const handleKpiSettingShow = function () { lastOpenedModal = this; };
-        kpiSettingsModals.forEach(m => m.addEventListener('show.bs.modal', handleKpiSettingShow));
-
-        const calculatorIds = ['objective-calculator-modal', 'prespective-calculator-modal', 'kpiActual-calculator-modal', 'kpi_formula_popup', 'ytd-calculator-modal'];
-        const handleCalculatorShow = () => { if (lastOpenedModal) lastOpenedModal.classList.add('modal-static'); };
-        const handleCalculatorHidden = () => {
-            document.querySelectorAll('.kpi_setting').forEach(el => el.classList.remove('modal-static'));
-            if (lastOpenedModal) {
-                if (window.bootstrap?.Modal) new window.bootstrap.Modal(lastOpenedModal).show();
-                lastOpenedModal = null;
-            }
-        };
-        calculatorIds.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('show.bs.modal', handleCalculatorShow);
-                el.addEventListener('hidden.bs.modal', handleCalculatorHidden);
-            }
-        });
-        return () => {
-            kpiSettingsModals.forEach(m => m.removeEventListener('show.bs.modal', handleKpiSettingShow));
-            calculatorIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.removeEventListener('show.bs.modal', handleCalculatorShow);
-                    el.removeEventListener('hidden.bs.modal', handleCalculatorHidden);
-                }
-            });
-        };
-    }, []);
 
     // ── Theme CSS vars ──────────────────────────────────────────────────────
     useEffect(() => {

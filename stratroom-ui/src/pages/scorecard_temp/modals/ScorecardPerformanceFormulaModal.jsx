@@ -70,140 +70,140 @@ const ScorecardPerformanceFormulaModal = () => {
                       </div>
                       <div className="g-col-12">
                         <div className="keypad d-flex flex-wrap gap-2">
-                          <button
+                          <button title="Addition"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('+')}
                           >
                             +
                           </button>
-                          <button
+                          <button title="Subtraction"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('-')}
                           >
                             -
                           </button>
-                          <button
+                          <button title="Multiplication"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('*')}
                           >
                             *
                           </button>
-                          <button
+                          <button title="Division"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('/')}
                           >
                             /
                           </button>
-                          <button
+                          <button title="Percentage"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('%')}
                           >
                             %
                           </button>
-                          <button
+                          <button title="Open Parenthesis"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('(')}
                           >
                             (
                           </button>
-                          <button
+                          <button title="Close Parenthesis"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective(')')}
                           >
                             )
                           </button>
-                          <button
+                          <button title="Open Bracket"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('[')}
                           >
                             [
                           </button>
-                          <button
+                          <button title="Close Bracket"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective(']')}
                           >
                             ]
                           </button>
-                          <button
+                          <button title="Colon"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective(':')}
                           >
                             :
                           </button>
-                          <button
+                          <button title="Logical AND"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('AND')}
                           >
                             AND
                           </button>
-                          <button
+                          <button title="Logical OR"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('OR')}
                           >
                             OR
                           </button>
-                          <button
+                          <button title="Logical NOT"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('NOT')}
                           >
                             NOT
                           </button>
-                          <button
+                          <button title="Included IN"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('IN')}
                           >
                             IN
                           </button>
-                          <button
+                          <button title="Equals"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('==')}
                           >
                             ==
                           </button>
-                          <button
+                          <button title="Not Equals"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('!=')}
                           >
                             !=
                           </button>
-                          <button
+                          <button title="Greater Than"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('>')}
                           >
                             &gt;
                           </button>
-                          <button
+                          <button title="Less Than"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('<')}
                           >
                             &lt;
                           </button>
-                          <button
+                          <button title="Greater Than or Equals"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('>=')}
                           >
                             &gt;=
                           </button>
-                          <button
+                          <button title="Less Than or Equals"
                             type="button"
                             className="kpiPerformance-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateScorecardPerspective && window.updateScorecardPerspective('<=')}

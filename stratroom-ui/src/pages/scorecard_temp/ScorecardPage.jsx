@@ -47,54 +47,6 @@ const ScorecardPageContent = ({ pageIdProp }) => {
     const { scorecardData: liveDTO, loading: liveLoading, error: liveError } = useScorecard(pageId);
     
     useEffect(() => {
-        let lastOpenedModal = null;
-        const kpiSettingsModals = document.querySelectorAll('.kpi_setting');
-
-        const handleKpiSettingShow = function() {
-            lastOpenedModal = this;
-        };
-
-        kpiSettingsModals.forEach(modal => {
-            modal.addEventListener('show.bs.modal', handleKpiSettingShow);
-        });
-
-        const calculatorIds = ['objective-calculator-modal', 'kpi-calculator-modal', 'prespective-calculator-modal'];
-        
-        const handleCalculatorShow = function() {
-            if (lastOpenedModal) {
-                lastOpenedModal.classList.add('modal-static');
-            }
-        };
-
-        const handleCalculatorHidden = function() {
-            document.querySelectorAll('.kpi_setting').forEach(el => el.classList.remove('modal-static'));
-            if (lastOpenedModal) {
-                // Reopen using global window.bootstrap if available
-                if (window.bootstrap && window.bootstrap.Modal) {
-                    const reopenModal = new window.bootstrap.Modal(lastOpenedModal);
-                    reopenModal.show();
-                }
-                lastOpenedModal = null;
-            }
-        };
-
-        calculatorIds.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('show.bs.modal', handleCalculatorShow);
-                el.addEventListener('hidden.bs.modal', handleCalculatorHidden);
-            }
-        });
-
-        return () => {
-            kpiSettingsModals.forEach(modal => {
-                modal.removeEventListener('show.bs.modal', handleKpiSettingShow);
-            });
-            calculatorIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.removeEventListener('show.bs.modal', handleCalculatorShow);
-                    el.removeEventListener('hidden.bs.modal', handleCalculatorHidden);
                 }
             });
         };

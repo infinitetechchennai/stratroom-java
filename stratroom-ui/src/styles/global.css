@@ -16,3 +16,87 @@
   --danger: #dc2626;
   --success: #16a34a;
 }
+
+/* ══════════════════════════════════════════
+   CALENDAR PICKER STYLES
+══════════════════════════════════════════ */
+.cal-preset-btn {
+  display: block; width: 100%; text-align: left;
+  padding: 6px 10px; border-radius: 7px; border: none;
+  background: none; font-family: 'Trebuchet MS', Trebuchet, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11.5px; font-weight: 500; color: #5B6B8A;
+  cursor: pointer; transition: background .12s, color .12s;
+}
+.cal-preset-btn:hover { background: #F0FFFE; color: #009999; }
+.cal-preset-btn.cal-active { background: rgba(0,196,196,.12); color: #009999; font-weight: 700; }
+
+.cal-type-tab {
+  padding: 4px 12px; border-radius: 6px; border: 1px solid transparent;
+  font-family: 'Trebuchet MS', Trebuchet, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11.5px; font-weight: 600; color: #5B6B8A;
+  background: none; cursor: pointer; transition: all .13s;
+}
+.cal-type-tab:hover:not(.active) { background: #F0FFFE; color: #009999; }
+.cal-type-tab.active { background: rgba(0,196,196,.12); color: #009999; border-color: rgba(0,196,196,.28); }
+
+.cal-nav-btn {
+  width: 26px; height: 26px; border-radius: 6px;
+  border: 1px solid #E4EAF4; background: #fff; cursor: pointer;
+  font-size: 16px; line-height: 1; color: #5B6B8A;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .12s;
+}
+.cal-nav-btn:hover { background: #F0FFFE; color: #009999; }
+
+.cal-grid-hdr {
+  display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px;
+}
+.cal-dow-lbl {
+  text-align: center; font-size: 10px; font-weight: 700;
+  color: #8A97B0; padding: 2px 0 4px; letter-spacing: .04em;
+}
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px;
+}
+.cal-day-cell {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; border-radius: 6px; cursor: pointer;
+  color: #5B6B8A; transition: background .1s, color .1s;
+  position: relative; user-select: none;
+  font-family: 'Trebuchet MS', Trebuchet, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500; border: none; background: none;
+}
+.cal-day-cell:hover:not(.cal-empty):not(.cal-other) { background: rgba(0,196,196,.12); color: #009999; }
+.cal-day-cell.cal-other { color: #8A97B0; opacity: .4; cursor: default; }
+.cal-day-cell.cal-empty { cursor: default; }
+.cal-day-cell.cal-in-range { background: rgba(0,196,196,.08); border-radius: 0; color: #009999; }
+.cal-day-cell.cal-range-start,
+.cal-day-cell.cal-range-end {
+  background: #009999 !important; color: #fff !important;
+  border-radius: 6px !important; font-weight: 700;
+}
+.cal-day-cell.cal-today::after {
+  content: ''; position: absolute; bottom: 2px; left: 50%;
+  transform: translateX(-50%); width: 3px; height: 3px;
+  border-radius: 50%; background: #009999;
+}
+.cal-day-cell.cal-range-start.cal-today::after,
+.cal-day-cell.cal-range-end.cal-today::after { background: #fff; }
+
+.cal-q-btn, .cal-yr-btn {
+  padding: 9px 4px; border-radius: 7px; text-align: center;
+  cursor: pointer; font-size: 11.5px; font-weight: 600;
+  border: 1px solid #E4EAF4; background: #F7F9FC;
+  color: #5B6B8A; transition: all .12s;
+  font-family: 'Trebuchet MS', Trebuchet, 'Helvetica Neue', Arial, sans-serif;
+}
+.cal-q-btn:hover, .cal-yr-btn:hover {
+  background: rgba(0,196,196,.1); color: #009999; border-color: rgba(0,196,196,.3);
+}
+.cal-q-btn.cal-active, .cal-yr-btn.cal-active {
+  background: #009999; color: #fff; border-color: #009999;
+}
+.cal-yr-btn.cal-yr-inrange,
+.cal-q-btn.cal-yr-inrange {
+  background: rgba(0,196,196,.08); color: #009999; border-color: rgba(0,196,196,.2);
+}

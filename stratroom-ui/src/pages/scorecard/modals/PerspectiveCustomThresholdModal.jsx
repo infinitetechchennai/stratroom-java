@@ -71,140 +71,140 @@ const PerspectiveCustomThresholdModal = () => {
                       </div>
                       <div className="g-col-12">
                         <div className="keypad d-flex flex-wrap gap-2">
-                          <button
+                          <button title="Addition"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('+')}
                           >
                             +
                           </button>
-                          <button
+                          <button title="Subtraction"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('-')}
                           >
                             -
                           </button>
-                          <button
+                          <button title="Multiplication"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('*')}
                           >
                             *
                           </button>
-                          <button
+                          <button title="Division"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('/')}
                           >
                             /
                           </button>
-                          <button
+                          <button title="Percentage"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('%')}
                           >
                             %
                           </button>
-                          <button
+                          <button title="Open Parenthesis"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('(')}
                           >
                             (
                           </button>
-                          <button
+                          <button title="Close Parenthesis"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective(')')}
                           >
                             )
                           </button>
-                          <button
+                          <button title="Open Bracket"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('[')}
                           >
                             [
                           </button>
-                          <button
+                          <button title="Close Bracket"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective(']')}
                           >
                             ]
                           </button>
-                          <button
+                          <button title="Colon"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective(':')}
                           >
                             :
                           </button>
-                          <button
+                          <button title="Logical AND"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('AND')}
                           >
                             AND
                           </button>
-                          <button
+                          <button title="Logical OR"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('OR')}
                           >
                             OR
                           </button>
-                          <button
+                          <button title="Logical NOT"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('NOT')}
                           >
                             NOT
                           </button>
-                          <button
+                          <button title="Included IN"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('IN')}
                           >
                             IN
                           </button>
-                          <button
+                          <button title="Equals"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('==')}
                           >
                             ==
                           </button>
-                          <button
+                          <button title="Not Equals"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('!=')}
                           >
                             !=
                           </button>
-                          <button
+                          <button title="Greater Than"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('>')}
                           >
                             &gt;
                           </button>
-                          <button
+                          <button title="Less Than"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('<')}
                           >
                             &lt;
                           </button>
-                          <button
+                          <button title="Greater Than or Equals"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('>=')}
                           >
                             &gt;=
                           </button>
-                          <button
+                          <button title="Less Than or Equals"
                             type="button"
                             className="prespective-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateCustomPerspective && window.updateCustomPerspective('<=')}

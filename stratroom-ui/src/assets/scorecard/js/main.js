@@ -103,46 +103,50 @@ window.addEventListener("resize", setMainHeightVar);
 
 
 
-// Add event listener for when the modal is shown
-document.getElementById('financial-global-kpi-calculator')?.addEventListener('show.bs.modal', function () {
-  const headerAddElement = document.getElementById('financial-global-header-add');
-  if (headerAddElement) {
-    headerAddElement.classList.add('modal-static');
-  }
+// Generic event listener for handling nested modals across the entire app
+document.addEventListener('click', function(e) {
+    const toggleBtn = e.target.closest('[data-bs-toggle="modal"]');
+    if (toggleBtn) {
+        const currentModal = toggleBtn.closest('.modal');
+        let targetSelector = toggleBtn.getAttribute('data-bs-target');
+        if (!targetSelector && toggleBtn.tagName === 'A') {
+            targetSelector = toggleBtn.getAttribute('href');
+        }
+        if (currentModal && targetSelector && targetSelector !== '#') {
+            try {
+                const targetModal = document.querySelector(targetSelector);
+                if (targetModal && currentModal.id) {
+                    // Use a data attribute which survives React re-renders better than JS properties
+                    targetModal.setAttribute('data-parent-modal', '#' + currentModal.id);
+                }
+            } catch (err) {
+                console.warn('Invalid modal selector', targetSelector);
+            }
+        }
+    }
 });
 
-// Add event listener for when the modal is hidden
-document.getElementById('financial-global-kpi-calculator')?.addEventListener('hidden.bs.modal', function () {
-  const headerAddElement = document.getElementById('financial-global-header-add');
-  if (headerAddElement) {
-    headerAddElement.classList.remove('modal-static');
-    const fghaModal = new bootstrap.Modal('#financial-global-header-add', {});
-    fghaModal.show();
-  }
+document.addEventListener('hidden.bs.modal', function(e) {
+    const closedModal = e.target;
+    const parentSelector = closedModal.getAttribute('data-parent-modal');
+    
+    if (parentSelector) {
+        // Clear the attribute
+        closedModal.removeAttribute('data-parent-modal');
+        
+        // Wait a short tick to let Bootstrap fully complete the hide transition
+        setTimeout(() => {
+            // Check if another modal hasn't already been opened
+            if (!document.body.classList.contains('modal-open')) {
+                const parentModal = document.querySelector(parentSelector);
+                if (parentModal && window.bootstrap?.Modal) {
+                    const modalInst = window.bootstrap.Modal.getOrCreateInstance(parentModal);
+                    modalInst.show();
+                }
+            }
+        }, 150);
+    }
 });
-
-
-// Add event listener for when the modal is shown
-document.getElementById('attendess-list-notes')?.addEventListener('show.bs.modal', function () {
-  const notesPestalAddElement = document.getElementById('notes-pestal');
-  if (notesPestalAddElement) {
-    notesPestalAddElement.classList.add('modal-static');
-  }
-});
-
-// Add event listener for when the modal is hidden
-document.getElementById('attendess-list-notes')?.addEventListener('hidden.bs.modal', function () {
-  const notesPestalAddElement = document.getElementById('notes-pestal');
-  if (notesPestalAddElement) {
-    notesPestalAddElement.classList.remove('modal-static');
-    const npModal = new bootstrap.Modal('#notes-pestal', {});
-    npModal.show();
-  }
-});
-
-
-
-
 
 
 

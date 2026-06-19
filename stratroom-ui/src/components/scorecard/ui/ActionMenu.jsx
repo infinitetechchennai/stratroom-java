@@ -17,11 +17,11 @@ export const ActionMenu = ({ level, item }) => {
     const renderLevel0 = () => (
         <div className="table-actions justify-content-end">
             <a href="#objective-view-modal" data-bs-toggle="modal" type="button"
-               className="btn btn-sm btn-icon">
+               className="btn btn-sm btn-icon" title="View Details">
                 <span className="icon"><i data-lucide="badge-info" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
             <div className="dropdown" ref={dropdownRef}>
-                <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown">
+                <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" title="More Actions">
                     <i data-lucide="ellipsis-vertical" style={{ width: '16px', height: '16px' }}></i>
                 </button>
                 <ul className="dropdown-menu border-0 shadow">
@@ -38,19 +38,19 @@ export const ActionMenu = ({ level, item }) => {
     const renderLevel1 = () => (
         <div className="table-actions justify-content-end">
              <a href="#" onClick={(e) => { e.preventDefault(); downloadKpiReport(item?.kpiPk ?? item?.id); }}
-                   className="btn btn-sm btn-icon">
+                   className="btn btn-sm btn-icon" title="Download Report">
                 <span className="icon"><i data-lucide="file-text" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
              <a href="#kpi-story-card-modal" data-bs-toggle="modal" type="button"
-                   className="btn btn-sm btn-icon" onClick={() => setStoryCardItem(item)}>
+                   className="btn btn-sm btn-icon" onClick={() => setStoryCardItem(item)} title="KPI Story Card">
                 <span className="icon"><i data-lucide="link" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
             <a href="#kpi-view-modal" data-bs-toggle="modal" type="button"
-                   className="btn btn-sm btn-icon">
+                   className="btn btn-sm btn-icon" title="View Details">
                 <span className="icon"><i data-lucide="badge-info" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
             <div className="dropdown" ref={dropdownRef}>
-                <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown">
+                <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" title="More Actions">
                     <i data-lucide="ellipsis-vertical" style={{ width: '16px', height: '16px' }}></i>
                 </button>
                 <ul className="dropdown-menu border-0 shadow">
@@ -67,19 +67,19 @@ export const ActionMenu = ({ level, item }) => {
     const renderLevelDeep = () => (
         <div className="table-actions justify-content-end">
             <a href="#" onClick={(e) => { e.preventDefault(); downloadKpiReport(item?.kpiPk ?? item?.id); }}
-                   className="btn btn-sm btn-icon">
+                   className="btn btn-sm btn-icon" title="Download Report">
                 <span className="icon"><i data-lucide="file-text" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
             <a href="#kpi-story-card-modal" data-bs-toggle="modal" type="button"
-                   className="btn btn-sm btn-icon" onClick={() => setStoryCardItem(item)}>
+                   className="btn btn-sm btn-icon" onClick={() => setStoryCardItem(item)} title="KPI Story Card">
                 <span className="icon"><i data-lucide="link" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
             <a href="#subkpi-view-modal" data-bs-toggle="modal" type="button"
-                   className="btn btn-sm btn-icon">
+                   className="btn btn-sm btn-icon" title="View Details">
                 <span className="icon"><i data-lucide="badge-info" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
             <div className="dropdown" ref={dropdownRef}>
-                <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown">
+                <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" title="More Actions">
                     <i data-lucide="ellipsis-vertical" style={{ width: '16px', height: '16px' }}></i>
                 </button>
                 <ul className="dropdown-menu border-0 shadow">
