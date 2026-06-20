@@ -1,0 +1,113 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.backend.db.bean.po.FormulationRiskActivities
+ *  com.estrat.backend.db.dto.FormulationRiskActivitiesDTO
+ *  com.estrat.backend.db.dto.FormulationSubRiskDTO
+ *  com.fasterxml.jackson.databind.ObjectMapper
+ */
+package com.estrat.backend.db.dto;
+
+import com.estrat.backend.db.bean.po.FormulationRiskActivities;
+import com.estrat.backend.db.dto.FormulationSubRiskDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+public class FormulationRiskActivitiesDTO {
+    private long id;
+    private Map<String, Object> activityValue;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
+    private Long createdBy;
+    private Long updatedBy;
+    private long subRiskId;
+    private FormulationSubRiskDTO subRiskDTO;
+
+    public FormulationRiskActivitiesDTO() {
+    }
+
+    public FormulationRiskActivitiesDTO(FormulationRiskActivities formulationRiskActivities) {
+        this.id = formulationRiskActivities.getId();
+        this.createdTime = formulationRiskActivities.getCreatedTime();
+        this.updatedTime = formulationRiskActivities.getUpdatedTime();
+        this.createdBy = formulationRiskActivities.getCreatedBy();
+        this.updatedBy = formulationRiskActivities.getUpdatedBy();
+        this.subRiskId = formulationRiskActivities.getSubRiskId().getId();
+        this.subRiskDTO = new FormulationSubRiskDTO(formulationRiskActivities.getSubRiskId(), true);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            this.activityValue = (Map)mapper.readValue(formulationRiskActivities.getActivityValue(), HashMap.class);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public FormulationSubRiskDTO getSubRiskDTO() {
+        return this.subRiskDTO;
+    }
+
+    public void setSubRiskDTO(FormulationSubRiskDTO subRiskDTO) {
+        this.subRiskDTO = subRiskDTO;
+    }
+
+    public long getSubRiskId() {
+        return this.subRiskId;
+    }
+
+    public void setSubRiskId(long subRiskId) {
+        this.subRiskId = subRiskId;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return this.updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public Long getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getUpdatedBy() {
+        return this.updatedBy;
+    }
+
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Map<String, Object> getActivityValue() {
+        return this.activityValue;
+    }
+
+    public void setActivityValue(Map<String, Object> activityValue) {
+        this.activityValue = activityValue;
+    }
+}
+

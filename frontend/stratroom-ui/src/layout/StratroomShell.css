@@ -1,0 +1,54 @@
+.stratroom-shell {
+  min-height: 100dvh;
+  background: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sticky top bar + header */
+.stratroom-shell .navbar-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background: #fff;
+}
+
+.stratroom-shell .header {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.stratroom-shell .navbar-brand img {
+  max-height: 36px;
+  width: auto;
+  display: block;
+}
+
+.stratroom-shell .nav-link.dropdown-toggle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  padding: 0.5rem 0.75rem;
+}
+
+.stratroom-shell .dropdown-menu.show {
+  display: block;
+  position: absolute;
+  z-index: 1050;
+}
+
+/* Content areas */
+.stratroom-landing-outlet {
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.stratroom-page-outlet {
+  padding: 0;
+  background: #f8f9fa;
+  flex: 1;
+}

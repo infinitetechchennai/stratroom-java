@@ -1,0 +1,151 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.backend.db.bean.po.InitiativeAttachment
+ *  com.estrat.backend.db.dto.InitiativeAttachmentDto
+ */
+package com.estrat.backend.db.dto;
+
+import com.estrat.backend.db.bean.po.InitiativeAttachment;
+import java.time.LocalDateTime;
+
+public class InitiativeAttachmentDto {
+    private long id;
+    private long initiativesId;
+    private int active = 0;
+    private Long createdBy;
+    private Long updatedBy;
+    private String name;
+    private String fileName;
+    private String size;
+    private String type;
+    private String file;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
+    private String uniqueFileReference;
+
+    public InitiativeAttachmentDto() {
+    }
+
+    public InitiativeAttachmentDto(InitiativeAttachment initiativeAttachment) {
+        this.id = initiativeAttachment.getId();
+        this.initiativesId = initiativeAttachment.getInitiativesId().getId();
+        this.active = initiativeAttachment.getActive();
+        this.createdBy = initiativeAttachment.getCreatedBy();
+        this.updatedBy = initiativeAttachment.getUpdatedBy();
+        this.name = initiativeAttachment.getName();
+        this.size = initiativeAttachment.getSize();
+        this.type = initiativeAttachment.getType();
+        this.file = initiativeAttachment.getFile();
+        this.createdTime = initiativeAttachment.getCreatedTime();
+        this.updatedTime = initiativeAttachment.getUpdatedTime();
+        this.fileName = initiativeAttachment.getFileName();
+        this.uniqueFileReference = initiativeAttachment.getUniqueFileReference();
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getInitiativesId() {
+        return this.initiativesId;
+    }
+
+    public void setInitiativesId(long initiativesId) {
+        this.initiativesId = initiativesId;
+    }
+
+    public int getActive() {
+        return this.active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public Long getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getUpdatedBy() {
+        return this.updatedBy;
+    }
+
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getSize() {
+        return this.size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getFile() {
+        return this.file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return this.updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public String getUniqueFileReference() {
+        return this.uniqueFileReference;
+    }
+
+    public void setUniqueFileReference(String uniqueFileReference) {
+        this.uniqueFileReference = uniqueFileReference;
+    }
+}
+

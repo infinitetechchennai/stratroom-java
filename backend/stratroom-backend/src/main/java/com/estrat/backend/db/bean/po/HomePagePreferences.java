@@ -1,0 +1,87 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.backend.db.bean.po.HomePagePreferences
+ *  com.estrat.backend.db.dto.HomePreferencesDTO
+ *  javax.persistence.Column
+ *  javax.persistence.Entity
+ *  javax.persistence.Id
+ *  javax.persistence.Table
+ */
+package com.estrat.backend.db.bean.po;
+
+import com.estrat.backend.db.dto.HomePreferencesDTO;
+import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="home_page_pref", schema="orgstructure")
+public class HomePagePreferences {
+    @Id
+    @Column(name="id")
+    private long id;
+    @Column(name="page_name")
+    private String pageName;
+    @Column(name="page_id")
+    private long pageId;
+    @Column(name="created_dt", updatable=false)
+    private LocalDateTime createdDt;
+    @Column(name="updated_dt")
+    private LocalDateTime updatedDt;
+
+    public HomePagePreferences() {
+    }
+
+    public HomePagePreferences(HomePreferencesDTO homePreferencesDTO) {
+        this.id = homePreferencesDTO.getId();
+        this.pageId = homePreferencesDTO.getPageId();
+        this.pageName = homePreferencesDTO.getPageName();
+        this.createdDt = homePreferencesDTO.getCreatedDt();
+        this.updatedDt = homePreferencesDTO.getUpdatedDt();
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public long getPageId() {
+        return this.pageId;
+    }
+
+    public void setPageId(long pageId) {
+        this.pageId = pageId;
+    }
+
+    public LocalDateTime getCreatedDt() {
+        return this.createdDt;
+    }
+
+    public void setCreatedDt(LocalDateTime createdDt) {
+        this.createdDt = createdDt;
+    }
+
+    public LocalDateTime getUpdatedDt() {
+        return this.updatedDt;
+    }
+
+    public void setUpdatedDt(LocalDateTime updatedDt) {
+        this.updatedDt = updatedDt;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getPageName() {
+        return this.pageName;
+    }
+
+    public void setPageName(String pageName) {
+        this.pageName = pageName;
+    }
+}
+

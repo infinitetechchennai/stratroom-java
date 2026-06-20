@@ -1,0 +1,10 @@
+control panel db config
+
+INSERT INTO orgstructure.control_panel_general
+  (orgId, site_name, site_language, admin_email_id, currency_type, calendar_year,
+   time_zone, implementation, implementation_type, currency_view, default_date_period,
+   start_month, end_month, created_time)
+VALUES
+  (1, 'Stratroom', 'English', 'admin@stratroom.in', 'USD', '2026',
+   'Asia/Kolkata', 'Employee', 'Employee', 'Actual', 'Month',
+   'January', 'December', now());

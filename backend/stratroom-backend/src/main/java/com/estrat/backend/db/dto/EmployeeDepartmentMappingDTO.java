@@ -1,0 +1,142 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+ *  com.estrat.backend.db.dto.EmployeeDepartmentMappingDTO
+ */
+package com.estrat.backend.db.dto;
+
+import com.estrat.backend.db.bean.po.EmployeeDepartmentMapping;
+import java.time.LocalDateTime;
+import java.util.Date;
+
+public class EmployeeDepartmentMappingDTO {
+    private long id;
+    private int active = 0;
+    private String status;
+    private Long empId;
+    private Long deptId;
+    private Date startDate;
+    private Date endDate;
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
+    private Long createdBy;
+    private Long updatedBy;
+    private String firstName;
+
+    public EmployeeDepartmentMappingDTO() {
+    }
+
+    public EmployeeDepartmentMappingDTO(EmployeeDepartmentMapping employeeDepartmentMapping) {
+        this.id = employeeDepartmentMapping.getId();
+        this.active = employeeDepartmentMapping.getActive();
+        this.status = employeeDepartmentMapping.getStatus();
+        this.empId = employeeDepartmentMapping.getEmpId();
+        this.deptId = employeeDepartmentMapping.getDeptId();
+        this.startDate = employeeDepartmentMapping.getStartDate();
+        this.endDate = employeeDepartmentMapping.getEndDate();
+        this.createdTime = employeeDepartmentMapping.getCreatedTime();
+        this.updatedTime = employeeDepartmentMapping.getUpdatedTime();
+        this.createdBy = employeeDepartmentMapping.getCreatedBy();
+        this.updatedBy = employeeDepartmentMapping.getUpdatedBy();
+        this.firstName = employeeDepartmentMapping.getFirstName();
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getActive() {
+        return this.active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getEmpId() {
+        return this.empId;
+    }
+
+    public void setEmpId(Long empId) {
+        this.empId = empId;
+    }
+
+    public Long getDeptId() {
+        return this.deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
+    public Date getStartDate() {
+        return this.startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return this.endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return this.updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public Long getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getUpdatedBy() {
+        return this.updatedBy;
+    }
+
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+}
+

@@ -1,0 +1,345 @@
+﻿[ERROR] COMPILATION ERROR : 
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[875,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RiskDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[878,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.RiskDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[910,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RiskDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[925,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.RiskDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[970,92] incompatible types: java.lang.Object cannot be converted to java.lang.String
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[987,32] no suitable constructor found for RiskEventDTO(java.lang.Object)
+    constructor com.estrat.backend.db.dto.RiskEventDTO.RiskEventDTO(com.estrat.backend.db.bean.po.RiskEvent) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RiskEvent)
+    constructor com.estrat.backend.db.dto.RiskEventDTO.RiskEventDTO(com.estrat.backend.db.bean.po.RiskEventHistory) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RiskEventHistory)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[999,19] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1001,36] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.dto.RiskEventDTO
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1006,67] bad operand types for binary operator '+'
+  first type:  java.lang.Object
+  second type: int
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1016,51] cannot find symbol
+  symbol:   method getKey()
+  location: variable nameEntry of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1017,67] cannot find symbol
+  symbol:   method getValue()
+  location: variable nameEntry of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1021,23] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1027,39] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.RiskEventFrequencyCountDto>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[75,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[109,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[144,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[171,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[205,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeProfilePo
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[210,47] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[213,23] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[242,35] incompatible types: java.lang.Object cannot be converted to java.lang.String
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[244,48] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeProfilePo
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[248,51] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[251,27] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[379,42] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[406,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeProfilePo
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[411,47] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[414,23] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[164,104] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.ChildTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[164,117] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.ChildTrackerDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[185,104] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.ChildTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[185,117] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.ChildTrackerDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[229,40] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[264,51] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[267,27] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[296,52] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[303,47] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[306,23] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[482,37] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[510,56] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[517,51] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+    constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+      (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[520,27] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[187,56] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[219,68] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[229,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserRoleManagement
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[232,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.UserDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[243,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserRoleManagement
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[246,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.UserDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[265,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserRoleManagement
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[268,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.UserDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[280,79] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[280,93] incompatible types: java.lang.Object cannot be converted to java.util.Set<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[322,129] cannot find symbol
+  symbol:   method getId()
+  location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[324,51] cannot find symbol
+  symbol:   method getId()
+  location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[329,131] cannot find symbol
+  symbol:   method getEmpId()
+  location: variable userDeptMapping2 of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[329,172] cannot find symbol
+  symbol:   method getDeptId()
+  location: variable userDeptMapping2 of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[331,106] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[333,63] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserDeptMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[338,129] cannot find symbol
+  symbol:   method getId()
+  location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[340,51] cannot find symbol
+  symbol:   method getId()
+  location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[346,127] cannot find symbol
+  symbol:   method getEmpId()
+  location: variable userDeptMapping2 of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[346,168] cannot find symbol
+  symbol:   method getDeptId()
+  location: variable userDeptMapping2 of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[348,102] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[350,59] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserDeptMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[356,125] cannot find symbol
+  symbol:   method getId()
+  location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[365,125] cannot find symbol
+  symbol:   method getId()
+  location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[392,55] cannot find symbol
+  symbol:   method getRoleName()
+  location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[393,70] cannot find symbol
+  symbol:   method getRoleId()
+  location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[397,51] cannot find symbol
+  symbol:   method size()
+  location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[397,93] cannot find symbol
+  symbol:   method get(int)
+  location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[398,86] cannot find symbol
+  symbol:   method get(int)
+  location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[399,71] cannot find symbol
+  symbol:   method get(int)
+  location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[402,60] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[406,107] cannot find symbol
+  symbol:   method get(int)
+  location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[449,66] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentChartMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[570,56] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[626,56] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[647,57] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[661,48] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[683,52] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[694,58] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserRoleManagement
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[104,92] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[104,109] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[110,106] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentChartMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[110,123] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.DepartmentChartDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[160,51] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[166,23] incompatible types: java.lang.Object cannot be converted to java.util.ArrayList<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[182,67] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[182,84] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[320,51] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[326,23] incompatible types: java.lang.Object cannot be converted to java.util.ArrayList<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[351,88] incompatible types: java.util.List<java.lang.Long> cannot be converted to java.util.ArrayList<java.lang.Long>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[368,51] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[370,23] incompatible types: java.lang.Object cannot be converted to java.util.ArrayList<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[395,76] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptMultipleOwnersMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[401,45] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserDeptMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[438,51] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[440,23] incompatible types: java.lang.Object cannot be converted to java.util.ArrayList<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[448,44] incompatible types: java.util.ArrayList<com.estrat.backend.db.dto.DepartmentChartDTO> cannot be converted to java.util.List<java.lang.Object>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[450,87] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentChartMapping
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project stratroom-backend: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[875,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RiskDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[878,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.RiskDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[910,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RiskDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[925,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.RiskDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[970,92] incompatible types: java.lang.Object cannot be converted to java.lang.String
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[987,32] no suitable constructor found for RiskEventDTO(java.lang.Object)
+[ERROR]     constructor com.estrat.backend.db.dto.RiskEventDTO.RiskEventDTO(com.estrat.backend.db.bean.po.RiskEvent) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RiskEvent)
+[ERROR]     constructor com.estrat.backend.db.dto.RiskEventDTO.RiskEventDTO(com.estrat.backend.db.bean.po.RiskEventHistory) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RiskEventHistory)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[999,19] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1001,36] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.dto.RiskEventDTO
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1006,67] bad operand types for binary operator '+'
+[ERROR]   first type:  java.lang.Object
+[ERROR]   second type: int
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1016,51] cannot find symbol
+[ERROR]   symbol:   method getKey()
+[ERROR]   location: variable nameEntry of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1017,67] cannot find symbol
+[ERROR]   symbol:   method getValue()
+[ERROR]   location: variable nameEntry of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1021,23] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/RiskDetailsService.java:[1027,39] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.RiskEventFrequencyCountDto>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[75,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[109,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[144,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[171,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[205,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeProfilePo
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[210,47] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[213,23] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[242,35] incompatible types: java.lang.Object cannot be converted to java.lang.String
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[244,48] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeProfilePo
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[248,51] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[251,27] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[379,42] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[406,44] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeProfilePo
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[411,47] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/OrgTrackerService.java:[414,23] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[164,104] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.ChildTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[164,117] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.ChildTrackerDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[185,104] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.ChildTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[185,117] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.ChildTrackerDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[229,40] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[264,51] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[267,27] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[296,52] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[303,47] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[306,23] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[482,37] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[510,56] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[517,51] no suitable constructor found for OrgTrackerDTO(java.lang.Object)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.OrgTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.OrgTracker)
+[ERROR]     constructor com.estrat.backend.db.dto.OrgTrackerDTO.OrgTrackerDTO(com.estrat.backend.db.bean.po.DeptTracker) is not applicable
+[ERROR]       (argument mismatch; java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptTracker)
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DeptTrackerService.java:[520,27] incompatible types: java.lang.Object cannot be converted to java.util.List
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[187,56] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[219,68] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[229,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserRoleManagement
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[232,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.UserDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[243,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserRoleManagement
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[246,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.UserDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[265,43] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserRoleManagement
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[268,19] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.UserDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[280,79] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[280,93] incompatible types: java.lang.Object cannot be converted to java.util.Set<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[322,129] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[324,51] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[329,131] cannot find symbol
+[ERROR]   symbol:   method getEmpId()
+[ERROR]   location: variable userDeptMapping2 of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[329,172] cannot find symbol
+[ERROR]   symbol:   method getDeptId()
+[ERROR]   location: variable userDeptMapping2 of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[331,106] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[333,63] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserDeptMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[338,129] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[340,51] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[346,127] cannot find symbol
+[ERROR]   symbol:   method getEmpId()
+[ERROR]   location: variable userDeptMapping2 of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[346,168] cannot find symbol
+[ERROR]   symbol:   method getDeptId()
+[ERROR]   location: variable userDeptMapping2 of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[348,102] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[350,59] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserDeptMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[356,125] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[365,125] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable departmentDetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[392,55] cannot find symbol
+[ERROR]   symbol:   method getRoleName()
+[ERROR]   location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[393,70] cannot find symbol
+[ERROR]   symbol:   method getRoleId()
+[ERROR]   location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[397,51] cannot find symbol
+[ERROR]   symbol:   method size()
+[ERROR]   location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[397,93] cannot find symbol
+[ERROR]   symbol:   method get(int)
+[ERROR]   location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[398,86] cannot find symbol
+[ERROR]   symbol:   method get(int)
+[ERROR]   location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[399,71] cannot find symbol
+[ERROR]   symbol:   method get(int)
+[ERROR]   location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[402,60] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[406,107] cannot find symbol
+[ERROR]   symbol:   method get(int)
+[ERROR]   location: variable roledetails of type java.lang.Object
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[449,66] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentChartMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[570,56] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[626,56] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[647,57] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.EmployeeDepartmentMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[661,48] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[683,52] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.RoleUserMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/UserRoleManagementService.java:[694,58] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserRoleManagement
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[104,92] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[104,109] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[110,106] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentChartMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[110,123] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.DepartmentChartDTO>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[160,51] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[166,23] incompatible types: java.lang.Object cannot be converted to java.util.ArrayList<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[182,67] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[182,84] incompatible types: java.lang.Object cannot be converted to java.util.List<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[320,51] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[326,23] incompatible types: java.lang.Object cannot be converted to java.util.ArrayList<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[351,88] incompatible types: java.util.List<java.lang.Long> cannot be converted to java.util.ArrayList<java.lang.Long>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[368,51] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[370,23] incompatible types: java.lang.Object cannot be converted to java.util.ArrayList<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[395,76] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DeptMultipleOwnersMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[401,45] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.UserDeptMapping
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[438,51] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentDetails
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[440,23] incompatible types: java.lang.Object cannot be converted to java.util.ArrayList<com.estrat.backend.db.dto.DeptDetails>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[448,44] incompatible types: java.util.ArrayList<com.estrat.backend.db.dto.DepartmentChartDTO> cannot be converted to java.util.List<java.lang.Object>
+[ERROR] /C:/Users/sibi/Desktop/Stratroom-Source/stack-service/stratroom-backend/src/main/java/com/estrat/backend/db/service/DepartmentDetailsService.java:[450,87] incompatible types: java.lang.Object cannot be converted to com.estrat.backend.db.bean.po.DepartmentChartMapping
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

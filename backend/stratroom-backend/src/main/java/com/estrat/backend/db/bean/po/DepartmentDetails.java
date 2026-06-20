@@ -1,0 +1,104 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  com.estrat.backend.db.bean.po.DepartmentDetails
+ *  com.estrat.backend.db.bean.po.DepartmentDetailsHistory
+ *  com.estrat.backend.db.dto.DeptDetails
+ *  javax.persistence.Column
+ *  javax.persistence.Entity
+ *  javax.persistence.GeneratedValue
+ *  javax.persistence.GenerationType
+ *  javax.persistence.Id
+ *  javax.persistence.Table
+ *  org.hibernate.annotations.GenericGenerator
+ */
+package com.estrat.backend.db.bean.po;
+
+import com.estrat.backend.db.bean.po.DepartmentDetailsHistory;
+import com.estrat.backend.db.dto.DeptDetails;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="org_department_details", schema="orgstructure")
+public class DepartmentDetails {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="dept_id")
+    private long id;
+    @Column(name="dept_unique_id")
+    private String deptUniqueID;
+    @Column(name="dept_name")
+    private String name;
+    @Column(name="status")
+    private String status;
+    @Column(name="orgId")
+    private Long orgId;
+
+    public DepartmentDetails() {
+    }
+
+    public DepartmentDetails(DeptDetails deptDetails) {
+        if (Long.valueOf(deptDetails.getId()) != null) {
+            this.id = deptDetails.getId();
+        }
+        this.name = deptDetails.getName();
+        this.status = deptDetails.getStatus();
+        this.orgId = deptDetails.getOrgId();
+        this.deptUniqueID = deptDetails.getDeptID();
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getDeptUniqueID() {
+        return this.deptUniqueID;
+    }
+
+    public void setDeptUniqueID(String deptUniqueID) {
+        this.deptUniqueID = deptUniqueID;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getOrgId() {
+        return this.orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
+    public DepartmentDetails(DepartmentDetailsHistory deptDetailsHistory) {
+        this.id = deptDetailsHistory.getDeptId();
+        this.name = deptDetailsHistory.getName();
+        this.status = deptDetailsHistory.getStatus();
+        this.orgId = deptDetailsHistory.getOrgId();
+        this.deptUniqueID = deptDetailsHistory.getDeptUniqueID();
+    }
+}
+
