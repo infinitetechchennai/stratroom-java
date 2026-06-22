@@ -110,9 +110,13 @@ public class ScorecardCalculationService {
             }
         }
 
+        BigDecimal overall = aggregatorService.aggregate(perspectiveScores, perspectiveWeights, "WEIGHTED", null);
         String formula = str(scRows.get(0).get("formula"));
-        BigDecimal overall = evaluateFormula(formula, perspectiveDtos);
-        
+        if (formula != null && !formula.isBlank()) {
+            BigDecimal formulaResult = evaluateFormula(formula, perspectiveDtos);
+            if (formulaResult != null) overall = formulaResult;
+        }
+
         RAGStatusService.RAGResult overallRag = ragStatusService.determineStatus(overall, scClass);
 
         Map<String, Object> cardDetails = new LinkedHashMap<>();
@@ -159,10 +163,11 @@ public class ScorecardCalculationService {
         }
 
         aggMethod = str(p.get("aggregation_method"));
+        BigDecimal score = aggregatorService.aggregate(objScores, objWeights, aggMethod, null);
         String formula = str(p.get("formula"));
-        BigDecimal score = null;
-        if ("FORMULA".equalsIgnoreCase(aggMethod) && formula != null) {
-            score = evaluateFormula(formula, objectiveDtos);
+        if ("FORMULA".equalsIgnoreCase(aggMethod) && formula != null && !formula.isBlank()) {
+            BigDecimal formulaResult = evaluateFormula(formula, objectiveDtos);
+            if (formulaResult != null) score = formulaResult;
         }
         RAGStatusService.RAGResult rag = ragStatusService.determineStatus(score, classType);
 
@@ -218,17 +223,13 @@ public class ScorecardCalculationService {
             } else {
                 score = aggregatorService.aggregate(kpiScores, kpiWeights, aggMethod, passRate);
             }
-        }
-        // [DISABLED] Automatic roll-up calculation stopped as per user request.
-        if ("FORMULA".equalsIgnoreCase(aggMethod)) {
-            String formula = str(o.get("formula"));
-            if (formula != null) {
-                score = evaluateFormula(formula, kpiDtos);
-            } else {
-                score = null;
-            }
         } else {
-            score = null; // aggregatorService.aggregate(kpiScores, kpiWeights, aggMethod, passRate);
+            score = aggregatorService.aggregate(kpiScores, kpiWeights, aggMethod, passRate);
+        }
+        String formula = str(o.get("formula"));
+        if ("FORMULA".equalsIgnoreCase(aggMethod) && formula != null && !formula.isBlank()) {
+            BigDecimal formulaResult = evaluateFormula(formula, kpiDtos);
+            if (formulaResult != null) score = formulaResult;
         }
         RAGStatusService.RAGResult rag = ragStatusService.determineStatus(score, classType);
         String status = statusOverride != null ? statusOverride : rag.getStatus();
