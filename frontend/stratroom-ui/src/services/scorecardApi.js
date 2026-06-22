@@ -300,9 +300,18 @@ export const validateFormula = (formula, type) =>
     body: JSON.stringify({ formula, type }),
   });
 
-// Node keys (measures / sub-measures) used to build KPI formulas in the calculators
-export const retrieveNodeKeyList = () =>
-  request(`${SC}/retrieveNodeKeyList`);
+// Node keys (measures / sub-measures) used to build KPI formulas in the calculators.
+// Passes the hierarchy context (nodeType/nodeId) so the V2 endpoint returns only the
+// measures valid at the current tier (scorecard→perspectives, perspective→its objectives,
+// objective→its KPIs, KPI→all KPIs+sub-KPIs).
+export const retrieveNodeKeyList = (pageId, dateRange, nodeType, nodeId) => {
+  const q = new URLSearchParams();
+  if (pageId) q.append('pageId', pageId);
+  if (dateRange) q.append('dateRange', dateRange);
+  if (nodeType) q.append('nodeType', nodeType);
+  if (nodeId) q.append('nodeId', nodeId);
+  return request(`${SC}/scorecardV2/retrieveNodeKeyList?${q.toString()}`);
+};
 
 // KPI attachments
 export const getKpiAttachments = (kpiId) =>
