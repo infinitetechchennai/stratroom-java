@@ -1933,18 +1933,22 @@ public class EmployeeService {
                     this.employeeProfilePoRepo.findByFirstNameAndLastNameAndStatusAndOrgId(firstName, lastName, "Active", org);
             if (fullNameMatches != null && !fullNameMatches.isEmpty()) {
                 if (fullNameMatches.size() > 1) {
-                    this.log.warn("[Org Import] multiple employees named '{}' in org_id={} — using emp_id={}",
-                            name, orgId, fullNameMatches.get(0).getEmpId());
+                    this.log.warn("[Org Import] multiple employees named '" + name + "' in org_id=" + orgId
+                            + " — using emp_id=" + fullNameMatches.get(0).getEmpId());
                 }
                 return fullNameMatches.get(0);
             }
+            // Full name provided but no match — skip owner (dept-first import: link after Users file).
+            this.log.debug("[Org Import] owner '" + name + "' not found in org_id=" + orgId
+                    + " — skipping until employee exists");
+            return null;
         }
         List<EmployeeProfilePo> firstNameMatches =
                 this.employeeProfilePoRepo.findByFirstNameAndStatusAndOrgId(parts[0], "Active", org);
         if (firstNameMatches != null && !firstNameMatches.isEmpty()) {
             if (firstNameMatches.size() > 1) {
-                this.log.warn("[Org Import] ambiguous first name '{}' ({} matches) in org_id={} — using emp_id={}",
-                        parts[0], firstNameMatches.size(), orgId, firstNameMatches.get(0).getEmpId());
+                this.log.warn("[Org Import] ambiguous first name '" + parts[0] + "' (" + firstNameMatches.size()
+                        + " matches) in org_id=" + orgId + " — using emp_id=" + firstNameMatches.get(0).getEmpId());
             }
             return firstNameMatches.get(0);
         }

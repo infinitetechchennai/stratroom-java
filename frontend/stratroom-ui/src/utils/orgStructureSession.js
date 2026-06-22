@@ -81,3 +81,31 @@ export function nodeActionFlags(node, permFlags) {
     delete: permFlags.canDelete && maintain,
   }
 }
+
+/** Dept import payload kept until Users import runs (owner/member backfill). */
+const PENDING_DEPT_IMPORT_KEY = 'pendingDeptImportBackfill'
+
+export function savePendingDeptImport(orgId, depts) {
+  if (!depts?.length) return
+  try {
+    sessionStorage.setItem(PENDING_DEPT_IMPORT_KEY, JSON.stringify({ orgId, depts }))
+  } catch { /* sessionStorage full or unavailable */ }
+}
+
+export function getPendingDeptImport(orgId) {
+  try {
+    const raw = sessionStorage.getItem(PENDING_DEPT_IMPORT_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (orgId != null && parsed.orgId != null && String(parsed.orgId) !== String(orgId)) return null
+    return parsed.depts ?? null
+  } catch {
+    return null
+  }
+}
+
+export function clearPendingDeptImport() {
+  try {
+    sessionStorage.removeItem(PENDING_DEPT_IMPORT_KEY)
+  } catch { /* ignore */ }
+}

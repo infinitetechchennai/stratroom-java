@@ -13,6 +13,9 @@ import {
   getOrgStructurePermissions,
   canDrillDownOrgChart,
   nodeActionFlags,
+  savePendingDeptImport,
+  getPendingDeptImport,
+  clearPendingDeptImport,
 } from '../../utils/orgStructureSession'
 import styles from './OrgStructureNew.module.css'
 import * as XLSX from 'xlsx'
@@ -1103,6 +1106,31 @@ function importColVal(row, ...names) {
   return ''
 }
 
+/** Owner column: email when value contains @, otherwise display name (legacy source uses email). */
+function resolveImportContact(value) {
+  if (!value) return { emailAddress: null, ownerName: null }
+  const trimmed = String(value).trim()
+  if (trimmed.includes('@')) return { emailAddress: trimmed, ownerName: null }
+  return { emailAddress: null, ownerName: trimmed }
+}
+
+function mapDeptImportRow(row, orgName) {
+  const ownerRaw = importColVal(
+    row,
+    'Owner', 'Owner Name', 'ownerName', 'Owner Email', 'Email Address', 'Email', 'emailAddress',
+  )
+  const { emailAddress, ownerName } = resolveImportContact(ownerRaw)
+  return {
+    parentDeptID: importColVal(row, 'Parent ID', 'ParentID', 'Parent Dept ID', 'parentDeptID') || null,
+    deptID: importColVal(row, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId'),
+    deptName: importColVal(row, 'Department Name', 'DepartmentName', 'Dept Name'),
+    emailAddress,
+    ownerName,
+    member: importColVal(row, 'Member', 'Members', 'member'),
+    orgName: importColVal(row, 'Organization', 'Organisation', 'Org', 'orgName') || orgName,
+  }
+}
+
 function WizardStepper({ step }) {
   const steps = ['Upload', 'Validation', 'Import']
   return (
@@ -1219,19 +1247,23 @@ function ImportWizard({ user, onClose, onComplete }) {
           orgDetails:         { orgId, name: orgName },
         })).filter(e => e.email)
         await axiosClient.post('/api/creatBulkEmployee', employees, { timeout: 300000 })
-        setResult({ success: true, count: employees.length, kind: 'user(s)' })
+        let ownersLinked = false
+        const pendingDepts = getPendingDeptImport(orgId)
+        if (pendingDepts?.length) {
+          try {
+            await createBulkDeptMapping(pendingDepts)
+            clearPendingDeptImport()
+            ownersLinked = true
+          } catch (backfillErr) {
+            console.warn('[Org Import] department owner backfill failed:', backfillErr)
+          }
+        }
+        setResult({ success: true, count: employees.length, kind: 'user(s)', ownersLinked })
       } else {
-        // Department-hierarchy file → builds the dept chart; owner resolved by name on the backend.
-        const depts = rows.map(r => ({
-          parentDeptID: importColVal(r, 'Parent ID', 'ParentID', 'Parent Dept ID', 'parentDeptID') || null,
-          deptID:       importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId'),
-          deptName:     importColVal(r, 'Department Name', 'DepartmentName', 'Dept Name'),
-          ownerName:    importColVal(r, 'Owner', 'Owner Name', 'ownerName'),
-          member:       importColVal(r, 'Member', 'Members', 'member'),
-          orgName:      importColVal(r, 'Organization', 'Organisation', 'Org', 'orgName') || orgName,
-        })).filter(d => d.deptID)
+        // Department file first: hierarchy is created; owners/members link when employees exist.
+        const depts = rows.map(r => mapDeptImportRow(r, orgName)).filter(d => d.deptID)
         await createBulkDeptMapping(depts)
-        // Switch the org to Department mode so the tree renders the imported hierarchy.
+        savePendingDeptImport(orgId, depts)
         try { await setImplementationMode(orgId, 'Department') } catch { /* non-fatal */ }
         setResult({ success: true, count: depts.length, kind: 'department(s)' })
       }
@@ -1287,8 +1319,8 @@ function ImportWizard({ user, onClose, onComplete }) {
                 {(isOrg || isUsers) && (
                   <p style={{ fontSize: 11.5, color: '#64748b', margin: '8px 2px 0', lineHeight: 1.5 }}>
                     {isUsers
-                      ? 'User file → Name, Email Address, Department ID, Designation, Location, Phone no. Import this first.'
-                      : 'Org file → Parent ID, Department ID, Department Name, Owner, Member. Import after Users. Switches the org to Department mode.'}
+                      ? 'User file → Name, Email Address, Department ID, Designation, Location, Phone no. Import after the Organisation file.'
+                      : 'Org file → Parent ID, Department ID, Department Name, Owner (email preferred), Member. Import this first — switches the org to Department mode.'}
                   </p>
                 )}
               </div>
@@ -1364,7 +1396,14 @@ function ImportWizard({ user, onClose, onComplete }) {
                   <p style={{ fontSize: 15, fontWeight: 700, color: '#166534', margin: '12px 0 4px' }}>Import complete</p>
                   <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>{result.count} {result.kind || 'record(s)'} imported successfully.</p>
                   {result.kind === 'department(s)' && (
-                    <p style={{ fontSize: 12, color: '#0891b2', margin: '6px 0 0' }}>Org switched to Department mode.</p>
+                    <p style={{ fontSize: 12, color: '#0891b2', margin: '6px 0 0' }}>
+                      Org switched to Department mode. Import the Users file next to create employees and link owners.
+                    </p>
+                  )}
+                  {result.kind === 'user(s)' && result.ownersLinked && (
+                    <p style={{ fontSize: 12, color: '#0891b2', margin: '6px 0 0' }}>
+                      Department owners and members were linked from your earlier Organisation import.
+                    </p>
                   )}
                 </>
               ) : (

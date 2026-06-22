@@ -465,8 +465,15 @@ public class DataServiceController {
                 this.log.warn("[Org Import] skipping row — missing orgName or deptID: {}", deptImportDTO.getDeptName());
                 skipped++; continue;
             }
-            this.log.info("[Org Import] processing deptID={} deptName={} parentDeptID={} ownerName={}", deptImportDTO.getDeptID(), deptImportDTO.getDeptName(), deptImportDTO.getParentDeptID(), deptImportDTO.getOwnerName());
-            if (this.employeeService.createBulkDeptMapping(deptImportDTO, loggedInEmpId)) imported++; else skipped++;
+            this.log.info("[Org Import] processing deptID={} deptName={} parentDeptID={} ownerName={} emailAddress={}",
+                    deptImportDTO.getDeptID(), deptImportDTO.getDeptName(), deptImportDTO.getParentDeptID(),
+                    deptImportDTO.getOwnerName(), deptImportDTO.getEmailAddress());
+            try {
+                if (this.employeeService.createBulkDeptMapping(deptImportDTO, loggedInEmpId)) imported++; else skipped++;
+            } catch (Exception ex) {
+                skipped++;
+                this.log.error("[Org Import] failed deptID={} deptName={}: {}", deptImportDTO.getDeptID(), deptImportDTO.getDeptName(), ex.getMessage());
+            }
         }
         this.log.info("[Org Import] done — imported={} skipped={}", imported, skipped);
         this.cacheUtil.removeEmployeeCache(loggedInEmpId);
