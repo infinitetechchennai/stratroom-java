@@ -14,7 +14,7 @@ export const useScorecard = (pageId) => {
   const [permissions, setPermissions] = useState(null);
   const [preferences, setPreferences] = useState(null);
   const [reporteeList, setReporteeList] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // start true to prevent blank flash before first fetch
   const [error, setError] = useState(null);
 
   const loadData = useCallback(async () => {

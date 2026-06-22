@@ -580,7 +580,10 @@ const ScorecardPage = ({ pageId: pageIdProp }) => {
             setScorecardData(live);
             return;
         }
-        if (!liveLoading) {
+        // Only clear data once loading is fully done AND we have received a response
+        // (liveDTO !== undefined). This prevents wiping data before the first fetch
+        // even starts (the race condition where liveLoading starts as false).
+        if (!liveLoading && liveDTO !== undefined) {
             setScorecardData(null);
         }
     }, [liveDTO, liveLoading]);
