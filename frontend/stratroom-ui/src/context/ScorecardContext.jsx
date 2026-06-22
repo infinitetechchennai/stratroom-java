@@ -16,7 +16,7 @@ import {
   saveOrgSubKpiEntry,
   downloadKpiPdf,
   downloadKpiExcel,
-  changePerspectiveName,
+  renamePerspective,
 } from '../services/scorecardApi';
 
 // ─────────────────────────────────────────────────────────────
@@ -123,7 +123,7 @@ export function ScorecardProvider({ children, reload, pageId }) {
   );
 
   const editPerspectiveName = useCallback(
-    (id, name) => act(() => changePerspectiveName(id, name), 'Perspective name updated.'),
+    (id, name) => act(() => renamePerspective(id, name), 'Perspective name updated.'),
     [act]
   );
 

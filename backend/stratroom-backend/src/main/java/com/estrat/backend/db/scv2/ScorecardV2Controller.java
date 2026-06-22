@@ -50,6 +50,16 @@ public class ScorecardV2Controller {
         return ResponseEntity.ok(calculationService.kpiStoryCard(id, dateRange));
     }
 
+    // List of measures for the formula calculators
+    @GetMapping("/scorecardV2/retrieveNodeKeyList")
+    public ResponseEntity<List<Map<String, Object>>> retrieveNodeKeyList(
+            @RequestParam("pageId") Long pageId,
+            @RequestParam(value = "dateRange", required = false) String dateRange,
+            @RequestParam(value = "nodeType", required = false) String nodeType,
+            @RequestParam(value = "nodeId", required = false) String nodeId) {
+        return ResponseEntity.ok(calculationService.retrieveNodeKeyList(pageId, dateRange, nodeType, nodeId));
+    }
+
     // -------- scorecard CRUD --------
 
     @PostMapping("/scorecardV2/scorecard")
@@ -69,6 +79,18 @@ public class ScorecardV2Controller {
 
     // -------- perspective CRUD --------
 
+    @GetMapping("/scorecardV2/perspective/{id}")
+    public ResponseEntity<Map<String, Object>> getPerspective(@PathVariable long id) {
+        return ResponseEntity.ok(crudService.getPerspective(id));
+    }
+
+    @PostMapping("/scorecardV2/perspective/{id}/name")
+    public ResponseEntity<Map<String, Object>> renamePerspective(
+            @PathVariable long id,
+            @RequestParam String name) {
+        return ResponseEntity.ok(okResult(crudService.renamePerspective(id, name)));
+    }
+
     @PostMapping("/scorecardV2/perspective")
     public ResponseEntity<Map<String, Object>> createPerspective(@RequestBody Map<String, Object> body) {
         return ResponseEntity.ok(idResult(crudService.createPerspective(body)));
@@ -86,6 +108,11 @@ public class ScorecardV2Controller {
 
     // -------- objective CRUD --------
 
+    @GetMapping("/scorecardV2/objective/{id}")
+    public ResponseEntity<Map<String, Object>> getObjective(@PathVariable long id) {
+        return ResponseEntity.ok(crudService.getObjective(id));
+    }
+
     @PostMapping("/scorecardV2/objective")
     public ResponseEntity<Map<String, Object>> createObjective(@RequestBody Map<String, Object> body) {
         return ResponseEntity.ok(idResult(crudService.createObjective(body)));
@@ -102,6 +129,11 @@ public class ScorecardV2Controller {
     }
 
     // -------- KPI CRUD --------
+
+    @GetMapping("/scorecardV2/kpi/{id}")
+    public ResponseEntity<Map<String, Object>> getKpi(@PathVariable long id) {
+        return ResponseEntity.ok(crudService.getKpi(id));
+    }
 
     @PostMapping("/scorecardV2/kpi")
     public ResponseEntity<Map<String, Object>> createKpi(@RequestBody Map<String, Object> body) {

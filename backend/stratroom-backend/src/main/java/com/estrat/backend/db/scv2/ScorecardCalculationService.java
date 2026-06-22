@@ -52,8 +52,8 @@ public class ScorecardCalculationService {
         LocalDate end = parseEnd(dateRange);
 
         List<Map<String, Object>> scRows = jdbc.queryForList(
-                "SELECT id, page_id, name, classification_type FROM sc_scorecards "
-                        + "WHERE page_id = ? AND is_active = true AND is_deleted = false ORDER BY id LIMIT 1",
+                "SELECT id, page_id, name, classification_type, formula FROM sc_scorecards "
+                        + "WHERE page_id = ? AND is_active = 1 AND is_deleted = 0 ORDER BY id LIMIT 1",
                 pageId);
         if (scRows.isEmpty()) {
             return emptyResponse(pageId);
@@ -65,33 +65,33 @@ public class ScorecardCalculationService {
 
         // ---- bulk-load the whole tree ----
         List<Map<String, Object>> perspectives = jdbc.queryForList(
-                "SELECT id, name, code, weight, aggregation_method, classification_type "
-                        + "FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true ORDER BY display_order, id",
+                "SELECT id, name, code, weight, aggregation_method, classification_type, formula "
+                        + "FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1 ORDER BY display_order, id",
                 scorecardId);
         List<Long> perspectiveIds = ids(perspectives);
 
         Map<Long, List<Map<String, Object>>> objByPersp = groupBy(
                 queryIn("SELECT id, name, code, weight, aggregation_method, classification_type, knockout_enabled, "
-                        + "knockout_threshold, pass_rate_threshold, perspective_id FROM sc_objectives "
-                        + "WHERE is_active = true AND perspective_id IN (%s) ORDER BY display_order, id", perspectiveIds),
+                        + "knockout_threshold, pass_rate_threshold, formula, perspective_id FROM sc_objectives "
+                        + "WHERE is_active = 1 AND perspective_id IN (%s) ORDER BY display_order, id", perspectiveIds),
                 "perspective_id");
         List<Long> objectiveIds = objByPersp.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> kpiByObj = groupBy(
                 queryIn("SELECT id, name, code, polarity, target_value, min_target, max_target, weight, data_type, "
-                        + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id "
-                        + "FROM sc_kpis WHERE is_deleted = false AND objective_id IN (%s) ORDER BY display_order, id", objectiveIds),
+                        + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id, formula "
+                        + "FROM sc_kpis WHERE is_deleted = 0 AND objective_id IN (%s) ORDER BY display_order, id", objectiveIds),
                 "objective_id");
         List<Long> kpiIds = kpiByObj.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> subByKpi = groupBy(
                 queryIn("SELECT id, name, code, target_value, polarity, weight, data_type, achievement_cap, kpi_id "
-                        + "FROM sc_sub_kpis WHERE is_deleted = false AND kpi_id IN (%s) ORDER BY display_order, id", kpiIds),
+                        + "FROM sc_sub_kpis WHERE is_deleted = 0 AND kpi_id IN (%s) ORDER BY display_order, id", kpiIds),
                 "kpi_id");
 
         // all KPI history for these KPIs, ordered, grouped — current & previous picked in memory
         Map<Long, List<Map<String, Object>>> histByKpi = groupBy(
-                queryIn("SELECT kpi_id, period_start, period_end, actual_value "
+                queryIn("SELECT kpi_id, period_start, period_end, actual_value, target_value, baseline_value "
                         + "FROM sc_kpi_history WHERE kpi_id IN (%s) ORDER BY kpi_id, period_end", kpiIds),
                 "kpi_id");
 
@@ -110,7 +110,9 @@ public class ScorecardCalculationService {
             }
         }
 
-        BigDecimal overall = aggregatorService.aggregate(perspectiveScores, perspectiveWeights, "WEIGHTED", null);
+        String formula = str(scRows.get(0).get("formula"));
+        BigDecimal overall = evaluateFormula(formula, perspectiveDtos);
+        
         RAGStatusService.RAGResult overallRag = ragStatusService.determineStatus(overall, scClass);
 
         Map<String, Object> cardDetails = new LinkedHashMap<>();
@@ -156,7 +158,12 @@ public class ScorecardCalculationService {
             }
         }
 
-        BigDecimal score = aggregatorService.aggregate(objScores, objWeights, aggMethod, null);
+        aggMethod = str(p.get("aggregation_method"));
+        String formula = str(p.get("formula"));
+        BigDecimal score = null;
+        if ("FORMULA".equalsIgnoreCase(aggMethod) && formula != null) {
+            score = evaluateFormula(formula, objectiveDtos);
+        }
         RAGStatusService.RAGResult rag = ragStatusService.determineStatus(score, classType);
 
         Map<String, Object> value = new LinkedHashMap<>();
@@ -167,6 +174,7 @@ public class ScorecardCalculationService {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", perspectiveId);
         dto.put("perspectiveType", name);
+        dto.put("code", str(p.get("code")));
         dto.put("scoreCardValue", value);
         dto.put("objectiveList", objectiveDtos);
         dto.put("score", score);
@@ -210,10 +218,18 @@ public class ScorecardCalculationService {
             } else {
                 score = aggregatorService.aggregate(kpiScores, kpiWeights, aggMethod, passRate);
             }
-        } else {
-            score = aggregatorService.aggregate(kpiScores, kpiWeights, aggMethod, passRate);
         }
-
+        // [DISABLED] Automatic roll-up calculation stopped as per user request.
+        if ("FORMULA".equalsIgnoreCase(aggMethod)) {
+            String formula = str(o.get("formula"));
+            if (formula != null) {
+                score = evaluateFormula(formula, kpiDtos);
+            } else {
+                score = null;
+            }
+        } else {
+            score = null; // aggregatorService.aggregate(kpiScores, kpiWeights, aggMethod, passRate);
+        }
         RAGStatusService.RAGResult rag = ragStatusService.determineStatus(score, classType);
         String status = statusOverride != null ? statusOverride : rag.getStatus();
 
@@ -293,16 +309,31 @@ public class ScorecardCalculationService {
             }
             if (current != null) {
                 actual = dec(current.get("actual_value"));
-                BigDecimal histTarget = null; // target_value not stored in history
+                BigDecimal histTarget = dec(current.get("target_value"));
                 if (histTarget != null) {
                     target = histTarget;
                 }
-                baseline = null; // baseline_value not stored in history
+                baseline = dec(current.get("baseline_value"));
             }
             if (actual == null) {
                 actual = applyNullHandling(nullHandling, target);
             }
             achievement = achievementCalculator.calculate(actual, target, polarity, minTarget, maxTarget, cap);
+
+            // If user set a custom performance formula, evaluate it with Actual/Target/Weight/Contribution
+            String kpiFormula = str(k.get("formula"));
+            if (kpiFormula != null && !kpiFormula.isBlank()) {
+                BigDecimal safeActual = actual != null ? actual : BigDecimal.ZERO;
+                BigDecimal safeTarget = target != null ? target : BigDecimal.ZERO;
+                BigDecimal safeWeight = dec(k.get("weight")) != null ? dec(k.get("weight")) : BigDecimal.ZERO;
+                List<Map<String, Object>> perfVars = new ArrayList<>();
+                perfVars.add(makeVar("Contribution", BigDecimal.ZERO));
+                perfVars.add(makeVar("Actual", safeActual));
+                perfVars.add(makeVar("Target", safeTarget));
+                perfVars.add(makeVar("Weight", safeWeight));
+                BigDecimal formulaResult = evaluateFormula(kpiFormula, perfVars);
+                if (formulaResult != null) achievement = formulaResult;
+            }
         }
 
         // Trend: compare the two most recent reported (non-null) periods within the
@@ -321,8 +352,9 @@ public class ScorecardCalculationService {
                 ? reported.get(reported.size() - 2)
                 : previousBefore(histByKpi.getOrDefault(kpiId, List.of()), start);
         if (prev != null) {
+            BigDecimal prevTarget = dec(prev.get("target_value"));
             previous = achievementCalculator.calculate(dec(prev.get("actual_value")),
-                    target, polarity, minTarget, maxTarget, cap);
+                    prevTarget != null ? prevTarget : target, polarity, minTarget, maxTarget, cap);
         }
         RAGStatusService.RAGResult rag = ragStatusService.determineStatus(achievement, classType);
         String trend = ragStatusService.calculateTrend(achievement, previous);
@@ -458,7 +490,7 @@ public class ScorecardCalculationService {
                         + "FROM sc_kpis k "
                         + "LEFT JOIN sc_objectives o ON k.objective_id = o.id "
                         + "LEFT JOIN sc_perspectives p ON o.perspective_id = p.id "
-                        + "WHERE k.id = ? AND k.is_deleted = false", kpiId);
+                        + "WHERE k.id = ? AND k.is_deleted = 0", kpiId);
         if (kpiRows.isEmpty()) {
             result.put("kpi", null);
             result.put("series", new ArrayList<>());
@@ -492,7 +524,7 @@ public class ScorecardCalculationService {
         LocalDate start = parseStart(dateRange);
         LocalDate end = parseEnd(dateRange);
         List<Map<String, Object>> hist = jdbc.queryForList(
-                "SELECT period_start, period_end, actual_value "
+                "SELECT period_start, period_end, actual_value, target_value, baseline_value "
                         + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end", kpiId);
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
         List<Map<String, Object>> series = new ArrayList<>();
@@ -503,7 +535,10 @@ public class ScorecardCalculationService {
                 continue;
             }
             BigDecimal actual = dec(h.get("actual_value"));
-            BigDecimal target = kpiTarget; // target stored on kpi, not in history
+            BigDecimal target = dec(h.get("target_value"));
+            if (target == null) {
+                target = kpiTarget;
+            }
             BigDecimal gap = (actual != null && target != null) ? actual.subtract(target) : null;
             if (actual != null) {
                 runningActual = runningActual.add(actual);
@@ -514,12 +549,147 @@ public class ScorecardCalculationService {
             point.put("target", target);
             point.put("gap", gap);
             point.put("ytd", runningActual);
-            point.put("baseline", null); // baseline_value not stored in sc_kpi_history
+            point.put("baseline", dec(h.get("baseline_value")));
             point.put("currency", currency);
             point.put("measureName", str(k.get("name")));
             series.add(point);
         }
         result.put("series", series);
+        return result;
+    }
+
+    /**
+     * Retrieves all active elements in the scorecard hierarchy (Scorecard, Perspectives,
+     * Objectives, KPIs, Sub-KPIs) formatted for the formula calculators.
+     * 
+     * Applies hierarchical filtering:
+     * - SCORECARD: returns its Perspectives
+     * - PERSPECTIVE: returns its Objectives
+     * - OBJECTIVE: returns its KPIs
+     * - KPI: returns its Sub-KPIs
+     * - SUBKPI: returns nothing
+     */
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> retrieveNodeKeyList(Long pageId, String dateRange, String nodeType, String nodeId) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        // No date-range filter for the definition itself, as the UI needs to see all variables
+        // that are active for this scorecard.
+
+        List<Map<String, Object>> scRows = jdbc.queryForList(
+                "SELECT id, name FROM sc_scorecards "
+                        + "WHERE page_id = ? AND is_active = 1 AND is_deleted = 0 ORDER BY id LIMIT 1",
+                pageId);
+        if (scRows.isEmpty()) {
+            return result;
+        }
+        Long scorecardId = num(scRows.get(0).get("id"));
+
+        if ("SCORECARD".equalsIgnoreCase(nodeType)) {
+            List<Map<String, Object>> perspectives = jdbc.queryForList(
+                    "SELECT id, name FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+            for (Map<String, Object> p : perspectives) {
+                result.add(Map.of("measureName", str(p.get("name")), "measureType", "0", "elementType", "PERSPECTIVE"));
+            }
+        } else if ("PERSPECTIVE".equalsIgnoreCase(nodeType)) {
+            if (nodeId != null && !nodeId.trim().isEmpty()) {
+                List<Map<String, Object>> objectives = jdbc.queryForList(
+                        "SELECT id, name FROM sc_objectives WHERE perspective_id = ? AND is_active = 1", Long.parseLong(nodeId));
+                for (Map<String, Object> o : objectives) {
+                    result.add(Map.of("measureName", str(o.get("name")), "measureType", "0", "elementType", "OBJECTIVE"));
+                }
+            } else {
+                List<Map<String, Object>> perspectives = jdbc.queryForList(
+                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+                if (!perspectives.isEmpty()) {
+                    List<Map<String, Object>> objectives = queryIn(
+                            "SELECT id, name FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = 1", ids(perspectives));
+                    for (Map<String, Object> o : objectives) {
+                        result.add(Map.of("measureName", str(o.get("name")), "measureType", "0", "elementType", "OBJECTIVE"));
+                    }
+                }
+            }
+        } else if ("OBJECTIVE".equalsIgnoreCase(nodeType)) {
+            if (nodeId != null && !nodeId.trim().isEmpty()) {
+                List<Map<String, Object>> kpis = jdbc.queryForList(
+                        "SELECT id, name FROM sc_kpis WHERE objective_id = ? AND is_deleted = 0", Long.parseLong(nodeId));
+                for (Map<String, Object> k : kpis) {
+                    result.add(Map.of("measureName", str(k.get("name")), "measureType", "0", "elementType", "KPI"));
+                }
+            } else {
+                List<Map<String, Object>> perspectives = jdbc.queryForList(
+                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+                if (!perspectives.isEmpty()) {
+                    List<Map<String, Object>> objectives = queryIn(
+                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = 1", ids(perspectives));
+                    if (!objectives.isEmpty()) {
+                        List<Map<String, Object>> kpis = queryIn(
+                                "SELECT id, name FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = 0", ids(objectives));
+                        for (Map<String, Object> k : kpis) {
+                            result.add(Map.of("measureName", str(k.get("name")), "measureType", "0", "elementType", "KPI"));
+                        }
+                    }
+                }
+            }
+        } else if ("KPI".equalsIgnoreCase(nodeType)) {
+            if (nodeId != null && !nodeId.trim().isEmpty()) {
+                List<Map<String, Object>> subKpis = jdbc.queryForList(
+                        "SELECT id, name FROM sc_sub_kpis WHERE kpi_id = ? AND is_deleted = 0", Long.parseLong(nodeId));
+                for (Map<String, Object> sk : subKpis) {
+                    result.add(Map.of("measureName", str(sk.get("name")), "measureType", "1", "elementType", "SUBKPI"));
+                }
+            } else {
+                // For KPI, normally handled by full fallback, but if called explicitly, return all SubKPIs in scorecard
+                List<Map<String, Object>> perspectives = jdbc.queryForList(
+                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+                if (!perspectives.isEmpty()) {
+                    List<Map<String, Object>> objectives = queryIn(
+                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = 1", ids(perspectives));
+                    if (!objectives.isEmpty()) {
+                        List<Map<String, Object>> kpis = queryIn(
+                                "SELECT id FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = 0", ids(objectives));
+                        if (!kpis.isEmpty()) {
+                            List<Map<String, Object>> subKpis = queryIn(
+                                    "SELECT id, name FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = 0", ids(kpis));
+                            for (Map<String, Object> sk : subKpis) {
+                                result.add(Map.of("measureName", str(sk.get("name")), "measureType", "1", "elementType", "SUBKPI"));
+                            }
+                        }
+                    }
+                }
+            }
+        } else if ("SUBKPI".equalsIgnoreCase(nodeType)) {
+            // Sub KPIs have no child elements to calculate from
+        } else {
+            // Fallback: return everything (e.g. for legacy testing)
+            List<Map<String, Object>> perspectives = jdbc.queryForList(
+                    "SELECT id, name FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+            List<Long> pIds = ids(perspectives);
+
+            List<Map<String, Object>> objectives = queryIn(
+                    "SELECT id, name FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = 1", pIds);
+            List<Long> oIds = ids(objectives);
+
+            List<Map<String, Object>> kpis = queryIn(
+                    "SELECT id, name FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = 0", oIds);
+            List<Long> kIds = ids(kpis);
+
+            List<Map<String, Object>> subKpis = queryIn(
+                    "SELECT id, name FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = 0", kIds);
+
+            for (Map<String, Object> p : perspectives) {
+                result.add(Map.of("measureName", str(p.get("name")), "measureType", "0", "elementType", "PERSPECTIVE"));
+            }
+            for (Map<String, Object> o : objectives) {
+                result.add(Map.of("measureName", str(o.get("name")), "measureType", "0", "elementType", "OBJECTIVE"));
+            }
+            for (Map<String, Object> k : kpis) {
+                result.add(Map.of("measureName", str(k.get("name")), "measureType", "0", "elementType", "KPI"));
+            }
+            for (Map<String, Object> sk : subKpis) {
+                result.add(Map.of("measureName", str(sk.get("name")), "measureType", "1", "elementType", "SUBKPI"));
+            }
+        }
+
         return result;
     }
 
@@ -633,5 +803,63 @@ public class ScorecardCalculationService {
             }
         }
         return fallback;
+    }
+
+    private BigDecimal evaluateFormula(String formula, List<Map<String, Object>> childDtos) {
+        if (formula == null || formula.trim().isEmpty()) return null;
+        String evalStr = formula;
+        
+        // Sort children by name length descending to replace longer names first
+        List<Map<String, Object>> sortedChildren = new ArrayList<>(childDtos);
+        sortedChildren.sort((c1, c2) -> {
+            String n1 = getNameFromChild(c1);
+            String n2 = getNameFromChild(c2);
+            if (n1 == null) return 1;
+            if (n2 == null) return -1;
+            return Integer.compare(n2.length(), n1.length());
+        });
+
+        for (Map<String, Object> child : sortedChildren) {
+            String name = getNameFromChild(child);
+            BigDecimal score = (BigDecimal) child.get("score");
+            if (score == null) score = BigDecimal.ZERO;
+            
+            if (name != null) {
+                // Support legacy bracket format if present
+                evalStr = evalStr.replace("[" + name + "]", score.toPlainString());
+                // Support raw name format
+                evalStr = evalStr.replace(name, score.toPlainString());
+            }
+        }
+        
+        // Replace list brackets with parentheses for EvalEx functions e.g. avg[10, 20] -> avg(10, 20)
+        evalStr = evalStr.replace("[", "(").replace("]", ")");
+        
+        try {
+            com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
+            return new BigDecimal(util.applyExpression(evalStr));
+        } catch (Exception e) {
+            System.err.println("Formula evaluation failed for " + formula + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+    private Map<String, Object> makeVar(String name, BigDecimal value) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("name", name);
+        m.put("score", value);
+        return m;
+    }
+
+    private String getNameFromChild(Map<String, Object> child) {
+        if (child.containsKey("objectivesValue")) {
+            return str(((Map<?,?>)child.get("objectivesValue")).get("name"));
+        } else if (child.containsKey("kpiValue")) {
+            return str(((Map<?,?>)child.get("kpiValue")).get("name"));
+        } else if (child.containsKey("scoreCardValue")) {
+            return str(((Map<?,?>)child.get("scoreCardValue")).get("name"));
+        } else {
+            return str(child.get("name"));
+        }
     }
 }

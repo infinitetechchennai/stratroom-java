@@ -180,6 +180,15 @@ export const changePerspectiveName = (scorecardId, name) =>
     { method: 'PUT' }
   );
 
+export const renamePerspective = (id, name) =>
+  request(`${SC}/scorecardV2/perspective/${id}/name?name=${encodeURIComponent(name)}`, { method: 'POST' });
+
+export const updateScorecardFormula = (id, formula) =>
+  request(`${SC}/scorecardV2/scorecard/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({ formula, aggregationMethod: formula ? 'FORMULA' : 'WEIGHTED' }),
+  });
+
 // Scorecard detail (page-level container)
 export const saveScorecardDetails = (data) =>
   request(`${SC}/scorecardDetails`, {

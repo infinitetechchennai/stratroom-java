@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { getPerspectiveById, getObjectiveById, getKpiById, updateScorecardFormula } from '../../services/scorecardApi';
 import { useScorecard } from '../../hooks/useScorecard';
 import { cardDetailsToTabs } from '../../utils/scorecardTransform';
 import { ScorecardProvider, useScorecardContext } from '../../context/ScorecardContext';
@@ -330,68 +331,66 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     if (el) new window.bootstrap.Modal(el).show();
                 }
             },
-            openEditPerspective: (id, data) => {
+            openEditPerspective: async (id) => {
                 window._editPerspectiveId = id;
-                if (data) {
-                    const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v || ''; };
-                    set('epid', data.scoreCardValue?.displayId || '');
-                    set('epName', data.scoreCardValue?.name);
-                    set('epDescription', data.scoreCardValue?.description);
-                    set('epWeight', data.scoreCardValue?.weight);
-                    set('epSubWeight', data.scoreCardValue?.subWeight);
-                    set('epStatus', data.scoreCardValue?.status);
-                    set('epOwner', data.scoreCardValue?.ownerId);
-                    if (data.scoreCardValue?.startDate) {
-                        const d = new Date(data.scoreCardValue.startDate);
-                        if (!isNaN(d.getTime())) set('epStartDate', d.toISOString().split('T')[0]);
+                const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
+                ['epid', 'epName', 'epDescription', 'epWeight', 'epSubWeight', 'epPerformance'].forEach(elId => set(elId, ''));
+                try {
+                    const p = await getPerspectiveById(id);
+                    if (p && p.id) {
+                        set('epid', p.id);
+                        set('epName', p.name);
+                        set('epDescription', p.description);
+                        set('epWeight', p.weight);
+                        set('epPerformance', p.formula || '');
                     }
-                    if (data.scoreCardValue?.endDate) {
-                        const d = new Date(data.scoreCardValue.endDate);
-                        if (!isNaN(d.getTime())) set('epEndDate', d.toISOString().split('T')[0]);
-                    }
+                } catch (e) {
+                    console.error('Failed to load perspective data', e);
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('prespective-edit-modal');
                     if (el) new window.bootstrap.Modal(el).show();
                 }
             },
-            openEditObjective: (id, data) => {
+            openEditObjective: async (id) => {
                 window._editObjectiveId = id;
-                if (data) {
-                    const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v || ''; };
-                    set('eodName', data.objectivesValue?.name);
-                    set('eodDescription', data.objectivesValue?.description);
-                    set('eodWeight', data.objectivesValue?.weight);
-                    set('eodSubWeight', data.objectivesValue?.subWeight);
-                    set('eodStatus', data.objectivesValue?.status);
-                    set('eodOwner', data.objectivesValue?.ownerId);
-                    if (data.objectivesValue?.startDate) {
-                        const d = new Date(data.objectivesValue.startDate);
-                        if (!isNaN(d.getTime())) set('eodStartDate', d.toISOString().split('T')[0]);
+                const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
+                ['eodName', 'eodDescription', 'eodWeight'].forEach(elId => set(elId, ''));
+                try {
+                    const o = await getObjectiveById(id);
+                    if (o && o.id) {
+                        set('eodName', o.name);
+                        set('eodDescription', o.description);
+                        set('eodWeight', o.weight);
                     }
-                    if (data.objectivesValue?.endDate) {
-                        const d = new Date(data.objectivesValue.endDate);
-                        if (!isNaN(d.getTime())) set('eodEndDate', d.toISOString().split('T')[0]);
-                    }
+                } catch (e) {
+                    console.error('Failed to load objective data', e);
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('objective-edit-modal');
                     if (el) new window.bootstrap.Modal(el).show();
                 }
             },
-            openEditKpi: (id, data) => {
+            openEditKpi: async (id) => {
                 window._editKpiId = id;
-                if (data) {
-                    const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v || ''; };
-                    set('ekName', data.kpiValue?.name);
-                    set('ekDescription', data.kpiValue?.description);
-                    set('ekTarget', data.kpiValue?.target);
-                    set('ekActual', data.kpiValue?.actual);
-                    set('ekWeight', data.kpiValue?.weight);
-                    set('ekSubWeight', data.kpiValue?.subWeight);
-                    set('ekStatus', data.kpiValue?.status);
-                    set('ekOwner', data.kpiValue?.ownerId);
-                    set('ekMeasurement', data.kpiValue?.kpi_measurement);
+                const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
+                ['ekpiId', 'ekpiName', 'ekpiDescription', 'ekpiWeight', 'ekpiContribution', 'ekipSubWeight',
+                 'ekpiActual', 'ekpiPerformance', 'ekpiYearToDate'].forEach(elId => set(elId, ''));
+                try {
+                    const kpi = await getKpiById(id);
+                    if (kpi && kpi.id) {
+                        set('ekpiId', kpi.id);
+                        set('ekpiName', kpi.name);
+                        set('ekpiDescription', kpi.description);
+                        set('ekpiWeight', kpi.weight);
+                        set('ekpiPerformance', kpi.formula || '');
+                        const polEl = document.getElementById('ekpiPolarity');
+                        if (polEl && kpi.polarity) polEl.value = kpi.polarity;
+                        const freqEl = document.getElementById('ekpiMeasurementFrequency');
+                        if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
+                    }
+                } catch (e) {
+                    console.error('Failed to load KPI data', e);
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('kpi-edit-modal');
@@ -401,6 +400,20 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         };
         return () => { delete window.scorecardActions; };
     }, [removePerspective, removeObjective, removeKpi, removeSubKpi]);
+
+    useEffect(() => {
+        window.saveScorecardFormula = async (formula) => {
+            const scorecardPk = scorecardData?.scoreCardDetailsId;
+            if (!scorecardPk) return;
+            try {
+                await updateScorecardFormula(scorecardPk, formula);
+                if (reload) reload();
+            } catch (e) {
+                console.error('Failed to save scorecard formula', e);
+            }
+        };
+        return () => { delete window.saveScorecardFormula; };
+    }, [scorecardData?.scoreCardDetailsId, reload]);
 
     const tabs = scorecardData?.tab || [];
 

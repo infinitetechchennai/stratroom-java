@@ -14,6 +14,8 @@
 
 import { validateFormula, retrieveNodeKeyList } from '../services/scorecardApi';
 
+let parentModalId = null;
+
 // component -> DOM ids it owns
 const COMPONENTS = {
   KPI: {
@@ -49,7 +51,7 @@ const COMPONENTS = {
   THRESSHOLD: {
     modalId: 'kpiCustomThreshold',
     textareaId: 'kpiCustomformula',
-    lists: { main: 'thressholdMeasureNames' },
+    lists: {},
   },
 };
 
@@ -58,13 +60,13 @@ const MODAL_TO_COMPONENT = Object.fromEntries(
 );
 
 const FUNCTION_DESC = {
-  if: "Returns second argument if first argument is true; Returns optional third argument if first argument is false; IF([KPI1, KPI2], 'trueCalc', 'falseCalc') IF(ACTUAL=0,0,ACTUAL/TARGET), IF(sum(ACTUAL)=0,0,sum(ACTUAL)/sum(TARGET)) , IF(sum[RG|OG]=0,0,sum[RG|OG]/sum[RG|OG])",
-  avg: "Returns the sum of the given expressions avg(ACTUAL) avg[RG] avg(avg[RG],avg[OG])",
-  agg: "Returns the sum of the given expressions agg(ACTUAL) agg(sum[RG],sum[OG])",
-  count: "Returns the count of the given expressions count[ACTUAL]+count[RG] = value",
-  sum: "Returns the sum of the given expressions SUM(ACTUAL) SUM(agg[RG],agg[OG])",
-  min: "Returns the smallest of the given expressions MIN(ACTUAL, TARGET) MIN(agg[RG],agg[OG])",
-  max: "Returns the biggest of the given expressions MAX(ACTUAL, TARGET) MAX(agg[RG],agg[OG])",
+  if: "Returns second argument if first argument is true; Returns optional third argument if first argument is false; IF([KPI1, KPI2], 'trueCalc', 'falseCalc')",
+  avg: 'Returns the sum of the given expressions\navg(ACTUAL)\navg[RG]\navg(avg[RG],avg[OG])',
+  agg: 'Returns the sum of the given expressions\nagg(ACTUAL)\nagg(sum[RG],sum[OG])',
+  count: 'Returns the count of the given expressions\ncount[ACTUAL]+count[RG] = value',
+  sum: 'Returns the sum of the given expressions\nSUM(ACTUAL)\nSUM(agg[RG],agg[OG])',
+  min: 'Returns the smallest of the given expressions\nMIN(ACTUAL, TARGET)\nMIN(agg[RG],agg[OG])',
+  max: 'Returns the biggest of the given expressions\nMAX(ACTUAL, TARGET)\nMAX(agg[RG],agg[OG])',
 };
 
 // The KPI input that launched the currently-open calculator. On "Add" the
@@ -92,14 +94,13 @@ function setDescription(component, name, descKey) {
   const head = modal.querySelector('.formulaheaderdesc');
   const body = modal.querySelector('.formulacontentdesc');
   if (head) head.textContent = String(name).toUpperCase();
-  if (body) body.textContent = FUNCTION_DESC[String(descKey).toLowerCase()] || '';
+  if (body) body.innerHTML = (FUNCTION_DESC[String(descKey).toLowerCase()] || '').replace(/\n/g, '<br>');
 }
 
 function insertMeasure(component, name) {
   const cfg = COMPONENTS[component];
   if (!cfg) return;
-  // Bracket-wrap so the backend's `\[(.*?)\]` node-key matcher picks it up.
-  insertToken(cfg.textareaId, `[${name}]`);
+  insertToken(cfg.textareaId, name);
 }
 
 function closeModal(modalId) {
@@ -133,22 +134,24 @@ async function loadMeasures(component) {
   const cfg = COMPONENTS[component];
   if (!cfg) return;
 
-  // clear this component's lists
-  Object.values(cfg.lists).forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = '';
-  });
-
+  // KPI Performance calculator shows only 4 fixed fields — no API call needed
   if (component === 'KPIPERFORMANCE') {
-    const listId = cfg.lists.main;
-    const ul = document.getElementById(listId);
+    const fixedList = [
+      { measureName: 'Actual' },
+      { measureName: 'Target' },
+      { measureName: 'Weight' },
+      { measureName: 'Contribution' },
+    ];
+    document.dispatchEvent(new CustomEvent('scorecardMeasuresLoaded', { detail: { component, data: fixedList } }));
+    const ul = document.getElementById(cfg.lists.main);
     if (ul) {
-      ['Actual', 'Target', 'Weight', 'Contribution'].forEach(name => {
+      ul.innerHTML = '';
+      fixedList.forEach((item) => {
         const li = document.createElement('li');
         li.className = 'list-group-item';
-        li.textContent = name;
+        li.textContent = item.measureName;
         li.style.cursor = 'pointer';
-        li.addEventListener('click', () => insertMeasure(component, name));
+        li.addEventListener('click', () => insertMeasure('KPIPERFORMANCE', item.measureName));
         ul.appendChild(li);
       });
     }
@@ -156,18 +159,129 @@ async function loadMeasures(component) {
   }
 
   try {
-    if (!nodeKeyCache) nodeKeyCache = await retrieveNodeKeyList();
+    const params = new URLSearchParams(window.location.search);
+    const pageId = params.get('pageId') || window.location.pathname.split('/').pop();
+    const y = new Date().getFullYear();
+    const dateRange = localStorage.getItem('customperiod') || `01/01/${y}-12/31/${y}`;
+
+    // --- Component-specific direct resolution (most reliable) ---
+    // For KPIPERFORMANCE (KPI Performance Calculator), always use the currently
+    // edited KPI's ID directly — do NOT depend on activeInput which may be null
+    // if the modal was opened by Bootstrap's data-bs-target attribute.
+    let nodeType = '';
+    let nodeId = '';
+
+    if (component === 'KPIPERFORMANCE') {
+      // Performance calculator shows only fixed fields: Actual, Target, Weight, Contribution.
+      // No API call needed — skip straight to the hardcoded list below.
+      nodeType = '';
+      nodeId = '';
+    } else if (component === 'KPI') {
+      // KPI Actual calculator: ALL KPIs (Measures tab) + ALL Sub-KPIs (Sub Measures tab) from entire scorecard.
+      nodeType = '';
+      nodeId = '';
+    } else if (component === 'YTD') {
+      // YTD calculator shows the full tree (all Perspectives, Objectives, KPIs, Sub-KPIs).
+      nodeType = '';
+      nodeId = '';
+    } else if (component === 'SCORECARDCONFIG') {
+      nodeType = 'SCORECARD';
+      nodeId = pageId;
+    } else if (component === 'PERSPECTIVE') {
+      nodeType = 'PERSPECTIVE';
+      nodeId = window._editPerspectiveId || '';
+    } else if (component === 'OBJECTIVE') {
+      nodeType = 'OBJECTIVE';
+      nodeId = window._editObjectiveId || '';
+    } else if (activeInput) {
+      // For KPI / YTD / THRESSHOLD: use activeInput to identify context
+      if (['abPerformance', 'eodPerformance', 'vodPerformance', 'objectivePerformance'].includes(activeInput.id)) {
+        nodeType = 'OBJECTIVE';
+        nodeId = window._editObjectiveId || '';
+      } else if (['apPerformance', 'epPerformance', 'vpPerformance', 'prespectivePerformance', 'perspectivePerformance'].includes(activeInput.id)) {
+        nodeType = 'PERSPECTIVE';
+        nodeId = window._editPerspectiveId || '';
+      } else if (['akpiPerformance', 'ekpiPerformance', 'vkpiPerformance', 'ekpiActual', 'vkpiActual', 'kpiPerformance', 'kpiActualPerformance'].includes(activeInput.id)) {
+        nodeType = 'KPI';
+        nodeId = window._editKpiId || '';
+      } else if (['askpiPerformance', 'eskpiPerformance', 'vskpiPerformance', 'subkpiPerformance'].includes(activeInput.id)) {
+        nodeType = 'SUBKPI';
+        nodeId = window._editSubKpiId || '';
+      } else if (['scorecard_formula'].includes(activeInput.id)) {
+        nodeType = 'SCORECARD';
+        nodeId = pageId;
+      } else {
+        // Fallback to form-based identification for Legacy jQuery / Bootstrap forms
+        const form = activeInput.closest('form');
+        if (form) {
+          if (form.id === 'kpiForm' || form.id === 'editKpiForm') {
+            nodeType = 'KPI';
+            nodeId = form.querySelector('#kpi_id')?.value || window._editKpiId || '';
+          } else if (form.id === 'objectiveForm' || form.id === 'editObjectiveForm') {
+            nodeType = 'OBJECTIVE';
+            nodeId = form.querySelector('#objective_id')?.value || window._editObjectiveId || '';
+          } else if (form.id === 'perspectiveForm' || form.id === 'editPerspectiveForm') {
+            nodeType = 'PERSPECTIVE';
+            nodeId = form.querySelector('#perspectiveId')?.value || window._editPerspectiveId || '';
+          } else if (form.id === 'scorecardForm') {
+            nodeType = 'SCORECARD';
+            nodeId = pageId;
+          } else if (form.id === 'subkpiForm' || form.id === 'editSubkpiForm') {
+            nodeType = 'SUBKPI';
+            nodeId = form.querySelector('#subkpi_id')?.value || form.querySelector('input[name="sub"]')?.value || window._editSubKpiId || '';
+          }
+        }
+      }
+    }
+
+    // KPI Actual and YTD use empty nodeType to get the full scorecard tree.
+    const isFullScorecardComponent = (component === 'KPI' || component === 'YTD');
+    const cacheKey = `${pageId}_${dateRange}_${nodeType || 'ALL'}_${nodeId || 'ALL'}`;
+    console.log('[Calculator] component:', component, 'nodeType:', nodeType || '(all)', 'nodeId:', nodeId || '(all)', 'isFullScorecardComponent:', isFullScorecardComponent);
+    if (!nodeKeyCache || nodeKeyCache.key !== cacheKey) {
+      // The backend now returns the full list of elements for the scorecard level 
+      // regardless of nodeId. This solves the issue when creating new elements.
+      const data = nodeType || isFullScorecardComponent
+        ? await retrieveNodeKeyList(pageId, dateRange, nodeType || '', nodeId || '')
+        : [];
+      console.log('[Calculator] API returned', data?.length, 'items');
+      nodeKeyCache = { key: cacheKey, data };
+    } else {
+      console.log('[Calculator] Using cached data:', nodeKeyCache.data?.length, 'items');
+    }
   } catch (err) {
     console.error('retrieveNodeKeyList failed:', err);
     return;
   }
-  console.log("loadMeasures nodeKeyCache:", nodeKeyCache);
-  const list = Array.isArray(nodeKeyCache) ? nodeKeyCache : [];
+  const list = Array.isArray(nodeKeyCache?.data) ? [...nodeKeyCache.data] : [];
+
+  // Dispatch custom event for React components
+  const event = new CustomEvent('scorecardMeasuresLoaded', {
+    detail: {
+      component: component,
+      data: list
+    }
+  });
+  document.dispatchEvent(event);
+
+  // Fallback DOM manipulation for any legacy non-React modals
+  Object.values(cfg.lists).forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
 
   list.forEach((nk) => {
     const name = nk?.measureName;
     if (!name) return;
     const type = Number(nk.measureType);
+    const elementType = nk?.elementType || '';
+
+    // KPI Actual + YTD: full tree — KPIs → Measures tab, Sub-KPIs → Sub Measures tab, skip everything else.
+    if ((component === 'KPI' || component === 'YTD') && elementType) {
+      if (elementType !== 'KPI' && elementType !== 'SUBKPI') return;
+    }
+
+    // Route to correct list: sub-KPIs (measureType=1) go to sub list when one exists.
     let listId = cfg.lists.main;
     if (type === 1 && cfg.lists.sub) listId = cfg.lists.sub;
     const ul = document.getElementById(listId);
@@ -209,6 +323,10 @@ async function runValidate(mode, component) {
       activeInput.value = formula;
       activeInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
+    // If opened from the scorecard header + button (no parent modal), auto-save formula.
+    if (component === 'SCORECARDCONFIG' && !parentModalId && window.saveScorecardFormula) {
+      window.saveScorecardFormula(formula);
+    }
     toast('Formula added', true);
     closeModal(cfg.modalId);
   } else {
@@ -218,13 +336,46 @@ async function runValidate(mode, component) {
 
 // ── Event handlers ────────────────────────────────────────────
 function onLaunchClick(e) {
-  const btn = e.target.closest('[data-bs-target]');
-  if (!btn) return;
-  const target = btn.getAttribute('data-bs-target') || '';
-  const id = target.replace('#', '');
-  if (!MODAL_TO_COMPONENT[id]) return;
-  const group = btn.closest('.input-group');
-  activeInput = group ? group.querySelector('input, textarea') : null;
+  // Capture clicks on any button or input that opens a modal
+  const trigger = e.target.closest('[data-bs-target], [data-target]');
+  if (!trigger) return;
+
+  const parentModal = trigger.closest('.modal');
+  if (parentModal) {
+    parentModalId = parentModal.id;
+  } else {
+    parentModalId = null;
+  }
+
+  // Scorecard header + button opens the SCORECARDCONFIG calculator directly.
+  // Set activeInput to the scorecard formula textarea so insertMeasure works.
+  if (trigger.dataset.scorecardFormulaLauncher) {
+    activeInput = document.getElementById(COMPONENTS.SCORECARDCONFIG.textareaId);
+    return;
+  }
+
+  // Find the associated input field to know which element is being edited
+  const group = trigger.closest('.input-group');
+  if (group) {
+    activeInput = group.querySelector('input, textarea');
+  } else if (trigger.tagName === 'INPUT' || trigger.tagName === 'TEXTAREA') {
+    activeInput = trigger;
+  }
+}
+
+function onModalHidden(e) {
+  const id = e.target?.id;
+  const component = MODAL_TO_COMPONENT[id];
+  if (component && parentModalId) {
+    const parentEl = document.getElementById(parentModalId);
+    if (parentEl && window.bootstrap?.Modal) {
+      const inst = window.bootstrap.Modal.getInstance(parentEl) || new window.bootstrap.Modal(parentEl);
+      inst.show();
+    } else if (parentEl && window.jQuery) {
+      window.jQuery(parentEl).modal('show');
+    }
+    parentModalId = null;
+  }
 }
 
 function onModalShow(e) {
@@ -258,21 +409,19 @@ export function initScorecardCalculator() {
     insertToken('formulaScoreCardPerspective', input);
     if (desc) setDescription('SCORECARDCONFIG', input, desc);
   };
-  window.updateThresshold = (input, desc) => {
-    insertToken('kpiCustomformula', input);
-    if (desc) setDescription('THRESSHOLD', input, desc);
-  };
-  window.updateCustomObjective = (input, desc) => {
-    insertToken('objectiveCustomformula', input);
-    if (desc) setDescription('OBJECTIVE', input, desc);
-  };
   window.updateCustomPerspective = (input, desc) => {
-    insertToken('perspectiveCustomformula', input);
+    insertToken('formulaCustomPerspective', input);
     if (desc) setDescription('PERSPECTIVE', input, desc);
   };
-  window.showFunctionDescription = (component, name, descKey) => {
-    setDescription(component, name, descKey);
+  window.updateCustomObjective = (input, desc) => {
+    insertToken('formulaCustomObjective', input);
+    if (desc) setDescription('OBJECTIVE', input, desc);
   };
+  window.updateCustomThreshold = (input, desc) => {
+    insertToken('thresholdformula', input);
+    if (desc) setDescription('THRESSHOLD', input, desc);
+  };
+
   window.fieldmeasurefilter = (listId, inputId) => {
     const input = document.getElementById(inputId);
     const ul = document.getElementById(listId);
@@ -287,18 +436,19 @@ export function initScorecardCalculator() {
 
   document.addEventListener('click', onLaunchClick, true);
   document.addEventListener('show.bs.modal', onModalShow);
+  document.addEventListener('hidden.bs.modal', onModalHidden);
 
   return () => {
     document.removeEventListener('click', onLaunchClick, true);
     document.removeEventListener('show.bs.modal', onModalShow);
+    document.removeEventListener('hidden.bs.modal', onModalHidden);
     delete window.updateFormula;
     delete window.updateYTDFormula;
     delete window.updatePerformance;
     delete window.updateScorecardPerspective;
-    delete window.updateThresshold;
-    delete window.updateCustomObjective;
     delete window.updateCustomPerspective;
-    delete window.showFunctionDescription;
+    delete window.updateCustomObjective;
+    delete window.updateCustomThreshold;
     delete window.fieldmeasurefilter;
     delete window.handleFormulaValidate;
     delete window.handleFormulaAdd;

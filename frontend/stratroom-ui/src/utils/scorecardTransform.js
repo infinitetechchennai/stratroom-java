@@ -57,11 +57,12 @@ function mapObjective(obj) {
 
 function mapScorecard(sc) {
   const v = sc.scoreCardValue || {};
+  const resolvedName = v.modifyName || v.name || sc.perspectiveType || sc.code || `Perspective ${sc.id}`;
   return {
     id: sc.id,
-    title: v.modifyName || v.name,
+    title: resolvedName,
     totalScore: v.thresholdResult,
-    perspectiveType: v.modifyeType || sc.perspectiveType,
+    perspectiveType: v.modifyeType || resolvedName,
     pk: sc.id,
     tabledata: (sc.objectiveList || []).map(mapObjective)
   };
@@ -78,6 +79,5 @@ export function cardDetailsToTabs(dto) {
     scorecardName: card.scorecardName ?? card.scoreCardName ?? 'Scorecard',
     overallScore: card.thresholdResult ?? '',
     scoreCardDetailsId: card.id ?? card.scoreCardDetailsId,
-    rawCard: card,
   };
 }
