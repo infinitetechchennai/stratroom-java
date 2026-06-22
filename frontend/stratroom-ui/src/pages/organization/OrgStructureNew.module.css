@@ -312,6 +312,7 @@
   flex-direction: column;
   gap: 5px;
   min-height: 200px;
+  overflow-x: auto;
 }
 
 .treeRow {
@@ -324,6 +325,7 @@
   cursor: default;
   transition: border-color .18s, box-shadow .18s, transform .12s, background .12s;
   margin-bottom: 1px;
+  min-width: 380px;
 }
 
 .treeRow:hover {
@@ -412,8 +414,8 @@
 }
 
 .childrenInner {
-  margin-left: 20px;
-  padding-left: 14px;
+  margin-left: 13px;
+  padding-left: 11px;
   border-left: 1.5px solid rgba(0,196,196,.18);
   margin-top: 3px;
   display: flex;

@@ -43,6 +43,7 @@
  */
 package com.estrat.backend.db.service;
 
+import com.estrat.backend.db.config.ModuleCatalog;
 import com.estrat.backend.db.bean.Employee;
 import com.estrat.backend.db.bean.po.EmployeeProfilePo;
 import com.estrat.backend.db.bean.po.ModuleDetailsPo;
@@ -266,6 +267,32 @@ public class RoleService {
             roleDetailPo.setOrgId(orgId);
             RoleDetailsPo roleDetailsPo = (RoleDetailsPo)this.roleRepository.save(roleDetailPo);
             this.updateModuleDetailsAndPrivileges(roleDetailsPo, roleDTO);
+        }
+    }
+
+    /**
+     * Idempotent repair for dev/migrated DBs: creates any missing default roles and
+     * backfills module_privilege_mapping when a role exists but has no mappings.
+     */
+    public void ensureDefaultRoleTemplates(Long orgId, Long empId) {
+        for (String roleName : ModuleCatalog.DEFAULT_ROLE_NAMES) {
+            Optional<RoleDetailsPo> existing = this.roleRepository.findByRoleName(orgId, roleName, 0);
+            RoleDetailsPo role;
+            if (existing.isPresent()) {
+                role = existing.get();
+                if (CollectionUtils.isNotEmpty(this.modulePrivilegeMappingRepo.findBy(role.getRoleId()))) {
+                    continue;
+                }
+                this.logger.info("Backfilling privilege mappings for org_id={} role={}", orgId, roleName);
+            } else {
+                RoleDTO roleDTO = this.getRoleDTO(roleName, empId);
+                RoleDetailsPo roleDetailPo = new RoleDetailsPo(roleDTO);
+                roleDetailPo.setOrgId(orgId);
+                role = (RoleDetailsPo)this.roleRepository.save(roleDetailPo);
+                this.logger.info("Created default role org_id={} role={}", orgId, roleName);
+            }
+            RoleDTO template = this.getRoleDTO(roleName, empId);
+            this.updateModuleDetailsAndPrivileges(role, template);
         }
     }
 

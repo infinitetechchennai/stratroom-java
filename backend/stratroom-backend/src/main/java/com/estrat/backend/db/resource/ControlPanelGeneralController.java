@@ -207,6 +207,11 @@ public class ControlPanelGeneralController {
         return new ResponseEntity((Object)this.controlPanelGeneralService.deleteById(id.longValue()), HttpStatus.OK);
     }
 
+    @PostMapping(value={"/implementationType"})
+    public ResponseEntity<ControlPanelGeneralDTO> setImplementationType(@RequestParam(value="orgId") long orgId, @RequestParam(value="type") String type) throws RequestException {
+        return new ResponseEntity((Object)this.controlPanelGeneralService.setImplementationType(orgId, type), HttpStatus.OK);
+    }
+
     @GetMapping(value={"/generalSettingList/{orgId}"})
     public ResponseEntity<ControlPanelGeneralDTO> findByOrgId(@PathVariable(value="orgId") long orgId) throws RequestException {
         Optional controlPanelGeneral = this.controlPanelGeneralService.findById(orgId);

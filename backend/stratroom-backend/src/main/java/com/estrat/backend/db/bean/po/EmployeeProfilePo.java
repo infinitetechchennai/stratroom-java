@@ -71,7 +71,7 @@ implements Serializable {
     @Column(name="profile_image")
     private String profileImage;
     @Column(name="parent_emp_id")
-    private long parentEmpId;
+    private Long parentEmpId;
     @Column(name="department")
     private String department;
     @Column(name="title")
@@ -229,11 +229,11 @@ implements Serializable {
         this.profileImage = profileImage;
     }
 
-    public long getParentEmpId() {
+    public Long getParentEmpId() {
         return this.parentEmpId;
     }
 
-    public void setParentEmpId(long parentEmpId) {
+    public void setParentEmpId(Long parentEmpId) {
         this.parentEmpId = parentEmpId;
     }
 

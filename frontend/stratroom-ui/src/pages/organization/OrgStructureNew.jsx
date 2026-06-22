@@ -1,9 +1,19 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { useAuth } from '../../context/AuthContext'
+import { usePermissions } from '../../context/PermissionsContext'
 import { useI18n } from '../../context/I18nContext'
-import { fetchOrgStructure, createEmployee, updateEmployee, deleteEmployee, addDepartmentMapping } from '../../api/orgStructureApi'
+import { fetchOrgStructure, createEmployee, updateEmployee, deleteEmployee, deleteDepartmentMapping, addDepartmentMapping, fetchOrgTrackList, clearOrgTrack, createBulkDeptMapping, setImplementationMode } from '../../api/orgStructureApi'
 import axiosClient from '../../api/axiosClient'
+import {
+  resolveChartEmpId,
+  drillDownAsSubUser,
+  returnToOrgRoot,
+  isDrilledDownFromRoot,
+  getOrgStructurePermissions,
+  canDrillDownOrgChart,
+  nodeActionFlags,
+} from '../../utils/orgStructureSession'
 import styles from './OrgStructureNew.module.css'
 import * as XLSX from 'xlsx'
 
@@ -31,6 +41,8 @@ function enhanceTree(nodes) {
       email: node.email ?? '',
       members: node.members ?? '',
       photo: node.photo ?? null,
+      ownerId: node.ownerId ?? null,
+      canMaintain: node.canMaintain !== false,
       color: node.color ?? pickColor(id),
       children: enhanceTree(node.children),
     }
@@ -63,6 +75,29 @@ function filterTree(nodes, term) {
     }
     return acc
   }, [])
+}
+
+// Keeps any node that satisfies `pred`, plus the ancestor chain leading to it (so the
+// match stays reachable in the tree). Used by the Department / Designation filters.
+function filterTreeByPredicate(nodes, pred) {
+  if (!nodes?.length) return []
+  return nodes.reduce((acc, node) => {
+    const childMatches = filterTreeByPredicate(node.children, pred)
+    if (pred(node) || childMatches.length > 0) {
+      acc.push({ ...node, children: childMatches })
+    }
+    return acc
+  }, [])
+}
+
+// Distinct, sorted, non-empty values of a field across the whole tree.
+function distinctFieldValues(nodes, field, out) {
+  const set = out || new Set()
+  ;(nodes || []).forEach(n => {
+    if (n[field]) set.add(n[field])
+    distinctFieldValues(n.children, field, set)
+  })
+  return out ? set : [...set].sort((a, b) => a.localeCompare(b))
 }
 
 // ── Avatar ─────────────────────────────────────────────────────────────────────
@@ -117,9 +152,13 @@ function NodeBadges({ node, small = false }) {
 }
 
 // ── TreeRow ────────────────────────────────────────────────────────────────────
-function TreeRow({ node, onAdd, onEdit, onDelete }) {
+function TreeRow({ node, permFlags, onAdd, onEdit, onDelete, onDrillDown }) {
   const { t } = useI18n()
   const [collapsed, setCollapsed] = useState(false)
+  const actions = nodeActionFlags(node, permFlags)
+  const drillId = node.ownerId ?? node.id
+  const nameClickable = permFlags.canDrillDown && drillId
+
   return (
     <div className={styles.treeRowWrap} data-id={node.id}>
       <div className={styles.treeRow}>
@@ -137,7 +176,14 @@ function TreeRow({ node, onAdd, onEdit, onDelete }) {
         <div className={styles.treeAvatarWrap}><Avatar node={node} size="md" /></div>
         <div className={styles.treeInfo}>
           <div className={styles.treeNameRow}>
-            <p className={styles.treeName}>{node.name}</p>
+            <p
+              className={styles.treeName}
+              style={nameClickable ? { cursor: 'pointer', color: 'var(--cyan, #00C4C4)' } : undefined}
+              onClick={nameClickable ? () => onDrillDown(drillId) : undefined}
+              title={nameClickable ? 'View org from this person' : undefined}
+            >
+              {node.name}
+            </p>
             <NodeBadges node={node} />
           </div>
         </div>
@@ -150,25 +196,31 @@ function TreeRow({ node, onAdd, onEdit, onDelete }) {
               </svg>
             </button>
           )}
-          <button className={`${styles.actionPill} ${styles.apAdd}`} onClick={() => onAdd(node.id)}>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            {t('common.add')}
-          </button>
-          <button className={`${styles.actionPill} ${styles.apEdit}`} onClick={() => onEdit(node.id)}>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-            {t('common.edit')}
-          </button>
-          <button className={`${styles.actionPill} ${styles.apDel}`} onClick={() => onDelete(node.id)}>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            </svg>
-            {t('common.delete')}
-          </button>
+          {actions.add && (
+            <button className={`${styles.actionPill} ${styles.apAdd}`} onClick={() => onAdd(node.id)}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              {t('common.add')}
+            </button>
+          )}
+          {actions.edit && (
+            <button className={`${styles.actionPill} ${styles.apEdit}`} onClick={() => onEdit(node.id)}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              {t('common.edit')}
+            </button>
+          )}
+          {actions.delete && (
+            <button className={`${styles.actionPill} ${styles.apDel}`} onClick={() => onDelete(node.id)}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              </svg>
+              {t('common.delete')}
+            </button>
+          )}
         </div>
       </div>
       {node.children.length > 0 && (
@@ -176,7 +228,7 @@ function TreeRow({ node, onAdd, onEdit, onDelete }) {
           style={{ maxHeight: collapsed ? 0 : '9999px' }}>
           <div className={styles.childrenInner}>
             {node.children.map(child => (
-              <TreeRow key={child.id} node={child} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} />
+              <TreeRow key={child.id} node={child} permFlags={permFlags} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} onDrillDown={onDrillDown} />
             ))}
           </div>
         </div>
@@ -186,7 +238,7 @@ function TreeRow({ node, onAdd, onEdit, onDelete }) {
 }
 
 // ── TreeView ───────────────────────────────────────────────────────────────────
-function TreeView({ tree, onAdd, onEdit, onDelete }) {
+function TreeView({ tree, permFlags, onAdd, onEdit, onDelete, onDrillDown }) {
   const { t } = useI18n()
   return (
     <div className={styles.sectionCard}>
@@ -195,12 +247,14 @@ function TreeView({ tree, onAdd, onEdit, onDelete }) {
           <h2 className={styles.sectionHeaderTitle}>{t('org.teamHierarchy')}</h2>
           <p className={styles.sectionHeaderSub}>{t('org.hierarchyHint')}</p>
         </div>
-        <button className={`${styles.actionPill} ${styles.apAdd}`} onClick={() => onAdd(-1)}>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          {t('org.addRoot')}
-        </button>
+        {permFlags.canCreate && (
+          <button className={`${styles.actionPill} ${styles.apAdd}`} onClick={() => onAdd(-1)}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            {t('org.addRoot')}
+          </button>
+        )}
       </div>
       <div className={styles.treeContainer}>
         {tree.length === 0 ? (
@@ -213,7 +267,7 @@ function TreeView({ tree, onAdd, onEdit, onDelete }) {
           </div>
         ) : (
           tree.map(n => (
-            <TreeRow key={n.id} node={n} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} />
+            <TreeRow key={n.id} node={n} permFlags={permFlags} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} onDrillDown={onDrillDown} />
           ))
         )}
       </div>
@@ -265,7 +319,7 @@ function buildEdges(nodes, layoutMap) {
   return edges
 }
 
-function ChartView({ tree, onAdd, onEdit, onDelete }) {
+function ChartView({ tree, permFlags, onAdd, onEdit, onDelete, onDrillDown }) {
   const { t } = useI18n()
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 40, y: 40 })
@@ -376,6 +430,9 @@ function ChartView({ tree, onAdd, onEdit, onDelete }) {
             {withOff.map(lay => {
               const node = findNode(tree, lay.id); if (!node) return null
               const isSelected = selected === lay.id
+              const actions = nodeActionFlags(node, permFlags)
+              const drillId = node.ownerId ?? node.id
+              const nameClickable = permFlags.canDrillDown && drillId
               return (
                 <div key={lay.id}
                   className={`${styles.chartNode}${isSelected ? ' ' + styles.selected : ''}`}
@@ -387,7 +444,12 @@ function ChartView({ tree, onAdd, onEdit, onDelete }) {
                       <div className={styles.cnNodeHeader}>
                         <Avatar node={node} size="sm" />
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--navy)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{node.name}</p>
+                          <p
+                            style={{ fontSize: 12, fontWeight: 700, color: nameClickable ? 'var(--cyan, #00C4C4)' : 'var(--navy)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: nameClickable ? 'pointer' : 'default' }}
+                            onClick={nameClickable ? (e) => { e.stopPropagation(); onDrillDown(drillId) } : undefined}
+                          >
+                            {node.name}
+                          </p>
                           <p style={{ fontSize: 10, color: 'var(--text-sec)', margin: '1px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{node.designation || node.department || ''}</p>
                         </div>
                       </div>
@@ -396,13 +458,17 @@ function ChartView({ tree, onAdd, onEdit, onDelete }) {
                       </div>
                     </div>
                   </div>
+                  {(actions.add || actions.edit || actions.delete) && (
                   <div className={styles.cnActions}>
+                    {actions.add && (
                     <button className={`${styles.actionPill} ${styles.apAdd}`} style={{ padding: '3px 6px' }}
                       onClick={e => { e.stopPropagation(); onAdd(node.id) }}>
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                       </svg>
                     </button>
+                    )}
+                    {actions.edit && (
                     <button className={`${styles.actionPill} ${styles.apEdit}`} style={{ padding: '3px 6px' }}
                       onClick={e => { e.stopPropagation(); onEdit(node.id) }}>
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -410,13 +476,17 @@ function ChartView({ tree, onAdd, onEdit, onDelete }) {
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                       </svg>
                     </button>
+                    )}
+                    {actions.delete && (
                     <button className={`${styles.actionPill} ${styles.apDel}`} style={{ padding: '3px 6px' }}
                       onClick={e => { e.stopPropagation(); onDelete(node.id) }}>
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                         <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
                       </svg>
                     </button>
+                    )}
                   </div>
+                  )}
                 </div>
               )
             })}
@@ -428,7 +498,7 @@ function ChartView({ tree, onAdd, onEdit, onDelete }) {
 }
 
 // ── GridView ───────────────────────────────────────────────────────────────────
-function GridView({ tree, onEdit, onDelete }) {
+function GridView({ tree, permFlags, onEdit, onDelete }) {
   const { t } = useI18n()
   const all = flattenTree(tree)
   return (
@@ -440,7 +510,9 @@ function GridView({ tree, onEdit, onDelete }) {
         </div>
       </div>
       <div className={styles.gridContainer}>
-        {all.map(node => (
+        {all.map(node => {
+          const actions = nodeActionFlags(node, permFlags)
+          return (
           <div key={node.id} className={styles.gridCard}>
             <div className={styles.gridColorStrip} style={{ background: node.color }} />
             <div className={styles.gridCardBody}>
@@ -451,7 +523,9 @@ function GridView({ tree, onEdit, onDelete }) {
                   <NodeBadges node={node} small />
                 </div>
               </div>
+              {(actions.edit || actions.delete) && (
               <div className={styles.gridCardActions}>
+                {actions.edit && (
                 <button className={`${styles.actionPill} ${styles.apEdit}`} style={{ padding: '3px 6px', fontSize: 9 }} onClick={() => onEdit(node.id)}>
                   <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -459,20 +533,24 @@ function GridView({ tree, onEdit, onDelete }) {
                   </svg>
                   {t('common.edit')}
                 </button>
+                )}
+                {actions.delete && (
                 <button className={`${styles.actionPill} ${styles.apDel}`} style={{ padding: '3px 6px', fontSize: 9 }} onClick={() => onDelete(node.id)}>
                   <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
                   </svg>
                   {t('common.delete')}
                 </button>
+                )}
               </div>
+              )}
             </div>
             <div className={styles.gridCardFooter}>
               <span className={styles.gridCardDept}>{node.designation || node.department}</span>
               {node.members && <span className={styles.gridCardMembers}>{node.members}</span>}
             </div>
           </div>
-        ))}
+        )})}
       </div>
     </div>
   )
@@ -587,13 +665,15 @@ function OrgModal({ mode, node, onSave, onClose }) {
 
   const [form, setForm] = useState(mode === 'edit' && node ? {
     ...EMPTY_FORM,
-    name: node.name || '',
-    department: node.department || '',
-    deptId: node.deptId || '',
-    email: node.email || '',
-    members: node.members || '',
+    name:        node.name || '',
+    department:  node.department || '',
+    deptId:      node.deptId || '',
+    email:       node.email || '',
+    members:     node.members || '',
     designation: node.designation || '',
-    location: node.location || '',
+    location:    node.location || '',
+    // Pre-select the owner dropdown so it doesn't appear blank on edit
+    owner:       node.ownerId != null ? String(node.ownerId) : '',
   } : { ...EMPTY_FORM })
 
   const [employees, setEmployees]   = useState([])
@@ -908,6 +988,433 @@ function DeleteModal({ node, onConfirm, onClose }) {
   )
 }
 
+// ── Org Tracker (change log) ─────────────────────────────────────────────────────
+// Renders the audit trail of org changes (who joined / moved / left) from /orgTrackList,
+// scoped to the currently selected period. Each row can be cleared.
+function TrackerView() {
+  const [rows, setRows] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const load = useCallback(async () => {
+    setLoading(true); setError(null)
+    try {
+      const period = localStorage.getItem('customperiod') || ''
+      const data = await fetchOrgTrackList('', period)
+      setRows(Array.isArray(data) ? data : [])
+    } catch (err) {
+      setError(err?.response?.data?.message || err?.message || 'Failed to load tracker')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  const handleClear = async (id) => {
+    try {
+      await clearOrgTrack(id)
+      setRows(rs => rs.filter(r => r.id !== id))
+    } catch (err) {
+      console.error('Clear org track failed', err)
+    }
+  }
+
+  const th = { textAlign: 'start', padding: '10px 14px', fontSize: 12, fontWeight: 700, color: '#475569', borderBottom: '1px solid #e2e8f0', whiteSpace: 'nowrap' }
+  const td = { padding: '10px 14px', fontSize: 13, color: '#334155', borderBottom: '1px solid #f1f5f9', verticalAlign: 'middle' }
+
+  return (
+    <div className={styles.sectionCard}>
+      <div className={styles.sectionHeader}>
+        <div>
+          <h2 className={styles.sectionHeaderTitle}>Organization Tracker</h2>
+          <p className={styles.sectionHeaderSub}>Changes to the org structure for the selected period</p>
+        </div>
+      </div>
+      <div style={{ padding: '4px 6px 8px' }}>
+        {loading ? (
+          <div className={styles.loaderWrap}><div className={styles.spinner} /></div>
+        ) : error ? (
+          <div className={styles.emptyState}><p>{error}</p></div>
+        ) : rows.length === 0 ? (
+          <div className={styles.emptyState}><p>No org changes recorded for this period.</p></div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={th}>Person</th>
+                  <th style={th}>Designation</th>
+                  <th style={th}>Action</th>
+                  <th style={th}>Reports To</th>
+                  <th style={th}>From</th>
+                  <th style={th}>To</th>
+                  <th style={th}></th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r, i) => (
+                  <tr key={r.id ?? i}>
+                    <td style={td}>
+                      <div style={{ fontWeight: 600 }}>{r.ownerName || '—'}</div>
+                      {r.email && <div style={{ fontSize: 11.5, color: '#94a3b8' }}>{r.email}</div>}
+                    </td>
+                    <td style={td}>{r.designation || '—'}</td>
+                    <td style={td}>{r.type || '—'}</td>
+                    <td style={td}>{r.parentName || '—'}</td>
+                    <td style={td}>{r.fromDate || '—'}</td>
+                    <td style={td}>{r.toDate || '—'}</td>
+                    <td style={{ ...td, textAlign: 'end' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleClear(r.id)}
+                        title="Clear this entry"
+                        style={{ border: '1px solid #fecaca', background: '#fef2f2', color: '#dc2626', borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer' }}
+                      >
+                        Clear
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Import Wizard (Upload → Validation → Import) ─────────────────────────────────
+const IMPORT_CATEGORIES = [
+  'Organisation', 'Users', 'Data Upload', 'Excel File Upload', 'Scorecard', 'Budget',
+  'Initiatives Data Load', 'Initiatives Budget Load', 'Initiatives & Projects',
+  'Risk', 'Compliance',
+]
+
+// Reads a row value by any of several candidate column names (case/space/underscore-insensitive).
+function importColVal(row, ...names) {
+  const keys = Object.keys(row)
+  for (const name of names) {
+    const norm = name.toLowerCase().replace(/[\s_-]/g, '')
+    const key = keys.find(k => k.toLowerCase().replace(/[\s_-]/g, '') === norm)
+    if (key && row[key] !== undefined && row[key] !== '') return String(row[key])
+  }
+  return ''
+}
+
+function WizardStepper({ step }) {
+  const steps = ['Upload', 'Validation', 'Import']
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 0 18px' }}>
+      {steps.map((label, i) => {
+        const n = i + 1
+        const done = step > n
+        const active = step === n
+        return (
+          <div key={label} style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, width: 90 }}>
+              <div style={{
+                width: 34, height: 34, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 14, fontWeight: 700,
+                background: active || done ? 'var(--cyan, #00C4C4)' : '#fff',
+                color: active || done ? '#fff' : '#94a3b8',
+                border: `2px solid ${active || done ? 'var(--cyan, #00C4C4)' : '#e2e8f0'}`,
+              }}>
+                {done ? '✓' : n}
+              </div>
+              <span style={{ fontSize: 12.5, fontWeight: active ? 700 : 500, color: active ? 'var(--navy, #0b1437)' : '#94a3b8' }}>{label}</span>
+            </div>
+            {i < steps.length - 1 && (
+              <div style={{ width: 70, height: 2, background: step > n ? 'var(--cyan, #00C4C4)' : '#e2e8f0', margin: '0 -8px 22px' }} />
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function ImportWizard({ user, onClose, onComplete }) {
+  const [step, setStep] = useState(1)
+  const [category, setCategory] = useState('')
+  const [file, setFile] = useState(null)
+  const [dragOver, setDragOver] = useState(false)
+  const [rows, setRows] = useState([])
+  const [errors, setErrors] = useState([])
+  const [parsing, setParsing] = useState(false)
+  const [importing, setImporting] = useState(false)
+  const [result, setResult] = useState(null)
+
+  const isOrg = category === 'Organisation'   // department-hierarchy file
+  const isUsers = category === 'Users'         // people file
+  const isSupported = isOrg || isUsers
+
+  // Parse + validate the file (per file type), then advance to the Validation step.
+  const handleNext = async () => {
+    if (!category || !file) return
+    if (!isSupported) {
+      setErrors([{ sheet: '—', row: '—', cell: 'Import Category',
+        reason: `"${category}" is imported from its own module, not from the Organisation module.` }])
+      setRows([]); setStep(2); return
+    }
+    setParsing(true)
+    try {
+      const buf = await file.arrayBuffer()
+      const wb = XLSX.read(buf, { type: 'array' })
+      const sheetName = wb.SheetNames[0]
+      const parsed = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' })
+      const errs = []
+      if (parsed.length === 0) errs.push({ sheet: sheetName, row: '—', cell: '—', reason: 'The sheet is empty' })
+
+      if (isUsers) {
+        parsed.forEach((r, idx) => {
+          const excelRow = idx + 2
+          const name = importColVal(r, 'Name', 'First Name', 'firstName', 'Full Name', 'Employee Name', 'Employee')
+          const email = importColVal(r, 'Email Address', 'Email', 'emailAddress', 'Work Email')
+          const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId')
+          if (!name) errs.push({ sheet: sheetName, row: excelRow, cell: 'Name', reason: 'Name is required' })
+          if (!email) errs.push({ sheet: sheetName, row: excelRow, cell: 'Email Address', reason: 'Email is required' })
+          else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push({ sheet: sheetName, row: excelRow, cell: 'Email Address', reason: 'Email is not valid' })
+          if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
+        })
+      } else { // Organisation (department hierarchy)
+        parsed.forEach((r, idx) => {
+          const excelRow = idx + 2
+          const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId')
+          const deptName = importColVal(r, 'Department Name', 'DepartmentName', 'Dept Name')
+          if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
+          if (!deptName) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department Name', reason: 'Department Name is required' })
+        })
+      }
+      setRows(parsed); setErrors(errs); setStep(2)
+    } catch (e) {
+      setErrors([{ sheet: '—', row: '—', cell: 'File', reason: e?.message || 'Could not read the file' }])
+      setRows([]); setStep(2)
+    } finally {
+      setParsing(false)
+    }
+  }
+
+  // Map rows and push to the right backend endpoint, then show statistics.
+  const handleImport = async () => {
+    setImporting(true); setResult(null); setStep(3)
+    try {
+      const orgName = user?.orgDetails?.orgName ?? user?.orgDetails?.name ?? 'Stratroom'
+      const orgId = user?.orgDetails?.orgId ?? user?.orgId ?? 1
+
+      if (isUsers) {
+        // People file: placed into departments by Department ID (no parent-email in dept mode).
+        const employees = rows.map(r => ({
+          name:               importColVal(r, 'Name', 'First Name', 'firstName', 'Full Name', 'Employee Name', 'Employee'),
+          lastName:           importColVal(r, 'Last Name', 'lastName', 'Surname'),
+          email:              importColVal(r, 'Email Address', 'Email', 'emailAddress', 'Work Email'),
+          title:              importColVal(r, 'Designation', 'designation', 'Title', 'Job Title', 'Position'),
+          deptUniqueId:       importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId'),
+          location:           importColVal(r, 'Location', 'location', 'Office', 'Branch', 'Site'),
+          phoneNumber:        importColVal(r, 'Phone no', 'Phone', 'Phone Number', 'phoneNumber', 'Mobile'),
+          // Manager reference — resolved on the backend by email (if it contains '@') or by name.
+          parentEmployeeName: importColVal(r, 'Parent Email', 'ParentEmail', 'Manager Email', 'Reports To Email', 'Parent Employee', 'Parent Employee Name', 'Reports To', 'Manager', 'Parent', 'parentEmployeeName') || null,
+          userRole:           0,
+          orgDetails:         { orgId, name: orgName },
+        })).filter(e => e.email)
+        await axiosClient.post('/api/creatBulkEmployee', employees, { timeout: 300000 })
+        setResult({ success: true, count: employees.length, kind: 'user(s)' })
+      } else {
+        // Department-hierarchy file → builds the dept chart; owner resolved by name on the backend.
+        const depts = rows.map(r => ({
+          parentDeptID: importColVal(r, 'Parent ID', 'ParentID', 'Parent Dept ID', 'parentDeptID') || null,
+          deptID:       importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId'),
+          deptName:     importColVal(r, 'Department Name', 'DepartmentName', 'Dept Name'),
+          ownerName:    importColVal(r, 'Owner', 'Owner Name', 'ownerName'),
+          member:       importColVal(r, 'Member', 'Members', 'member'),
+          orgName:      importColVal(r, 'Organization', 'Organisation', 'Org', 'orgName') || orgName,
+        })).filter(d => d.deptID)
+        await createBulkDeptMapping(depts)
+        // Switch the org to Department mode so the tree renders the imported hierarchy.
+        try { await setImplementationMode(orgId, 'Department') } catch { /* non-fatal */ }
+        setResult({ success: true, count: depts.length, kind: 'department(s)' })
+      }
+      await onComplete?.()
+    } catch (err) {
+      setResult({ success: false, message: err?.response?.data?.message || err.message || 'Import failed' })
+    } finally {
+      setImporting(false)
+    }
+  }
+
+  const onDrop = (e) => {
+    e.preventDefault(); setDragOver(false)
+    const f = e.dataTransfer.files?.[0]
+    if (f) setFile(f)
+  }
+
+  const valid = errors.length === 0 && rows.length > 0
+  const td = { padding: '8px 12px', fontSize: 12.5, color: '#334155', borderBottom: '1px solid #f1f5f9', textAlign: 'center' }
+  const th = { padding: '8px 12px', fontSize: 12, fontWeight: 700, color: '#475569', borderBottom: '1px solid #e2e8f0', textAlign: 'center' }
+
+  return (
+    <div className={`${styles.overlay} ${styles.open}`} onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      <div className={styles.modal} style={{ maxWidth: 620 }}>
+        <div className={styles.modalHeader}>
+          <div className={styles.modalHeaderLeft}>
+            <div className={styles.modalIcon}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="2.2" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <h3 className={styles.modalTitle}>File Upload</h3>
+          </div>
+          <button className={styles.modalClose} onClick={onClose}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <div className={styles.modalBody} style={{ gap: 14 }}>
+          <WizardStepper step={step} />
+
+          {step === 1 && (
+            <>
+              <div>
+                <label className={styles.fieldLabel}>IMPORT CATEGORY</label>
+                <select className={styles.headerSelect} style={{ width: '100%', marginTop: 4 }}
+                  value={category} onChange={e => setCategory(e.target.value)}>
+                  <option value="">Select Import Category</option>
+                  {IMPORT_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                {(isOrg || isUsers) && (
+                  <p style={{ fontSize: 11.5, color: '#64748b', margin: '8px 2px 0', lineHeight: 1.5 }}>
+                    {isUsers
+                      ? 'User file → Name, Email Address, Department ID, Designation, Location, Phone no. Import this first.'
+                      : 'Org file → Parent ID, Department ID, Department Name, Owner, Member. Import after Users. Switches the org to Department mode.'}
+                  </p>
+                )}
+              </div>
+
+              <label
+                onDragOver={e => { e.preventDefault(); setDragOver(true) }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={onDrop}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  border: `2px dashed ${dragOver ? 'var(--cyan, #00C4C4)' : '#cbd5e1'}`, borderRadius: 12,
+                  padding: '34px 16px', cursor: 'pointer', background: dragOver ? '#f0fdfa' : '#fafbfc', textAlign: 'center',
+                }}>
+                <input type="file" accept=".xlsx,.xls,.csv" style={{ display: 'none' }}
+                  onChange={e => setFile(e.target.files[0] || null)} />
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <p style={{ margin: 0, fontSize: 13, color: '#64748b', fontWeight: 600 }}>Upload File</p>
+                <p style={{ margin: 0, fontSize: 12.5, color: '#94a3b8' }}>
+                  {file ? file.name : 'Choose a file or drag it here.'}
+                </p>
+              </label>
+            </>
+          )}
+
+          {step === 2 && (
+            <div>
+              {valid ? (
+                <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                  <div style={{ fontSize: 40, lineHeight: 1, color: '#16a34a' }}>✓</div>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: '#166534', margin: '10px 0 4px' }}>File validated successfully</p>
+                  <p style={{ fontSize: 12.5, color: '#64748b', margin: 0 }}>{rows.length} row(s) ready to import.</p>
+                </div>
+              ) : (
+                <>
+                  <div style={{ textAlign: 'center', padding: '4px 0 10px' }}>
+                    <div style={{ fontSize: 40, lineHeight: 1, color: '#dc2626' }}>⚠</div>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#991b1b', margin: '8px 0 0' }}>
+                      {errors.length} issue(s) found — fix the file and re-upload.
+                    </p>
+                  </div>
+                  <div style={{ maxHeight: 240, overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: 8 }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead><tr><th style={th}>Sheet</th><th style={th}>Row</th><th style={th}>Column</th><th style={th}>Reason</th></tr></thead>
+                      <tbody>
+                        {errors.map((er, i) => (
+                          <tr key={i}>
+                            <td style={td}>{er.sheet}</td>
+                            <td style={td}>{er.row}</td>
+                            <td style={td}>{er.cell}</td>
+                            <td style={{ ...td, textAlign: 'start', color: '#b91c1c' }}>{er.reason}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {step === 3 && (
+            <div style={{ textAlign: 'center', padding: '14px 0' }}>
+              {importing ? (
+                <>
+                  <div className={styles.spinner} style={{ margin: '0 auto' }} />
+                  <p style={{ fontSize: 13, color: '#64748b', marginTop: 14 }}>Importing…</p>
+                </>
+              ) : result?.success ? (
+                <>
+                  <div style={{ fontSize: 44, lineHeight: 1, color: '#16a34a' }}>✓</div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: '#166534', margin: '12px 0 4px' }}>Import complete</p>
+                  <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>{result.count} {result.kind || 'record(s)'} imported successfully.</p>
+                  {result.kind === 'department(s)' && (
+                    <p style={{ fontSize: 12, color: '#0891b2', margin: '6px 0 0' }}>Org switched to Department mode.</p>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div style={{ fontSize: 44, lineHeight: 1, color: '#dc2626' }}>✗</div>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: '#991b1b', margin: '12px 0 0' }}>{result?.message || 'Import failed'}</p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className={styles.modalFooter}>
+          {step === 1 && (
+            <>
+              <button className={styles.btnGhost} onClick={onClose}>Cancel</button>
+              <button className={styles.btnPrimary} onClick={handleNext}
+                disabled={!category || !file || parsing}
+                style={{ opacity: (!category || !file || parsing) ? 0.6 : 1, cursor: (!category || !file || parsing) ? 'not-allowed' : 'pointer' }}>
+                {parsing ? 'Reading…' : 'Next'}
+              </button>
+            </>
+          )}
+          {step === 2 && (
+            <>
+              <button className={styles.btnGhost} onClick={() => setStep(1)}>Previous</button>
+              <button className={styles.btnPrimary} onClick={handleImport}
+                disabled={!valid}
+                style={{ opacity: valid ? 1 : 0.6, cursor: valid ? 'pointer' : 'not-allowed' }}>
+                Import
+              </button>
+            </>
+          )}
+          {step === 3 && (
+            <>
+              {!importing && !result?.success && (
+                <button className={styles.btnGhost} onClick={() => setStep(2)}>Previous</button>
+              )}
+              <button className={styles.btnPrimary} onClick={onClose} disabled={importing}
+                style={{ opacity: importing ? 0.6 : 1, cursor: importing ? 'not-allowed' : 'pointer' }}>
+                Done
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Derives the "as of" date for the historical org chart from the global period picker
 // (localStorage 'customperiod' = "MM/DD/YYYY-MM/DD/YYYY"). Returns YYYY-MM-DD only when
 // the selected period END is in the PAST — current/future periods show the live tree.
@@ -925,43 +1432,87 @@ function getHistoricalAsOf() {
 // ── Main Component ─────────────────────────────────────────────────────────────
 export default function OrgStructureNew() {
   const { user, loading: authLoading } = useAuth()
+  const { hasPermission, loading: permsLoading } = usePermissions()
   const { t } = useI18n()
   const [tree, setTree] = useState([])
   const [apiLoading, setApiLoading] = useState(true)
   const [apiError, setApiError] = useState(null)
   const [view, setView] = useState('tree')
   const [search, setSearch] = useState('')
+  const [deptFilter, setDeptFilter] = useState('')
+  const [designationFilter, setDesignationFilter] = useState('')
   const [modal, setModal] = useState(null)
   const [delTarget, setDelTarget] = useState(null)
   const [deptMode, setDeptMode] = useState(false)
   const [importOpen, setImportOpen] = useState(false)
-  const [importFile, setImportFile] = useState(null)
-  const [importing, setImporting] = useState(false)
-  const [importProgress, setImportProgress] = useState(0)
-  const [importResult, setImportResult] = useState(null)
   const [historicalDate, setHistoricalDate] = useState(null)
+  const [userRoleName, setUserRoleName] = useState('')
+  const [chartEmpId, setChartEmpId] = useState(null)
+
+  useEffect(() => {
+    if (!user?.empId) {
+      setChartEmpId(null)
+      return
+    }
+    setChartEmpId(resolveChartEmpId(user.empId))
+  }, [user?.empId])
+
+  useEffect(() => {
+    const empId = user?.empId
+    if (!empId) return
+    axiosClient.get(`/api/userRole/${empId}`)
+      .then(r => setUserRoleName(r.data?.role || r.data?.userRole || ''))
+      .catch(() => setUserRoleName(''))
+  }, [user?.empId])
+
+  const permFlags = useMemo(() => ({
+    ...getOrgStructurePermissions(hasPermission, !!historicalDate),
+    canDrillDown: canDrillDownOrgChart(userRoleName),
+  }), [hasPermission, historicalDate, userRoleName])
 
   const loadOrg = useCallback(async () => {
-    const empId = user?.empId
+    const loginEmpId = user?.empId
+    const empId = chartEmpId ?? resolveChartEmpId(loginEmpId)
     if (!empId) { setApiLoading(false); return }
     setApiLoading(true); setApiError(null)
     try {
       const orgId = user?.orgDetails?.orgId ?? user?.orgId
       const asOf = getHistoricalAsOf()
       setHistoricalDate(asOf)
-      const { nodes, departmentMode } = await fetchOrgStructure(empId, orgId, asOf)
-      setDeptMode(departmentMode)
-      setTree(enhanceTree(nodes))
+
+      const result = await fetchOrgStructure(empId, orgId, asOf)
+
+      if (result.accessDenied) {
+        setTree([])
+        setApiError('No organization access')
+        return
+      }
+
+      setDeptMode(result.departmentMode)
+      setTree(enhanceTree(result.nodes))
     } catch (err) {
       setApiError(err?.message || t('org.loadError'))
     } finally {
       setApiLoading(false)
     }
-  }, [user?.empId, user?.orgId, user?.orgDetails?.orgId, t])
+  }, [user?.empId, user?.orgId, user?.orgDetails?.orgId, chartEmpId, t])
+
+  const handleDrillDown = useCallback((empId) => {
+    if (!permFlags.canDrillDown || !empId) return
+    drillDownAsSubUser(empId)
+    setChartEmpId(Number(empId))
+  }, [permFlags.canDrillDown])
+
+  const handleReturnToOrgRoot = useCallback(() => {
+    returnToOrgRoot()
+    const root = localStorage.getItem('rootuseraccessid')
+    setChartEmpId(root ? Number(root) : user?.empId ?? null)
+  }, [user?.empId])
+
 
   useEffect(() => {
-    if (!authLoading) loadOrg()
-  }, [authLoading, loadOrg])
+    if (!authLoading && chartEmpId) loadOrg()
+  }, [authLoading, chartEmpId, loadOrg])
 
   const handleAdd = useCallback((parentId) => setModal({ mode: 'add', parentId }), [])
   const handleEdit = useCallback((nodeId) => setModal({ mode: 'edit', nodeId }), [])
@@ -1068,20 +1619,35 @@ export default function OrgStructureNew() {
 
   const handleConfirmDelete = useCallback(async () => {
     try {
-      // Dept-mode rows carry the deptId; the delete endpoint needs the owner's empId.
       const node = findNode(tree, delTarget)
-      await deleteEmployee(node?.ownerId ?? delTarget)
+      if (deptMode) {
+        // Dept-mode: delTarget is a deptId — remove the department chart node.
+        // Do NOT delete the owner employee; the person still exists in the system.
+        await deleteDepartmentMapping(delTarget)
+      } else {
+        // Employee-mode: delTarget is an empId.
+        await deleteEmployee(node?.ownerId ?? delTarget)
+      }
     } catch (err) {
-      console.error('Delete employee failed:', err)
+      console.error('Delete failed:', err)
     }
     setDelTarget(null)
     await loadOrg()
-  }, [delTarget, tree, loadOrg])
+  }, [delTarget, tree, deptMode, loadOrg])
 
   const editNode = modal?.mode === 'edit' ? findNode(tree, modal.nodeId) : null
   const delNode = delTarget ? findNode(tree, delTarget) : null
   const showSearch = search.trim().length > 0
-  const displayTree = showSearch ? filterTree(tree, search.toLowerCase()) : tree
+
+  // Dropdown option lists, derived from whatever is in the current tree.
+  const departmentOptions = distinctFieldValues(tree, 'department')
+  const designationOptions = distinctFieldValues(tree, 'designation')
+
+  // Compose the active filters: search → department → designation. Each keeps matching
+  // nodes plus their ancestor chain so the hierarchy stays intact.
+  let displayTree = showSearch ? filterTree(tree, search.toLowerCase()) : tree
+  if (deptFilter) displayTree = filterTreeByPredicate(displayTree, n => n.department === deptFilter)
+  if (designationFilter) displayTree = filterTreeByPredicate(displayTree, n => n.designation === designationFilter)
 
   // In a historical snapshot the chart is read-only — editing the past makes no sense.
   const blockHistoricalEdit = () =>
@@ -1090,64 +1656,25 @@ export default function OrgStructureNew() {
   const editAction = historicalDate ? blockHistoricalEdit : handleEdit
   const deleteAction = historicalDate ? blockHistoricalEdit : handleDelete
 
-  const handleImport = async () => {
-    if (!importFile) return
-    setImporting(true)
-    setImportProgress(0)
-    setImportResult(null)
-    try {
-      // Phase 1 — read file bytes (0 → 25%)
-      setImportProgress(10)
-      const buf = await importFile.arrayBuffer()
-      setImportProgress(25)
-
-      // Phase 2 — parse Excel rows (25 → 55%)
-      const wb = XLSX.read(buf, { type: 'array' })
-      const ws = wb.Sheets[wb.SheetNames[0]]
-      const rows = XLSX.utils.sheet_to_json(ws, { defval: '' })
-      setImportProgress(45)
-      const orgName = user?.orgDetails?.orgName ?? user?.orgDetails?.name ?? 'Stratroom'
-      const orgId   = user?.orgDetails?.orgId ?? user?.orgId ?? 1
-      if (rows.length > 0) {
-        console.log('[Import] Excel columns found:', Object.keys(rows[0]))
-      }
-      const colVal = (row, ...names) => {
-        const keys = Object.keys(row)
-        for (const name of names) {
-          const norm = name.toLowerCase().replace(/[\s_-]/g, '')
-          const key = keys.find(k => k.toLowerCase().replace(/[\s_-]/g, '') === norm)
-          if (key && row[key] !== undefined && row[key] !== '') return String(row[key])
-        }
-        return ''
-      }
-      const employees = rows.map(r => ({
-        name:               colVal(r, 'First Name', 'firstName', 'Name', 'Full Name', 'Employee Name', 'Employee'),
-        lastName:           colVal(r, 'Last Name', 'lastName', 'Surname', 'Family Name'),
-        email:              colVal(r, 'Email', 'Email Address', 'emailAddress', 'Work Email', 'Corporate Email'),
-        parentEmployeeName: colVal(r, 'Parent Email', 'parentEmail', 'Manager Email', 'Manager', 'Reporting Manager', 'Reports To', 'Supervisor Email', 'Superior Email', 'Supervisor', 'Superior', 'Reporting To', 'Parent'),
-        title:              colVal(r, 'Designation', 'designation', 'Title', 'Job Title', 'Position', 'Role'),
-        dept:               colVal(r, 'Department', 'department', 'Dept', 'Division', 'Business Unit'),
-        deptUniqueId:       colVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'dept_id'),
-        location:           colVal(r, 'Location', 'location', 'Office', 'Branch', 'Site'),
-        userRole:           0,
-        orgDetails:         { orgId, name: orgName },
-      })).filter(e => e.email)
-      setImportProgress(55)
-
-      // Phase 3 — upload to server (55 → 85%)
-      await axiosClient.post('/api/creatBulkEmployee', employees, { timeout: 300000 })
-      setImportProgress(85)
-
-      // Phase 4 — refresh org tree (85 → 100%)
-      await loadOrg()
-      setImportProgress(100)
-      setImportResult({ success: true, count: employees.length })
-    } catch (err) {
-      setImportProgress(0)
-      setImportResult({ success: false, message: err?.response?.data?.message || err.message || 'Import failed' })
-    } finally {
-      setImporting(false)
+  // Maps the period dropdown to the global date range (localStorage 'customperiod',
+  // "MM/DD/YYYY-MM/DD/YYYY") and reloads so the whole app — including the historical
+  // org chart — re-reads it. Past-ending periods (e.g. Q1 mid-year) show a snapshot.
+  const applyPeriod = (value) => {
+    const y = new Date().getFullYear()
+    const pad = (n) => String(n).padStart(2, '0')
+    const fmt = (mo, d) => `${pad(mo)}/${pad(d)}/${y}`
+    const now = new Date()
+    let from, to
+    switch (value) {
+      case 'ytd': from = fmt(1, 1); to = fmt(now.getMonth() + 1, now.getDate()); break
+      case 'q1': from = fmt(1, 1); to = fmt(3, 31); break
+      case 'q2': from = fmt(4, 1); to = fmt(6, 30); break
+      case 'q3': from = fmt(7, 1); to = fmt(9, 30); break
+      case 'q4': from = fmt(10, 1); to = fmt(12, 31); break
+      default: from = fmt(1, 1); to = fmt(12, 31); break
     }
+    localStorage.setItem('customperiod', `${from}-${to}`)
+    window.location.reload()
   }
 
   const VIEW_BTNS = [
@@ -1163,15 +1690,35 @@ export default function OrgStructureNew() {
       id: 'grid', title: t('org.gridView'), onClick: () => setView('grid'),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
     },
-    {
-      id: 'add', title: t('org.addPerson'), onClick: () => handleAdd(-1),
+    ...(permFlags.canCreate ? [{
+      id: 'add', title: t('org.addPerson'), onClick: () => addAction(-1),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>,
-    },
-    {
-      id: 'import', title: 'Import from Excel', onClick: () => { setImportFile(null); setImportResult(null); setImportProgress(0); setImportOpen(true) },
+    }] : []),
+    ...(permFlags.canView ? [{
+      id: 'tracker', title: 'Organization Tracker', onClick: () => setView('tracker'),
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>,
+    }] : []),
+    ...(permFlags.canCreate ? [{
+      id: 'import', title: 'Import from Excel', onClick: () => setImportOpen(true),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
-    },
+    }] : []),
   ]
+
+  if (!authLoading && !permsLoading && !permFlags.canView) {
+    return (
+      <div className={styles.root}>
+        <main className={styles.main}>
+          <div className={styles.sectionCard}>
+            <div className={styles.emptyState}>
+              <p>No organization access</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  const showDrillBanner = isDrilledDownFromRoot(user?.empId)
 
   return (
     <div className={styles.root}>
@@ -1196,7 +1743,7 @@ export default function OrgStructureNew() {
               value={search} onChange={e => setSearch(e.target.value)} />
           </div>
 
-          <select className={styles.headerSelect} defaultValue="current">
+          <select className={styles.headerSelect} defaultValue="current" onChange={e => applyPeriod(e.target.value)}>
             <option value="current">{t('org.current')}</option>
             <option value="ytd">YTD</option>
             <option value="q1">Q1</option>
@@ -1205,12 +1752,14 @@ export default function OrgStructureNew() {
             <option value="q4">Q4</option>
           </select>
 
-          <select className={styles.headerSelect} defaultValue="">
+          <select className={styles.headerSelect} value={designationFilter} onChange={e => setDesignationFilter(e.target.value)}>
             <option value="">{t('org.allGroups')}</option>
+            {designationOptions.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
 
-          <select className={styles.headerSelect} defaultValue="">
+          <select className={styles.headerSelect} value={deptFilter} onChange={e => setDeptFilter(e.target.value)}>
             <option value="">{t('org.allDepartments')}</option>
+            {departmentOptions.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
 
           <div className={styles.pageIcons}>
@@ -1227,6 +1776,19 @@ export default function OrgStructureNew() {
 
       {/* Main content */}
       <main className={styles.main}>
+        {showDrillBanner && (
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+            margin: '0 0 14px', padding: '10px 16px', borderRadius: 10, fontSize: 13,
+            color: '#1e40af', background: '#eff6ff', border: '1px solid #bfdbfe'
+          }}>
+            <span>Viewing org structure from another person&apos;s perspective</span>
+            <button type="button" className={styles.btnPrimary} style={{ padding: '6px 12px', fontSize: 12 }}
+              onClick={handleReturnToOrgRoot}>
+              Return to organization home
+            </button>
+          </div>
+        )}
         {historicalDate && !apiLoading && !authLoading && !apiError && (
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, margin: '0 0 14px',
@@ -1254,14 +1816,16 @@ export default function OrgStructureNew() {
               <p>{apiError}</p>
             </div>
           </div>
+        ) : view === 'tracker' ? (
+          <TrackerView />
         ) : showSearch ? (
           <SearchView query={search} tree={tree} />
         ) : view === 'tree' ? (
-          <TreeView tree={displayTree} onAdd={addAction} onEdit={editAction} onDelete={deleteAction} />
+          <TreeView tree={displayTree} permFlags={permFlags} onAdd={addAction} onEdit={editAction} onDelete={deleteAction} onDrillDown={handleDrillDown} />
         ) : view === 'chart' ? (
-          <ChartView tree={displayTree} onAdd={addAction} onEdit={editAction} onDelete={deleteAction} />
+          <ChartView tree={displayTree} permFlags={permFlags} onAdd={addAction} onEdit={editAction} onDelete={deleteAction} onDrillDown={handleDrillDown} />
         ) : (
-          <GridView tree={displayTree} onEdit={editAction} onDelete={deleteAction} />
+          <GridView tree={displayTree} permFlags={permFlags} onEdit={editAction} onDelete={deleteAction} />
         )}
       </main>
 
@@ -1273,89 +1837,11 @@ export default function OrgStructureNew() {
       )}
 
       {importOpen && (
-        <div className={`${styles.overlay} ${styles.open}`} onClick={e => { if (e.target === e.currentTarget) setImportOpen(false) }}>
-          <div className={`${styles.modal} ${styles.modalSm}`} style={{ maxWidth: 460 }}>
-            <div className={styles.modalHeader}>
-              <div className={styles.modalHeaderLeft}>
-                <div className={styles.modalIcon}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="2.2" strokeLinecap="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
-                </div>
-                <h3 className={styles.modalTitle}>Import from Excel</h3>
-              </div>
-              <button className={styles.modalClose} onClick={() => setImportOpen(false)}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            </div>
-
-            <div className={styles.modalBody} style={{ gap: 14 }}>
-              <p style={{ fontSize: 12, color: 'var(--text-sec)', margin: 0 }}>
-                Upload an Excel file (.xlsx). Expected columns:
-              </p>
-              <div style={{ background: '#f8fafc', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px', fontSize: 11.5, color: 'var(--text-sec)', lineHeight: 1.8 }}>
-                <strong>First Name</strong>, <strong>Last Name</strong>, <strong>Email</strong>, <strong>Parent Email</strong>, <strong>Designation</strong>, <strong>Department</strong>, <strong>Location</strong>
-              </div>
-
-              <div className={styles.fileInputWrap}>
-                <label className={styles.fileInputLabel}>
-                  <input type="file" accept=".xlsx,.xls" className={styles.fileInputHidden}
-                    onChange={e => { setImportFile(e.target.files[0] || null); setImportResult(null); setImportProgress(0) }} />
-                  <span className={styles.fileInputBtn}>Choose File</span>
-                  <span className={styles.fileInputName}>{importFile ? importFile.name : 'No file chosen'}</span>
-                </label>
-                <p className={styles.fileInputHint}>Supported: .xlsx, .xls</p>
-              </div>
-
-              {(importing || importProgress > 0) && !importResult && (
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5, fontSize: 11.5, color: 'var(--text-sec)' }}>
-                    <span>
-                      {importProgress < 25 ? 'Reading file…'
-                        : importProgress < 55 ? 'Parsing rows…'
-                        : importProgress < 85 ? 'Uploading…'
-                        : 'Refreshing…'}
-                    </span>
-                    <span style={{ fontWeight: 600 }}>{importProgress}%</span>
-                  </div>
-                  <div style={{ background: 'var(--border)', borderRadius: 99, height: 6, overflow: 'hidden' }}>
-                    <div style={{
-                      height: '100%',
-                      width: `${importProgress}%`,
-                      background: 'linear-gradient(90deg, var(--cyan) 0%, #0ea5e9 100%)',
-                      borderRadius: 99,
-                      transition: 'width 0.35s ease',
-                    }} />
-                  </div>
-                </div>
-              )}
-
-              {importResult && (
-                <div style={{
-                  padding: '8px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                  background: importResult.success ? '#f0fdf4' : '#fef2f2',
-                  color: importResult.success ? '#166534' : '#991b1b',
-                  border: `1px solid ${importResult.success ? '#86efac' : '#fca5a5'}`,
-                }}>
-                  {importResult.success
-                    ? `✓ Successfully imported ${importResult.count} employee(s).`
-                    : `✗ ${importResult.message}`}
-                </div>
-              )}
-            </div>
-
-            <div className={styles.modalFooter}>
-              <button className={styles.btnGhost} onClick={() => setImportOpen(false)}>Cancel</button>
-              <button className={styles.btnPrimary} onClick={handleImport}
-                disabled={!importFile || importing}
-                style={{ opacity: (!importFile || importing) ? 0.6 : 1, cursor: (!importFile || importing) ? 'not-allowed' : 'pointer' }}>
-                {importing ? 'Importing…' : 'Import'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ImportWizard
+          user={user}
+          onClose={() => setImportOpen(false)}
+          onComplete={loadOrg}
+        />
       )}
     </div>
   )

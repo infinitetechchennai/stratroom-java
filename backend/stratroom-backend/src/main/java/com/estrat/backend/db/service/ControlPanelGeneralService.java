@@ -118,6 +118,21 @@ public class ControlPanelGeneralService {
         return new ControlPanelGeneralDTO(controlPanelGeneral);
     }
 
+    // Flips the org between Employee and Department implementation modes. Used by the
+    // two-file org import, which switches the org to Department mode after loading the
+    // department-hierarchy file.
+    public ControlPanelGeneralDTO setImplementationType(long orgId, String type) {
+        ControlPanelGeneral controlPanelGeneral = this.controlPanelGeneralRepository.findById(orgId).orElse(null);
+        if (controlPanelGeneral == null) {
+            return new ControlPanelGeneralDTO();
+        }
+        controlPanelGeneral.setImplementationType(type);
+        controlPanelGeneral.setImplementation(type);
+        controlPanelGeneral.setUpdatedTime(java.time.LocalDateTime.now());
+        this.controlPanelGeneralRepository.save(controlPanelGeneral);
+        return new ControlPanelGeneralDTO(controlPanelGeneral);
+    }
+
     public ControlPanelResponseDTO deleteById(long id) {
         Optional controlPanelGeneral = this.findById(id);
         ControlPanelResponseDTO controlPanelResponseDTO = new ControlPanelResponseDTO();

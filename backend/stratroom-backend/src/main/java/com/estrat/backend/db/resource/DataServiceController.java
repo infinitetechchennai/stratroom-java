@@ -246,13 +246,33 @@ public class DataServiceController {
                     }
                 }
                 if (StringUtils.isNotEmpty((CharSequence)updateEmployee.getParentEmail())) {
-                    Employee parentEmployee = this.employeeService.getEmployeeIDByEmail(updateEmployee.getParentEmail());
+                    String parentRef = updateEmployee.getParentEmail().trim();
+                    Employee parentEmployee;
+                    if (parentRef.contains("@")) {
+                        parentEmployee = this.employeeService.getEmployeeIDByEmail(parentRef);
+                    } else {
+                        long orgId = Objects.nonNull(updateEmployee.getOrgDetails()) ? updateEmployee.getOrgDetails().getOrgId() : 0L;
+                        String[] parts = parentRef.split("\\s+", 2);
+                        if (parts.length == 2) {
+                            parentEmployee = this.employeeService.getEmployeeIDByFullName(parts[0], parts[1], orgId);
+                            if (parentEmployee == null) {
+                                parentEmployee = this.employeeService.getEmployeeId(parts[0], orgId);
+                            }
+                        } else {
+                            parentEmployee = this.employeeService.getEmployeeId(parts[0], orgId);
+                        }
+                    }
                     long resolvedParentId = parentEmployee != null ? parentEmployee.getEmpId() : 0L;
-                    this.log.info("[Import] parent lookup for " + updateEmployee.getEmailAddress() + " -> parentEmail='" + updateEmployee.getParentEmail() + "' resolved to empId=" + resolvedParentId);
+                    if (resolvedParentId == 0L) {
+                        resolvedParentId = this.employeeService.superUserId();
+                        this.log.warn("[Import] parent '" + parentRef + "' for " + updateEmployee.getEmailAddress() + " not found -> falling back to superUser empId=" + resolvedParentId);
+                    } else {
+                        this.log.info("[Import] parent lookup for " + updateEmployee.getEmailAddress() + " -> parentRef='" + parentRef + "' resolved to empId=" + resolvedParentId);
+                    }
                     updateEmployee.setParentEmpId(resolvedParentId);
                 } else {
                     long rootParent = this.employeeService.superUserId();
-                    this.log.info("[Import] no parentEmail for " + updateEmployee.getEmailAddress() + " -> assigned to superUser empId=" + rootParent);
+                    this.log.info("[Import] no parent for " + updateEmployee.getEmailAddress() + " -> assigned to superUser empId=" + rootParent);
                     updateEmployee.setParentEmpId(rootParent);
                 }
                 if (StringUtils.isNotEmpty((CharSequence)updateEmployee.getNewEmailAddress())) {
@@ -438,12 +458,21 @@ public class DataServiceController {
     @RequestMapping(value={"/createBulkDeptMapping"}, method={RequestMethod.POST})
     public boolean createBulkDeptMapping(@RequestBody List<DeptImportDTO> deptImportDTOList, HttpServletRequest request) throws InputValidationException {
         String loggedInEmpId = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+        int imported = 0, skipped = 0;
+        this.log.info("[Org Import] received {} departments, loggedInEmpId={}", deptImportDTOList.size(), loggedInEmpId);
         for (DeptImportDTO deptImportDTO : deptImportDTOList) {
-            if (deptImportDTO.getOrgName().isEmpty() || deptImportDTO.getDeptID().isEmpty()) continue;
-            this.employeeService.createBulkDeptMapping(deptImportDTO, loggedInEmpId);
+            if (deptImportDTO.getOrgName() == null || deptImportDTO.getOrgName().isEmpty() || deptImportDTO.getDeptID() == null || deptImportDTO.getDeptID().isEmpty()) {
+                this.log.warn("[Org Import] skipping row — missing orgName or deptID: {}", deptImportDTO.getDeptName());
+                skipped++; continue;
+            }
+            this.log.info("[Org Import] processing deptID={} deptName={} parentDeptID={} ownerName={}", deptImportDTO.getDeptID(), deptImportDTO.getDeptName(), deptImportDTO.getParentDeptID(), deptImportDTO.getOwnerName());
+            if (this.employeeService.createBulkDeptMapping(deptImportDTO, loggedInEmpId)) imported++; else skipped++;
         }
-        this.log.debug("logged in employeeID " + loggedInEmpId);
+        this.log.info("[Org Import] done — imported={} skipped={}", imported, skipped);
         this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        if (imported == 0 && skipped > 0) {
+            throw new InputValidationException("Import failed: 0 of " + skipped + " departments could be imported. Check that the Organization name in the Excel matches the system ('" + (deptImportDTOList.isEmpty() ? "" : deptImportDTOList.get(0).getOrgName()) + "').");
+        }
         return true;
     }
 

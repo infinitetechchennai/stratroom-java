@@ -112,7 +112,8 @@ public class Employee {
         this.title = employeeProfilePo.getTitle();
         this.location = employeeProfilePo.getLocation();
         this.emailAddress = employeeProfilePo.getEmailAddress();
-        this.parentEmpId = employeeProfilePo.getParentEmpId();
+        Long pid2 = employeeProfilePo.getParentEmpId();
+        this.parentEmpId = pid2 != null ? pid2 : 0L;
         this.location = employeeProfilePo.getLocation();
         this.department = employeeProfilePo.getDepartment();
         this.phoneNumber = employeeProfilePo.getPhoneNumber();
@@ -137,7 +138,8 @@ public class Employee {
         this.title = employeeProfilePo.getTitle();
         this.location = employeeProfilePo.getLocation();
         this.emailAddress = employeeProfilePo.getEmailAddress();
-        this.parentEmpId = employeeProfilePo.getParentEmpId();
+        Long pid = employeeProfilePo.getParentEmpId();
+        this.parentEmpId = pid != null ? pid : 0L;
         this.location = employeeProfilePo.getLocation();
         this.createdDate = employeeProfilePo.getCreatedDate();
         this.department = employeeProfilePo.getDepartment();

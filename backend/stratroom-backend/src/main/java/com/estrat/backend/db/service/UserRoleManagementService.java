@@ -225,11 +225,27 @@ public class UserRoleManagementService {
     public List<UserDTO> getUserList(FindDTO findDTO) {
         List<UserRoleManagement> dbList = null;
         dbList = findDTO.getOrgId() != 0L && findDTO.getRoles() != null && findDTO.getDeptIds() != null && !findDTO.getDeptIds().isEmpty() && !findDTO.getRoles().isEmpty() && findDTO.getStatus() != null ? this.userRoleManagementRepository.findBy(findDTO.getOrgId(), findDTO.getDeptIds(), findDTO.getRoles(), findDTO.getStatus(), 0) : this.userRoleManagementRepository.findBy(findDTO.getOrgId(), 0);
-        return dbList.stream().map(dbValue -> {
-            UserDTO userDTO = new UserDTO(dbValue);
-            userDTO.setDepartmentList(new ArrayList(this.updateDeptList(Long.valueOf(userDTO.getUserId()))));
-            return userDTO;
-        }).collect(Collectors.toList());
+        return dbList.stream().map(this::toUserDTO).collect(Collectors.toList());
+    }
+
+    private UserDTO toUserDTO(UserRoleManagement dbValue) {
+        UserDTO userDTO = new UserDTO(dbValue);
+        if (userDTO.getUserRole() == null || userDTO.getUserRole().isBlank()) {
+            String resolvedRole = this.getUserRole(userDTO.getUserId());
+            if (resolvedRole != null && !resolvedRole.isBlank()) {
+                userDTO.setUserRole(resolvedRole);
+            }
+        }
+        userDTO.setDepartmentList(new ArrayList<>(this.updateDeptList(Long.valueOf(userDTO.getUserId()))));
+        if ((userDTO.getDepartmentList() == null || userDTO.getDepartmentList().isEmpty())
+                && (userDTO.getDepartments() == null || userDTO.getDepartments().isBlank())) {
+            this.profilePoRepo.findById(userDTO.getUserId()).ifPresent(profile -> {
+                if (profile.getDepartment() != null && !profile.getDepartment().isBlank()) {
+                    userDTO.setDepartments(profile.getDepartment());
+                }
+            });
+        }
+        return userDTO;
     }
 
     public List<UserDTO> getFindUserList(FindDTO findDTO) {
@@ -239,11 +255,7 @@ public class UserRoleManagementService {
         }
         List<UserRoleManagement> dbList = null;
         dbList = findDTO.getRoles() != null && findDTO.getDeptIds() != null && !findDTO.getDeptIds().isEmpty() && !findDTO.getRoles().isEmpty() && findDTO.getStatus() != null ? (findDTO.getStatus().equalsIgnoreCase("All") ? this.userRoleManagementRepository.findBy(findDTO.getOrgId(), 0) : this.userRoleManagementRepository.findByEmpId(findDTO.getOrgId(), empIds, findDTO.getRoles(), findDTO.getStatus(), 0)) : (findDTO.getRoles() != null && !findDTO.getRoles().isEmpty() && findDTO.getDeptIds() == null && findDTO.getStatus() == null ? this.userRoleManagementRepository.findByOrgIdANDRoles(findDTO.getOrgId(), findDTO.getRoles(), 0) : (findDTO.getDeptIds() != null && !findDTO.getDeptIds().isEmpty() && findDTO.getRoles() == null && findDTO.getStatus() == null ? this.userRoleManagementRepository.findByOrgIdANDEmpIds(findDTO.getOrgId(), empIds, 0) : (findDTO.getStatus() != null && findDTO.getDeptIds() == null && findDTO.getRoles() == null ? (findDTO.getStatus().equalsIgnoreCase("All") ? this.userRoleManagementRepository.findBy(findDTO.getOrgId(), 0) : this.userRoleManagementRepository.findByStatus(findDTO.getOrgId(), findDTO.getStatus(), 0)) : (findDTO.getRoles() != null && !findDTO.getRoles().isEmpty() && findDTO.getDeptIds() != null && !findDTO.getDeptIds().isEmpty() && findDTO.getStatus() == null ? this.userRoleManagementRepository.findByDeptIdAndRoles(findDTO.getOrgId(), empIds, findDTO.getRoles(), 0) : (findDTO.getRoles() != null && !findDTO.getRoles().isEmpty() && findDTO.getDeptIds() == null && findDTO.getStatus() != null ? (findDTO.getStatus().equalsIgnoreCase("All") ? this.userRoleManagementRepository.findByOrgIdANDRoles(findDTO.getOrgId(), findDTO.getRoles(), 0) : this.userRoleManagementRepository.findByRolesANDStatus(findDTO.getOrgId(), findDTO.getRoles(), findDTO.getStatus(), 0)) : (findDTO.getRoles() == null && findDTO.getDeptIds() != null && !findDTO.getDeptIds().isEmpty() && findDTO.getStatus() != null ? (findDTO.getStatus().equalsIgnoreCase("All") ? this.userRoleManagementRepository.findByOrgIdANDEmpIds(findDTO.getOrgId(), empIds, 0) : this.userRoleManagementRepository.findByDeptIdAndStatus(findDTO.getOrgId(), empIds, findDTO.getStatus(), 0)) : this.userRoleManagementRepository.findBy(findDTO.getOrgId(), 0)))))));
-        return dbList.stream().map(dbValue -> {
-            UserDTO userDTO = new UserDTO(dbValue);
-            userDTO.setDepartmentList(new ArrayList(this.updateDeptList(Long.valueOf(userDTO.getUserId()))));
-            return userDTO;
-        }).collect(Collectors.toList());
+        return dbList.stream().map(this::toUserDTO).collect(Collectors.toList());
     }
 
     public List<UserDTO> getSearchUserList(FindDTO findDTO) {
@@ -261,11 +273,7 @@ public class UserRoleManagementService {
         } else if (findDTO.getDesignations() != null) {
             dbList = this.userRoleManagementRepository.findByDesignations(findDTO.getOrgId(), findDTO.getDesignations(), 0);
         }
-        return dbList.stream().map(dbValue -> {
-            UserDTO userDTO = new UserDTO(dbValue);
-            userDTO.setDepartmentList(new ArrayList(this.updateDeptList(Long.valueOf(userDTO.getUserId()))));
-            return userDTO;
-        }).collect(Collectors.toList());
+        return dbList.stream().map(this::toUserDTO).collect(Collectors.toList());
     }
 
     public Set<DeptDetails> updateDeptList(Long empId) {
@@ -273,7 +281,13 @@ public class UserRoleManagementService {
         ids.addAll(this.userDeptMappingRepository.findAllDeptIdByEmpId(empId));
         ids.addAll(this.multipleOwnersMappingRepository.findAllDeptIdByEmpId(empId));
         if (ids.isEmpty()) {
-            return new HashSet<DeptDetails>();
+            List<EmployeeDepartmentMapping> employeeDeptMappings =
+                    this.employeeDepartmentMappingRepository.findByEmpId(empId.longValue(), "Active");
+            for (EmployeeDepartmentMapping mapping : employeeDeptMappings) {
+                if (mapping.getDeptId() != null) {
+                    ids.add(mapping.getDeptId());
+                }
+            }
         }
         List<DepartmentDetails> departmentDetailsList = this.departmentDetailsRepository.findAll(ids);
         if (!departmentDetailsList.isEmpty()) {
@@ -571,8 +585,10 @@ public class UserRoleManagementService {
                     this.roleusermappingrepo.delete(roleUserMapping);
                 }
             }
-            RoleUserMapping userMapping = new RoleUserMapping(userRoleManagement.getRoleId(), Long.valueOf(userRoleManagement.getEmpId()));
-            this.roleusermappingrepo.save(userMapping);
+            if (userRoleManagement.getRoleId() != null) {
+                RoleUserMapping userMapping = new RoleUserMapping(userRoleManagement.getRoleId(), Long.valueOf(userRoleManagement.getEmpId()));
+                this.roleusermappingrepo.save(userMapping);
+            }
         } else {
             EmployeeProfilePo employeeProfilePo;
             List<RoleUserMapping> roleUserMappings;
@@ -656,10 +672,17 @@ public class UserRoleManagementService {
     public String getUserRole(long empId) {
         String roleName = null;
         HashMap<String, String> role = new HashMap<String, String>();
-        EmployeeProfilePo profilePo = (EmployeeProfilePo)this.profilePoRepo.findById(empId).get();
+        java.util.Optional<EmployeeProfilePo> profileOpt = this.profilePoRepo.findById(empId);
+        if (!profileOpt.isPresent()) {
+            return roleName;
+        }
+        EmployeeProfilePo profilePo = profileOpt.get();
         List<RoleUserMapping> roleUserMappingList = this.roleusermappingrepo.findAllByIdEmpId(profilePo);
         for (RoleUserMapping roleUserMapping : roleUserMappingList) {
             role.put(roleUserMapping.getId().getRoleId().getRoleName(), roleUserMapping.getId().getRoleId().getRoleName());
+        }
+        if (role.containsKey("Super Admin")) {
+            return (String)role.get("Super Admin");
         }
         if (role.containsKey("Super User")) {
             return (String)role.get("Super User");
@@ -672,6 +695,9 @@ public class UserRoleManagementService {
         }
         if (role.containsKey("User")) {
             return (String)role.get("User");
+        }
+        if (!role.isEmpty()) {
+            return role.values().iterator().next();
         }
         return roleName;
     }

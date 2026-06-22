@@ -84,6 +84,13 @@ public class UserRoleManagementController {
         return new ResponseEntity((Object)this.userRoleManagementService.getUserList(findDTO), HttpStatus.OK);
     }
 
+    @GetMapping(value={"/userList/org/{orgId}"})
+    public ResponseEntity<List<UserDTO>> getUserListByOrg(@PathVariable(value="orgId") Long orgId) {
+        FindDTO findDTO = new FindDTO();
+        findDTO.setOrgId(orgId);
+        return new ResponseEntity((Object)this.userRoleManagementService.getUserList(findDTO), HttpStatus.OK);
+    }
+
     @GetMapping(value={"/searchUser"})
     public ResponseEntity<List<UserDTO>> searchUser(@RequestBody FindDTO findDTO, HttpServletRequest request) throws RequestException {
         return new ResponseEntity((Object)this.userRoleManagementService.getSearchUserList(findDTO), HttpStatus.OK);
