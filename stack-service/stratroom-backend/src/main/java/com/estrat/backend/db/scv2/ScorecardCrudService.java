@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -30,24 +31,36 @@ public class ScorecardCrudService {
         this.jdbc = jdbc;
     }
 
+    @PostConstruct
+    public void initSchema() {
+        try { jdbc.execute("ALTER TABLE sc_scorecards ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_perspectives ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_objectives ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
+    }
+
     // ---------------- SCORECARD ----------------
 
     @Transactional
     public long createScorecard(Map<String, Object> b) {
         return insert(
                 "INSERT INTO sc_scorecards (page_id, name, description, owner_id, department_id, "
-                        + "classification_type, created_by) VALUES (?,?,?,?,?,?,?)",
+                        + "classification_type, created_by, formula) VALUES (?,?,?,?,?,?,?,?)",
                 lng(b, "pageId", 0L), str(b, "name", "Scorecard"), str(b, "description", null),
                 lng(b, "ownerId", 0L), lngOrNull(b, "departmentId"),
-                str(b, "classificationType", "THREE_COLOR"), lng(b, "createdBy", 0L));
+                str(b, "classificationType", "THREE_COLOR"), lng(b, "createdBy", 0L), str(b, "formula", null));
     }
 
     @Transactional
     public boolean updateScorecard(long id, Map<String, Object> b) {
+        String incomingName = str(b, "name", null);
+        String nameToSave = (incomingName == null || incomingName.isBlank())
+                ? jdbc.queryForObject("SELECT name FROM sc_scorecards WHERE id=?", String.class, id)
+                : incomingName;
         return jdbc.update(
-                "UPDATE sc_scorecards SET name=?, description=?, classification_type=?, updated_by=? WHERE id=?",
-                str(b, "name", "Scorecard"), str(b, "description", null),
-                str(b, "classificationType", "THREE_COLOR"), lng(b, "updatedBy", 0L), id) > 0;
+                "UPDATE sc_scorecards SET name=?, description=?, classification_type=?, updated_by=?, formula=? WHERE id=?",
+                nameToSave, str(b, "description", null),
+                str(b, "classificationType", "THREE_COLOR"), lng(b, "updatedBy", 0L), str(b, "formula", null), id) > 0;
     }
 
     @Transactional
@@ -57,24 +70,41 @@ public class ScorecardCrudService {
 
     // ---------------- PERSPECTIVE ----------------
 
+    public boolean renamePerspective(long id, String name) {
+        if (name == null || name.isBlank()) return false;
+        return jdbc.update("UPDATE sc_perspectives SET name=? WHERE id=?", name.trim(), id) > 0;
+    }
+
+    public Map<String, Object> getPerspective(long id) {
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT id, scorecard_id, code, name, description, weight, aggregation_method, "
+                        + "classification_type, formula, display_order FROM sc_perspectives WHERE id = ?", id);
+        return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
+    }
+
     @Transactional
     public long createPerspective(Map<String, Object> b) {
         return insert(
                 "INSERT INTO sc_perspectives (scorecard_id, code, name, description, display_order, weight, "
-                        + "aggregation_method, classification_type) VALUES (?,?,?,?,?,?,?,?)",
+                        + "aggregation_method, classification_type, formula) VALUES (?,?,?,?,?,?,?,?,?)",
                 lng(b, "scorecardId", 0L), str(b, "code", null), str(b, "name", "Perspective"),
                 str(b, "description", null), intg(b, "displayOrder", 0), dec(b, "weight", BigDecimal.ZERO),
-                str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"));
+                str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"),
+                str(b, "formula", null));
     }
 
     @Transactional
     public boolean updatePerspective(long id, Map<String, Object> b) {
+        String incomingName = str(b, "name", null);
+        String nameToSave = (incomingName == null || incomingName.isBlank())
+                ? jdbc.queryForObject("SELECT name FROM sc_perspectives WHERE id=?", String.class, id)
+                : incomingName;
         return jdbc.update(
                 "UPDATE sc_perspectives SET name=?, description=?, weight=?, aggregation_method=?, "
-                        + "classification_type=?, display_order=? WHERE id=?",
-                str(b, "name", "Perspective"), str(b, "description", null), dec(b, "weight", BigDecimal.ZERO),
+                        + "classification_type=?, display_order=?, formula=? WHERE id=?",
+                nameToSave, str(b, "description", null), dec(b, "weight", BigDecimal.ZERO),
                 str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"),
-                intg(b, "displayOrder", 0), id) > 0;
+                intg(b, "displayOrder", 0), str(b, "formula", null), id) > 0;
     }
 
     @Transactional
@@ -84,29 +114,41 @@ public class ScorecardCrudService {
 
     // ---------------- OBJECTIVE ----------------
 
+    public Map<String, Object> getObjective(long id) {
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT id, perspective_id, code, name, description, weight, aggregation_method, "
+                        + "classification_type, knockout_enabled, knockout_threshold, pass_rate_threshold, "
+                        + "display_order, formula FROM sc_objectives WHERE id = ?", id);
+        return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
+    }
+
     @Transactional
     public long createObjective(Map<String, Object> b) {
         return insert(
                 "INSERT INTO sc_objectives (perspective_id, code, name, description, display_order, weight, "
                         + "aggregation_method, classification_type, knockout_enabled, knockout_threshold, "
-                        + "pass_rate_threshold) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                        + "pass_rate_threshold, formula) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "perspectiveId", 0L), str(b, "code", null), str(b, "name", "Objective"),
                 str(b, "description", null), intg(b, "displayOrder", 0), dec(b, "weight", BigDecimal.ZERO),
                 str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"),
                 bln(b, "knockoutEnabled") ? 1 : 0, dec(b, "knockoutThreshold", new BigDecimal("80")),
-                dec(b, "passRateThreshold", new BigDecimal("95")));
+                dec(b, "passRateThreshold", new BigDecimal("95")), str(b, "formula", null));
     }
 
     @Transactional
     public boolean updateObjective(long id, Map<String, Object> b) {
+        String incomingName = str(b, "name", null);
+        String nameToSave = (incomingName == null || incomingName.isBlank())
+                ? jdbc.queryForObject("SELECT name FROM sc_objectives WHERE id=?", String.class, id)
+                : incomingName;
         return jdbc.update(
                 "UPDATE sc_objectives SET name=?, description=?, weight=?, aggregation_method=?, "
                         + "classification_type=?, knockout_enabled=?, knockout_threshold=?, pass_rate_threshold=?, "
-                        + "display_order=? WHERE id=?",
-                str(b, "name", "Objective"), str(b, "description", null), dec(b, "weight", BigDecimal.ZERO),
+                        + "display_order=?, formula=? WHERE id=?",
+                nameToSave, str(b, "description", null), dec(b, "weight", BigDecimal.ZERO),
                 str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"),
                 bln(b, "knockoutEnabled") ? 1 : 0, dec(b, "knockoutThreshold", new BigDecimal("80")),
-                dec(b, "passRateThreshold", new BigDecimal("95")), intg(b, "displayOrder", 0), id) > 0;
+                dec(b, "passRateThreshold", new BigDecimal("95")), intg(b, "displayOrder", 0), str(b, "formula", null), id) > 0;
     }
 
     @Transactional
@@ -115,6 +157,15 @@ public class ScorecardCrudService {
     }
 
     // ---------------- KPI ----------------
+
+    public Map<String, Object> getKpi(long id) {
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT id, objective_id, code, name, description, polarity, target_value, min_target, "
+                        + "max_target, data_type, currency_code, weight, measurement_frequency, "
+                        + "null_handling, achievement_cap, classification_type, formula, display_order "
+                        + "FROM sc_kpis WHERE id = ?", id);
+        return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
+    }
 
     @Transactional
     public long createKpi(Map<String, Object> b) {
@@ -135,13 +186,13 @@ public class ScorecardCrudService {
         return jdbc.update(
                 "UPDATE sc_kpis SET name=?, description=?, polarity=?, target_value=?, min_target=?, max_target=?, "
                         + "data_type=?, currency_code=?, weight=?, measurement_frequency=?, null_handling=?, "
-                        + "achievement_cap=?, classification_type=?, display_order=? WHERE id=?",
+                        + "achievement_cap=?, classification_type=?, display_order=?, formula=? WHERE id=?",
                 str(b, "name", "KPI"), str(b, "description", null), str(b, "polarity", "HIGHER"),
                 dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"), decOrNull(b, "maxTarget"),
                 str(b, "dataType", "NUMBER"), str(b, "currencyCode", null), dec(b, "weight", BigDecimal.ZERO),
                 str(b, "measurementFrequency", null), str(b, "nullHandling", "EXCLUDE"),
                 dec(b, "achievementCap", new BigDecimal("150")), str(b, "classificationType", "THREE_COLOR"),
-                intg(b, "displayOrder", 0), id) > 0;
+                intg(b, "displayOrder", 0), str(b, "formula", null), id) > 0;
     }
 
     @Transactional
@@ -182,8 +233,8 @@ public class ScorecardCrudService {
     @Transactional
     public void recordKpiActual(Map<String, Object> b) {
         jdbc.update(
-                "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value) VALUES (?,?,?,?) "
-                        + "ON DUPLICATE KEY UPDATE actual_value=VALUES(actual_value), calculated_at=NOW()",
+                "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value) VALUES (?,cast(? as date),cast(? as date),?) "
+                        + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET actual_value=EXCLUDED.actual_value, calculated_at=NOW()",
                 lng(b, "kpiId", 0L), str(b, "periodStart", null), str(b, "periodEnd", null),
                 decOrNull(b, "actualValue"));
     }
@@ -191,8 +242,8 @@ public class ScorecardCrudService {
     @Transactional
     public void recordSubKpiActual(Map<String, Object> b) {
         jdbc.update(
-                "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value) VALUES (?,?,?,?) "
-                        + "ON DUPLICATE KEY UPDATE actual_value=VALUES(actual_value), calculated_at=NOW()",
+                "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value) VALUES (?,cast(? as date),cast(? as date),?) "
+                        + "ON CONFLICT (sub_kpi_id, period_start, period_end) DO UPDATE SET actual_value=EXCLUDED.actual_value, calculated_at=NOW()",
                 lng(b, "subKpiId", 0L), str(b, "periodStart", null), str(b, "periodEnd", null),
                 decOrNull(b, "actualValue"));
     }
@@ -255,10 +306,10 @@ public class ScorecardCrudService {
             }
             jdbc.update(
                     "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value, target_value) "
-                            + "VALUES (?,?,?,?,?) "
-                            + "ON DUPLICATE KEY UPDATE "
-                            + "actual_value = COALESCE(VALUES(actual_value), actual_value), "
-                            + "target_value = COALESCE(VALUES(target_value), target_value), "
+                            + "VALUES (?,cast(? as date),cast(? as date),?,?) "
+                            + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET "
+                            + "actual_value = COALESCE(EXCLUDED.actual_value, sc_kpi_history.actual_value), "
+                            + "target_value = COALESCE(EXCLUDED.target_value, sc_kpi_history.target_value), "
                             + "calculated_at = NOW()",
                     kpiId, periodStart, periodEnd, actual, target);
             updated++;

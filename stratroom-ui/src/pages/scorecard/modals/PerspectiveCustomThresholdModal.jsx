@@ -4,7 +4,7 @@ const PerspectiveCustomThresholdModal = () => {
   return (
     <div
       className="modal custom-modal fade perspective_custom_threshold_popup"
-      id="prespective-calculator-modal"
+      id="prespective_custom_threshold_popup"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
       tabIndex="-1"
@@ -24,7 +24,7 @@ const PerspectiveCustomThresholdModal = () => {
               type="button"
               id="perspectiveClosePopupId"
               className="btn-close"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
           </div>

@@ -21,7 +21,7 @@ const ScorecardModal = () => {
             <button
               type="button"
               className="btn-close"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
           </div>
@@ -176,20 +176,25 @@ const ScorecardModal = () => {
                         >
                           Performance
                         </label>
-                        <input
-                          type="text"
-                          className="form-control browser-default"
-                          name="scorecard_formula"
-                          id="scorecard_formula"
-                          readOnly
-                          data-toggle="modal"
-                          data-target=".scorecard_custom_threshold_popup"
-                          onClick={() => {
-                            if (window.handleCustomThresholdEvent)
-                              window.handleCustomThresholdEvent('SCORECARDCONFIG');
-                          }}
-                          role="button"
-                        />
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control browser-default"
+                            name="scorecard_formula"
+                            id="scorecard_formula"
+                            readOnly
+                            style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }}
+                          />
+                          <button
+                            className="btn btn-label-secondary"
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#kpi-calculator-modal"
+                            data-translate="page.scorecard.scorecardItems.kpiCalculator"
+                          >
+                            Calculator
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -377,7 +382,7 @@ const ScorecardModal = () => {
                 <button
                   type="button"
                   className="btn btn-label-secondary"
-                  data-dismiss="modal"
+                  data-bs-dismiss="modal"
                   aria-label="Close"
                   data-translate="page.scorecard.scorecardItems.cancel"
                 >

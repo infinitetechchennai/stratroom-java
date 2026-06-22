@@ -63,7 +63,7 @@ export const ObjectiveAddModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#objective-calculator-modal"
+                                                    data-bs-toggle="modal" data-bs-target="#objective_custom_threshold_popup"
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
                                                     Calculator
                                                 </button>
@@ -191,7 +191,7 @@ export const ObjectiveEditModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#objective-calculator-modal"
+                                                    data-bs-toggle="modal" data-bs-target="#objective_custom_threshold_popup"
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
                                                     KPI Calculator
                                                 </button>
@@ -344,7 +344,7 @@ export const ObjectiveViewModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" readOnly style={{ cursor: 'not-allowed', backgroundColor: '#f8f9fa' }} />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#objective-calculator-modal"
+                                                    data-bs-toggle="modal" data-bs-target="#objective_custom_threshold_popup"
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
                                                     KPI Calculator
                                                 </button>

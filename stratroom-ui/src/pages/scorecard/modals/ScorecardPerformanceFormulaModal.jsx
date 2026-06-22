@@ -22,7 +22,7 @@ const ScorecardPerformanceFormulaModal = () => {
             <button
               type="button"
               className="btn-close"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               aria-label="Close"
               id="scorecardClosePopupId"
             ></button>
