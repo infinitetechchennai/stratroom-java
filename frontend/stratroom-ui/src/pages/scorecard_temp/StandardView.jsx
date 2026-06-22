@@ -36,6 +36,49 @@ const StandardView = ({ pageId = '1' }) => {
     }
   }, [scoreCardDTOS, activeTabId]);
 
+  useEffect(() => {
+    // Global Bootstrap 5 Modal Stacking Fix for nested modals
+    const modalHistory = [];
+
+    const handleShow = (e) => {
+      if (e.relatedTarget) {
+        const parentModal = e.relatedTarget.closest('.modal');
+        if (parentModal && parentModal.id) {
+          modalHistory.push({
+            current: e.target.id,
+            parent: parentModal.id
+          });
+        }
+      }
+    };
+
+    const handleHidden = (e) => {
+      const closedModalId = e.target.id;
+      // Reverse find to get the most recent history entry for this modal
+      for (let i = modalHistory.length - 1; i >= 0; i--) {
+        if (modalHistory[i].current === closedModalId) {
+          const parentId = modalHistory[i].parent;
+          modalHistory.splice(i, 1);
+          
+          const parentModalEl = document.getElementById(parentId);
+          if (parentModalEl && window.bootstrap) {
+            const bsModal = window.bootstrap.Modal.getOrCreateInstance(parentModalEl);
+            bsModal.show();
+          }
+          break;
+        }
+      }
+    };
+
+    document.addEventListener('show.bs.modal', handleShow);
+    document.addEventListener('hidden.bs.modal', handleHidden);
+
+    return () => {
+      document.removeEventListener('show.bs.modal', handleShow);
+      document.removeEventListener('hidden.bs.modal', handleHidden);
+    };
+  }, []);
+
   const activePerspective = scoreCardDTOS.find(s => s.id === activeTabId) || scoreCardDTOS[0];
 
   const getStatusIcon = (status) => {

@@ -43,7 +43,7 @@ const ScorecardPageContent = ({ pageIdProp }) => {
     const [viewMode, setViewMode] = useState('table'); // 'table' or 'smap'
 
     // Live backend data (cardDetailsDTO). Set to true only to demo without a backend.
-    const USE_SAMPLE_FALLBACK = false;
+    const USE_SAMPLE_FALLBACK = true;
     const { scorecardData: liveDTO, loading: liveLoading, error: liveError } = useScorecard(pageId);
     
     useEffect(() => {

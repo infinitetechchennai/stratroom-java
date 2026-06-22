@@ -10,13 +10,14 @@ import {
 } from "../../api/kpiApi";
 
 // ── palette ──────────────────────────────────────────────────────────────────
-const PURPLE = "#9b59b6";
-const PURPLE_LIGHT = "#d8b4f0";
-const PURPLE_DARK = "#6c3483";
+const DARK_BLUE = "#883b71";
+const GREY_BG = "#f5f6fa";
+const TH_BG = "#dfc7d4";
+const TH_COLOR = "#883b71";
+const WHITE = "#ffffff";
 
 const MONTH_PALETTE = [
-  "#b39ddb", "#e91e8c", "#80cbc4", "#26a69a", "#ff8c42", "#e53935",
-  "#00897b", "#f06292", "#fdd835", "#f4511e", "#7e57c2", "#29b6f6",
+  "#bda3c4", "#a3b2c4", "#b2c4a3", "#c4bca3", "#c4a3a3", "#a3c4bd"
 ];
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -208,27 +209,27 @@ function EmptyRow({ children = "No data available", pad = "16px 14px" }) {
 
 // ── styles ────────────────────────────────────────────────────────────────────
 const S = {
-  page: { fontFamily: "system-ui,sans-serif", background: "#f3e9fa", minHeight: "100vh", paddingBottom: 40 },
-  panel: { background: "#fff", border: "0.5px solid #dde0e8", borderRadius: 10, overflow: "hidden" },
+  page: { fontFamily: "system-ui,sans-serif", background: GREY_BG, minHeight: "100vh", paddingBottom: 40 },
+  panel: { background: WHITE, border: "1px solid #dde0e8", borderRadius: 4, overflow: "hidden" },
   panelHeader: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
-    padding: "10px 14px", borderBottom: "0.5px solid #eee"
+    padding: "8px 14px", background: DARK_BLUE, color: WHITE
   },
-  panelTitle: { fontSize: 14, fontWeight: 500, color: "#222" },
+  panelTitle: { fontSize: 14, fontWeight: 600, color: WHITE },
   dotBtn: {
-    background: "none", border: "none", cursor: "pointer",
-    fontSize: 18, color: "#aaa", padding: "2px 4px", borderRadius: 4, lineHeight: 1
+    background: WHITE, border: "none", cursor: "pointer",
+    fontSize: 14, color: DARK_BLUE, padding: "2px 6px", borderRadius: 4, lineHeight: 1, fontWeight: "bold"
   },
-  th: (bg = PURPLE_LIGHT, color = PURPLE_DARK) => ({
-    padding: "6px 10px", fontSize: 11, fontWeight: 500,
-    background: bg, color, border: "0.5px solid #ddd", textAlign: "center", whiteSpace: "nowrap",
+  th: (bg = TH_BG, color = TH_COLOR) => ({
+    padding: "8px 10px", fontSize: 11, fontWeight: 600, textTransform: "uppercase",
+    background: bg, color, border: "1px solid #ddd", textAlign: "center", whiteSpace: "nowrap",
   }),
-  td: { padding: "7px 10px", border: "0.5px solid #eee", fontSize: 12, textAlign: "center", color: "#333" },
-  tdNeg: { padding: "7px 10px", border: "0.5px solid #eee", fontSize: 12, textAlign: "center", color: "#c0392b" },
+  td: { padding: "8px 10px", border: "1px solid #eee", fontSize: 12, textAlign: "center", color: "#333" },
+  tdNeg: { padding: "8px 10px", border: "1px solid #eee", fontSize: 12, textAlign: "center", color: "#e74c3c" },
   monthTh: (color) => ({
-    background: color, color: "#fff", fontWeight: 500, fontSize: 12,
-    textAlign: "center", padding: "5px 0", border: "0.5px solid rgba(255,255,255,.25)",
-    whiteSpace: "nowrap",
+    background: color, color: WHITE, fontWeight: 600, fontSize: 12,
+    textAlign: "center", padding: "6px 0", border: "1px solid rgba(255,255,255,.25)",
+    whiteSpace: "nowrap", textTransform: "uppercase"
   }),
 };
 
@@ -313,7 +314,7 @@ function CommentItem({ c }) {
   const author = v.createdByName || (c.createdBy ? `Employee #${c.createdBy}` : "Unknown");
   return (
     <div style={{ display: "flex", gap: 10 }}>
-      <Avatar initials={initialsFrom(author)} bg="#7b5ea7" size={34} />
+      <Avatar initials={initialsFrom(author)} bg={DARK_BLUE} size={34} />
       <div style={{ flex: 1 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span style={{ fontSize: 13, fontWeight: 500, color: "#222" }}>{author}</span>
@@ -372,7 +373,7 @@ function CommentsPanel({ comments, onAdd }) {
         />
         <button onClick={submit} disabled={busy} style={{
           width: 34, height: 34, borderRadius: "50%",
-          background: PURPLE, border: "none", cursor: busy ? "default" : "pointer",
+          background: DARK_BLUE, border: "none", cursor: busy ? "default" : "pointer",
           color: "#fff", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
           opacity: busy ? 0.6 : 1,
         }}>→</button>
@@ -391,7 +392,7 @@ function DataTable({ rows, currency }) {
 
   return (
     <div style={{ borderRight: "0.5px solid #eee" }}>
-      <div style={{ ...S.panelHeader, background: "#fafafa" }}>
+      <div style={S.panelHeader}>
         <span style={S.panelTitle}>Data Table</span>
         <ThreeDot />
       </div>
@@ -437,7 +438,7 @@ function PgBtn({ label, active, onClick }) {
   return (
     <button onClick={onClick} style={{
       width: 28, height: 28, borderRadius: "50%", border: "0.5px solid #ddd", cursor: "pointer",
-      background: active ? PURPLE : "none", color: active ? "#fff" : "#999",
+      background: active ? DARK_BLUE : "none", color: active ? "#fff" : "#999",
       fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center",
     }}>{label}</button>
   );
@@ -581,9 +582,12 @@ function ActualVsTarget({ rows, currency }) {
 
   return (
     <div style={{ position: "relative" }}>
-      <div style={{ ...S.panelHeader, background: "#fafafa" }}>
+      <div style={S.panelHeader}>
         <span style={S.panelTitle}>Actual v/s Target</span>
-        <ThreeDot />
+        <div style={{display: 'flex', gap: '8px'}}>
+          <button style={S.dotBtn}>📈</button>
+          <ThreeDot />
+        </div>
       </div>
       <div style={{ padding: "10px 16px 4px", position: "relative" }}>
         <canvas 
@@ -783,24 +787,23 @@ export default function KpiStoryCardPage() {
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "20px 20px 0" }}>
 
         {/* Page Header */}
-        <div style={{ display: "flex", gap: 14, marginBottom: 16, alignItems: "center" }}>
-          <button onClick={() => navigate(-1)} style={{
-            width: 36, height: 36, borderRadius: 8, border: "0.5px solid #ddd",
-            background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
-          }} title="Back to Scorecard">
-            <span style={{ fontSize: 18, color: "#555" }}>←</span>
-          </button>
-
-          <Panel style={{ flex: 1 }}>
+        <div style={{ marginBottom: 16 }}>
+          <Panel style={{ background: DARK_BLUE, color: WHITE, border: "none" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px" }}>
-              <Avatar initials={initialsFrom(kpiVal.ownerName || kpiName)} bg="#7b5ea7" size={30} />
-              <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: "#222" }}>
+              <button onClick={() => navigate(-1)} style={{
+                width: 28, height: 28, borderRadius: 4, border: "none",
+                background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              }} title="Back to Scorecard">
+                <span style={{ fontSize: 18, color: DARK_BLUE, fontWeight: "bold", lineHeight: 1 }}>←</span>
+              </button>
+              <div style={{ background: WHITE, borderRadius: 4, padding: "4px 8px", color: DARK_BLUE, fontWeight: "bold", fontSize: 12 }}>DO</div>
+              <span style={{ flex: 1, fontSize: 15, fontWeight: 600, color: WHITE }}>
                 {loading ? "Loading KPI…" : kpiName}
               </span>
-              <div style={{ display: "flex", gap: 12, color: "#555", fontSize: 16, alignItems: "center" }}>
-                <span style={{ cursor: "pointer" }} onClick={() => setShowDescModal(true)} title="View Details">👁</span>
-                <ThreeDot />
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <button style={{ background: WHITE, border: "none", borderRadius: 4, width: 28, height: 28, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>✏️</button>
+                <button onClick={() => setShowDescModal(true)} title="View Details" style={{ background: WHITE, border: "none", borderRadius: 4, width: 28, height: 28, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>👁</button>
+                <button style={{ background: WHITE, border: "none", borderRadius: 4, width: 28, height: 28, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>⋮</button>
               </div>
             </div>
           </Panel>
@@ -843,7 +846,7 @@ export default function KpiStoryCardPage() {
         <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1050 }}>
           <div className="modal-dialog modal-dialog-centered modal-lg">
             <div className="modal-content">
-              <div className="modal-header d-flex justify-content-between align-items-center" style={{ background: "#7b5ea7", color: "#fff", padding: "12px 20px" }}>
+              <div className="modal-header d-flex justify-content-between align-items-center" style={{ background: DARK_BLUE, color: "#fff", padding: "12px 20px" }}>
                 <h6 className="modal-title mb-0" style={{ fontSize: 14, fontWeight: 600 }}>KPI Details</h6>
                 <button type="button" className="btn-close btn-close-white border-0 bg-transparent" onClick={() => setShowDescModal(false)} style={{ color: "#fff", fontSize: 18, cursor: "pointer" }}>×</button>
               </div>

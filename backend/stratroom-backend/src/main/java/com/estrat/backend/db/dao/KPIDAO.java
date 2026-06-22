@@ -125,7 +125,27 @@ public class KPIDAO {
     }
 
     public List<KPIDetailsDTO> retrieveNodeKeyList(long orgId) {
-        List dbList = this.jdbcTemplate.query("SELECT ked.node_key,ked.measure_name,ked.measure_type,ked.measureKey FROM orgstructure.kpi_element_details ked WHERE  ked.element_type='ELEMENT' AND ked.active=0 AND ked.org_id=" + orgId + " GROUP BY ked.node_key,ked.measure_name, ked.measure_type,ked.measureKey", (RowMapper)new MeasureNameMapper(this));
+        String query = 
+            "SELECT CAST(ked.node_key AS VARCHAR) as node_key, ked.measure_name, ked.measure_type, CAST(ked.measureKey AS VARCHAR) as measureKey " +
+            "FROM orgstructure.kpi_element_details ked " +
+            "WHERE ked.element_type='ELEMENT' AND ked.active=0 AND ked.org_id=" + orgId + " " +
+            "GROUP BY ked.node_key, ked.measure_name, ked.measure_type, ked.measureKey " +
+            "UNION ALL " +
+            "SELECT CAST(k.id AS VARCHAR) as node_key, k.name as measure_name, 0 as measure_type, NULL as measureKey " +
+            "FROM orgstructure.sc_kpis k " +
+            "JOIN orgstructure.sc_objectives o ON k.objective_id = o.id " +
+            "JOIN orgstructure.sc_perspectives p ON o.perspective_id = p.id " +
+            "JOIN orgstructure.sc_scorecards s ON p.scorecard_id = s.id " +
+            "WHERE k.is_deleted = false AND s.is_deleted = false " +
+            "UNION ALL " +
+            "SELECT CAST(sk.id AS VARCHAR) as node_key, sk.name as measure_name, 1 as measure_type, CAST(sk.kpi_id AS VARCHAR) as measureKey " +
+            "FROM orgstructure.sc_sub_kpis sk " +
+            "JOIN orgstructure.sc_kpis k ON sk.kpi_id = k.id " +
+            "JOIN orgstructure.sc_objectives o ON k.objective_id = o.id " +
+            "JOIN orgstructure.sc_perspectives p ON o.perspective_id = p.id " +
+            "JOIN orgstructure.sc_scorecards s ON p.scorecard_id = s.id " +
+            "WHERE sk.is_deleted = false AND s.is_deleted = false";
+        List dbList = this.jdbcTemplate.query(query, (RowMapper)new MeasureNameMapper(this));
         return dbList;
     }
 

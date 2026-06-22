@@ -5,7 +5,7 @@ import styles from './LeftNavigation.module.css'
 
 const PAGE_TYPE_GROUPS = {
   Measure: (p) =>
-    p.groupType === 'Measure' || p.pageType === 'Standard_View',
+    p.groupType === 'Measure' || ['Standard_View', 'Scorecardview'].includes(p.pageType),
   Plan: (p) =>
     p.groupType === 'Plan' ||
     ['SWOT', 'PESTEL', 'Strategy Map', 'Strategy Formulation',

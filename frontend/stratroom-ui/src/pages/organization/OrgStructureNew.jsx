@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useI18n } from '../../context/I18nContext'
-import { fetchOrgStructure, createEmployee, updateEmployee, deleteEmployee, addDepartmentMapping } from '../../api/orgStructureApi'
+import { usePermissions } from '../../context/PermissionsContext'
+import { fetchOrgStructure, createEmployee, updateEmployee, deleteEmployee, addDepartmentMapping, fetchOrgTrackList, clearOrgTrack } from '../../api/orgStructureApi'
 import axiosClient from '../../api/axiosClient'
 import styles from './OrgStructureNew.module.css'
 import * as XLSX from 'xlsx'
@@ -65,6 +66,29 @@ function filterTree(nodes, term) {
   }, [])
 }
 
+// Keeps any node that satisfies `pred`, plus the ancestor chain leading to it (so the
+// match stays reachable in the tree). Used by the Department / Designation filters.
+function filterTreeByPredicate(nodes, pred) {
+  if (!nodes?.length) return []
+  return nodes.reduce((acc, node) => {
+    const childMatches = filterTreeByPredicate(node.children, pred)
+    if (pred(node) || childMatches.length > 0) {
+      acc.push({ ...node, children: childMatches })
+    }
+    return acc
+  }, [])
+}
+
+// Distinct, sorted, non-empty values of a field across the whole tree.
+function distinctFieldValues(nodes, field, out) {
+  const set = out || new Set()
+    ; (nodes || []).forEach(n => {
+      if (n[field]) set.add(n[field])
+      distinctFieldValues(n.children, field, set)
+    })
+  return out ? set : [...set].sort((a, b) => a.localeCompare(b))
+}
+
 // ── Avatar ─────────────────────────────────────────────────────────────────────
 function Avatar({ node, size = 'md' }) {
   const cls = [styles.avatar, size === 'sm' ? styles.avatarSm : styles.avatarMd].join(' ')
@@ -88,7 +112,7 @@ function NodeBadges({ node, small = false }) {
       {node.designation && (
         <span className={`${styles.badge} ${styles.badgePurple}`} style={{ fontSize: fs }}>
           <svg width={sw} height={sw} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
           </svg>
           {node.designation}
         </span>
@@ -96,7 +120,7 @@ function NodeBadges({ node, small = false }) {
       {node.department && node.department !== node.name && (
         <span className={`${styles.badge} ${styles.badgeCyan}`} style={{ fontSize: fs }}>
           <svg width={sw} height={sw} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
           </svg>
           {node.department}
         </span>
@@ -104,7 +128,7 @@ function NodeBadges({ node, small = false }) {
       {node.location && (
         <span className={`${styles.badge} ${styles.badgePink}`} style={{ fontSize: fs }}>
           <svg width={sw} height={sw} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
           </svg>
           {node.location}
         </span>
@@ -126,12 +150,12 @@ function TreeRow({ node, onAdd, onEdit, onDelete }) {
         <div className={styles.treeColorBar} style={{ background: node.color }} />
         <div className={styles.gripIcon}>
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="9" cy="5" r="1.2" fill="currentColor"/>
-            <circle cx="9" cy="12" r="1.2" fill="currentColor"/>
-            <circle cx="9" cy="19" r="1.2" fill="currentColor"/>
-            <circle cx="15" cy="5" r="1.2" fill="currentColor"/>
-            <circle cx="15" cy="12" r="1.2" fill="currentColor"/>
-            <circle cx="15" cy="19" r="1.2" fill="currentColor"/>
+            <circle cx="9" cy="5" r="1.2" fill="currentColor" />
+            <circle cx="9" cy="12" r="1.2" fill="currentColor" />
+            <circle cx="9" cy="19" r="1.2" fill="currentColor" />
+            <circle cx="15" cy="5" r="1.2" fill="currentColor" />
+            <circle cx="15" cy="12" r="1.2" fill="currentColor" />
+            <circle cx="15" cy="19" r="1.2" fill="currentColor" />
           </svg>
         </div>
         <div className={styles.treeAvatarWrap}><Avatar node={node} size="md" /></div>
@@ -146,26 +170,26 @@ function TreeRow({ node, onAdd, onEdit, onDelete }) {
             <button className={`${styles.actionPill} ${styles.apTog}`} onClick={() => setCollapsed(c => !c)}>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
                 style={{ transform: collapsed ? 'rotate(0deg)' : 'rotate(90deg)', transition: 'transform .2s' }}>
-                <polyline points="9 18 15 12 9 6"/>
+                <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
           )}
           <button className={`${styles.actionPill} ${styles.apAdd}`} onClick={() => onAdd(node.id)}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
             </svg>
             {t('common.add')}
           </button>
           <button className={`${styles.actionPill} ${styles.apEdit}`} onClick={() => onEdit(node.id)}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
             </svg>
             {t('common.edit')}
           </button>
           <button className={`${styles.actionPill} ${styles.apDel}`} onClick={() => onDelete(node.id)}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
             </svg>
             {t('common.delete')}
           </button>
@@ -197,7 +221,7 @@ function TreeView({ tree, onAdd, onEdit, onDelete }) {
         </div>
         <button className={`${styles.actionPill} ${styles.apAdd}`} onClick={() => onAdd(-1)}>
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
           </svg>
           {t('org.addRoot')}
         </button>
@@ -206,8 +230,8 @@ function TreeView({ tree, onAdd, onEdit, onDelete }) {
         {tree.length === 0 ? (
           <div className={styles.emptyState}>
             <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
             <p>{t('org.noData')}</p>
           </div>
@@ -227,13 +251,13 @@ const NW = 204, NH = 96, HG = 36, VG = 64
 function layoutChart(nodes, depth = 0, sx = 0) {
   const result = []
   let x = sx
-  const levelY      = depth       * (NH + VG)
+  const levelY = depth * (NH + VG)
   const childLevelY = (depth + 1) * (NH + VG)
 
   for (const n of nodes) {
     const descendants = n.children.length ? layoutChart(n.children, depth + 1, x) : []
     // Only direct children (one level down) for width + centering
-    const directKids  = descendants.filter(k => k.y === childLevelY)
+    const directKids = descendants.filter(k => k.y === childLevelY)
 
     let sw, cx
     if (directKids.length === 0) {
@@ -290,7 +314,7 @@ function ChartView({ tree, onAdd, onEdit, onDelete }) {
     if (laid.length === 0 || !canvasRef.current) return
     const maxX = Math.max(...laid.map(n => n.x + NW))
     const maxY = Math.max(...laid.map(n => n.y + NH))
-    const vw = canvasRef.current.clientWidth  || 900
+    const vw = canvasRef.current.clientWidth || 900
     const vh = canvasRef.current.clientHeight || 530
     const padding = 48
     const scaleX = (vw - padding * 2) / maxX
@@ -342,20 +366,20 @@ function ChartView({ tree, onAdd, onEdit, onDelete }) {
         <div className={styles.chartControls}>
           <button className={styles.icBtn} onClick={() => setZoom(z => Math.min(2, +(z + 0.15).toFixed(2)))} title="Zoom in">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" />
             </svg>
           </button>
           <span className={styles.zoomLabel}>{Math.round(zoom * 100)}%</span>
           <button className={styles.icBtn} onClick={() => setZoom(z => Math.max(0.3, +(z - 0.15).toFixed(2)))} title="Zoom out">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              <line x1="8" y1="11" x2="14" y2="11"/>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="8" y1="11" x2="14" y2="11" />
             </svg>
           </button>
           <button className={styles.icBtn} onClick={() => { setOffsets({}); setZoom(1); setPan({ x: 40, y: 40 }) }} title="Reset">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+              <polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 .49-3.51" />
             </svg>
           </button>
         </div>
@@ -400,20 +424,20 @@ function ChartView({ tree, onAdd, onEdit, onDelete }) {
                     <button className={`${styles.actionPill} ${styles.apAdd}`} style={{ padding: '3px 6px' }}
                       onClick={e => { e.stopPropagation(); onAdd(node.id) }}>
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
                       </svg>
                     </button>
                     <button className={`${styles.actionPill} ${styles.apEdit}`} style={{ padding: '3px 6px' }}
                       onClick={e => { e.stopPropagation(); onEdit(node.id) }}>
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                       </svg>
                     </button>
                     <button className={`${styles.actionPill} ${styles.apDel}`} style={{ padding: '3px 6px' }}
                       onClick={e => { e.stopPropagation(); onDelete(node.id) }}>
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                       </svg>
                     </button>
                   </div>
@@ -454,14 +478,14 @@ function GridView({ tree, onEdit, onDelete }) {
               <div className={styles.gridCardActions}>
                 <button className={`${styles.actionPill} ${styles.apEdit}`} style={{ padding: '3px 6px', fontSize: 9 }} onClick={() => onEdit(node.id)}>
                   <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
                   {t('common.edit')}
                 </button>
                 <button className={`${styles.actionPill} ${styles.apDel}`} style={{ padding: '3px 6px', fontSize: 9 }} onClick={() => onDelete(node.id)}>
                   <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                   </svg>
                   {t('common.delete')}
                 </button>
@@ -526,8 +550,8 @@ const EMPTY_FORM = {
 function ModalDropdown({ value, onChange, options, placeholder }) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
-  const [pos, setPos]   = useState({ top: 0, left: 0, width: 0 })
-  const btnRef  = useRef(null)
+  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 })
+  const btnRef = useRef(null)
   const listRef = useRef(null)
 
   const toggle = () => {
@@ -558,7 +582,7 @@ function ModalDropdown({ value, onChange, options, placeholder }) {
           {selected ? selected.label : placeholder}
         </span>
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-          <polyline points="6 9 12 15 18 9"/>
+          <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
       {open && createPortal(
@@ -596,11 +620,11 @@ function OrgModal({ mode, node, onSave, onClose }) {
     location: node.location || '',
   } : { ...EMPTY_FORM })
 
-  const [employees, setEmployees]   = useState([])
+  const [employees, setEmployees] = useState([])
   const [scorecards, setScorecards] = useState([])
   const [initiatives, setInitiatives] = useState([])
-  const [kpis, setKpis]             = useState([])
-  const [risks, setRisks]           = useState([])
+  const [kpis, setKpis] = useState([])
+  const [risks, setRisks] = useState([])
 
   useEffect(() => {
     if (!empId) return
@@ -658,7 +682,7 @@ function OrgModal({ mode, node, onSave, onClose }) {
 
   const IconClose = () => (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   )
 
@@ -669,7 +693,7 @@ function OrgModal({ mode, node, onSave, onClose }) {
           <div className={styles.modalHeaderLeft}>
             <div className={styles.modalIcon}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="2.2" strokeLinecap="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
               </svg>
             </div>
             <h3 className={styles.modalTitle}>{mode === 'add' ? t('org.addSubordinate') : t('org.editMember')}</h3>
@@ -684,7 +708,7 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>FULL NAME *</label>
               <div className={styles.inputRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
                 </svg>
                 <input type="text" placeholder="Full Name" value={form.name} onChange={set('name')} />
               </div>
@@ -711,7 +735,7 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.department').toUpperCase()}</label>
               <div className={styles.inputRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 </svg>
                 <input type="text" placeholder={t('org.department')} value={form.department} onChange={set('department')} />
               </div>
@@ -724,8 +748,8 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.departmentId').toUpperCase()}</label>
               <div className={styles.inputRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <rect x="3" y="4" width="18" height="18" rx="2"/>
-                  <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
                 <input type="text" placeholder={t('org.departmentId')} value={form.deptId} onChange={set('deptId')} />
               </div>
@@ -734,7 +758,7 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.owner').toUpperCase()}</label>
               <div className={styles.selectRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
                 </svg>
                 <ModalDropdown
                   value={form.owner}
@@ -755,8 +779,8 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.email').toUpperCase()}</label>
               <div className={styles.inputRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
                 </svg>
                 <input type="email" placeholder={t('org.email')} value={form.email} onChange={set('email')} />
               </div>
@@ -765,8 +789,8 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.members').toUpperCase()}</label>
               <div className={styles.inputRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
                 <input type="text" placeholder={t('org.members')} value={form.members} onChange={set('members')} />
               </div>
@@ -779,8 +803,8 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.designation').toUpperCase()}</label>
               <div className={styles.inputRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <rect x="2" y="7" width="20" height="14" rx="2"/>
-                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
                 </svg>
                 <input type="text" placeholder={t('org.designation')} value={form.designation} onChange={set('designation')} />
               </div>
@@ -789,7 +813,7 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.location').toUpperCase()}</label>
               <div className={styles.inputRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
                 </svg>
                 <input type="text" placeholder={t('org.location')} value={form.location} onChange={set('location')} />
               </div>
@@ -802,8 +826,8 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.scorecard').toUpperCase()}</label>
               <div className={styles.selectRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
                 </svg>
                 <ModalDropdown
                   value={form.scorecard}
@@ -817,7 +841,7 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.initiative').toUpperCase()}</label>
               <div className={styles.selectRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                 </svg>
                 <ModalDropdown
                   value={form.initiative}
@@ -835,8 +859,8 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('nav.kpi').toUpperCase()}</label>
               <div className={styles.selectRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
-                  <line x1="6" y1="20" x2="6" y2="14"/>
+                  <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
                 </svg>
                 <ModalDropdown
                   value={form.kpi}
@@ -850,8 +874,8 @@ function OrgModal({ mode, node, onSave, onClose }) {
               <label className={styles.fieldLabel}>{t('org.risk').toUpperCase()}</label>
               <div className={styles.selectRow}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: 12, height: 12, flexShrink: 0 }}>
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                  <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
                 </svg>
                 <ModalDropdown
                   value={form.risk}
@@ -883,14 +907,14 @@ function DeleteModal({ node, onConfirm, onClose }) {
           <div className={styles.modalHeaderLeft}>
             <div className={styles.modalIcon} style={{ background: 'rgba(255,255,255,.18)' }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
-                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
               </svg>
             </div>
             <h3 className={styles.modalTitle}>{t('org.deleteTitle')}</h3>
           </div>
           <button className={styles.modalClose} onClick={onClose}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
@@ -903,6 +927,103 @@ function DeleteModal({ node, onConfirm, onClose }) {
           <button className={styles.btnGhost} onClick={onClose}>{t('common.cancel')}</button>
           <button className={styles.btnDanger} onClick={onConfirm}>{t('common.delete')}</button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Org Tracker (change log) ─────────────────────────────────────────────────────
+// Renders the audit trail of org changes (who joined / moved / left) from /orgTrackList,
+// scoped to the currently selected period. Each row can be cleared.
+function TrackerView() {
+  const [rows, setRows] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const load = useCallback(async () => {
+    setLoading(true); setError(null)
+    try {
+      const period = localStorage.getItem('customperiod') || ''
+      const data = await fetchOrgTrackList('', period)
+      setRows(Array.isArray(data) ? data : [])
+    } catch (err) {
+      setError(err?.response?.data?.message || err?.message || 'Failed to load tracker')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  const handleClear = async (id) => {
+    try {
+      await clearOrgTrack(id)
+      setRows(rs => rs.filter(r => r.id !== id))
+    } catch (err) {
+      console.error('Clear org track failed', err)
+    }
+  }
+
+  const th = { textAlign: 'start', padding: '10px 14px', fontSize: 12, fontWeight: 700, color: '#475569', borderBottom: '1px solid #e2e8f0', whiteSpace: 'nowrap' }
+  const td = { padding: '10px 14px', fontSize: 13, color: '#334155', borderBottom: '1px solid #f1f5f9', verticalAlign: 'middle' }
+
+  return (
+    <div className={styles.sectionCard}>
+      <div className={styles.sectionHeader}>
+        <div>
+          <h2 className={styles.sectionHeaderTitle}>Organization Tracker</h2>
+          <p className={styles.sectionHeaderSub}>Changes to the org structure for the selected period</p>
+        </div>
+      </div>
+      <div style={{ padding: '4px 6px 8px' }}>
+        {loading ? (
+          <div className={styles.loaderWrap}><div className={styles.spinner} /></div>
+        ) : error ? (
+          <div className={styles.emptyState}><p>{error}</p></div>
+        ) : rows.length === 0 ? (
+          <div className={styles.emptyState}><p>No org changes recorded for this period.</p></div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th style={th}>Person</th>
+                  <th style={th}>Designation</th>
+                  <th style={th}>Action</th>
+                  <th style={th}>Reports To</th>
+                  <th style={th}>From</th>
+                  <th style={th}>To</th>
+                  <th style={th}></th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r, i) => (
+                  <tr key={r.id ?? i}>
+                    <td style={td}>
+                      <div style={{ fontWeight: 600 }}>{r.ownerName || '—'}</div>
+                      {r.email && <div style={{ fontSize: 11.5, color: '#94a3b8' }}>{r.email}</div>}
+                    </td>
+                    <td style={td}>{r.designation || '—'}</td>
+                    <td style={td}>{r.type || '—'}</td>
+                    <td style={td}>{r.parentName || '—'}</td>
+                    <td style={td}>{r.fromDate || '—'}</td>
+                    <td style={td}>{r.toDate || '—'}</td>
+                    <td style={{ ...td, textAlign: 'end' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleClear(r.id)}
+                        title="Clear this entry"
+                        style={{ border: '1px solid #fecaca', background: '#fef2f2', color: '#dc2626', borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer' }}
+                      >
+                        Clear
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -926,11 +1047,14 @@ function getHistoricalAsOf() {
 export default function OrgStructureNew() {
   const { user, loading: authLoading } = useAuth()
   const { t } = useI18n()
+  const { reload } = usePermissions()
   const [tree, setTree] = useState([])
   const [apiLoading, setApiLoading] = useState(true)
   const [apiError, setApiError] = useState(null)
   const [view, setView] = useState('tree')
   const [search, setSearch] = useState('')
+  const [deptFilter, setDeptFilter] = useState('')
+  const [designationFilter, setDesignationFilter] = useState('')
   const [modal, setModal] = useState(null)
   const [delTarget, setDelTarget] = useState(null)
   const [deptMode, setDeptMode] = useState(false)
@@ -939,6 +1063,7 @@ export default function OrgStructureNew() {
   const [importing, setImporting] = useState(false)
   const [importProgress, setImportProgress] = useState(0)
   const [importResult, setImportResult] = useState(null)
+  const [importCategory, setImportCategory] = useState('Select Import Category')
   const [historicalDate, setHistoricalDate] = useState(null)
 
   const loadOrg = useCallback(async () => {
@@ -972,11 +1097,11 @@ export default function OrgStructureNew() {
     // getOrgDetails(name) then reads .getOrgId() — both name and orgId required to avoid NPE.
     const orgId = user?.orgDetails?.orgId ?? user?.orgDetails?.id ?? user?.orgId ?? 1
     const payload = {
-      name:       formData.name,
-      email:      formData.email,
-      title:      formData.designation,
-      dept:       formData.department,
-      location:   formData.location,
+      name: formData.name,
+      email: formData.email,
+      title: formData.designation,
+      dept: formData.department,
+      location: formData.location,
       orgDetails: { orgId, name: orgName },
     }
     // Send dept name + deptUniqueId (NOT deptDetails.id — the form value is a user-typed code,
@@ -1012,9 +1137,9 @@ export default function OrgStructureNew() {
         //   1) create the bare employee (NO dept fields → backend won't make an orphan node)
         //   2) addDepartmentMapping creates the dept + chart node (owner + parent) + assigns them
         const personPayload = {
-          name:     formData.name,
-          email:    formData.email,
-          title:    formData.designation,
+          name: formData.name,
+          email: formData.email,
+          title: formData.designation,
           location: formData.location,
           orgDetails: { orgId, name: orgName },
         }
@@ -1026,16 +1151,16 @@ export default function OrgStructureNew() {
         // Parent row id IS the parent department's id in dept mode. -1 = add a root dept.
         const deptParentId = modal.parentId === -1 ? 0 : modal.parentId
         const deptPayload = {
-          deptName:      formData.department,
-          deptUniqueId:  formData.deptId ? String(formData.deptId) : undefined,
+          deptName: formData.department,
+          deptUniqueId: formData.deptId ? String(formData.deptId) : undefined,
           orgId,
-          owner:         newEmpId,
-          emailAddress:  formData.email,
+          owner: newEmpId,
+          emailAddress: formData.email,
           deptParentId,
-          empIdList:     [newEmpId],
-          createdBy:     meId,
+          empIdList: [newEmpId],
+          createdBy: meId,
           superCreatedBy: meId,
-          active:        0,
+          active: 0,
         }
         console.log('addDepartmentMapping payload:', JSON.stringify(deptPayload))
         await addDepartmentMapping(deptPayload)
@@ -1081,7 +1206,16 @@ export default function OrgStructureNew() {
   const editNode = modal?.mode === 'edit' ? findNode(tree, modal.nodeId) : null
   const delNode = delTarget ? findNode(tree, delTarget) : null
   const showSearch = search.trim().length > 0
-  const displayTree = showSearch ? filterTree(tree, search.toLowerCase()) : tree
+
+  // Dropdown option lists, derived from whatever is in the current tree.
+  const departmentOptions = distinctFieldValues(tree, 'department')
+  const designationOptions = distinctFieldValues(tree, 'designation')
+
+  // Compose the active filters: search → department → designation. Each keeps matching
+  // nodes plus their ancestor chain so the hierarchy stays intact.
+  let displayTree = showSearch ? filterTree(tree, search.toLowerCase()) : tree
+  if (deptFilter) displayTree = filterTreeByPredicate(displayTree, n => n.department === deptFilter)
+  if (designationFilter) displayTree = filterTreeByPredicate(displayTree, n => n.designation === designationFilter)
 
   // In a historical snapshot the chart is read-only — editing the past makes no sense.
   const blockHistoricalEdit = () =>
@@ -1090,27 +1224,52 @@ export default function OrgStructureNew() {
   const editAction = historicalDate ? blockHistoricalEdit : handleEdit
   const deleteAction = historicalDate ? blockHistoricalEdit : handleDelete
 
+  // Maps the period dropdown to the global date range (localStorage 'customperiod',
+  // "MM/DD/YYYY-MM/DD/YYYY") and reloads so the whole app — including the historical
+  // org chart — re-reads it. Past-ending periods (e.g. Q1 mid-year) show a snapshot.
+  const applyPeriod = (value) => {
+    const y = new Date().getFullYear()
+    const pad = (n) => String(n).padStart(2, '0')
+    const fmt = (mo, d) => `${pad(mo)}/${pad(d)}/${y}`
+    const now = new Date()
+    let from, to
+    switch (value) {
+      case 'ytd': from = fmt(1, 1); to = fmt(now.getMonth() + 1, now.getDate()); break
+      case 'q1': from = fmt(1, 1); to = fmt(3, 31); break
+      case 'q2': from = fmt(4, 1); to = fmt(6, 30); break
+      case 'q3': from = fmt(7, 1); to = fmt(9, 30); break
+      case 'q4': from = fmt(10, 1); to = fmt(12, 31); break
+      default: from = fmt(1, 1); to = fmt(12, 31); break
+    }
+    localStorage.setItem('customperiod', `${from}-${to}`)
+    window.location.reload()
+  }
+
   const handleImport = async () => {
     if (!importFile) return
+    const supportedCategories = ['Org Skeleton', 'Users', 'Scorecard', 'Data Load']
+    if (!supportedCategories.includes(importCategory)) {
+      alert(`Import for ${importCategory} is coming soon!`)
+      return
+    }
     setImporting(true)
     setImportProgress(0)
     setImportResult(null)
     try {
-      // Phase 1 — read file bytes (0 → 25%)
       setImportProgress(10)
       const buf = await importFile.arrayBuffer()
       setImportProgress(25)
 
-      // Phase 2 — parse Excel rows (25 → 55%)
       const wb = XLSX.read(buf, { type: 'array' })
       const ws = wb.Sheets[wb.SheetNames[0]]
       const rows = XLSX.utils.sheet_to_json(ws, { defval: '' })
       setImportProgress(45)
       const orgName = user?.orgDetails?.orgName ?? user?.orgDetails?.name ?? 'Stratroom'
-      const orgId   = user?.orgDetails?.orgId ?? user?.orgId ?? 1
+      const orgId = user?.orgDetails?.orgId ?? user?.orgId ?? 1
       if (rows.length > 0) {
-        console.log('[Import] Excel columns found:', Object.keys(rows[0]))
+        console.log(`[Import] Excel columns found for ${importCategory}:`, Object.keys(rows[0]))
       }
+      
       const colVal = (row, ...names) => {
         const keys = Object.keys(row)
         for (const name of names) {
@@ -1120,31 +1279,61 @@ export default function OrgStructureNew() {
         }
         return ''
       }
-      const employees = rows.map(r => ({
-        name:               colVal(r, 'First Name', 'firstName', 'Name', 'Full Name', 'Employee Name', 'Employee'),
-        lastName:           colVal(r, 'Last Name', 'lastName', 'Surname', 'Family Name'),
-        email:              colVal(r, 'Email', 'Email Address', 'emailAddress', 'Work Email', 'Corporate Email'),
-        parentEmployeeName: colVal(r, 'Parent Email', 'parentEmail', 'Manager Email', 'Manager', 'Reporting Manager', 'Reports To', 'Supervisor Email', 'Superior Email', 'Supervisor', 'Superior', 'Reporting To', 'Parent'),
-        title:              colVal(r, 'Designation', 'designation', 'Title', 'Job Title', 'Position', 'Role'),
-        dept:               colVal(r, 'Department', 'department', 'Dept', 'Division', 'Business Unit'),
-        deptUniqueId:       colVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'dept_id'),
-        location:           colVal(r, 'Location', 'location', 'Office', 'Branch', 'Site'),
-        userRole:           0,
-        orgDetails:         { orgId, name: orgName },
-      })).filter(e => e.email)
+
       setImportProgress(55)
 
-      // Phase 3 — upload to server (55 → 85%)
-      await axiosClient.post('/api/creatBulkEmployee', employees, { timeout: 300000 })
-      setImportProgress(85)
+      if (importCategory === 'Organisation') {
+        // Auto-detect if this is the skeleton file or the users file
+        const isUsersFile = rows.length > 0 && colVal(rows[0], 'Email Address', 'EmailAddress', 'Email') !== '';
 
-      // Phase 4 — refresh org tree (85 → 100%)
+        if (isUsersFile) {
+          const payload = rows.map(r => ({
+            name: colVal(r, 'Name', 'FullName'),
+            emailAddress: colVal(r, 'Email Address', 'EmailAddress', 'Email'),
+            deptUniqueId: colVal(r, 'Department ID', 'DepartmentID'),
+            designation: colVal(r, 'Designation'),
+            userRole: colVal(r, 'Role'),
+            location: colVal(r, 'Location'),
+            phoneNumber: colVal(r, 'Phone no', 'Phone no ', 'PhoneNumber'),
+            status: colVal(r, 'Status'),
+            orgDetails: { orgId, name: colVal(r, 'Organization') || orgName },
+          })).filter(e => e.emailAddress)
+          await axiosClient.post('/api/creatBulkEmployee', payload, { timeout: 300000 })
+        } else {
+          const payload = rows.map(r => ({
+            parentDeptID: colVal(r, 'Parent ID', 'ParentID'),
+            deptID: colVal(r, 'Department ID', 'DepartmentID'),
+            deptName: colVal(r, 'Department Name', 'DepartmentName'),
+            ownerName: colVal(r, 'Owner', 'OwnerName'),
+            member: colVal(r, 'Member'),
+            orgName: colVal(r, 'Organization') || orgName
+          })).filter(e => e.deptID && e.deptName)
+          await axiosClient.post('/api/createBulkDeptMapping', payload, { timeout: 300000 })
+        }
+      } else if (importCategory === 'Scorecard') {
+        const res = await axiosClient.post('/api/scorecard/bulkImport', rows, { timeout: 300000 })
+        setImportProgress(85)
+        await loadOrg()
+        setImportProgress(100)
+        if (res?.data?.flag === false) {
+          setImportResult({ success: false, message: res?.data?.message || 'Import failed' })
+        } else {
+          setImportResult({ success: true, count: rows.length })
+          // Refresh nav pages so newly imported scorecards appear in Measure menu
+          try { reload() } catch (_) {}
+        }
+        return
+      } else if (importCategory === 'Data Upload') {
+        await axiosClient.post('/api/data/bulkImport', rows, { timeout: 300000 })
+      }
+
+      setImportProgress(85)
       await loadOrg()
       setImportProgress(100)
-      setImportResult({ success: true, count: employees.length })
+      setImportResult({ success: true, count: rows.length })
     } catch (err) {
       setImportProgress(0)
-      setImportResult({ success: false, message: err?.response?.data?.message || err.message || 'Import failed' })
+      setImportResult({ success: false, message: err?.response?.data?.message || err?.response?.data?.error || err.message || 'Import failed. Please check the file format.' })
     } finally {
       setImporting(false)
     }
@@ -1153,23 +1342,27 @@ export default function OrgStructureNew() {
   const VIEW_BTNS = [
     {
       id: 'tree', title: t('org.treeView'), onClick: () => setView('tree'),
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>,
     },
     {
       id: 'chart', title: t('org.chartView'), onClick: () => setView('chart'),
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="12" y1="14" x2="5" y2="16"/><line x1="12" y1="14" x2="19" y2="16"/></svg>,
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="5" r="3" /><circle cx="5" cy="19" r="3" /><circle cx="19" cy="19" r="3" /><line x1="12" y1="8" x2="12" y2="14" /><line x1="12" y1="14" x2="5" y2="16" /><line x1="12" y1="14" x2="19" y2="16" /></svg>,
     },
     {
       id: 'grid', title: t('org.gridView'), onClick: () => setView('grid'),
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>,
     },
     {
       id: 'add', title: t('org.addPerson'), onClick: () => handleAdd(-1),
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>,
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" /></svg>,
+    },
+    {
+      id: 'tracker', title: 'Organization Tracker', onClick: () => setView('tracker'),
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8v4l3 3" /><circle cx="12" cy="12" r="9" /></svg>,
     },
     {
       id: 'import', title: 'Import from Excel', onClick: () => { setImportFile(null); setImportResult(null); setImportProgress(0); setImportOpen(true) },
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>,
     },
   ]
 
@@ -1190,13 +1383,13 @@ export default function OrgStructureNew() {
 
           <div className={styles.searchWrap}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
             <input className={styles.searchInput} type="text" placeholder={t('org.searchPeople')}
               value={search} onChange={e => setSearch(e.target.value)} />
           </div>
 
-          <select className={styles.headerSelect} defaultValue="current">
+          <select className={styles.headerSelect} defaultValue="current" onChange={e => applyPeriod(e.target.value)}>
             <option value="current">{t('org.current')}</option>
             <option value="ytd">YTD</option>
             <option value="q1">Q1</option>
@@ -1205,12 +1398,14 @@ export default function OrgStructureNew() {
             <option value="q4">Q4</option>
           </select>
 
-          <select className={styles.headerSelect} defaultValue="">
+          <select className={styles.headerSelect} value={designationFilter} onChange={e => setDesignationFilter(e.target.value)}>
             <option value="">{t('org.allGroups')}</option>
+            {designationOptions.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
 
-          <select className={styles.headerSelect} defaultValue="">
+          <select className={styles.headerSelect} value={deptFilter} onChange={e => setDeptFilter(e.target.value)}>
             <option value="">{t('org.allDepartments')}</option>
+            {departmentOptions.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
 
           <div className={styles.pageIcons}>
@@ -1234,7 +1429,7 @@ export default function OrgStructureNew() {
             color: '#92400e', background: '#fffbeb', border: '1px solid #fde68a'
           }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
             </svg>
             Viewing the org chart as it stood on <strong>{historicalDate}</strong> — read-only historical snapshot. Switch the date range to the current period to make changes.
           </div>
@@ -1249,11 +1444,13 @@ export default function OrgStructureNew() {
           <div className={styles.sectionCard}>
             <div className={styles.emptyState}>
               <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
               <p>{apiError}</p>
             </div>
           </div>
+        ) : view === 'tracker' ? (
+          <TrackerView />
         ) : showSearch ? (
           <SearchView query={search} tree={tree} />
         ) : view === 'tree' ? (
@@ -1273,86 +1470,116 @@ export default function OrgStructureNew() {
       )}
 
       {importOpen && (
-        <div className={`${styles.overlay} ${styles.open}`} onClick={e => { if (e.target === e.currentTarget) setImportOpen(false) }}>
-          <div className={`${styles.modal} ${styles.modalSm}`} style={{ maxWidth: 460 }}>
-            <div className={styles.modalHeader}>
-              <div className={styles.modalHeaderLeft}>
-                <div className={styles.modalIcon}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" strokeWidth="2.2" strokeLinecap="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
+        <div className="modal custom-modal fade show file_upload_popup" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1" onClick={e => { if (e.target === e.currentTarget) setImportOpen(false) }}>
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h4 className="modal-title">File Upload</h4>
+                <button type="button" className="btn-close" onClick={() => setImportOpen(false)} aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <div className="card-header-progress">
+                  <ul className="form-progressbar w-100">
+                    <li className={importProgress >= 0 ? "active" : ""}>Upload</li>
+                    <li className={importProgress > 50 ? "active" : ""}>Validation</li>
+                    <li className={importResult ? "active" : ""}>Import</li>
+                  </ul>
                 </div>
-                <h3 className={styles.modalTitle}>Import from Excel</h3>
-              </div>
-              <button className={styles.modalClose} onClick={() => setImportOpen(false)}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            </div>
+                
+                {!importResult ? (
+                  <div id="file-upload" className="card custom-card" style={{ marginTop: '20px' }}>
+                    <div className="card-body grid gap-3">
+                      <div className="g-col-12">
+                        <div className="form-group">
+                          <label className="form-label" style={{ fontWeight: 600 }}>Import Category</label>
+                          <select className="form-select select-dropdown-file-upload w-100" 
+                                  value={importCategory} onChange={(e) => setImportCategory(e.target.value)}>
+                            <option value="Select Import Category" disabled hidden>Select Import Category</option>
+                            <option value="Organisation">Organisation</option>
+                            <option value="Data Upload">Data Upload</option>
+                            <option value="Excel File Upload">Excel File Upload</option>
+                            <option value="Scorecard">Scorecard</option>
+                            <option value="Budget">Budget</option>
+                            <option value="Initiatives Data Load">Initiatives Data Load</option>
+                            <option value="Initiatives Budget Load">Initiatives Budget Load</option>
+                            <option value="Initiatives & Projects">Initiatives & Projects</option>
+                            <option value="Risk">Risk</option>
+                            <option value="Compliance">Compliance</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      {importCategory === 'Organisation' && (
+                        <div className="g-col-12" style={{ marginTop: '-10px', marginBottom: '5px' }}>
+                          <p style={{ fontSize: 12, color: 'var(--text-sec)', margin: 0 }}>
+                            Upload an Excel file (.xlsx). Merges Org Skeleton and Users.
+                          </p>
+                        </div>
+                      )}
 
-            <div className={styles.modalBody} style={{ gap: 14 }}>
-              <p style={{ fontSize: 12, color: 'var(--text-sec)', margin: 0 }}>
-                Upload an Excel file (.xlsx). Expected columns:
-              </p>
-              <div style={{ background: '#f8fafc', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px', fontSize: 11.5, color: 'var(--text-sec)', lineHeight: 1.8 }}>
-                <strong>First Name</strong>, <strong>Last Name</strong>, <strong>Email</strong>, <strong>Parent Email</strong>, <strong>Designation</strong>, <strong>Department</strong>, <strong>Location</strong>
-              </div>
+                      <div className="g-col-12">
+                        <div className="form-group">
+                          <label className="form-label" style={{ fontWeight: 600 }}>Upload File</label>
+                          <label className="upload-label upload-box" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '1.5px dashed #ccc', padding: '40px', borderRadius: '8px', background: '#fafafa' }}>
+                            <div className="upload" style={{ color: '#888', fontSize: '15px' }}>
+                              {importFile ? importFile.name : "Choose a file or drag it here."}
+                            </div>
+                            <input type="file" accept=".xlsx,.xls,.csv" style={{ display: 'none' }} onChange={e => { setImportFile(e.target.files[0] || null); setImportResult(null); setImportProgress(0) }} />
+                          </label>
+                        </div>
+                      </div>
 
-              <div className={styles.fileInputWrap}>
-                <label className={styles.fileInputLabel}>
-                  <input type="file" accept=".xlsx,.xls" className={styles.fileInputHidden}
-                    onChange={e => { setImportFile(e.target.files[0] || null); setImportResult(null); setImportProgress(0) }} />
-                  <span className={styles.fileInputBtn}>Choose File</span>
-                  <span className={styles.fileInputName}>{importFile ? importFile.name : 'No file chosen'}</span>
-                </label>
-                <p className={styles.fileInputHint}>Supported: .xlsx, .xls</p>
-              </div>
-
-              {(importing || importProgress > 0) && !importResult && (
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5, fontSize: 11.5, color: 'var(--text-sec)' }}>
-                    <span>
-                      {importProgress < 25 ? 'Reading file…'
-                        : importProgress < 55 ? 'Parsing rows…'
-                        : importProgress < 85 ? 'Uploading…'
-                        : 'Refreshing…'}
-                    </span>
-                    <span style={{ fontWeight: 600 }}>{importProgress}%</span>
+                      {(importing || importProgress > 0) && (
+                        <div className="g-col-12">
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5, fontSize: 12, color: 'var(--text-sec)' }}>
+                            <span>Importing...</span>
+                            <span style={{ fontWeight: 600 }}>{importProgress}%</span>
+                          </div>
+                          <div style={{ height: 6, background: '#e2e8f0', borderRadius: 3, overflow: 'hidden' }}>
+                            <div style={{ height: '100%', background: 'var(--cyan)', width: `${importProgress}%`, transition: 'width 0.3s' }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="card-footer">
+                      <div className="d-flex justify-content-end form-line">
+                        <button className="btn btn-primary initative_save_btn" onClick={handleImport} disabled={!importFile || importing} style={{ fontWeight: 600, background: '#1e3a8a', borderColor: '#1e3a8a', padding: '8px 24px' }}>
+                          {importing ? 'Processing...' : 'Next'}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ background: 'var(--border)', borderRadius: 99, height: 6, overflow: 'hidden' }}>
-                    <div style={{
-                      height: '100%',
-                      width: `${importProgress}%`,
-                      background: 'linear-gradient(90deg, var(--cyan) 0%, #0ea5e9 100%)',
-                      borderRadius: 99,
-                      transition: 'width 0.35s ease',
-                    }} />
+                ) : (
+                  <div className="card custom-card" id="file-save" style={{ marginTop: '20px' }}>
+                    <div className="card-body grid gap-3">
+                      <div className="g-col-12 text-center" style={{ padding: '30px 0' }}>
+                        {importResult.success ? (
+                          <>
+                            <img src="/images/Success.png" alt="Success" width="100" style={{ margin: '0 auto', display: 'block' }} />
+                            <h5 style={{ color: '#16a34a', marginTop: '20px', fontWeight: 600 }}>Import Successful</h5>
+                            {importResult.count && <p style={{ fontSize: 15, color: '#555', marginTop: '10px' }}>
+                                Successfully imported {importResult.count} record(s).
+                            </p>}
+                          </>
+                        ) : (
+                          <>
+                            <img src="/images/Not-Verified.png" alt="Failed" width="100" style={{ margin: '0 auto', display: 'block' }} />
+                            <h5 style={{ color: '#dc2626', marginTop: '20px', fontWeight: 600 }}>Import Failed</h5>
+                            <p style={{ fontSize: 14, color: '#555', marginTop: '10px' }}>{importResult.message || importResult.error}</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div className="card-footer">
+                      <div className="d-flex justify-content-end form-line">
+                        <button className="btn btn-primary initative_save_btn" onClick={() => setImportOpen(false)} style={{ fontWeight: 600, background: '#1e3a8a', borderColor: '#1e3a8a', padding: '8px 24px' }}>
+                          Done
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              )}
-
-              {importResult && (
-                <div style={{
-                  padding: '8px 12px', borderRadius: 8, fontSize: 12, fontWeight: 600,
-                  background: importResult.success ? '#f0fdf4' : '#fef2f2',
-                  color: importResult.success ? '#166534' : '#991b1b',
-                  border: `1px solid ${importResult.success ? '#86efac' : '#fca5a5'}`,
-                }}>
-                  {importResult.success
-                    ? `✓ Successfully imported ${importResult.count} employee(s).`
-                    : `✗ ${importResult.message}`}
-                </div>
-              )}
-            </div>
-
-            <div className={styles.modalFooter}>
-              <button className={styles.btnGhost} onClick={() => setImportOpen(false)}>Cancel</button>
-              <button className={styles.btnPrimary} onClick={handleImport}
-                disabled={!importFile || importing}
-                style={{ opacity: (!importFile || importing) ? 0.6 : 1, cursor: (!importFile || importing) ? 'not-allowed' : 'pointer' }}>
-                {importing ? 'Importing…' : 'Import'}
-              </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

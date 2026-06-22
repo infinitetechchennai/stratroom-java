@@ -93,7 +93,7 @@ public class ScorecardCrudService {
                 lng(b, "perspectiveId", 0L), str(b, "code", null), str(b, "name", "Objective"),
                 str(b, "description", null), intg(b, "displayOrder", 0), dec(b, "weight", BigDecimal.ZERO),
                 str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"),
-                bln(b, "knockoutEnabled") ? 1 : 0, dec(b, "knockoutThreshold", new BigDecimal("80")),
+                bln(b, "knockoutEnabled"), dec(b, "knockoutThreshold", new BigDecimal("80")),
                 dec(b, "passRateThreshold", new BigDecimal("95")));
     }
 
@@ -105,7 +105,7 @@ public class ScorecardCrudService {
                         + "display_order=? WHERE id=?",
                 str(b, "name", "Objective"), str(b, "description", null), dec(b, "weight", BigDecimal.ZERO),
                 str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"),
-                bln(b, "knockoutEnabled") ? 1 : 0, dec(b, "knockoutThreshold", new BigDecimal("80")),
+                bln(b, "knockoutEnabled"), dec(b, "knockoutThreshold", new BigDecimal("80")),
                 dec(b, "passRateThreshold", new BigDecimal("95")), intg(b, "displayOrder", 0), id) > 0;
     }
 
@@ -182,8 +182,8 @@ public class ScorecardCrudService {
     @Transactional
     public void recordKpiActual(Map<String, Object> b) {
         jdbc.update(
-                "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value) VALUES (?,?,?,?) "
-                        + "ON DUPLICATE KEY UPDATE actual_value=VALUES(actual_value), calculated_at=NOW()",
+                "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value) VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?) "
+                        + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET actual_value=EXCLUDED.actual_value, calculated_at=NOW()",
                 lng(b, "kpiId", 0L), str(b, "periodStart", null), str(b, "periodEnd", null),
                 decOrNull(b, "actualValue"));
     }
@@ -191,8 +191,8 @@ public class ScorecardCrudService {
     @Transactional
     public void recordSubKpiActual(Map<String, Object> b) {
         jdbc.update(
-                "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value) VALUES (?,?,?,?) "
-                        + "ON DUPLICATE KEY UPDATE actual_value=VALUES(actual_value), calculated_at=NOW()",
+                "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value) VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?) "
+                        + "ON CONFLICT (sub_kpi_id, period_start, period_end) DO UPDATE SET actual_value=EXCLUDED.actual_value, calculated_at=NOW()",
                 lng(b, "subKpiId", 0L), str(b, "periodStart", null), str(b, "periodEnd", null),
                 decOrNull(b, "actualValue"));
     }
@@ -220,7 +220,7 @@ public class ScorecardCrudService {
         String periodEnd = range[1].toString();
 
         List<Map<String, Object>> sc = jdbc.queryForList(
-                "SELECT id FROM sc_scorecards WHERE page_id = ? AND is_active = 1 AND is_deleted = 0 ORDER BY id LIMIT 1",
+                "SELECT id FROM sc_scorecards WHERE page_id = ? AND is_active = true AND is_deleted = false ORDER BY id LIMIT 1",
                 pageId);
         if (sc.isEmpty()) {
             result.put("error", "No scorecard found for page " + pageId);
@@ -234,7 +234,7 @@ public class ScorecardCrudService {
                 "SELECT k.id, k.code FROM sc_kpis k "
                         + "JOIN sc_objectives o ON k.objective_id = o.id "
                         + "JOIN sc_perspectives p ON o.perspective_id = p.id "
-                        + "WHERE p.scorecard_id = ? AND k.is_deleted = 0",
+                        + "WHERE p.scorecard_id = ? AND k.is_deleted = false",
                 scorecardId);
         Map<String, Long> codeToId = new HashMap<>();
         for (Map<String, Object> kr : kpiRows) {
@@ -255,10 +255,10 @@ public class ScorecardCrudService {
             }
             jdbc.update(
                     "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value, target_value) "
-                            + "VALUES (?,?,?,?,?) "
-                            + "ON DUPLICATE KEY UPDATE "
-                            + "actual_value = COALESCE(VALUES(actual_value), actual_value), "
-                            + "target_value = COALESCE(VALUES(target_value), target_value), "
+                            + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
+                            + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET "
+                            + "actual_value = COALESCE(EXCLUDED.actual_value, sc_kpi_history.actual_value), "
+                            + "target_value = COALESCE(EXCLUDED.target_value, sc_kpi_history.target_value), "
                             + "calculated_at = NOW()",
                     kpiId, periodStart, periodEnd, actual, target);
             updated++;
@@ -322,6 +322,12 @@ public class ScorecardCrudService {
             }
             return ps;
         }, kh);
+        
+        Map<String, Object> keys = kh.getKeys();
+        if (keys != null && keys.containsKey("id")) {
+            return ((Number) keys.get("id")).longValue();
+        }
+        
         Number key = kh.getKey();
         return key == null ? -1L : key.longValue();
     }

@@ -53,7 +53,7 @@ public class ScorecardCalculationService {
 
         List<Map<String, Object>> scRows = jdbc.queryForList(
                 "SELECT id, page_id, name, classification_type FROM sc_scorecards "
-                        + "WHERE page_id = ? AND is_active = 1 AND is_deleted = 0 ORDER BY id LIMIT 1",
+                        + "WHERE page_id = ? AND is_active = true AND is_deleted = false ORDER BY id LIMIT 1",
                 pageId);
         if (scRows.isEmpty()) {
             return emptyResponse(pageId);
@@ -66,32 +66,32 @@ public class ScorecardCalculationService {
         // ---- bulk-load the whole tree ----
         List<Map<String, Object>> perspectives = jdbc.queryForList(
                 "SELECT id, name, code, weight, aggregation_method, classification_type "
-                        + "FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1 ORDER BY display_order, id",
+                        + "FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true ORDER BY display_order, id",
                 scorecardId);
         List<Long> perspectiveIds = ids(perspectives);
 
         Map<Long, List<Map<String, Object>>> objByPersp = groupBy(
                 queryIn("SELECT id, name, code, weight, aggregation_method, classification_type, knockout_enabled, "
                         + "knockout_threshold, pass_rate_threshold, perspective_id FROM sc_objectives "
-                        + "WHERE is_active = 1 AND perspective_id IN (%s) ORDER BY display_order, id", perspectiveIds),
+                        + "WHERE is_active = true AND perspective_id IN (%s) ORDER BY display_order, id", perspectiveIds),
                 "perspective_id");
         List<Long> objectiveIds = objByPersp.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> kpiByObj = groupBy(
                 queryIn("SELECT id, name, code, polarity, target_value, min_target, max_target, weight, data_type, "
                         + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id "
-                        + "FROM sc_kpis WHERE is_deleted = 0 AND objective_id IN (%s) ORDER BY display_order, id", objectiveIds),
+                        + "FROM sc_kpis WHERE is_deleted = false AND objective_id IN (%s) ORDER BY display_order, id", objectiveIds),
                 "objective_id");
         List<Long> kpiIds = kpiByObj.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> subByKpi = groupBy(
                 queryIn("SELECT id, name, code, target_value, polarity, weight, data_type, achievement_cap, kpi_id "
-                        + "FROM sc_sub_kpis WHERE is_deleted = 0 AND kpi_id IN (%s) ORDER BY display_order, id", kpiIds),
+                        + "FROM sc_sub_kpis WHERE is_deleted = false AND kpi_id IN (%s) ORDER BY display_order, id", kpiIds),
                 "kpi_id");
 
         // all KPI history for these KPIs, ordered, grouped — current & previous picked in memory
         Map<Long, List<Map<String, Object>>> histByKpi = groupBy(
-                queryIn("SELECT kpi_id, period_start, period_end, actual_value, target_value, baseline_value "
+                queryIn("SELECT kpi_id, period_start, period_end, actual_value "
                         + "FROM sc_kpi_history WHERE kpi_id IN (%s) ORDER BY kpi_id, period_end", kpiIds),
                 "kpi_id");
 
@@ -293,11 +293,11 @@ public class ScorecardCalculationService {
             }
             if (current != null) {
                 actual = dec(current.get("actual_value"));
-                BigDecimal histTarget = dec(current.get("target_value"));
+                BigDecimal histTarget = null; // target_value not stored in history
                 if (histTarget != null) {
                     target = histTarget;
                 }
-                baseline = dec(current.get("baseline_value"));
+                baseline = null; // baseline_value not stored in history
             }
             if (actual == null) {
                 actual = applyNullHandling(nullHandling, target);
@@ -321,9 +321,8 @@ public class ScorecardCalculationService {
                 ? reported.get(reported.size() - 2)
                 : previousBefore(histByKpi.getOrDefault(kpiId, List.of()), start);
         if (prev != null) {
-            BigDecimal prevTarget = dec(prev.get("target_value"));
             previous = achievementCalculator.calculate(dec(prev.get("actual_value")),
-                    prevTarget != null ? prevTarget : target, polarity, minTarget, maxTarget, cap);
+                    target, polarity, minTarget, maxTarget, cap);
         }
         RAGStatusService.RAGResult rag = ragStatusService.determineStatus(achievement, classType);
         String trend = ragStatusService.calculateTrend(achievement, previous);
@@ -459,7 +458,7 @@ public class ScorecardCalculationService {
                         + "FROM sc_kpis k "
                         + "LEFT JOIN sc_objectives o ON k.objective_id = o.id "
                         + "LEFT JOIN sc_perspectives p ON o.perspective_id = p.id "
-                        + "WHERE k.id = ? AND k.is_deleted = 0", kpiId);
+                        + "WHERE k.id = ? AND k.is_deleted = false", kpiId);
         if (kpiRows.isEmpty()) {
             result.put("kpi", null);
             result.put("series", new ArrayList<>());
@@ -493,7 +492,7 @@ public class ScorecardCalculationService {
         LocalDate start = parseStart(dateRange);
         LocalDate end = parseEnd(dateRange);
         List<Map<String, Object>> hist = jdbc.queryForList(
-                "SELECT period_start, period_end, actual_value, target_value, baseline_value "
+                "SELECT period_start, period_end, actual_value "
                         + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end", kpiId);
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
         List<Map<String, Object>> series = new ArrayList<>();
@@ -504,10 +503,7 @@ public class ScorecardCalculationService {
                 continue;
             }
             BigDecimal actual = dec(h.get("actual_value"));
-            BigDecimal target = dec(h.get("target_value"));
-            if (target == null) {
-                target = kpiTarget;
-            }
+            BigDecimal target = kpiTarget; // target stored on kpi, not in history
             BigDecimal gap = (actual != null && target != null) ? actual.subtract(target) : null;
             if (actual != null) {
                 runningActual = runningActual.add(actual);
@@ -518,7 +514,7 @@ public class ScorecardCalculationService {
             point.put("target", target);
             point.put("gap", gap);
             point.put("ytd", runningActual);
-            point.put("baseline", dec(h.get("baseline_value")));
+            point.put("baseline", null); // baseline_value not stored in sc_kpi_history
             point.put("currency", currency);
             point.put("measureName", str(k.get("name")));
             series.add(point);

@@ -15,7 +15,7 @@ const PAGE_TYPE_GROUPS = {
     ['SWOT', 'PESTEL', 'Strategy Map', 'Strategy Formulation',
       'Project Formulation', 'Audit Management', 'AuditManagement'].includes(p.pageType),
   Measure: (p) =>
-    p.groupType === 'Measure' || p.pageType === 'Standard_View',
+    p.groupType === 'Measure' || ['Standard_View', 'Scorecardview'].includes(p.pageType),
   Execute: (p) =>
     p.groupType === 'Execute' ||
     ['Initiatives & Projects', 'Task', 'Budget', 'Approval Page'].includes(p.pageType),
@@ -95,7 +95,7 @@ export default function MainNavigation() {
                     {t(NAV_LABEL_KEYS[key]) || label}
                   </button>
                   {isOpen && modulePages.length > 0 && (
-                    <ul className="dropdown-menu border-0 shadow-sm submenu show">
+                    <ul className="dropdown-menu border-0 shadow-sm submenu show" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                       {modulePages.map((page) => (
                         <li key={page.id}>
                           <button

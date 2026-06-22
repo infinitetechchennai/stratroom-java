@@ -103,13 +103,22 @@ async function request(url, options = {}) {
  */
 export const getScorecardDetails = async (pageId) => {
   const dateRange = getDateRange();
-  // V2 engine: computes achievement %, RAG and roll-ups server-side over the
-  // sc_ schema. The response already carries { cardDetailsDTO: { scoreCardDTOS } },
-  // which cardDetailsToTabs() consumes directly.
-  const json = await request(
-    `/api/scorecardV2/${pageId}?dateRange=${encodeURIComponent(dateRange)}`
-  );
-  return json;
+  
+  try {
+    const v2Json = await request(
+      `/api/scorecardV2/${pageId}?dateRange=${encodeURIComponent(dateRange)}`
+    );
+    
+    // Check if V2 returned actual perspective data
+    if (v2Json?.cardDetailsDTO?.scoreCardDTOS?.length > 0) {
+      return v2Json;
+    }
+  } catch (error) {
+    console.warn("V2 endpoint failed, falling back to legacy schema", error);
+  }
+
+  // Fallback to legacy schema for scorecards not yet migrated to V2
+  return request(`/api/scoreCardDetailsByPage/${pageId}`);
 };
 
 // ============================================================

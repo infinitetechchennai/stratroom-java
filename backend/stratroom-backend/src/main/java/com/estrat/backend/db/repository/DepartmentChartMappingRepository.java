@@ -97,5 +97,7 @@ extends JpaRepository<DepartmentChartMapping, Long> {
 
     @Query(value="SELECT c.* FROM orgstructure.department_chart_details c WHERE  c.dept_name =:dept_name and c.active=:active and ( c.deptId =:deptId OR c.deptParentId =:deptId ) ", nativeQuery=true)
     public List<DepartmentChartMapping> getByDeptName(@Param(value="dept_name") String var1, @Param(value="deptId") Long var2, @Param(value="active") int var3);
-}
 
+    @Query(value="SELECT c.* FROM orgstructure.department_chart_details c WHERE c.deptUniqueId =:deptUniqueId", nativeQuery=true)
+    public DepartmentChartMapping findByDeptUniqueId(@Param(value="deptUniqueId") String deptUniqueId);
+}

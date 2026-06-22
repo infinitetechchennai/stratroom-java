@@ -109,7 +109,7 @@ export const SubSubKpiEditModal = () => {
                                             <label htmlFor="esskpiPerformance" className="form-label">Performance</label>
                                             <div className="input-group">
                                                 <input type="text" className="form-control" id="esskpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup">
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup" onClick={() => { window._kpiCalcCallerModalId = 'subsubkpi-edit-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPIPERFORMANCE'); }}>
                                                     KPI Calculator
                                                 </button>
                                             </div>
@@ -350,7 +350,7 @@ export const SubSubKpiViewModal = () => {
                                             <label htmlFor="vsskpiPerformance" className="form-label">Performance</label>
                                             <div className="input-group">
                                                 <input type="text" className="form-control" id="vsskpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup">
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup" onClick={() => { window._kpiCalcCallerModalId = 'subsubkpi-view-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPIPERFORMANCE'); }}>
                                                     KPI Calculator
                                                 </button>
                                             </div>

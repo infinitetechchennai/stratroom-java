@@ -78,6 +78,7 @@ public class ScoreCard {
     @Where(clause="active=0")
     private List<Objectives> objectiveList;
     @Column(name="include_reportee")
+    @jakarta.persistence.Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     private boolean includeReportee;
     @Column(name="custom_repotees")
     private String customReportees;

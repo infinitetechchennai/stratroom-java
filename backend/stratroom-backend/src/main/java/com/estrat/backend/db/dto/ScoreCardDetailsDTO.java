@@ -43,7 +43,7 @@ public class ScoreCardDetailsDTO {
         this.id = scoreCardDetails.getId();
         this.active = scoreCardDetails.getActive();
         this.owner = scoreCardDetails.getOwner();
-        this.pageId = scoreCardDetails.getPageId().getId();
+        this.pageId = scoreCardDetails.getPageId() != null ? scoreCardDetails.getPageId().getId() : null;
         this.createdBy = scoreCardDetails.getCreatedBy();
         this.updatedBy = scoreCardDetails.getUpdatedBy();
         this.createdTime = scoreCardDetails.getCreatedTime();
@@ -52,7 +52,7 @@ public class ScoreCardDetailsDTO {
         if (scoreCardDetails.getDepartmentId() != null) {
             this.departmentId = scoreCardDetails.getDepartmentId();
         }
-        if (scoreCardDetails.getScorecardName() == null) {
+        if (scoreCardDetails.getScorecardName() == null && scoreCardDetails.getPageId() != null) {
             this.scorecardName = scoreCardDetails.getPageId().getPageName();
         }
         this.startDate = scoreCardDetails.getStartDate();

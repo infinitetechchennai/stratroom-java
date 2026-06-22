@@ -1,5 +1,23 @@
 import React from 'react';
 
+const goBackToCallerModal = () => {
+  const calcModal = document.getElementById('kpiActual-calculator-modal');
+  const callerModalId = window._kpiCalcCallerModalId || 'kpi-view-modal';
+  const callerModal = document.getElementById(callerModalId);
+  if (!calcModal || !callerModal || !window.bootstrap) return;
+
+  const bsCalc = window.bootstrap.Modal.getInstance(calcModal);
+  if (bsCalc) {
+    // When the calculator finishes hiding, reopen the caller modal
+    calcModal.addEventListener('hidden.bs.modal', function reopenParent() {
+      calcModal.removeEventListener('hidden.bs.modal', reopenParent);
+      const bsCaller = window.bootstrap.Modal.getOrCreateInstance(callerModal);
+      bsCaller.show();
+    });
+    bsCalc.hide();
+  }
+};
+
 const KpiFormulaModal = () => {
   return (
     <div
@@ -24,8 +42,8 @@ const KpiFormulaModal = () => {
               type="button"
               id="closePopupId"
               className="btn-close"
-              data-bs-dismiss="modal"
               aria-label="Close"
+              onClick={goBackToCallerModal}
             ></button>
           </div>
           <div className="modal-body">
@@ -45,43 +63,34 @@ const KpiFormulaModal = () => {
                 </option>
               </select>
             </div>
-            <div className="card border-0">
-              <div className="card-header bg-transparent border-0">
-                <ul className="nav nav-underline gap-3" role="tablist">
-                  <li className="nav-item" role="Formula Builder">
-                    <button
-                      className="nav-link text-uppercase active"
-                      id="kpiActualFormulaBuilderTab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#kpiActualFormulaBuilderTab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="kpiActualFormulaBuilderTab-pane"
-                      href="#formula_builder"
-                      aria-selected="true"
-                    >
-                      Formula Builder
-                    </button>
-                  </li>
-                  <li className="nav-item" role="Summary Calculation">
-                    <button
-                      className="nav-link text-uppercase"
-                      id="kpiActualSummaryCalculationTab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#kpiActualSummaryCalculationTab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="kpiActualSummaryCalculationTab-pane"
-                      aria-selected="false"
-                      href="#summary_calculation"
-                    >
-                      Summary Calculation
-                    </button>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="card-body">
+            <div className="card">
+              <ul className="nav nav-tabs" role="tablist">
+                <li className="nav-item m-l-10" role="Formula Builder">
+                  <a
+                    className="nav-link active"
+                    data-bs-toggle="tab"
+                    href="#kpiActualFormulaBuilderTab-pane"
+                    role="tab"
+                    aria-controls="kpiActualFormulaBuilderTab-pane"
+                    aria-selected="true"
+                  >
+                    Formula Builder
+                  </a>
+                </li>
+                <li className="nav-item m-l-10" role="Summary Calculation">
+                  <a
+                    className="nav-link"
+                    data-bs-toggle="tab"
+                    href="#kpiActualSummaryCalculationTab-pane"
+                    role="tab"
+                    aria-controls="kpiActualSummaryCalculationTab-pane"
+                    aria-selected="false"
+                  >
+                    Summary Calculation
+                  </a>
+                </li>
+              </ul>
+              <div className="card-body pt-3">
                 <div className="tab-content">
                   <div
                     className="tab-pane fade show active"

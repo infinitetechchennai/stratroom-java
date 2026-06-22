@@ -31,6 +31,26 @@ const COMPONENTS = {
     textareaId: 'customYtdformula',
     lists: { main: 'ytdMeasureNames', sub: 'ytdsubMeasureNames', init: 'ytdinitiativeNames' },
   },
+  SCORECARDCONFIG: {
+    modalId: 'kpi-calculator-modal',
+    textareaId: 'formulaScoreCardPerspective',
+    lists: { main: 'scorecardMeasureNames' },
+  },
+  PERSPECTIVE: {
+    modalId: 'perspectiveCustomThreshold',
+    textareaId: 'perspectiveCustomformula',
+    lists: { main: 'perspectiveMeasureNames' },
+  },
+  OBJECTIVE: {
+    modalId: 'objectiveCustomThreshold',
+    textareaId: 'objectiveCustomformula',
+    lists: { main: 'objectiveMeasureNames' },
+  },
+  THRESSHOLD: {
+    modalId: 'kpiCustomThreshold',
+    textareaId: 'kpiCustomformula',
+    lists: { main: 'thressholdMeasureNames' },
+  },
 };
 
 const MODAL_TO_COMPONENT = Object.fromEntries(
@@ -38,13 +58,13 @@ const MODAL_TO_COMPONENT = Object.fromEntries(
 );
 
 const FUNCTION_DESC = {
-  if: "Returns second argument if first argument is true; Returns optional third argument if first argument is false; IF([KPI1, KPI2], 'trueCalc', 'falseCalc')",
-  avg: 'Returns the average of the given measures.',
-  agg: 'Returns the aggregated value of the given measures.',
-  count: 'Returns the count of the given measures.',
-  sum: 'Returns the sum of the given measures.',
-  min: 'Returns the minimum of the given measures.',
-  max: 'Returns the maximum of the given measures.',
+  if: "Returns second argument if first argument is true; Returns optional third argument if first argument is false; IF([KPI1, KPI2], 'trueCalc', 'falseCalc') IF(ACTUAL=0,0,ACTUAL/TARGET), IF(sum(ACTUAL)=0,0,sum(ACTUAL)/sum(TARGET)) , IF(sum[RG|OG]=0,0,sum[RG|OG]/sum[RG|OG])",
+  avg: "Returns the sum of the given expressions avg(ACTUAL) avg[RG] avg(avg[RG],avg[OG])",
+  agg: "Returns the sum of the given expressions agg(ACTUAL) agg(sum[RG],sum[OG])",
+  count: "Returns the count of the given expressions count[ACTUAL]+count[RG] = value",
+  sum: "Returns the sum of the given expressions SUM(ACTUAL) SUM(agg[RG],agg[OG])",
+  min: "Returns the smallest of the given expressions MIN(ACTUAL, TARGET) MIN(agg[RG],agg[OG])",
+  max: "Returns the biggest of the given expressions MAX(ACTUAL, TARGET) MAX(agg[RG],agg[OG])",
 };
 
 // The KPI input that launched the currently-open calculator. On "Add" the
@@ -112,19 +132,37 @@ function toast(message, ok) {
 async function loadMeasures(component) {
   const cfg = COMPONENTS[component];
   if (!cfg) return;
-  try {
-    if (!nodeKeyCache) nodeKeyCache = await retrieveNodeKeyList();
-  } catch (err) {
-    console.error('retrieveNodeKeyList failed:', err);
-    return;
-  }
-  const list = Array.isArray(nodeKeyCache) ? nodeKeyCache : [];
 
   // clear this component's lists
   Object.values(cfg.lists).forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
   });
+
+  if (component === 'KPIPERFORMANCE') {
+    const listId = cfg.lists.main;
+    const ul = document.getElementById(listId);
+    if (ul) {
+      ['Actual', 'Target', 'Weight', 'Contribution'].forEach(name => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.textContent = name;
+        li.style.cursor = 'pointer';
+        li.addEventListener('click', () => insertMeasure(component, name));
+        ul.appendChild(li);
+      });
+    }
+    return;
+  }
+
+  try {
+    if (!nodeKeyCache) nodeKeyCache = await retrieveNodeKeyList();
+  } catch (err) {
+    console.error('retrieveNodeKeyList failed:', err);
+    return;
+  }
+  console.log("loadMeasures nodeKeyCache:", nodeKeyCache);
+  const list = Array.isArray(nodeKeyCache) ? nodeKeyCache : [];
 
   list.forEach((nk) => {
     const name = nk?.measureName;
@@ -216,6 +254,25 @@ export function initScorecardCalculator() {
     insertToken('performanceformula', input);
     if (desc) setDescription('KPIPERFORMANCE', input, desc);
   };
+  window.updateScorecardPerspective = (input, desc) => {
+    insertToken('formulaScoreCardPerspective', input);
+    if (desc) setDescription('SCORECARDCONFIG', input, desc);
+  };
+  window.updateThresshold = (input, desc) => {
+    insertToken('kpiCustomformula', input);
+    if (desc) setDescription('THRESSHOLD', input, desc);
+  };
+  window.updateCustomObjective = (input, desc) => {
+    insertToken('objectiveCustomformula', input);
+    if (desc) setDescription('OBJECTIVE', input, desc);
+  };
+  window.updateCustomPerspective = (input, desc) => {
+    insertToken('perspectiveCustomformula', input);
+    if (desc) setDescription('PERSPECTIVE', input, desc);
+  };
+  window.showFunctionDescription = (component, name, descKey) => {
+    setDescription(component, name, descKey);
+  };
   window.fieldmeasurefilter = (listId, inputId) => {
     const input = document.getElementById(inputId);
     const ul = document.getElementById(listId);
@@ -237,6 +294,11 @@ export function initScorecardCalculator() {
     delete window.updateFormula;
     delete window.updateYTDFormula;
     delete window.updatePerformance;
+    delete window.updateScorecardPerspective;
+    delete window.updateThresshold;
+    delete window.updateCustomObjective;
+    delete window.updateCustomPerspective;
+    delete window.showFunctionDescription;
     delete window.fieldmeasurefilter;
     delete window.handleFormulaValidate;
     delete window.handleFormulaAdd;

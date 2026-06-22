@@ -216,6 +216,7 @@ const KpiModal = () => {
                             data-bs-toggle="modal"
                             data-bs-target=".kpi_performanceformula_popup"
                             onClick={() => {
+                              window._kpiCalcCallerModalId = 'kpi-add-modal';
                               if (window.handleFormulaEvent)
                                 window.handleFormulaEvent('KPIPERFORMANCE');
                             }}
@@ -249,6 +250,7 @@ const KpiModal = () => {
                             data-bs-toggle="modal"
                             data-bs-target=".kpiYtdFormulaPoPUp"
                             onClick={() => {
+                              window._kpiCalcCallerModalId = 'kpi-add-modal';
                               if (window.handleYTDFormulaEvent) window.handleYTDFormulaEvent();
                             }}
                           >

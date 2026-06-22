@@ -216,6 +216,7 @@ const SubKpiModal = () => {
                               data-bs-toggle="modal"
                               data-bs-target=".kpi_performanceformula_popup"
                               onClick={() => {
+                                window._kpiCalcCallerModalId = 'subkpi-add-modal';
                                 if (window.handleFormulaEvent) window.handleFormulaEvent('KPIPERFORMANCE');
                               }}
                               data-translate="page.scorecard.scorecardItems.kpiCalculator"
@@ -690,6 +691,7 @@ const SubKpiModal = () => {
                               data-bs-toggle="modal"
                               data-bs-target=".kpi_formula_popup"
                               onClick={() => {
+                                window._kpiCalcCallerModalId = 'subkpi-add-modal';
                                 if (window.handleFormulaEvent) window.handleFormulaEvent('KPI');
                               }}
                               data-translate="page.scorecard.scorecardItems.kpiCalculator"

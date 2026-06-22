@@ -18,6 +18,7 @@ import KpiPerformanceFormulaModal from './modals/KpiPerformanceFormulaModal';
 import KpiYtdFormulaModal from './modals/KpiYtdFormulaModal';
 import { DeleteModal, ImportModal, CreateTemplateModal, EditModal } from '../../components/scorecard/modals/UtilityModals';
 import { KpiStoryCardModal } from '../../components/scorecard/modals/KpiStoryCardModal';
+import { ScorecardSettingsModal } from '../../components/scorecard/modals/ScorecardSettingsModal';
 import { initScorecardCalculator } from '../../utils/scorecardCalculator';
 import '../../assets/scorecard/css/bootstrap.min.css';
 import '../../assets/scorecard/css/jquery-ui.min.css';
@@ -136,11 +137,13 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         const handlers = {
             // ── Perspective Add ────────────────────────────────────────────
             'prespective-add-modal': () => {
+                const startStr = val('apStartDate');
+                const endStr = val('apEndDate');
                 addPerspective({
                     name: val('apName'),
                     description: val('apDescription'),
-                    startDate: val('apStartEndDate').split(' - ')[0] || '',
-                    endDate: val('apStartEndDate').split(' - ')[1] || '',
+                    startDate: startStr ? `${startStr.split('-')[1]}/${startStr.split('-')[2]}/${startStr.split('-')[0]}` : '',
+                    endDate: endStr ? `${endStr.split('-')[1]}/${endStr.split('-')[2]}/${endStr.split('-')[0]}` : '',
                     weight: val('apWeight'),
                     subWeight: val('apSubWeight'),
                     status: val('apStatus'),
@@ -151,12 +154,14 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             },
             // ── Perspective Edit ────────────────────────────────────────────
             'prespective-edit-modal': () => {
+                const startStr = val('epStartDate');
+                const endStr = val('epEndDate');
                 editPerspective({
-                    id: val('epId') || window._editPerspectiveId,
+                    id: val('epid') || window._editPerspectiveId,
                     name: val('epName'),
                     description: val('epDescription'),
-                    startDate: val('epStartEndDate').split(' - ')[0] || '',
-                    endDate: val('epStartEndDate').split(' - ')[1] || '',
+                    startDate: startStr ? `${startStr.split('-')[1]}/${startStr.split('-')[2]}/${startStr.split('-')[0]}` : '',
+                    endDate: endStr ? `${endStr.split('-')[1]}/${endStr.split('-')[2]}/${endStr.split('-')[0]}` : '',
                     weight: val('epWeight'),
                     subWeight: val('epSubWeight'),
                     status: val('epStatus'),
@@ -166,32 +171,36 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             },
             // ── Objective Add ────────────────────────────────────────────────
             'objective-add-modal': () => {
+                const startStr = val('abStartDate');
+                const endStr = val('abEndDate');
                 addObjective({
-                    name: val('aoName'),
-                    description: val('aoDescription'),
-                    startDate: val('aoStartEndDate').split(' - ')[0] || '',
-                    endDate: val('aoStartEndDate').split(' - ')[1] || '',
-                    weight: val('aoWeight'),
-                    subWeight: val('aoSubWeight'),
-                    status: val('aoStatus'),
-                    ownerId: val('aoOwner'),
+                    name: val('abName'),
+                    description: val('abDescription'),
+                    startDate: startStr ? `${startStr.split('-')[1]}/${startStr.split('-')[2]}/${startStr.split('-')[0]}` : '',
+                    endDate: endStr ? `${endStr.split('-')[1]}/${endStr.split('-')[2]}/${endStr.split('-')[0]}` : '',
+                    weight: val('abWeight'),
+                    subWeight: val('abSubWeight'),
+                    status: val('abStatus'),
+                    ownerId: val('abOwner'),
                     createdBy: getEmpId(),
-                    perspectiveId: val('aoPerspectiveId') || window._editPerspectiveId,
+                    perspectiveId: val('abPerspectiveId') || window._editPerspectiveId,
                 });
             },
             // ── Objective Edit ────────────────────────────────────────────────
             'objective-edit-modal': () => {
+                const startStr = val('eodStartDate');
+                const endStr = val('eodEndDate');
                 editObjective({
-                    id: val('eoId') || window._editObjectiveId,
-                    name: val('eoName'),
-                    description: val('eoDescription'),
-                    startDate: val('eoStartEndDate').split(' - ')[0] || '',
-                    endDate: val('eoStartEndDate').split(' - ')[1] || '',
-                    weight: val('eoWeight'),
-                    subWeight: val('eoSubWeight'),
-                    status: val('eoStatus'),
-                    ownerId: val('eoOwner'),
-                    perspectiveId: val('eoPerspectiveId') || window._editPerspectiveId,
+                    id: val('eodId') || window._editObjectiveId,
+                    name: val('eodName'),
+                    description: val('eodDescription'),
+                    startDate: startStr ? `${startStr.split('-')[1]}/${startStr.split('-')[2]}/${startStr.split('-')[0]}` : '',
+                    endDate: endStr ? `${endStr.split('-')[1]}/${endStr.split('-')[2]}/${endStr.split('-')[0]}` : '',
+                    weight: val('eodWeight'),
+                    subWeight: val('eodSubWeight'),
+                    status: val('eodStatus'),
+                    ownerId: val('eodOwner'),
+                    perspectiveId: val('eodPerspectiveId') || window._editPerspectiveId,
                 });
             },
             // ── KPI Add ──────────────────────────────────────────────────────
@@ -332,6 +341,14 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     set('epSubWeight', data.scoreCardValue?.subWeight);
                     set('epStatus', data.scoreCardValue?.status);
                     set('epOwner', data.scoreCardValue?.ownerId);
+                    if (data.scoreCardValue?.startDate) {
+                        const d = new Date(data.scoreCardValue.startDate);
+                        if (!isNaN(d.getTime())) set('epStartDate', d.toISOString().split('T')[0]);
+                    }
+                    if (data.scoreCardValue?.endDate) {
+                        const d = new Date(data.scoreCardValue.endDate);
+                        if (!isNaN(d.getTime())) set('epEndDate', d.toISOString().split('T')[0]);
+                    }
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('prespective-edit-modal');
@@ -342,12 +359,20 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 window._editObjectiveId = id;
                 if (data) {
                     const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v || ''; };
-                    set('eoName', data.objectivesValue?.name);
-                    set('eoDescription', data.objectivesValue?.description);
-                    set('eoWeight', data.objectivesValue?.weight);
-                    set('eoSubWeight', data.objectivesValue?.subWeight);
-                    set('eoStatus', data.objectivesValue?.status);
-                    set('eoOwner', data.objectivesValue?.ownerId);
+                    set('eodName', data.objectivesValue?.name);
+                    set('eodDescription', data.objectivesValue?.description);
+                    set('eodWeight', data.objectivesValue?.weight);
+                    set('eodSubWeight', data.objectivesValue?.subWeight);
+                    set('eodStatus', data.objectivesValue?.status);
+                    set('eodOwner', data.objectivesValue?.ownerId);
+                    if (data.objectivesValue?.startDate) {
+                        const d = new Date(data.objectivesValue.startDate);
+                        if (!isNaN(d.getTime())) set('eodStartDate', d.toISOString().split('T')[0]);
+                    }
+                    if (data.objectivesValue?.endDate) {
+                        const d = new Date(data.objectivesValue.endDate);
+                        if (!isNaN(d.getTime())) set('eodEndDate', d.toISOString().split('T')[0]);
+                    }
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('objective-edit-modal');
@@ -531,6 +556,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             <KpiStoryCardModal />
             <CreateTemplateModal />
             <EditModal />
+            <ScorecardSettingsModal scorecardData={scorecardData} />
         </React.Fragment>
     );
 }

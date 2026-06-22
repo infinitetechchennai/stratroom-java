@@ -216,6 +216,7 @@ const SubKpiModal = () => {
                               data-bs-toggle="modal"
                               data-bs-target=".kpi_performanceformula_popup"
                               onClick={() => {
+                                window._kpiCalcCallerModalId = 'subkpi-add-modal';
                                 if (window.handleFormulaEvent) window.handleFormulaEvent('KPIPERFORMANCE');
                               }}
                               data-translate="page.scorecard.scorecardItems.kpiCalculator"
@@ -689,9 +690,9 @@ const SubKpiModal = () => {
                               id="button-addon2"
                               data-bs-toggle="modal"
                               data-bs-target=".kpi_formula_popup"
-                              onClick={() => {
+                              onClick={() => { window._kpiCalcCallerModalId = 'subkpi-add-modal'; 
                                 if (window.handleFormulaEvent) window.handleFormulaEvent('KPI');
-                              }}
+                               }}
                               data-translate="page.scorecard.scorecardItems.kpiCalculator"
                             >
                               KPI Calculator
@@ -763,9 +764,9 @@ const SubKpiModal = () => {
                               id="button-addon2"
                               data-bs-toggle="modal"
                               data-bs-target=".kpiYtdFormulaPoPUp"
-                              onClick={() => {
+                              onClick={() => { window._kpiCalcCallerModalId = 'subkpi-add-modal'; 
                                 if (window.handleYTDFormulaEvent) window.handleYTDFormulaEvent();
-                              }}
+                               }}
                               data-translate="page.scorecard.scorecardItems.kpiCalculator"
                             >
                               YTD Calculator
