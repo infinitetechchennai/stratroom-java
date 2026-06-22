@@ -91,7 +91,7 @@ public class ScorecardCalculationService {
 
         // all KPI history for these KPIs, ordered, grouped — current & previous picked in memory
         Map<Long, List<Map<String, Object>>> histByKpi = groupBy(
-                queryIn("SELECT kpi_id, period_start, period_end, actual_value, target_value, baseline_value "
+                queryIn("SELECT kpi_id, period_start, period_end, actual_value "
                         + "FROM sc_kpi_history WHERE kpi_id IN (%s) ORDER BY kpi_id, period_end", kpiIds),
                 "kpi_id");
 
@@ -525,7 +525,7 @@ public class ScorecardCalculationService {
         LocalDate start = parseStart(dateRange);
         LocalDate end = parseEnd(dateRange);
         List<Map<String, Object>> hist = jdbc.queryForList(
-                "SELECT period_start, period_end, actual_value, target_value, baseline_value "
+                "SELECT period_start, period_end, actual_value "
                         + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end", kpiId);
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
         List<Map<String, Object>> series = new ArrayList<>();
