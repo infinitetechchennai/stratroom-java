@@ -358,10 +358,11 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             openEditObjective: async (id) => {
                 window._editObjectiveId = id;
                 const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
-                ['eodName', 'eodDescription', 'eodWeight'].forEach(elId => set(elId, ''));
+                ['eodId', 'eodName', 'eodDescription', 'eodWeight'].forEach(elId => set(elId, ''));
                 try {
                     const o = await getObjectiveById(id);
                     if (o && o.id) {
+                        set('eodId', o.id);
                         set('eodName', o.name);
                         set('eodDescription', o.description);
                         set('eodWeight', o.weight);

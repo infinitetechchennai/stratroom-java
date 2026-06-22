@@ -611,10 +611,19 @@ public class ScorecardCalculationService {
             }
         } else if ("OBJECTIVE".equalsIgnoreCase(nodeType)) {
             if (nodeId != null && !nodeId.trim().isEmpty()) {
+                // Objective calculator: that objective's KPIs (measure) + those KPIs' sub-KPIs (sub measure).
                 List<Map<String, Object>> kpis = jdbc.queryForList(
                         "SELECT id, name FROM sc_kpis WHERE objective_id = ? AND is_deleted = false", Long.parseLong(nodeId));
                 for (Map<String, Object> k : kpis) {
                     result.add(Map.of("measureName", str(k.get("name")), "measureType", "0", "elementType", "KPI"));
+                }
+                List<Long> objKpiIds = ids(kpis);
+                if (!objKpiIds.isEmpty()) {
+                    List<Map<String, Object>> subKpis = queryIn(
+                            "SELECT id, name FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = false", objKpiIds);
+                    for (Map<String, Object> sk : subKpis) {
+                        result.add(Map.of("measureName", str(sk.get("name")), "measureType", "1", "elementType", "SUBKPI"));
+                    }
                 }
             } else {
                 List<Map<String, Object>> perspectives = jdbc.queryForList(

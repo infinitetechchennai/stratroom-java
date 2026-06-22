@@ -129,6 +129,19 @@ function toast(message, ok) {
   }
 }
 
+// Reads the hierarchy node id from a hidden field inside the modal that launched
+// the calculator (parentModalId). More reliable than the window globals because it
+// reflects the row currently being edited, even across rapid open/close cycles.
+function readParentNodeId(fieldIds) {
+  const parent = parentModalId && document.getElementById(parentModalId);
+  if (!parent) return '';
+  for (const fid of fieldIds) {
+    const el = parent.querySelector('#' + fid);
+    if (el && el.value) return el.value;
+  }
+  return '';
+}
+
 // ── Measure list population ───────────────────────────────────
 async function loadMeasures(component) {
   const cfg = COMPONENTS[component];
@@ -189,10 +202,12 @@ async function loadMeasures(component) {
       nodeId = pageId;
     } else if (component === 'PERSPECTIVE') {
       nodeType = 'PERSPECTIVE';
-      nodeId = window._editPerspectiveId || '';
+      // Prefer the id field inside the open parent modal (always reflects the row
+      // being edited); fall back to the global set by openEditPerspective.
+      nodeId = readParentNodeId(['epid', 'apid']) || window._editPerspectiveId || '';
     } else if (component === 'OBJECTIVE') {
       nodeType = 'OBJECTIVE';
-      nodeId = window._editObjectiveId || '';
+      nodeId = readParentNodeId(['eodId', 'eodid', 'aoId']) || window._editObjectiveId || '';
     } else if (activeInput) {
       // For KPI / YTD / THRESSHOLD: use activeInput to identify context
       if (['abPerformance', 'eodPerformance', 'vodPerformance', 'objectivePerformance'].includes(activeInput.id)) {
