@@ -271,7 +271,7 @@ public class ScorecardCrudService {
         String periodEnd = range[1].toString();
 
         List<Map<String, Object>> sc = jdbc.queryForList(
-                "SELECT id FROM sc_scorecards WHERE page_id = ? AND is_active = 1 AND is_deleted = 0 ORDER BY id LIMIT 1",
+                "SELECT id FROM sc_scorecards WHERE page_id = ? AND is_active = true AND is_deleted = false ORDER BY id LIMIT 1",
                 pageId);
         if (sc.isEmpty()) {
             result.put("error", "No scorecard found for page " + pageId);
@@ -285,7 +285,7 @@ public class ScorecardCrudService {
                 "SELECT k.id, k.code FROM sc_kpis k "
                         + "JOIN sc_objectives o ON k.objective_id = o.id "
                         + "JOIN sc_perspectives p ON o.perspective_id = p.id "
-                        + "WHERE p.scorecard_id = ? AND k.is_deleted = 0",
+                        + "WHERE p.scorecard_id = ? AND k.is_deleted = false",
                 scorecardId);
         Map<String, Long> codeToId = new HashMap<>();
         for (Map<String, Object> kr : kpiRows) {

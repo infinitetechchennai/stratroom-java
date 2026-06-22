@@ -53,7 +53,7 @@ public class ScorecardCalculationService {
 
         List<Map<String, Object>> scRows = jdbc.queryForList(
                 "SELECT id, page_id, name, classification_type, formula FROM sc_scorecards "
-                        + "WHERE page_id = ? AND is_active = 1 AND is_deleted = 0 ORDER BY id LIMIT 1",
+                        + "WHERE page_id = ? AND is_active = true AND is_deleted = false ORDER BY id LIMIT 1",
                 pageId);
         if (scRows.isEmpty()) {
             return emptyResponse(pageId);
@@ -66,27 +66,27 @@ public class ScorecardCalculationService {
         // ---- bulk-load the whole tree ----
         List<Map<String, Object>> perspectives = jdbc.queryForList(
                 "SELECT id, name, code, weight, aggregation_method, classification_type, formula "
-                        + "FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1 ORDER BY display_order, id",
+                        + "FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true ORDER BY display_order, id",
                 scorecardId);
         List<Long> perspectiveIds = ids(perspectives);
 
         Map<Long, List<Map<String, Object>>> objByPersp = groupBy(
                 queryIn("SELECT id, name, code, weight, aggregation_method, classification_type, knockout_enabled, "
                         + "knockout_threshold, pass_rate_threshold, formula, perspective_id FROM sc_objectives "
-                        + "WHERE is_active = 1 AND perspective_id IN (%s) ORDER BY display_order, id", perspectiveIds),
+                        + "WHERE is_active = true AND perspective_id IN (%s) ORDER BY display_order, id", perspectiveIds),
                 "perspective_id");
         List<Long> objectiveIds = objByPersp.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> kpiByObj = groupBy(
                 queryIn("SELECT id, name, code, polarity, target_value, min_target, max_target, weight, data_type, "
                         + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id, formula "
-                        + "FROM sc_kpis WHERE is_deleted = 0 AND objective_id IN (%s) ORDER BY display_order, id", objectiveIds),
+                        + "FROM sc_kpis WHERE is_deleted = false AND objective_id IN (%s) ORDER BY display_order, id", objectiveIds),
                 "objective_id");
         List<Long> kpiIds = kpiByObj.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> subByKpi = groupBy(
                 queryIn("SELECT id, name, code, target_value, polarity, weight, data_type, achievement_cap, kpi_id "
-                        + "FROM sc_sub_kpis WHERE is_deleted = 0 AND kpi_id IN (%s) ORDER BY display_order, id", kpiIds),
+                        + "FROM sc_sub_kpis WHERE is_deleted = false AND kpi_id IN (%s) ORDER BY display_order, id", kpiIds),
                 "kpi_id");
 
         // all KPI history for these KPIs, ordered, grouped — current & previous picked in memory
@@ -490,7 +490,7 @@ public class ScorecardCalculationService {
                         + "FROM sc_kpis k "
                         + "LEFT JOIN sc_objectives o ON k.objective_id = o.id "
                         + "LEFT JOIN sc_perspectives p ON o.perspective_id = p.id "
-                        + "WHERE k.id = ? AND k.is_deleted = 0", kpiId);
+                        + "WHERE k.id = ? AND k.is_deleted = false", kpiId);
         if (kpiRows.isEmpty()) {
             result.put("kpi", null);
             result.put("series", new ArrayList<>());
@@ -577,7 +577,7 @@ public class ScorecardCalculationService {
 
         List<Map<String, Object>> scRows = jdbc.queryForList(
                 "SELECT id, name FROM sc_scorecards "
-                        + "WHERE page_id = ? AND is_active = 1 AND is_deleted = 0 ORDER BY id LIMIT 1",
+                        + "WHERE page_id = ? AND is_active = true AND is_deleted = false ORDER BY id LIMIT 1",
                 pageId);
         if (scRows.isEmpty()) {
             return result;
@@ -586,23 +586,23 @@ public class ScorecardCalculationService {
 
         if ("SCORECARD".equalsIgnoreCase(nodeType)) {
             List<Map<String, Object>> perspectives = jdbc.queryForList(
-                    "SELECT id, name FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+                    "SELECT id, name FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
             for (Map<String, Object> p : perspectives) {
                 result.add(Map.of("measureName", str(p.get("name")), "measureType", "0", "elementType", "PERSPECTIVE"));
             }
         } else if ("PERSPECTIVE".equalsIgnoreCase(nodeType)) {
             if (nodeId != null && !nodeId.trim().isEmpty()) {
                 List<Map<String, Object>> objectives = jdbc.queryForList(
-                        "SELECT id, name FROM sc_objectives WHERE perspective_id = ? AND is_active = 1", Long.parseLong(nodeId));
+                        "SELECT id, name FROM sc_objectives WHERE perspective_id = ? AND is_active = true", Long.parseLong(nodeId));
                 for (Map<String, Object> o : objectives) {
                     result.add(Map.of("measureName", str(o.get("name")), "measureType", "0", "elementType", "OBJECTIVE"));
                 }
             } else {
                 List<Map<String, Object>> perspectives = jdbc.queryForList(
-                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
                 if (!perspectives.isEmpty()) {
                     List<Map<String, Object>> objectives = queryIn(
-                            "SELECT id, name FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = 1", ids(perspectives));
+                            "SELECT id, name FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true", ids(perspectives));
                     for (Map<String, Object> o : objectives) {
                         result.add(Map.of("measureName", str(o.get("name")), "measureType", "0", "elementType", "OBJECTIVE"));
                     }
@@ -611,19 +611,19 @@ public class ScorecardCalculationService {
         } else if ("OBJECTIVE".equalsIgnoreCase(nodeType)) {
             if (nodeId != null && !nodeId.trim().isEmpty()) {
                 List<Map<String, Object>> kpis = jdbc.queryForList(
-                        "SELECT id, name FROM sc_kpis WHERE objective_id = ? AND is_deleted = 0", Long.parseLong(nodeId));
+                        "SELECT id, name FROM sc_kpis WHERE objective_id = ? AND is_deleted = false", Long.parseLong(nodeId));
                 for (Map<String, Object> k : kpis) {
                     result.add(Map.of("measureName", str(k.get("name")), "measureType", "0", "elementType", "KPI"));
                 }
             } else {
                 List<Map<String, Object>> perspectives = jdbc.queryForList(
-                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
                 if (!perspectives.isEmpty()) {
                     List<Map<String, Object>> objectives = queryIn(
-                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = 1", ids(perspectives));
+                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true", ids(perspectives));
                     if (!objectives.isEmpty()) {
                         List<Map<String, Object>> kpis = queryIn(
-                                "SELECT id, name FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = 0", ids(objectives));
+                                "SELECT id, name FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = false", ids(objectives));
                         for (Map<String, Object> k : kpis) {
                             result.add(Map.of("measureName", str(k.get("name")), "measureType", "0", "elementType", "KPI"));
                         }
@@ -633,23 +633,23 @@ public class ScorecardCalculationService {
         } else if ("KPI".equalsIgnoreCase(nodeType)) {
             if (nodeId != null && !nodeId.trim().isEmpty()) {
                 List<Map<String, Object>> subKpis = jdbc.queryForList(
-                        "SELECT id, name FROM sc_sub_kpis WHERE kpi_id = ? AND is_deleted = 0", Long.parseLong(nodeId));
+                        "SELECT id, name FROM sc_sub_kpis WHERE kpi_id = ? AND is_deleted = false", Long.parseLong(nodeId));
                 for (Map<String, Object> sk : subKpis) {
                     result.add(Map.of("measureName", str(sk.get("name")), "measureType", "1", "elementType", "SUBKPI"));
                 }
             } else {
                 // For KPI, normally handled by full fallback, but if called explicitly, return all SubKPIs in scorecard
                 List<Map<String, Object>> perspectives = jdbc.queryForList(
-                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+                        "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
                 if (!perspectives.isEmpty()) {
                     List<Map<String, Object>> objectives = queryIn(
-                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = 1", ids(perspectives));
+                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true", ids(perspectives));
                     if (!objectives.isEmpty()) {
                         List<Map<String, Object>> kpis = queryIn(
-                                "SELECT id FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = 0", ids(objectives));
+                                "SELECT id FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = false", ids(objectives));
                         if (!kpis.isEmpty()) {
                             List<Map<String, Object>> subKpis = queryIn(
-                                    "SELECT id, name FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = 0", ids(kpis));
+                                    "SELECT id, name FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = false", ids(kpis));
                             for (Map<String, Object> sk : subKpis) {
                                 result.add(Map.of("measureName", str(sk.get("name")), "measureType", "1", "elementType", "SUBKPI"));
                             }
@@ -662,19 +662,19 @@ public class ScorecardCalculationService {
         } else {
             // Fallback: return everything (e.g. for legacy testing)
             List<Map<String, Object>> perspectives = jdbc.queryForList(
-                    "SELECT id, name FROM sc_perspectives WHERE scorecard_id = ? AND is_active = 1", scorecardId);
+                    "SELECT id, name FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
             List<Long> pIds = ids(perspectives);
 
             List<Map<String, Object>> objectives = queryIn(
-                    "SELECT id, name FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = 1", pIds);
+                    "SELECT id, name FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true", pIds);
             List<Long> oIds = ids(objectives);
 
             List<Map<String, Object>> kpis = queryIn(
-                    "SELECT id, name FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = 0", oIds);
+                    "SELECT id, name FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = false", oIds);
             List<Long> kIds = ids(kpis);
 
             List<Map<String, Object>> subKpis = queryIn(
-                    "SELECT id, name FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = 0", kIds);
+                    "SELECT id, name FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = false", kIds);
 
             for (Map<String, Object> p : perspectives) {
                 result.add(Map.of("measureName", str(p.get("name")), "measureType", "0", "elementType", "PERSPECTIVE"));
