@@ -13,7 +13,10 @@ import { ObjectiveAddModal, ObjectiveEditModal, ObjectiveViewModal } from '../..
 import { KpiAddModal, KpiEditModal, KpiViewModal } from '../../components/scorecard/modals/KpiModal';
 import { SubKpiAddModal, SubKpiEditModal, SubKpiViewModal } from '../../components/scorecard/modals/SubKpiModal';
 import { SubSubKpiEditModal, SubSubKpiViewModal } from '../../components/scorecard/modals/SubSubKpiModal';
-import { PerspectiveCalculatorModal, ObjectiveCalculatorModal } from '../../components/scorecard/modals/CalculatorModals';
+import PerspectiveCustomThresholdModal from './modals/PerspectiveCustomThresholdModal';
+import ObjectiveCustomThresholdModal from './modals/ObjectiveCustomThresholdModal';
+import KpiCustomThresholdModal from './modals/KpiCustomThresholdModal';
+import ScorecardPerformanceFormulaModal from './modals/ScorecardPerformanceFormulaModal';
 import KpiFormulaModal from './modals/KpiFormulaModal';
 import KpiPerformanceFormulaModal from './modals/KpiPerformanceFormulaModal';
 import KpiYtdFormulaModal from './modals/KpiYtdFormulaModal';
@@ -558,8 +561,10 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             <SubSubKpiEditModal />
             <SubSubKpiViewModal />
 
-            <PerspectiveCalculatorModal />
-            <ObjectiveCalculatorModal />
+            <PerspectiveCustomThresholdModal />
+            <ObjectiveCustomThresholdModal />
+            <KpiCustomThresholdModal />
+            <ScorecardPerformanceFormulaModal />
             <KpiFormulaModal />
             <KpiPerformanceFormulaModal />
             <KpiYtdFormulaModal />

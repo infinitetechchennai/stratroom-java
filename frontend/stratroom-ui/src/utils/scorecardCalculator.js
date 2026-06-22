@@ -20,7 +20,7 @@ let parentModalId = null;
 const COMPONENTS = {
   KPI: {
     modalId: 'kpiActual-calculator-modal',
-    textareaId: 'formula',
+    textareaId: 'kpiActualPerformance',
     lists: { main: 'measureNames', sub: 'kpisubmeasureNames', init: 'kpiinitiativeNames' },
   },
   KPIPERFORMANCE: {
@@ -30,7 +30,7 @@ const COMPONENTS = {
   },
   YTD: {
     modalId: 'ytd-calculator-modal',
-    textareaId: 'customYtdformula',
+    textareaId: 'ytdPerformance',
     lists: { main: 'ytdMeasureNames', sub: 'ytdsubMeasureNames', init: 'ytdinitiativeNames' },
   },
   SCORECARDCONFIG: {
@@ -39,18 +39,18 @@ const COMPONENTS = {
     lists: { main: 'scorecardMeasureNames' },
   },
   PERSPECTIVE: {
-    modalId: 'perspectiveCustomThreshold',
-    textareaId: 'perspectiveCustomformula',
+    modalId: 'prespective_custom_threshold_popup',
+    textareaId: 'formulaCustomPerspective',
     lists: { main: 'perspectiveMeasureNames' },
   },
   OBJECTIVE: {
-    modalId: 'objectiveCustomThreshold',
-    textareaId: 'objectiveCustomformula',
+    modalId: 'objective_custom_threshold_popup',
+    textareaId: 'formulaCustomObjective',
     lists: { main: 'objectiveMeasureNames' },
   },
   THRESSHOLD: {
-    modalId: 'kpiCustomThreshold',
-    textareaId: 'kpiCustomformula',
+    modalId: 'kpi_custom_threshold_popup',
+    textareaId: 'formulaCustomKPI',
     lists: {},
   },
 };

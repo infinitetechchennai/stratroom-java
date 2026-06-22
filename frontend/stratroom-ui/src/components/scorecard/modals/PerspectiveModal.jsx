@@ -65,7 +65,7 @@ export const PerspectiveAddModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#prespective-calculator-modal"
+                                                    data-bs-toggle="modal" data-bs-target="#prespective_custom_threshold_popup"
                                                     data-translate="page.scorecard.scorecardItems.calculator">
                                                     Calculator
                                                 </button>
@@ -188,7 +188,7 @@ export const PerspectiveEditModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#prespective-calculator-modal"
+                                                    data-bs-toggle="modal" data-bs-target="#prespective_custom_threshold_popup"
                                                     data-translate="page.scorecard.scorecardItems.calculator">
                                                     Calculator
                                                 </button>
@@ -335,7 +335,7 @@ export const PerspectiveViewModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#prespective-calculator-modal"
+                                                    data-bs-toggle="modal" data-bs-target="#prespective_custom_threshold_popup"
                                                     data-translate="page.scorecard.scorecardItems.calculator">
                                                     Calculator
                                                 </button>

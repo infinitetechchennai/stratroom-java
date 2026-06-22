@@ -1,23 +1,5 @@
 import React from 'react';
 
-const goBackToCallerModal = () => {
-  const calcModal = document.getElementById('kpiActual-calculator-modal');
-  const callerModalId = window._kpiCalcCallerModalId || 'kpi-view-modal';
-  const callerModal = document.getElementById(callerModalId);
-  if (!calcModal || !callerModal || !window.bootstrap) return;
-
-  const bsCalc = window.bootstrap.Modal.getInstance(calcModal);
-  if (bsCalc) {
-    // When the calculator finishes hiding, reopen the caller modal
-    calcModal.addEventListener('hidden.bs.modal', function reopenParent() {
-      calcModal.removeEventListener('hidden.bs.modal', reopenParent);
-      const bsCaller = window.bootstrap.Modal.getOrCreateInstance(callerModal);
-      bsCaller.show();
-    });
-    bsCalc.hide();
-  }
-};
-
 const KpiFormulaModal = () => {
   return (
     <div
@@ -42,8 +24,8 @@ const KpiFormulaModal = () => {
               type="button"
               id="closePopupId"
               className="btn-close"
+              data-bs-dismiss="modal"
               aria-label="Close"
-              onClick={goBackToCallerModal}
             ></button>
           </div>
           <div className="modal-body">
@@ -63,34 +45,43 @@ const KpiFormulaModal = () => {
                 </option>
               </select>
             </div>
-            <div className="card">
-              <ul className="nav nav-tabs" role="tablist">
-                <li className="nav-item m-l-10" role="Formula Builder">
-                  <a
-                    className="nav-link active"
-                    data-bs-toggle="tab"
-                    href="#kpiActualFormulaBuilderTab-pane"
-                    role="tab"
-                    aria-controls="kpiActualFormulaBuilderTab-pane"
-                    aria-selected="true"
-                  >
-                    Formula Builder
-                  </a>
-                </li>
-                <li className="nav-item m-l-10" role="Summary Calculation">
-                  <a
-                    className="nav-link"
-                    data-bs-toggle="tab"
-                    href="#kpiActualSummaryCalculationTab-pane"
-                    role="tab"
-                    aria-controls="kpiActualSummaryCalculationTab-pane"
-                    aria-selected="false"
-                  >
-                    Summary Calculation
-                  </a>
-                </li>
-              </ul>
-              <div className="card-body pt-3">
+            <div className="card border-0">
+              <div className="card-header bg-transparent border-0">
+                <ul className="nav nav-underline gap-3" role="tablist">
+                  <li className="nav-item" role="Formula Builder">
+                    <button
+                      className="nav-link text-uppercase active"
+                      id="kpiActualFormulaBuilderTab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#kpiActualFormulaBuilderTab-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="kpiActualFormulaBuilderTab-pane"
+                      href="#formula_builder"
+                      aria-selected="true"
+                    >
+                      Formula Builder
+                    </button>
+                  </li>
+                  <li className="nav-item" role="Summary Calculation">
+                    <button
+                      className="nav-link text-uppercase"
+                      id="kpiActualSummaryCalculationTab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#kpiActualSummaryCalculationTab-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="kpiActualSummaryCalculationTab-pane"
+                      aria-selected="false"
+                      href="#summary_calculation"
+                    >
+                      Summary Calculation
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="card-body">
                 <div className="tab-content">
                   <div
                     className="tab-pane fade show active"
@@ -112,140 +103,140 @@ const KpiFormulaModal = () => {
                       </div>
                       <div className="g-col-12">
                         <div className="keypad d-flex flex-wrap gap-2">
-                          <button
+                          <button title="Addition"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('+')}
                           >
                             +
                           </button>
-                          <button
+                          <button title="Subtraction"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('-')}
                           >
                             -
                           </button>
-                          <button
+                          <button title="Multiplication"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('*')}
                           >
                             *
                           </button>
-                          <button
+                          <button title="Division"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('/')}
                           >
                             /
                           </button>
-                          <button
+                          <button title="Percentage"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('%')}
                           >
                             %
                           </button>
-                          <button
+                          <button title="Open Parenthesis"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('(')}
                           >
                             (
                           </button>
-                          <button
+                          <button title="Close Parenthesis"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula(')')}
                           >
                             )
                           </button>
-                          <button
+                          <button title="Open Bracket"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('[')}
                           >
                             [
                           </button>
-                          <button
+                          <button title="Close Bracket"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula(']')}
                           >
                             ]
                           </button>
-                          <button
+                          <button title="Colon"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula(':')}
                           >
                             :
                           </button>
-                          <button
+                          <button title="Logical AND"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('AND')}
                           >
                             AND
                           </button>
-                          <button
+                          <button title="Logical OR"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('OR')}
                           >
                             OR
                           </button>
-                          <button
+                          <button title="Logical NOT"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('NOT')}
                           >
                             NOT
                           </button>
-                          <button
+                          <button title="Included IN"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('IN')}
                           >
                             IN
                           </button>
-                          <button
+                          <button title="Equals"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateFormula && window.updateFormula('==')}
                           >
                             ==
                           </button>
-                          <button
+                          <button title="Not Equals"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateFormula && window.updateFormula('!=')}
                           >
                             !=
                           </button>
-                          <button
+                          <button title="Greater Than"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('>')}
                           >
                             &gt;
                           </button>
-                          <button
+                          <button title="Less Than"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateFormula && window.updateFormula('<')}
                           >
                             &lt;
                           </button>
-                          <button
+                          <button title="Greater Than or Equals"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateFormula && window.updateFormula('>=')}
                           >
                             &gt;=
                           </button>
-                          <button
+                          <button title="Less Than or Equals"
                             type="button"
                             className="kpiActual-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateFormula && window.updateFormula('<=')}

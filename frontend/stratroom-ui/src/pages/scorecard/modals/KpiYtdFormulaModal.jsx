@@ -1,22 +1,5 @@
 import React from 'react';
 
-const goBackToCallerModal = () => {
-  const calcModal = document.getElementById('ytd-calculator-modal');
-  const callerModalId = window._kpiCalcCallerModalId || 'kpi-view-modal';
-  const callerModal = document.getElementById(callerModalId);
-  if (!calcModal || !callerModal || !window.bootstrap) return;
-
-  const bsCalc = window.bootstrap.Modal.getInstance(calcModal);
-  if (bsCalc) {
-    calcModal.addEventListener('hidden.bs.modal', function reopenParent() {
-      calcModal.removeEventListener('hidden.bs.modal', reopenParent);
-      const bsCaller = window.bootstrap.Modal.getOrCreateInstance(callerModal);
-      bsCaller.show();
-    });
-    bsCalc.hide();
-  }
-};
-
 const KpiYtdFormulaModal = () => {
   return (
     <div
@@ -41,8 +24,8 @@ const KpiYtdFormulaModal = () => {
               type="button"
               id="ytdClosePopupId"
               className="btn-close"
+              data-bs-dismiss="modal"
               aria-label="Close"
-              onClick={goBackToCallerModal}
             ></button>
           </div>
           <div className="modal-body">
@@ -88,140 +71,140 @@ const KpiYtdFormulaModal = () => {
                       </div>
                       <div className="g-col-12">
                         <div className="keypad d-flex flex-wrap gap-2">
-                          <button
+                          <button title="Addition"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('+')}
                           >
                             +
                           </button>
-                          <button
+                          <button title="Subtraction"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('-')}
                           >
                             -
                           </button>
-                          <button
+                          <button title="Multiplication"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('*')}
                           >
                             *
                           </button>
-                          <button
+                          <button title="Division"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('/')}
                           >
                             /
                           </button>
-                          <button
+                          <button title="Percentage"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('%')}
                           >
                             %
                           </button>
-                          <button
+                          <button title="Open Parenthesis"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('(')}
                           >
                             (
                           </button>
-                          <button
+                          <button title="Close Parenthesis"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula(')')}
                           >
                             )
                           </button>
-                          <button
+                          <button title="Open Bracket"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('[')}
                           >
                             [
                           </button>
-                          <button
+                          <button title="Close Bracket"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula(']')}
                           >
                             ]
                           </button>
-                          <button
+                          <button title="Colon"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula(':')}
                           >
                             :
                           </button>
-                          <button
+                          <button title="Logical AND"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('AND')}
                           >
                             AND
                           </button>
-                          <button
+                          <button title="Logical OR"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('OR')}
                           >
                             OR
                           </button>
-                          <button
+                          <button title="Logical NOT"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('NOT')}
                           >
                             NOT
                           </button>
-                          <button
+                          <button title="Included IN"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('IN')}
                           >
                             IN
                           </button>
-                          <button
+                          <button title="Equals"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('==')}
                           >
                             ==
                           </button>
-                          <button
+                          <button title="Not Equals"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('!=')}
                           >
                             !=
                           </button>
-                          <button
+                          <button title="Greater Than"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('>')}
                           >
                             &gt;
                           </button>
-                          <button
+                          <button title="Less Than"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('<')}
                           >
                             &lt;
                           </button>
-                          <button
+                          <button title="Greater Than or Equals"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('>=')}
                           >
                             &gt;=
                           </button>
-                          <button
+                          <button title="Less Than or Equals"
                             type="button"
                             className="ytdPerformance-kepad btn btn-sm btn-secondary text-nowrap"
                             onClick={() => window.updateYTDFormula && window.updateYTDFormula('<=')}
