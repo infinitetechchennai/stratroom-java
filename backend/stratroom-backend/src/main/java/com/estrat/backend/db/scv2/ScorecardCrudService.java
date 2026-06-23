@@ -37,6 +37,9 @@ public class ScorecardCrudService {
         try { jdbc.execute("ALTER TABLE sc_perspectives ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_objectives ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
+        // Separate storage for the KPI Actual and YTD calculators (formula = Performance).
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN actual_formula TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN ytd_formula TEXT"); } catch (Exception ignore) {}
     }
 
     // ---------------- SCORECARD ----------------
@@ -168,8 +171,8 @@ public class ScorecardCrudService {
         List<Map<String, Object>> rows = jdbc.queryForList(
                 "SELECT id, objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, "
-                        + "null_handling, achievement_cap, classification_type, formula, display_order "
-                        + "FROM sc_kpis WHERE id = ?", id);
+                        + "null_handling, achievement_cap, classification_type, formula, actual_formula, "
+                        + "ytd_formula, display_order FROM sc_kpis WHERE id = ?", id);
         return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
     }
 
@@ -189,16 +192,38 @@ public class ScorecardCrudService {
 
     @Transactional
     public boolean updateKpi(long id, Map<String, Object> b) {
+        // Non-destructive update: the edit form only carries a subset of fields, so any
+        // column the caller doesn't supply keeps its current DB value (instead of being
+        // reset to a default, which would wipe target/min/max/dataType/etc.).
+        List<Map<String, Object>> exRows = jdbc.queryForList(
+                "SELECT name, description, polarity, target_value, min_target, max_target, data_type, "
+                        + "currency_code, weight, measurement_frequency, null_handling, achievement_cap, "
+                        + "classification_type, display_order, formula, actual_formula, ytd_formula "
+                        + "FROM sc_kpis WHERE id = ?", id);
+        Map<String, Object> ex = exRows.isEmpty() ? java.util.Collections.emptyMap() : exRows.get(0);
+        Integer exDisplay = ex.get("display_order") == null ? 0 : ((Number) ex.get("display_order")).intValue();
         return jdbc.update(
                 "UPDATE sc_kpis SET name=?, description=?, polarity=?, target_value=?, min_target=?, max_target=?, "
                         + "data_type=?, currency_code=?, weight=?, measurement_frequency=?, null_handling=?, "
-                        + "achievement_cap=?, classification_type=?, display_order=?, formula=? WHERE id=?",
-                str(b, "name", "KPI"), str(b, "description", null), str(b, "polarity", "HIGHER"),
-                dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"), decOrNull(b, "maxTarget"),
-                str(b, "dataType", "NUMBER"), str(b, "currencyCode", null), dec(b, "weight", BigDecimal.ZERO),
-                str(b, "measurementFrequency", null), str(b, "nullHandling", "EXCLUDE"),
-                dec(b, "achievementCap", new BigDecimal("150")), str(b, "classificationType", "THREE_COLOR"),
-                intg(b, "displayOrder", 0), str(b, "formula", null), id) > 0;
+                        + "achievement_cap=?, classification_type=?, display_order=?, formula=?, "
+                        + "actual_formula=?, ytd_formula=? WHERE id=?",
+                str(b, "name", (String) ex.get("name")),
+                str(b, "description", (String) ex.get("description")),
+                str(b, "polarity", (String) ex.get("polarity")),
+                dec(b, "targetValue", (BigDecimal) ex.get("target_value")),
+                dec(b, "minTarget", (BigDecimal) ex.get("min_target")),
+                dec(b, "maxTarget", (BigDecimal) ex.get("max_target")),
+                str(b, "dataType", (String) ex.get("data_type")),
+                str(b, "currencyCode", (String) ex.get("currency_code")),
+                dec(b, "weight", (BigDecimal) ex.get("weight")),
+                str(b, "measurementFrequency", (String) ex.get("measurement_frequency")),
+                str(b, "nullHandling", (String) ex.get("null_handling")),
+                dec(b, "achievementCap", (BigDecimal) ex.get("achievement_cap")),
+                str(b, "classificationType", (String) ex.get("classification_type")),
+                intg(b, "displayOrder", exDisplay),
+                str(b, "formula", (String) ex.get("formula")),
+                str(b, "actualFormula", (String) ex.get("actual_formula")),
+                str(b, "ytdFormula", (String) ex.get("ytd_formula")), id) > 0;
     }
 
     @Transactional

@@ -427,7 +427,7 @@ export const KpiEditModal = () => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button className="btn btn-primary" value="Save">Save</button>
+                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
                         <div className="modal-audit">
                             <div className="audit-listing">
                                 <div className="audit-box">
@@ -646,7 +646,7 @@ export const KpiViewModal = () => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button className="btn btn-primary" value="Save">Save</button>
+                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
                         <div className="modal-audit">
                             <div className="audit-listing">
                                 <div className="audit-box">

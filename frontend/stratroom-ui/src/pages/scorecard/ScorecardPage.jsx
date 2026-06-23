@@ -210,33 +210,29 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             // ── KPI Add ──────────────────────────────────────────────────────
             'kpi-add-modal': () => {
                 addKpi({
-                    name: val('akName'),
-                    description: val('akDescription'),
-                    targetValue: val('akTarget'),
-                    actualValue: val('akActual'),
-                    measurementFrequency: val('akMeasurement') || val('akFrequency'),
-                    weight: val('akWeight'),
-                    subWeight: val('akSubWeight'),
-                    status: val('akStatus'),
-                    ownerId: val('akOwner'),
+                    name: val('akpiName'),
+                    description: val('akpiDescription'),
+                    polarity: val('akpiPolarity') || undefined,
+                    measurementFrequency: val('akpiMeasurementFrequency') || undefined,
+                    weight: val('akpiWeight') || undefined,
+                    formula: val('akpiPerformance') || undefined,
                     createdBy: getEmpId(),
-                    objectiveId: val('akObjectiveId') || window._editObjectiveId,
+                    objectiveId: window._editObjectiveId,
                 });
             },
             // ── KPI Edit ──────────────────────────────────────────────────────
             'kpi-edit-modal': () => {
                 editKpi({
-                    id: val('ekId') || window._editKpiId,
-                    name: val('ekName'),
-                    description: val('ekDescription'),
-                    targetValue: val('ekTarget'),
-                    actualValue: val('ekActual'),
-                    measurementFrequency: val('ekMeasurement') || val('ekFrequency'),
-                    weight: val('ekWeight'),
-                    subWeight: val('ekSubWeight'),
-                    status: val('ekStatus'),
-                    ownerId: val('ekOwner'),
-                    objectiveId: val('ekObjectiveId') || window._editObjectiveId,
+                    id: val('ekpiId') || window._editKpiId,
+                    name: val('ekpiName') || undefined,
+                    description: val('ekpiDescription') || undefined,
+                    polarity: val('ekpiPolarity') || undefined,
+                    measurementFrequency: val('ekpiMeasurementFrequency') || undefined,
+                    weight: val('ekpiWeight') || undefined,
+                    formula: val('ekpiPerformance') || undefined,
+                    actualFormula: val('ekpiActual') || undefined,
+                    ytdFormula: val('ekpiYearToDate') || undefined,
+                    objectiveId: window._editObjectiveId,
                 });
             },
             // ── SubKPI Add ────────────────────────────────────────────────────
@@ -388,6 +384,8 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('ekpiDescription', kpi.description);
                         set('ekpiWeight', kpi.weight);
                         set('ekpiPerformance', kpi.formula || '');
+                        set('ekpiActual', kpi.actual_formula || '');
+                        set('ekpiYearToDate', kpi.ytd_formula || '');
                         const polEl = document.getElementById('ekpiPolarity');
                         if (polEl && kpi.polarity) polEl.value = kpi.polarity;
                         const freqEl = document.getElementById('ekpiMeasurementFrequency');
