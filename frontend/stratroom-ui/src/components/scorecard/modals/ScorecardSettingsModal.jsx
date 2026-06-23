@@ -60,7 +60,10 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
         setName(rawCard.scorecardName || '');
         setOwner(rawCard.owner?.toString() || '');
         setDepartment(rawCard.departmentId?.toString() || '');
-        
+        // V2 scorecard fields (sc_scorecards): description + performance formula.
+        setDescription(rawCard.description || '');
+        setPerformance(rawCard.formula || '');
+
         // Date parsing (backend format might vary, just trying to convert to YYYY-MM-DD or display)
         const formatDt = (dt) => dt ? new Date(dt).toISOString().split('T')[0] : '';
         setStartDate(formatDt(rawCard.startDate));
@@ -68,9 +71,9 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
 
         if (rawCard.scoreCardDetailsValue) {
             const vals = rawCard.scoreCardDetailsValue;
-            setDescription(vals.description || '');
+            if (vals.description) setDescription(vals.description);
             setStatus(vals.status || '');
-            setPerformance(vals.performance || '');
+            if (vals.performance) setPerformance(vals.performance);
 
             const checkedFields = vals.scorecardFields || [];
             setFields({

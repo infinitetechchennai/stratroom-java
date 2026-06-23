@@ -52,7 +52,7 @@ public class ScorecardCalculationService {
         LocalDate end = parseEnd(dateRange);
 
         List<Map<String, Object>> scRows = jdbc.queryForList(
-                "SELECT id, page_id, name, classification_type, formula FROM sc_scorecards "
+                "SELECT id, page_id, name, description, classification_type, formula FROM sc_scorecards "
                         + "WHERE page_id = ? AND is_active = true AND is_deleted = false ORDER BY id LIMIT 1",
                 pageId);
         if (scRows.isEmpty()) {
@@ -121,8 +121,11 @@ public class ScorecardCalculationService {
 
         Map<String, Object> cardDetails = new LinkedHashMap<>();
         cardDetails.put("id", scorecardId);
+        cardDetails.put("pageId", pageId);
         cardDetails.put("scorecardName", scorecardName);
         cardDetails.put("scoreCardName", scorecardName);
+        cardDetails.put("description", str(sc.get("description")));
+        cardDetails.put("formula", str(sc.get("formula")));
         cardDetails.put("statusLight", overallRag.getStatus());
         cardDetails.put("thresholdResult", formatPct(overall));
         cardDetails.put("scoreCardDTOS", perspectiveDtos);

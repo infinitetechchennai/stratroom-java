@@ -79,5 +79,13 @@ export function cardDetailsToTabs(dto) {
     scorecardName: card.scorecardName ?? card.scoreCardName ?? 'Scorecard',
     overallScore: card.thresholdResult ?? '',
     scoreCardDetailsId: card.id ?? card.scoreCardDetailsId,
+    // Raw scorecard fields so the Settings modal can pre-fill name/description/formula.
+    rawCard: {
+      id: card.id ?? card.scoreCardDetailsId,
+      pageId: card.pageId,
+      scorecardName: card.scorecardName ?? card.scoreCardName ?? '',
+      description: card.description ?? '',
+      formula: card.formula ?? '',
+    },
   };
 }
