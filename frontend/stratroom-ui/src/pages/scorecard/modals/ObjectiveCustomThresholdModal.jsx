@@ -24,9 +24,7 @@ const ObjectiveCustomThresholdModal = () => {
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
+            ></button>
           </div>
           <div className="modal-body" style={{ padding: '0 25px' }}>
             <div className="card">
