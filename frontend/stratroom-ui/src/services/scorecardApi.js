@@ -189,6 +189,14 @@ export const updateScorecardFormula = (id, formula) =>
     body: JSON.stringify({ formula, aggregationMethod: formula ? 'FORMULA' : 'WEIGHTED' }),
   });
 
+// Update the V2 scorecard (sc_scorecards) — name/description/formula. Blank name or
+// description are preserved server-side, so partial updates are safe.
+export const updateScorecardV2 = (id, body) =>
+  request(`${SC}/scorecardV2/scorecard/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(body),
+  });
+
 // Scorecard detail (page-level container)
 export const saveScorecardDetails = (data) =>
   request(`${SC}/scorecardDetails`, {

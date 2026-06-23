@@ -57,9 +57,15 @@ public class ScorecardCrudService {
         String nameToSave = (incomingName == null || incomingName.isBlank())
                 ? jdbc.queryForObject("SELECT name FROM sc_scorecards WHERE id=?", String.class, id)
                 : incomingName;
+        // Preserve the existing description when the caller doesn't supply one (e.g. the
+        // formula-only save from the calculator), so it isn't wiped.
+        String incomingDesc = str(b, "description", null);
+        String descToSave = (incomingDesc == null || incomingDesc.isBlank())
+                ? jdbc.queryForObject("SELECT description FROM sc_scorecards WHERE id=?", String.class, id)
+                : incomingDesc;
         return jdbc.update(
                 "UPDATE sc_scorecards SET name=?, description=?, classification_type=?, updated_by=?, formula=? WHERE id=?",
-                nameToSave, str(b, "description", null),
+                nameToSave, descToSave,
                 str(b, "classificationType", "THREE_COLOR"), lng(b, "updatedBy", 0L), str(b, "formula", null), id) > 0;
     }
 

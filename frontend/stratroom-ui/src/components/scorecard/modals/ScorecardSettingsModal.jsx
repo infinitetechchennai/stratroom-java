@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useScorecardContext } from '../../../context/ScorecardContext';
-import { getReporteeList, updateScorecardDetails } from '../../../services/scorecardApi';
+import { getReporteeList, updateScorecardV2 } from '../../../services/scorecardApi';
 import { getAllDepartmentList } from '../../../api/scorecardApi';
 
 export const ScorecardSettingsModal = ({ scorecardData }) => {
@@ -102,28 +102,23 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
         const saveStartDate = startDate;
         const saveEndDate = endDate;
         
-        const payload = {
-            id: rawCard.id,
-            active: rawCard.active || 1,
-            owner: parseInt(owner, 10) || rawCard.owner,
-            createdBy: rawCard.createdBy,
-            updatedBy: rawCard.updatedBy,
-            pageId: rawCard.pageId,
-            scorecardName: name,
-            startDate: saveStartDate,
-            endDate: saveEndDate,
-            departmentId: parseInt(department, 10) || null,
-            scoreCardDetailsValue: {
-                ...(rawCard.scoreCardDetailsValue || {}),
-                description,
-                status,
-                performance,
-                scorecardFields: selectedFields
-            }
-        };
+        // The scorecard lives in the V2 sc_scorecards table; its primary key is
+        // exposed as scoreCardDetailsId by the transform. Save name/description/formula
+        // through the V2 endpoint (the same one the header + button uses).
+        const id = scorecardData?.scoreCardDetailsId ?? rawCard.id;
+        if (!id) {
+            alert('Could not determine the scorecard id to save.');
+            setSaving(false);
+            return;
+        }
 
         try {
-            await updateScorecardDetails(payload);
+            await updateScorecardV2(id, {
+                name,
+                description,
+                formula: performance || null,
+                aggregationMethod: performance ? 'FORMULA' : 'WEIGHTED',
+            });
             const modalEl = document.getElementById('add-settings-modal');
             if (modalEl && window.bootstrap) {
                 const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
