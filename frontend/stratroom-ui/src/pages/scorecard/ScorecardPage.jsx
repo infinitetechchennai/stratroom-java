@@ -170,6 +170,8 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     subWeight: val('epSubWeight'),
                     status: val('epStatus'),
                     ownerId: val('epOwner'),
+                    formula: val('epPerformance') || undefined,
+                    aggregationMethod: val('epPerformance') ? 'FORMULA' : 'WEIGHTED',
                     scorecardId: val('epScoreCardDetailsId') || window._currentScoreCardDetailsId,
                 });
             },
@@ -204,6 +206,8 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     subWeight: val('eodSubWeight'),
                     status: val('eodStatus'),
                     ownerId: val('eodOwner'),
+                    formula: val('eodPerformance') || undefined,
+                    aggregationMethod: val('eodPerformance') ? 'FORMULA' : 'WEIGHTED',
                     perspectiveId: val('eodPerspectiveId') || window._editPerspectiveId,
                 });
             },

@@ -246,7 +246,7 @@ export const ObjectiveEditModal = () => {
                             data-translate="actions.cancel">
                             Cancel
                         </button>
-                        <button className="btn btn-primary" value="Save">Save</button>
+                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
                         <div className="modal-audit">
                             <div className="audit-listing">
                                 <div className="audit-box">
