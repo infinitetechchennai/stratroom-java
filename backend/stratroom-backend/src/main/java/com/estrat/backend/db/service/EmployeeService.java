@@ -569,6 +569,33 @@ public class EmployeeService {
         return this.employeeDAO.getEmployeeIDByEmail(emailAddress);
     }
 
+    /**
+     * Resolves an employee for bulk user import — profile by email first, then credentials
+     * (covers rows where credentials exist but profile email lookup missed).
+     */
+    public Employee resolveEmployeeForImport(String emailAddress) {
+        if (StringUtils.isEmpty(emailAddress)) {
+            return null;
+        }
+        String email = emailAddress.trim();
+        Employee employee = this.getEmployeeIDByEmail(email);
+        if (employee != null) {
+            return employee;
+        }
+        java.util.Optional<EmployeeCredentialsPo> cred = this.employeeCredentialsPoRepo
+                .findByUserNameOrEmailAddressAndStatus(email, email, "Active");
+        if (!cred.isPresent()) {
+            cred = this.employeeCredentialsPoRepo.findByUserNameOrEmailAddressAndStatus(email, email, "InActive");
+        }
+        if (cred.isPresent()) {
+            java.util.Optional<EmployeeProfilePo> profile = this.employeeProfilePoRepo.findById(cred.get().getEmpId());
+            if (profile.isPresent()) {
+                return new Employee(profile.get());
+            }
+        }
+        return null;
+    }
+
     public Employee getEmployeeIDByFullName(String firstName, String lastName, long orgId) {
         return this.employeeDAO.getEmployeeIDByFullName(firstName, lastName, orgId);
     }
@@ -2045,8 +2072,12 @@ public class EmployeeService {
 
     public Long superUserDeptId() {
         EmployeeProfilePo employeeProfilePo = (EmployeeProfilePo)this.employeeProfilePoRepo.getOne(this.userRoleManagementService.superUserId());
-        if (employeeProfilePo != null && employeeProfilePo.getDepartment() != null) {
-            return this.departmentDetailsRepository.findByDeptUniqueId(employeeProfilePo.getDeptId().getDeptUniqueID(), employeeProfilePo.getOrgId().getId(), "Active").getId();
+        if (employeeProfilePo != null && employeeProfilePo.getDeptId() != null) {
+            DepartmentDetails departmentDetails = this.departmentDetailsRepository.findByDeptUniqueId(
+                    employeeProfilePo.getDeptId().getDeptUniqueID(), employeeProfilePo.getOrgId().getId(), "Active");
+            if (departmentDetails != null) {
+                return departmentDetails.getId();
+            }
         }
         return 0L;
     }

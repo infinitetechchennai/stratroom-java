@@ -311,9 +311,14 @@ public class DeptTrackerService {
     }
 
     public void populateAdditionalDept(OrgTrackerDTO orgTrackerDTO, String type, DepartmentChartMapping departmentChartMapping) {
-        DepartmentDetails departmentDetails = (DepartmentDetails)this.departmentDetailsRepository.findById(orgTrackerDTO.getDeptId()).get();
+        Optional<DepartmentDetails> departmentDetailsOpt = this.departmentDetailsRepository.findById(orgTrackerDTO.getDeptId());
+        if (!departmentDetailsOpt.isPresent()) {
+            return;
+        }
+        DepartmentDetails departmentDetails = departmentDetailsOpt.get();
         if (orgTrackerDTO.getParentId() != 0L) {
-            orgTrackerDTO.setParentName(((DepartmentDetails)this.departmentDetailsRepository.findById(orgTrackerDTO.getParentId()).get()).getName());
+            Optional<DepartmentDetails> parentDept = this.departmentDetailsRepository.findById(orgTrackerDTO.getParentId());
+            parentDept.ifPresent(dept -> orgTrackerDTO.setParentName(dept.getName()));
         }
         if (departmentDetails != null) {
             Optional employeeProfilePo;

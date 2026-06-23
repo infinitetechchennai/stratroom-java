@@ -308,6 +308,12 @@ public class ScoreCardController {
         return new ResponseEntity(scorecardList, HttpStatus.OK);
     }
 
+    /** Legacy alias used by performance contract / improvement plan screens. */
+    @GetMapping(value={"/getscoreCardListByDeptIds"})
+    public ResponseEntity<List<ScorecardList>> getscoreCardListByDeptIds(@RequestParam(value="deptIds", required=false) String deptIds) {
+        return this.getcheckscoreCardListByDeptId(deptIds);
+    }
+
     @GetMapping(value={"/formScoreCardDetailList/{empId}"})
     public ResponseEntity<List<ScoreCardDetailsDTO>> formScoreCardDetailList(@PathVariable(value="empId") long empId) {
         return new ResponseEntity((Object)this.scoreCardDetailsService.formScoreCardDetailList(empId), HttpStatus.OK);

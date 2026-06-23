@@ -392,7 +392,9 @@ export default function MyFormsPage() {
                                 {file ? file.name : 'No file chosen'}
                             </div>
                         </div>
-                        <div style={{ fontSize: '11.5px', color: '#6b7280', marginTop: '6px' }}>Supported file type (jpeg, pdf, pptx, xlsx, docx)</div>
+                        <div style={{ fontSize: '11.5px', color: '#6b7280', marginTop: '6px' }}>
+                            Supported file type (jpeg, pdf, pptx, xlsx, docx). File attachment on save is not wired yet — actual values save to the scorecard.
+                        </div>
                     </div>
 
                     {/* Save Button */}

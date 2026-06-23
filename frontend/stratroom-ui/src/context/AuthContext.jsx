@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { loginApi, validateTokenApi, postPreAuditTrail } from '../api/authApi'
 import { resetOrgChartSession } from '../utils/orgStructureSession'
+import { loadAndApplyOrgTheme } from '../utils/stratroomTheme'
 
 const AuthContext = createContext(null)
 
@@ -60,6 +61,7 @@ export function AuthProvider({ children }) {
           if (!parsed.empId && parsed.id) parsed.empId = parsed.id
           syncLegacyAccessIds(parsed)
           setUser(parsed)
+          loadAndApplyOrgTheme(parsed.orgDetails?.orgId ?? parsed.orgId)
         } else {
           clearSession()
         }
@@ -114,6 +116,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem(SESSION_KEYS.PROFILE, JSON.stringify(profile))
     syncLegacyAccessIds(profile)
     setUser(profile)
+    loadAndApplyOrgTheme(profile.orgDetails?.orgId ?? profile.orgId)
 
     return data
   }, [])

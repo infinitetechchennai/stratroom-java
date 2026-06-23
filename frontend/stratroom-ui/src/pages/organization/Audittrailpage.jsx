@@ -1,52 +1,52 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import axiosClient from '../../api/axiosClient'
+import { getAuditTrailList, exportAuditTrail, getAuditTrailActions } from '../../api/profileMenuApi'
 import styles from './Audittrailpage.module.css'
 
 export default function Audittrailpage() {
   const { user } = useAuth()
   const [trails, setTrails] = useState([])
+  const [actions, setActions] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [filterAction, setFilterAction] = useState('')
   const pageSize = 20
 
-  const fetchAuditTrail = useCallback(async (page) => {
-    if (!user?.empId) return
+  const pagedTrails = trails.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+  const totalPages = Math.max(1, Math.ceil(trails.length / pageSize))
+
+  const fetchAuditTrail = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await axiosClient.get(`/stratroom/auditTrailList`, {
-        params: { empId: user.empId, page, size: pageSize }
-      })
-      const data = res.data
-      if (Array.isArray(data)) {
-        setTrails(data)
-        setTotalPages(Math.max(1, Math.ceil(data.length / pageSize)))
-      } else if (data?.content) {
-        setTrails(data.content)
-        setTotalPages(data.totalPages || 1)
-      } else {
-        setTrails([])
-      }
+      const params = {}
+      if (filterAction) params.action = filterAction
+      const data = await getAuditTrailList(params)
+      setTrails(Array.isArray(data) ? data : [])
     } catch {
       setTrails([])
     } finally {
       setLoading(false)
     }
-  }, [user?.empId])
+  }, [filterAction])
 
-  useEffect(() => { fetchAuditTrail(currentPage) }, [currentPage, fetchAuditTrail])
+  useEffect(() => {
+    getAuditTrailActions()
+      .then((data) => setActions(Array.isArray(data) ? data : []))
+      .catch(() => setActions([]))
+  }, [])
+
+  useEffect(() => {
+    fetchAuditTrail()
+    setCurrentPage(1)
+  }, [fetchAuditTrail])
 
   const handleExport = async () => {
     try {
-      const res = await axiosClient.get('/stratroom/auditTrailExport', {
-        params: { empId: user?.empId },
-        responseType: 'blob'
-      })
-      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const blob = await exportAuditTrail(filterAction ? { action: filterAction } : {})
+      const url = window.URL.createObjectURL(new Blob([blob]))
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute('download', 'audit-trail.xlsx')
+      link.setAttribute('download', 'audit-trail.csv')
       document.body.appendChild(link)
       link.click()
       link.remove()
@@ -67,11 +67,19 @@ export default function Audittrailpage() {
           </h4>
         </div>
         <div className={styles.headerRight}>
+          <select
+            className={styles.filterSelect}
+            value={filterAction}
+            onChange={(e) => setFilterAction(e.target.value)}
+            title="Filter by action"
+          >
+            <option value="">All actions</option>
+            {actions.map((a) => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
           <button className={styles.actionBtn} onClick={handleExport} title="Export">
             <ExportIcon />
-          </button>
-          <button className={styles.actionBtn} title="Filter">
-            <FilterIcon />
           </button>
         </div>
       </div>
@@ -99,20 +107,20 @@ export default function Audittrailpage() {
                       <div className={styles.spinner} />
                     </td>
                   </tr>
-                ) : trails.length === 0 ? (
+                ) : pagedTrails.length === 0 ? (
                   <tr>
                     <td colSpan={5} className={styles.emptyCell}>
                       No audit trail records found
                     </td>
                   </tr>
                 ) : (
-                  trails.map((trail, i) => (
+                  pagedTrails.map((trail, i) => (
                     <tr key={trail.id || i}>
-                      <td className={styles.tdLeft}>{trail.performedBy || trail.userId || '—'}</td>
+                      <td className={styles.tdLeft}>{trail.userName || trail.performedBy || trail.userId || '—'}</td>
                       <td className={styles.tdCenter}>{trail.action || '—'}</td>
-                      <td className={styles.tdCenter}>{trail.additionalInfo || trail.description || '—'}</td>
-                      <td className={styles.tdCenter}>{formatDate(trail.createdDt || trail.dateTime)}</td>
-                      <td className={styles.tdCenter}>{trail.ipAddress || trail.systemIp || '—'}</td>
+                      <td className={styles.tdCenter}>{trail.type || trail.additionalInfo || trail.description || '—'}</td>
+                      <td className={styles.tdCenter}>{formatDate(trail.accessDate || trail.createdTime || trail.dateTime)}</td>
+                      <td className={styles.tdCenter}>{trail.systemIp || trail.ipAddress || '—'}</td>
                     </tr>
                   ))
                 )}
@@ -161,7 +169,7 @@ function formatDate(dt) {
       hour: '2-digit', minute: '2-digit'
     })
   } catch {
-    return dt
+    return String(dt)
   }
 }
 
@@ -178,14 +186,6 @@ function ExportIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
-  )
-}
-
-function FilterIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </svg>
   )
 }

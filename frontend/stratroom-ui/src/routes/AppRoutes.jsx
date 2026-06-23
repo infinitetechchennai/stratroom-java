@@ -17,6 +17,9 @@ import ApiCheckPage from '../pages/check/ApiCheckPage'
 import ScorecardPage from '../pages/scorecard/ScorecardPage'
 import KpiStoryCardPage from '../pages/scorecard/KpiStoryCardPage'
 import MyFormsPage from '../pages/my-forms/MyFormsPage'
+import ProfilePage from '../pages/profile-menu/ProfilePage'
+import PerformanceContractPage from '../pages/profile-menu/PerformanceContractPage'
+import PerformanceImprovementPlanPage from '../pages/profile-menu/PerformanceImprovementPlanPage'
 
 function PrivateRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
@@ -80,6 +83,9 @@ export default function AppRoutes() {
         <Route path="/kpi-story-card" element={<KpiStoryCardPage />} />
         <Route path="/kpi-story-card/:kpiId" element={<KpiStoryCardPage />} />
         <Route path="/my-forms" element={<MyFormsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/performance-contract" element={<PerformanceContractPage />} />
+        <Route path="/performance-improvement-plan" element={<PerformanceImprovementPlanPage />} />
 
         <Route path="/" element={<Navigate to="/home" replace />} />
       </Route>

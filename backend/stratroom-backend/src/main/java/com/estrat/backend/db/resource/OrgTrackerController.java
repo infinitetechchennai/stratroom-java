@@ -49,33 +49,58 @@ public class OrgTrackerController {
     @Autowired
     public ControlPanelGeneralService controlPanelGeneralService;
 
-    @GetMapping(value={"/orgTrackList"})
-    public ResponseEntity<List<OrgTrackerDTO>> findAll(@RequestParam(value="flagType") String flagType, @RequestParam(value="datePeriod", required=false) String datePeriod, @RequestParam(value="id", required=false) String id) throws RequestException {
+    private long resolveOrgId() {
+        String orgIdStr = UserThreadLocal.get("USER_ORG_ID");
+        if (StringUtils.isBlank(orgIdStr)) {
+            return 1L;
+        }
+        return Long.parseLong(orgIdStr);
+    }
+
+    private boolean isDepartmentMode(ControlPanelGeneralDTO controlPanelGeneral) {
+        return controlPanelGeneral != null
+                && "Department".equalsIgnoreCase(controlPanelGeneral.getImplementationType());
+    }
+
+    private String normalizeDatePeriod(String datePeriod) {
         String[] searchArray = new String[]{"%20", "%2520"};
         String[] replaceArray = new String[]{" ", " "};
-        String result = StringUtils.replaceEach((String)flagType, (String[])searchArray, (String[])replaceArray);
-        String date = StringUtils.replaceEach((String)datePeriod, (String[])searchArray, (String[])replaceArray);
-        List orgTrackerDTOList = null;
-        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
-        orgTrackerDTOList = controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department") ? this.deptTrackerService.findAll(result, date, id) : this.orgTrackerService.findAll(result, date);
+        return StringUtils.replaceEach((String)datePeriod, (String[])searchArray, (String[])replaceArray);
+    }
+
+    @GetMapping(value={"/orgTrackList"})
+    public ResponseEntity<List<OrgTrackerDTO>> findAll(@RequestParam(value="flagType") String flagType, @RequestParam(value="datePeriod", required=false) String datePeriod, @RequestParam(value="id", required=false) String id) throws RequestException {
+        String result = this.normalizeDatePeriod(flagType);
+        String date = this.normalizeDatePeriod(datePeriod);
+        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(this.resolveOrgId());
+        boolean listAll = StringUtils.isBlank(result) && StringUtils.isBlank(id);
+        List orgTrackerDTOList;
+        if (this.isDepartmentMode(controlPanelGeneral)) {
+            orgTrackerDTOList = listAll
+                    ? this.deptTrackerService.findAll(date)
+                    : this.deptTrackerService.findAll(result, date, id);
+        } else {
+            orgTrackerDTOList = listAll
+                    ? this.orgTrackerService.findAll(date)
+                    : this.orgTrackerService.findAll(result, date);
+        }
         return new ResponseEntity((Object)orgTrackerDTOList, HttpStatus.OK);
     }
 
     @GetMapping(value={"/orgTrackAllList"})
     public ResponseEntity<List<OrgTrackerDTO>> orgTrackAllList(@RequestParam(value="datePeriod", required=false) String datePeriod) throws RequestException {
-        String[] searchArray = new String[]{"%20", "%2520"};
-        String[] replaceArray = new String[]{" ", " "};
-        String date = StringUtils.replaceEach((String)datePeriod, (String[])searchArray, (String[])replaceArray);
-        List orgTrackerDTOList = null;
-        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
-        orgTrackerDTOList = controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department") ? this.deptTrackerService.findAll(date) : this.orgTrackerService.findAll(date);
+        String date = this.normalizeDatePeriod(datePeriod);
+        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(this.resolveOrgId());
+        List orgTrackerDTOList = this.isDepartmentMode(controlPanelGeneral)
+                ? this.deptTrackerService.findAll(date)
+                : this.orgTrackerService.findAll(date);
         return new ResponseEntity((Object)orgTrackerDTOList, HttpStatus.OK);
     }
 
     @DeleteMapping(value={"/clearOrgTrack/{id}"})
     public ResponseEntity<Boolean> clearOrgTrack(@PathVariable(value="id") Long id, @RequestParam(value="type", required=false) String type) throws RequestException {
-        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
-        if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
+        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(this.resolveOrgId());
+        if (this.isDepartmentMode(controlPanelGeneral)) {
             this.deptTrackerService.clearDeptTracker(id, type);
         } else {
             this.orgTrackerService.clearOrgTracker(id, type);
@@ -85,13 +110,12 @@ public class OrgTrackerController {
 
     @GetMapping(value={"/orgTrackSearchList"})
     public ResponseEntity<List<OrgTrackerDTO>> orgTrackSearchList(@RequestParam(value="flagType") String flagType, @RequestParam(value="datePeriod", required=false) String datePeriod) throws RequestException {
-        String[] searchArray = new String[]{"%20", "%2520"};
-        String[] replaceArray = new String[]{" ", " "};
-        String result = StringUtils.replaceEach((String)flagType, (String[])searchArray, (String[])replaceArray);
-        String date = StringUtils.replaceEach((String)datePeriod, (String[])searchArray, (String[])replaceArray);
-        List orgTrackerDTOList = null;
-        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
-        orgTrackerDTOList = controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department") ? this.deptTrackerService.deptTrackSearchList(result, date) : this.orgTrackerService.orgTrackSearchList(result, date);
+        String result = this.normalizeDatePeriod(flagType);
+        String date = this.normalizeDatePeriod(datePeriod);
+        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(this.resolveOrgId());
+        List orgTrackerDTOList = this.isDepartmentMode(controlPanelGeneral)
+                ? this.deptTrackerService.deptTrackSearchList(result, date)
+                : this.orgTrackerService.orgTrackSearchList(result, date);
         return new ResponseEntity((Object)orgTrackerDTOList, HttpStatus.OK);
     }
 }

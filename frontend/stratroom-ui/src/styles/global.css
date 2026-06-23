@@ -8,11 +8,35 @@
   min-height: 100dvh;
 }
 
-/* React app custom tokens (used by CSS modules) */
+/* Default branding tokens — overridden at runtime by applyStratroomTheme() on <html> */
 :root {
   --primary: #883B71;
   --primary-dark: #702f5b;
   --primary-light: #a04d87;
   --danger: #dc2626;
   --success: #16a34a;
+}
+
+/* Light / dark shell layout tokens (do not redefine --primary here) */
+[data-theme='light'],
+.stratroom-shell.light {
+  --shell-bg: #f8f9fa;
+  --shell-surface: #ffffff;
+  --shell-text: #0b1437;
+  --shell-muted: #64748b;
+  --shell-border: rgba(0, 0, 0, 0.06);
+  --shell-tab-bg: #eef0f4;
+  --shell-input-bg: #ffffff;
+}
+
+[data-theme='dark'],
+.stratroom-shell.dark {
+  --shell-bg: #0f172a;
+  --shell-surface: #1e293b;
+  --shell-text: #e2e8f0;
+  --shell-muted: #94a3b8;
+  --shell-border: rgba(255, 255, 255, 0.08);
+  --shell-tab-bg: #334155;
+  --shell-input-bg: #0f172a;
+  color-scheme: dark;
 }

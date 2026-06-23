@@ -119,6 +119,14 @@ export async function fetchOrgTrackList(flagType, datePeriod = '', id = '') {
   return response.data
 }
 
+/** Full org-change log for the selected period (Organisation Tracker tab). */
+export async function fetchOrgTrackAllList(datePeriod = '') {
+  const params = new URLSearchParams()
+  if (datePeriod) params.set('datePeriod', datePeriod)
+  const response = await axiosClient.get(`/api/orgTrackAllList?${params}`)
+  return response.data
+}
+
 export async function clearOrgTrack(id) {
   const response = await axiosClient.delete(`/api/clearOrgTrack/${id}`)
   return response.data

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { useAuth } from '../../context/AuthContext'
 import { usePermissions } from '../../context/PermissionsContext'
 import { useI18n } from '../../context/I18nContext'
-import { fetchOrgStructure, createEmployee, updateEmployee, deleteEmployee, deleteDepartmentMapping, addDepartmentMapping, fetchOrgTrackList, clearOrgTrack, createBulkDeptMapping, setImplementationMode } from '../../api/orgStructureApi'
+import { fetchOrgStructure, createEmployee, updateEmployee, deleteEmployee, deleteDepartmentMapping, addDepartmentMapping, fetchOrgTrackAllList, clearOrgTrack, createBulkDeptMapping, setImplementationMode } from '../../api/orgStructureApi'
 import axiosClient from '../../api/axiosClient'
 import {
   resolveChartEmpId,
@@ -992,7 +992,7 @@ function DeleteModal({ node, onConfirm, onClose }) {
 }
 
 // ── Org Tracker (change log) ─────────────────────────────────────────────────────
-// Renders the audit trail of org changes (who joined / moved / left) from /orgTrackList,
+// Renders the audit trail of org changes (who joined / moved / left) from /orgTrackAllList,
 // scoped to the currently selected period. Each row can be cleared.
 function TrackerView() {
   const [rows, setRows] = useState([])
@@ -1003,7 +1003,7 @@ function TrackerView() {
     setLoading(true); setError(null)
     try {
       const period = localStorage.getItem('customperiod') || ''
-      const data = await fetchOrgTrackList('', period)
+      const data = await fetchOrgTrackAllList(period)
       setRows(Array.isArray(data) ? data : [])
     } catch (err) {
       setError(err?.response?.data?.message || err?.message || 'Failed to load tracker')
@@ -1269,7 +1269,7 @@ function ImportWizard({ user, onClose, onComplete }) {
       }
       await onComplete?.()
     } catch (err) {
-      setResult({ success: false, message: err?.response?.data?.message || err.message || 'Import failed' })
+      setResult({ success: false, message: err?.response?.data?.exception || err?.response?.data?.message || err.message || 'Import failed' })
     } finally {
       setImporting(false)
     }
