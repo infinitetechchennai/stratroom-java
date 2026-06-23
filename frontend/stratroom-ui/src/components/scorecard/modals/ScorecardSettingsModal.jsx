@@ -106,6 +106,8 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
             id: rawCard.id,
             active: rawCard.active || 1,
             owner: parseInt(owner, 10) || rawCard.owner,
+            createdBy: rawCard.createdBy,
+            updatedBy: rawCard.updatedBy,
             pageId: rawCard.pageId,
             scorecardName: name,
             startDate: saveStartDate,

@@ -184,11 +184,11 @@ public class ScoreCardController {
                 }
             }
         } else {
-            if (scoreCardDetailsDTO.getCreatedBy() != 0L) {
+            if (scoreCardDetailsDTO.getCreatedBy() != null && scoreCardDetailsDTO.getCreatedBy() != 0L) {
                 employeeDTO.setEmployeeId(scoreCardDetailsDTO.getCreatedBy());
                 scoreCardDetailsDTO.getScoreCardDetailsValue().put("createdByName", this.employeeService.getEmployee(employeeDTO).getFirstName());
             }
-            if (scoreCardDetailsDTO.getUpdatedBy() != 0L) {
+            if (scoreCardDetailsDTO.getUpdatedBy() != null && scoreCardDetailsDTO.getUpdatedBy() != 0L) {
                 employeeDTO.setEmployeeId(scoreCardDetailsDTO.getUpdatedBy());
                 scoreCardDetailsDTO.getScoreCardDetailsValue().put("updatedByName", this.employeeService.getEmployee(employeeDTO).getFirstName());
             }
