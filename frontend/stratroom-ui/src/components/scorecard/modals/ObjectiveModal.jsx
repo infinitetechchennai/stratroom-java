@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export const ObjectiveAddModal = () => {
+
     return (
         <div className="modal custom-modal fade kpi_setting" id="objective-add-modal" data-bs-backdrop="static"
             data-bs-keyboard="false" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
@@ -46,11 +47,12 @@ export const ObjectiveAddModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="abStartEndDate" className="form-label"
+                                            <label className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.startEndDate">Start/End Date</label>
-                                            <input type="text" id="abStartEndDate" className="form-control"
-                                                data-translate="page.scorecard.scorecardItems.startEndDate"
-                                                placeholder="Start/End Date" />
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="abStartDate" className="form-control" />
+                                                <input type="date" id="abEndDate" className="form-control" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12">
@@ -119,6 +121,7 @@ export const ObjectiveAddModal = () => {
 };
 
 export const ObjectiveEditModal = () => {
+
     return (
         <div className="modal custom-modal fade kpi_setting" id="objective-edit-modal" data-bs-backdrop="static"
             data-bs-keyboard="false" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
@@ -174,11 +177,12 @@ export const ObjectiveEditModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="eodStartEndDate" className="form-label"
+                                            <label className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.startEndDate">Start/End Date</label>
-                                            <input type="text" id="eodStartEndDate"
-                                                data-translate="page.scorecard.scorecardItems.startEndDate"
-                                                placeholder="Start/End Date" className="form-control" />
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="eodStartDate" className="form-control" />
+                                                <input type="date" id="eodEndDate" className="form-control" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12">
@@ -271,6 +275,7 @@ export const ObjectiveEditModal = () => {
 };
 
 export const ObjectiveViewModal = () => {
+
     return (
         <div className="modal fade kpi_setting" id="objective-view-modal" data-bs-backdrop="static" data-bs-keyboard="false"
             tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
@@ -327,11 +332,12 @@ export const ObjectiveViewModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="vodStartEndDate" className="form-label"
+                                            <label className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.startEndDate">Start/End Date</label>
-                                            <input type="text" id="vodStartEndDate"
-                                                data-translate="page.scorecard.scorecardItems.startEndDate"
-                                                placeholder="Start/End Date" className="form-control" />
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="vodStartDate" className="form-control" disabled />
+                                                <input type="date" id="vodEndDate" className="form-control" disabled />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12">
@@ -344,7 +350,7 @@ export const ObjectiveViewModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#kpi_formula_popup"
+                                                    data-bs-toggle="modal" data-bs-target="#kpi_formula_popup" onClick={() => { window._kpiCalcCallerModalId = 'objective-view-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPIPERFORMANCE'); }}
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
                                                     KPI Calculator
                                                 </button>

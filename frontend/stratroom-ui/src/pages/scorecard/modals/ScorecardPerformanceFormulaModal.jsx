@@ -34,15 +34,29 @@ const ScorecardPerformanceFormulaModal = () => {
                   <li className="nav-item" role="Formula Builder">
                     <button
                       className="nav-link text-uppercase active"
-                      id="kpiFormulaBuilderTab"
-                      data-toggle="tab"
-                      data-target="#kpiFormulaBuilderTab-pane"
+                      id="kpiActualFormulaBuilderTab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#kpiActualFormulaBuilderTab-pane"
                       type="button"
                       role="tab"
                       aria-controls="kpiFormulaBuilderTab-pane"
                       aria-selected="true"
                     >
                       Formula Builder
+                    </button>
+                  </li>
+                  <li className="nav-item" role="Summary Calculation">
+                    <button
+                      className="nav-link text-uppercase"
+                      id="summaryCalculationTab-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#kpiSummaryCalculationTab-pane"
+                      type="button"
+                      role="tab"
+                      aria-controls="kpiSummaryCalculationTab-pane"
+                      aria-selected="false"
+                    >
+                      Summary Calculation
                     </button>
                   </li>
                 </ul>

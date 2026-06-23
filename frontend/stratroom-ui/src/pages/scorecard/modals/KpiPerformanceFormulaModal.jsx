@@ -27,8 +27,10 @@ const KpiPerformanceFormulaModal = () => {
             ></button>
           </div>
           <div className="modal-body" style={{ padding: '0 25px' }}>
-            <div className="col-md-8" style={{ padding: '0' }}>
-              Field Name: &nbsp;
+            <div className="p-2 mb-3">
+              <label htmlFor="performancefieldId" className="form-label">
+                <small>Field Name</small>
+              </label>
               <select
                 id="performancefieldId"
                 name="performancefieldName"
@@ -48,18 +50,18 @@ const KpiPerformanceFormulaModal = () => {
             <div className="card">
               <ul className="nav nav-tabs" role="tablist">
                 <li className="nav-item m-l-10">
-                  <a className="nav-link active" data-toggle="tab" href="#formula_builder">
+                  <a className="nav-link active" data-bs-toggle="tab" href="#formula_builder">
                     Formula Builder
                   </a>
                 </li>
                 <li className="nav-item m-l-10">
-                  <a className="nav-link" data-toggle="tab" href="#summary_calculation">
+                  <a className="nav-link" data-bs-toggle="tab" href="#summary_calculation">
                     Summary Calculation
                   </a>
                 </li>
               </ul>
               <div className="tab-content" style={{ padding: '10px' }}>
-                <div className="tab-pane body active" id="formula_builder">
+                <div className="tab-pane fade show active" id="formula_builder">
                   <div className="mb-3 w-100">
                     <textarea
                       className="form-control browser-default"
@@ -219,22 +221,26 @@ const KpiPerformanceFormulaModal = () => {
                         <div className="panel-heading">
                           <h6 className="panel-title">Fields and measures:</h6>
                         </div>
-                        <div className="panel-body" data-spy="scroll">
-                          <input
-                            type="text"
-                            className="form-control browser-default"
-                            onKeyUp={() => {
-                              if (window.fieldmeasurefilter)
-                                window.fieldmeasurefilter('PerformancemeasureNames', 'Performancefieldmeasurefilter');
-                            }}
-                            id="Performancefieldmeasurefilter"
-                            autoComplete="off"
-                            placeholder="Search"
-                          />
-                          <button type="button" className="searchformulaicon">
-                            <i className="fa fa-search"></i>
-                          </button>
-                          <ul className="list-group" id="PerformancemeasureNames"></ul>
+                        <div className="panel-body">
+                          <div className="input-group mb-2">
+                            <input
+                              type="text"
+                              className="form-control"
+                              onKeyUp={() => {
+                                if (window.fieldmeasurefilter)
+                                  window.fieldmeasurefilter('PerformancemeasureNames', 'Performancefieldmeasurefilter');
+                              }}
+                              id="Performancefieldmeasurefilter"
+                              autoComplete="off"
+                              placeholder="Search"
+                            />
+                            <button className="btn btn-outline-secondary" type="button" style={{ borderColor: '#ced4da' }}>
+                              <i className="fa fa-search"></i>
+                            </button>
+                          </div>
+                          <div className="border rounded" style={{ maxHeight: '240px', overflowY: 'auto' }}>
+                            <ul className="list-group list-group-flush" id="PerformancemeasureNames" style={{ maxHeight: 'none', overflowY: 'visible' }}></ul>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -247,42 +253,49 @@ const KpiPerformanceFormulaModal = () => {
                           <ul className="list-group">
                             <li
                               className="list-group-item"
+                              style={{ cursor: 'pointer' }}
                               onClick={() => window.updatePerformance && window.updatePerformance('if', 'if')}
                             >
                               if
                             </li>
                             <li
                               className="list-group-item"
+                              style={{ cursor: 'pointer' }}
                               onClick={() => window.updatePerformance && window.updatePerformance('avg', 'avg')}
                             >
                               avg
                             </li>
                             <li
                               className="list-group-item"
+                              style={{ cursor: 'pointer' }}
                               onClick={() => window.updatePerformance && window.updatePerformance('agg', 'agg')}
                             >
                               agg
                             </li>
                             <li
                               className="list-group-item"
+                              style={{ cursor: 'pointer' }}
                               onClick={() => window.updatePerformance && window.updatePerformance('count', 'count')}
                             >
                               count
                             </li>
                             <li
                               className="list-group-item"
+                              style={{ cursor: 'pointer' }}
                               onClick={() => window.updatePerformance && window.updatePerformance('sum', 'sum')}
                             >
                               sum
                             </li>
                             <li
                               className="list-group-item"
+                              style={{ cursor: 'pointer' }}
                               onClick={() => window.updatePerformance && window.updatePerformance('min', 'min')}
                             >
                               min
                             </li>
                             <li
                               className="list-group-item"
+                              style={{ cursor: 'pointer' }}
                               onClick={() => window.updatePerformance && window.updatePerformance('max', 'max')}
                             >
                               max
@@ -303,8 +316,8 @@ const KpiPerformanceFormulaModal = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-4" style={{ marginBottom: '0px' }}>
+                  <div className="row mt-4">
+                    <div className="col-md-12 d-flex gap-2">
                       <button
                         name="validate"
                         id="validate"
@@ -328,7 +341,7 @@ const KpiPerformanceFormulaModal = () => {
                     </div>
                   </div>
                 </div>
-                <div className="tab-pane body" id="summary_calculation">
+                <div className="tab-pane fade" id="summary_calculation">
                   <div className="col-md-12">
                     <div className="panel panel-primary" id="final_panel">
                       <div className="panel-heading">

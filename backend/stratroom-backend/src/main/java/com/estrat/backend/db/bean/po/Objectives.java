@@ -63,7 +63,7 @@ public class Objectives {
     private LocalDateTime updatedTime;
     @Column(name="owner")
     private long owner;
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="score_card_id")
     private ScoreCard scoreCardId;
     @Column(name="created_by", updatable=false)

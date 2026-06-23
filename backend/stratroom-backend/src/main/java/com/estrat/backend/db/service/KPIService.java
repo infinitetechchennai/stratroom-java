@@ -532,8 +532,10 @@ public class KPIService {
     private boolean checkNodekey(String nodeKey) {
         List<KPIDetailsDTO> nodeKeyDataList = this.retrieveKpiDetailsList();
         java.util.Map<String, String> nodeKeyMap = nodeKeyDataList.stream()
+                .filter(dto -> dto.getMeasureName() != null && dto.getNodeKey() != null)
                 .collect(Collectors.toMap(KPIDetailsDTO::getMeasureName, KPIDetailsDTO::getNodeKey, (existingValue, newValue) -> existingValue));
         java.util.Map<String, String> nodeKeyMapCaseinsensitive = nodeKeyMap.entrySet().stream()
+                .filter(entry -> entry.getKey() != null && entry.getValue() != null)
                 .collect(Collectors.toMap(entry -> entry.getKey().toUpperCase(), java.util.Map.Entry::getValue, (existingValue, newValue) -> existingValue));
         return nodeKeyMapCaseinsensitive.containsKey(nodeKey.trim().toUpperCase());
     }

@@ -91,6 +91,8 @@ public class PageController {
     protected DepartmentDetailsService departmentDetailsService;
     @Autowired
     protected EmployeeService employeeService;
+    @Autowired
+    protected com.estrat.backend.db.repository.DepartmentChartMappingRepository departmentChartMappingRepository;
 
     @PostMapping(value={"/pages"})
     public ResponseEntity<ScoreCardResponseDTO> savePageDetails(@RequestBody PageDTO pageDTO) throws RequestException {
@@ -188,11 +190,20 @@ public class PageController {
         if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType() != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
             List<PageDTO> pageDTOS;
             List<Long> departmentlist = new ArrayList<>();
-            departmentlist = this.departmentDetailsService.getDeptList(empId);
+            com.estrat.backend.db.bean.Employee empCheck = new com.estrat.backend.db.bean.Employee();
+            empCheck.setEmpId(empId);
+            if (this.employeeService.checkRole(empCheck)) {
+                System.out.println("User IS an admin! Fetching all departments.");
+                departmentlist = this.departmentChartMappingRepository.getAllDepartmentByOrgId(orgId, 0);
+            } else {
+                System.out.println("User is NOT an admin. Fetching assigned departments only.");
+                departmentlist = this.departmentDetailsService.getDeptList(empId);
+            }
             EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
             if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
                 departmentlist.add(empProfilepo.getDeptId().getId());
             }
+            System.out.println("Final department list size: " + (departmentlist != null ? departmentlist.size() : 0));
             if (CollectionUtils.isNotEmpty((Collection)(pageDTOS = this.pageService.findAllByDept(departmentlist)))) {
                 return new ResponseEntity((Object)pageDTOS, HttpStatus.OK);
             }

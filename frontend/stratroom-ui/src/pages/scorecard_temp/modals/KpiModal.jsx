@@ -184,9 +184,9 @@ const KpiModal = () => {
                             id="button-addon2"
                             data-bs-toggle="modal"
                             data-bs-target=".kpi_formula_popup"
-                            onClick={() => {
+                            onClick={() => { window._kpiCalcCallerModalId = 'kpi-add-modal'; 
                               if (window.handleFormulaEvent) window.handleFormulaEvent('KPI');
-                            }}
+                             }}
                           >
                             KPI Calculator
                           </button>
@@ -215,10 +215,10 @@ const KpiModal = () => {
                             type="button"
                             data-bs-toggle="modal"
                             data-bs-target=".kpi_performanceformula_popup"
-                            onClick={() => {
+                            onClick={() => { window._kpiCalcCallerModalId = 'kpi-add-modal'; 
                               if (window.handleFormulaEvent)
                                 window.handleFormulaEvent('KPIPERFORMANCE');
-                            }}
+                             }}
                           >
                             Performance Calculator
                           </button>
@@ -248,9 +248,9 @@ const KpiModal = () => {
                             id="button-addon2"
                             data-bs-toggle="modal"
                             data-bs-target=".kpiYtdFormulaPoPUp"
-                            onClick={() => {
+                            onClick={() => { window._kpiCalcCallerModalId = 'kpi-add-modal'; 
                               if (window.handleYTDFormulaEvent) window.handleYTDFormulaEvent();
-                            }}
+                             }}
                           >
                             YTD Calculator
                           </button>

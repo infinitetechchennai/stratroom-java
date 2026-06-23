@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export const PerspectiveAddModal = () => {
+    useEffect(() => {
+    }, []);
     return (
         <div className="modal custom-modal fade kpi_setting" id="prespective-add-modal" data-bs-backdrop="static"
             data-bs-keyboard="false" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
@@ -45,11 +47,12 @@ export const PerspectiveAddModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="apStartEndDate" className="form-label"
+                                            <label className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.startEndDate">Start/End Date</label>
-                                            <input type="text" id="apStartEndDate" className="form-control"
-                                                placeholder="Start/End Date"
-                                                data-translate="page.scorecard.scorecardItems.startEndDate" />
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="apStartDate" className="form-control" />
+                                                <input type="date" id="apEndDate" className="form-control" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12">
@@ -116,6 +119,8 @@ export const PerspectiveAddModal = () => {
 };
 
 export const PerspectiveEditModal = () => {
+    useEffect(() => {
+    }, []);
     return (
         <div className="modal custom-modal fade kpi_setting" id="prespective-edit-modal" data-bs-backdrop="static"
             data-bs-keyboard="false" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
@@ -166,10 +171,11 @@ export const PerspectiveEditModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="epStartEndDate" className="form-label">Start/End Date</label>
-                                            <input type="text" id="epStartEndDate" className="form-control"
-                                                data-translate="page.scorecard.scorecardItems.startEndDate"
-                                                placeholder="Start/End Date" />
+                                            <label className="form-label">Start/End Date</label>
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="epStartDate" className="form-control" />
+                                                <input type="date" id="epEndDate" className="form-control" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12">
@@ -257,6 +263,8 @@ export const PerspectiveEditModal = () => {
 };
 
 export const PerspectiveViewModal = () => {
+    useEffect(() => {
+    }, []);
     return (
         <div className="modal custom-modal fade kpi_setting" id="prespective-view-modal" data-bs-backdrop="static"
             data-bs-keyboard="false" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
@@ -309,11 +317,12 @@ export const PerspectiveViewModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="vpStartEndDate" className="form-label"
+                                            <label className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.startEndDate">Start/End Date</label>
-                                            <input type="text" id="vpStartEndDate" className="form-control"
-                                                data-translate="page.scorecard.scorecardItems.startEndDate"
-                                                placeholder="Start/End Date" />
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="vpStartDate" className="form-control" disabled />
+                                                <input type="date" id="vpEndDate" className="form-control" disabled />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12">

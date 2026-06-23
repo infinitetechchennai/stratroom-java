@@ -237,17 +237,46 @@ public class ScoreCardDetailsService {
 
     public List<ScoreCardDetailsDTO> scoreCardDetailList(long empId, boolean loadFlag) {
         Employee emp = this.employeeService.getProfileDetails(empId);
-        long deptId = 0L;
-        if (emp.getDeptDetails() != null) {
-            deptId = emp.getDeptDetails().getId();
-        } else {
-            Optional deptMultipleOwnersMapping = this.departmentChartMapping.findOwner(Long.valueOf(emp.getEmpId()), 0);
-            if (deptMultipleOwnersMapping.isPresent()) {
-                deptId = ((DepartmentChartMapping)deptMultipleOwnersMapping.get()).getDeptId();
+        boolean isAdmin = false;
+        long orgId = 0L;
+        com.estrat.backend.db.dto.UserDTO userRole = this.userRoleManagement.findById(Long.valueOf(empId));
+        if (userRole != null) {
+            String role = userRole.getUserRole();
+            if ("1".equals(role) || "Admin".equalsIgnoreCase(role) || "Super Admin".equalsIgnoreCase(role) || "Super User".equalsIgnoreCase(role) || (userRole.getRoleId() != null && userRole.getRoleId() == 1L)) {
+                isAdmin = true;
             }
         }
-        System.out.println("score deptid :: " + deptId);
-        List<ScoreCardDetails> dbList = this.scoreCardRepository.scoreCardDetailListByDeptId(Long.valueOf(deptId), 0);
+        if (emp != null && emp.getOrgDetails() != null) {
+            orgId = emp.getOrgDetails().getOrgId();
+        }
+
+        List<ScoreCardDetails> dbList;
+        if (isAdmin) {
+            dbList = this.scoreCardRepository.findByAll(0);
+        } else if (orgId > 0) {
+            List<DeptDetails> deptList = this.departmentDetailsService.findAllByOrgId(orgId);
+            List<Long> deptIds = deptList.stream().map(DeptDetails::getId).collect(Collectors.toList());
+            if (!deptIds.isEmpty()) {
+                dbList = this.scoreCardRepository.scoreCardListByDeptId(deptIds, 0);
+            } else {
+                dbList = new ArrayList<>();
+            }
+        } else {
+            long deptId = 0L;
+            if (emp.getDeptDetails() != null) {
+                deptId = emp.getDeptDetails().getId();
+            } else {
+                Optional deptMultipleOwnersMapping = this.departmentChartMapping.findOwner(Long.valueOf(emp.getEmpId()), 0);
+                if (deptMultipleOwnersMapping.isPresent()) {
+                    deptId = ((DepartmentChartMapping)deptMultipleOwnersMapping.get()).getDeptId();
+                }
+            }
+            if (deptId > 0) {
+                dbList = this.scoreCardRepository.scoreCardDetailListByDeptId(Long.valueOf(deptId), 0);
+            } else {
+                dbList = new ArrayList<>();
+            }
+        }
         return dbList.stream().map(dbValue -> new ScoreCardDetailsDTO(dbValue, loadFlag)).collect(Collectors.toList());
     }
 

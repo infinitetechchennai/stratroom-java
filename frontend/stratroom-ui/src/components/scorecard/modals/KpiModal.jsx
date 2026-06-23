@@ -94,7 +94,7 @@ export const KpiAddModal = () => {
                                                     placeholder="Performance" aria-label=""
                                                     aria-describedby="button-addon2" />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2"
-                                                    data-bs-toggle="modal" data-bs-target="#kpi_formula_popup"
+                                                    data-bs-toggle="modal" data-bs-target="#kpi_formula_popup" onClick={() => { window._kpiCalcCallerModalId = 'kpi-add-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPIPERFORMANCE'); }}
                                                     data-translate="page.scorecard.scorecardItems.kpiCalculator">
                                                     KPI Calculator
                                                 </button>
@@ -311,7 +311,7 @@ export const KpiEditModal = () => {
                                             <label htmlFor="ekpiActual" className="form-label">Actual</label>
                                             <div className="input-group">
                                                 <input type="text" className="form-control" id="ekpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpiActual-calculator-modal">KPI Calculator</button>
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpiActual-calculator-modal" onClick={() => { window._kpiCalcCallerModalId = 'kpi-edit-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPI'); }}>KPI Calculator</button>
                                             </div>
                                         </div>
                                     </div>
@@ -320,7 +320,7 @@ export const KpiEditModal = () => {
                                             <label htmlFor="ekpiPerformance" className="form-label">Performance</label>
                                             <div className="input-group">
                                                 <input type="text" className="form-control" id="ekpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup">KPI Calculator</button>
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup" onClick={() => { window._kpiCalcCallerModalId = 'kpi-edit-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPIPERFORMANCE'); }}>KPI Calculator</button>
                                             </div>
                                         </div>
                                     </div>
@@ -329,7 +329,7 @@ export const KpiEditModal = () => {
                                             <label htmlFor="ekpiYearToDate" className="form-label">Year To Date (YTD)</label>
                                             <div className="input-group">
                                                 <input type="text" className="form-control" id="ekpiYearToDate" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" readOnly />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#ytd-calculator-modal">YTD Calculator</button>
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#ytd-calculator-modal" onClick={() => { window._kpiCalcCallerModalId = 'kpi-edit-modal'; }}>YTD Calculator</button>
                                             </div>
                                         </div>
                                     </div>
@@ -530,7 +530,7 @@ export const KpiViewModal = () => {
                                             <label htmlFor="vkpiActual" className="form-label">Actual</label>
                                             <div className="input-group">
                                                 <input type="text" className="form-control" id="vkpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpiActual-calculator-modal">KPI Calculator</button>
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpiActual-calculator-modal" onClick={() => { window._kpiCalcCallerModalId = 'kpi-view-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPI'); }}>KPI Calculator</button>
                                             </div>
                                         </div>
                                     </div>
@@ -539,7 +539,7 @@ export const KpiViewModal = () => {
                                             <label htmlFor="vkpiPerformance" className="form-label">Performance</label>
                                             <div className="input-group">
                                                 <input type="text" className="form-control" id="vkpiPerformance" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup">KPI Calculator</button>
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpi_formula_popup" onClick={() => { window._kpiCalcCallerModalId = 'kpi-view-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPIPERFORMANCE'); }}>KPI Calculator</button>
                                             </div>
                                         </div>
                                     </div>
@@ -548,7 +548,7 @@ export const KpiViewModal = () => {
                                             <label htmlFor="vkpiYearToDate" className="form-label">Year To Date (YTD)</label>
                                             <div className="input-group">
                                                 <input type="text" className="form-control" id="vkpiYearToDate" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" readOnly />
-                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#ytd-calculator-modal">YTD Calculator</button>
+                                                <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#ytd-calculator-modal" onClick={() => { window._kpiCalcCallerModalId = 'kpi-view-modal'; }}>YTD Calculator</button>
                                             </div>
                                         </div>
                                     </div>

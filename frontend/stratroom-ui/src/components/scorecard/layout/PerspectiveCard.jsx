@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { ScorecardTable } from './ScorecardTable';
 
 export const PerspectiveCard = ({ tab, isActive }) => {
-    const tablePrefix = tab.title.toLowerCase().replace(/\s+/g, "-");
+    const tablePrefix = (tab.title || "").toLowerCase().replace(/\s+/g, "-");
 
     useEffect(() => {
         if (window.lucide) window.lucide.createIcons();

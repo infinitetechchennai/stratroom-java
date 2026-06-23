@@ -89,7 +89,8 @@ public class ScoreCardDetails {
     }
 
     public ScoreCardDetails(ScoreCardDetailsDTO scoreCardDetailsDTO) {
-        this.id = scoreCardDetailsDTO.getId();
+        Long dtoId = scoreCardDetailsDTO.getId();
+        this.id = (dtoId != null && dtoId != 0L) ? dtoId : null;
         this.active = scoreCardDetailsDTO.getActive();
         this.owner = scoreCardDetailsDTO.getOwner();
         Long pageId = scoreCardDetailsDTO.getPageId();
@@ -108,7 +109,14 @@ public class ScoreCardDetails {
         this.scorecardName = scoreCardDetailsDTO.getScorecardName();
         this.startDate = scoreCardDetailsDTO.getStartDate();
         this.endDate = scoreCardDetailsDTO.getEndDate();
-        this.scoreCardList = scoreCardDetailsDTO.getScoreCardDTOS() != null ? scoreCardDetailsDTO.getScoreCardDTOS().stream().map(obj -> new ScoreCard(obj)).collect(Collectors.toList()) : null;
+        if (scoreCardDetailsDTO.getScoreCardDTOS() != null) {
+            final ScoreCardDetails self = this;
+            this.scoreCardList = scoreCardDetailsDTO.getScoreCardDTOS().stream().map(obj -> {
+                ScoreCard sc = new ScoreCard(obj);
+                sc.setScoreCardDetailsId(self);
+                return sc;
+            }).collect(Collectors.toList());
+        }
         ObjectMapper mapper = new ObjectMapper();
         try {
             this.scoreCardDetailsValue = mapper.writeValueAsString((Object)scoreCardDetailsDTO.getScoreCardDetailsValue());

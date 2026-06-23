@@ -1,4 +1,4 @@
-# Node
+﻿# Node
 node_modules/
 dist/
 .env*
@@ -19,7 +19,12 @@ target/
 .idea/
 *.iml
 .vscode/
+.metadata/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+*.gz

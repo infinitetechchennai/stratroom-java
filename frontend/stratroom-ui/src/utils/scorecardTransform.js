@@ -78,5 +78,6 @@ export function cardDetailsToTabs(dto) {
     scorecardName: card.scorecardName ?? card.scoreCardName ?? 'Scorecard',
     overallScore: card.thresholdResult ?? '',
     scoreCardDetailsId: card.id ?? card.scoreCardDetailsId,
+    rawCard: card,
   };
 }

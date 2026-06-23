@@ -1,0 +1,108 @@
+:root {
+  --cyan: #00C4C4;
+  --cyan-dk: #009999;
+  --cyan-lt: #F0FFFE;
+  --pink: #E91E8C;
+  --amber: #F59E0B;
+  --gold: #D4A017;
+  --gold-lt: #FDF6E3;
+  --purple: #7C3AED;
+  --green: #10B981;
+  --blue: #3B82F6;
+  --red: #F43F5E;
+  --navy: #0B1437;
+  --navy-2: #0f1d4a;
+  --text-pri: #0B1437;
+  --text-sec: #5B6B8A;
+  --text-ter: #8A97B0;
+  --border: #E4EAF4;
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --font: 'Trebuchet MS', Trebuchet, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ══════════════════════════════════════════
+   CALENDAR PICKER STYLES
+══════════════════════════════════════════ */
+.cal-preset-btn {
+  display: block; width: 100%; text-align: left;
+  padding: 6px 10px; border-radius: 7px; border: none;
+  background: none; font-family: var(--font); font-size: 11.5px;
+  font-weight: 500; color: var(--text-sec); cursor: pointer;
+  transition: background .12s, color .12s;
+}
+
+.cal-preset-btn:hover { background: var(--cyan-lt); color: var(--cyan-dk); }
+
+.cal-preset-btn.cal-active { background: rgba(0,196,196,.12); color: var(--cyan-dk); font-weight: 700; }
+
+.cal-type-tab {
+  padding: 4px 12px; border-radius: 6px; border: 1px solid transparent;
+  font-family: var(--font); font-size: 11.5px; font-weight: 600;
+  color: var(--text-sec); background: none; cursor: pointer;
+  transition: all .13s;
+}
+
+.cal-type-tab:hover:not(.active) { background: #F0FFFE; color: var(--cyan-dk); }
+
+.cal-type-tab.active { background: rgba(0,196,196,.12); color: var(--cyan-dk); border-color: rgba(0,196,196,.28); }
+
+.cal-nav-btn {
+  width: 26px; height: 26px; border-radius: 6px;
+  border: 1px solid #E4EAF4; background: #fff; cursor: pointer;
+  font-size: 16px; line-height: 1; color: var(--text-sec);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .12s;
+}
+
+.cal-nav-btn:hover { background: #F0FFFE; color: var(--cyan-dk); }
+
+.cal-grid-hdr { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 4px; }
+
+.cal-dow-lbl { text-align: center; font-size: 10px; font-weight: 700; color: var(--text-ter); padding: 2px 0 4px; letter-spacing: .04em; }
+
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; }
+
+.cal-day-cell {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; border-radius: 6px; cursor: pointer;
+  color: var(--text-sec); transition: background .1s, color .1s;
+  position: relative; user-select: none; font-family: var(--font); font-weight: 500;
+  border: none; background: none;
+}
+
+.cal-day-cell:hover:not(.cal-empty):not(.cal-other) { background: rgba(0,196,196,.12); color: var(--cyan-dk); }
+
+.cal-day-cell.cal-other { color: var(--text-ter); opacity: .4; cursor: default; }
+
+.cal-day-cell.cal-empty { cursor: default; }
+
+.cal-day-cell.cal-in-range { background: rgba(0,196,196,.08); border-radius: 0; color: var(--cyan-dk); }
+
+.cal-day-cell.cal-range-start, .cal-day-cell.cal-range-end {
+  background: var(--cyan-dk) !important; color: #fff !important;
+  border-radius: 6px !important; font-weight: 700;
+}
+
+.cal-day-cell.cal-today::after {
+  content: ''; position: absolute; bottom: 2px; left: 50%;
+  transform: translateX(-50%); width: 3px; height: 3px;
+  border-radius: 50%; background: var(--cyan-dk);
+}
+
+.cal-day-cell.cal-range-start.cal-today::after,
+.cal-day-cell.cal-range-end.cal-today::after { background: #fff; }
+
+.cal-q-btn, .cal-yr-btn {
+  padding: 9px 4px; border-radius: 7px; text-align: center;
+  cursor: pointer; font-size: 11.5px; font-weight: 600;
+  border: 1px solid #E4EAF4; background: #F7F9FC;
+  color: var(--text-sec); transition: all .12s;
+  font-family: var(--font);
+}
+
+.cal-q-btn:hover, .cal-yr-btn:hover { background: rgba(0,196,196,.1); color: var(--cyan-dk); border-color: rgba(0,196,196,.3); }
+
+.cal-q-btn.cal-active, .cal-yr-btn.cal-active { background: var(--cyan-dk); color: #fff; border-color: var(--cyan-dk); }
+
+.cal-yr-btn.cal-yr-inrange { background: rgba(0,196,196,.08); color: var(--cyan-dk); border-color: rgba(0,196,196,.2); }

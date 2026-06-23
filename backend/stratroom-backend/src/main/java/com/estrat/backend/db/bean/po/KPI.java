@@ -28,6 +28,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -39,6 +41,7 @@ public class KPI {
     @Column(name="org_id")
     private long orgId;
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="ID")
     private long id;
     @Column(name="kpi_name")
@@ -64,6 +67,7 @@ public class KPI {
     @Column(name="kpi_id")
     private String kpiId;
     @Column(name="include_reportee")
+    @jakarta.persistence.Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     private boolean includeReportee;
     @Column(name="custom_repotees")
     private String customReportees;

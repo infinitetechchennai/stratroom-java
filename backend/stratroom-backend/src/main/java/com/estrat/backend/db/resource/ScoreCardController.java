@@ -137,6 +137,14 @@ public class ScoreCardController {
         return new ResponseEntity((Object)response, HttpStatus.OK);
     }
 
+    @Autowired
+    private com.estrat.backend.db.service.ScoreCardImportService scoreCardImportService;
+
+    @PostMapping(value={"/scorecard/bulkImport"})
+    public ResponseEntity<ScoreCardResponseDTO> bulkImportScorecards(@RequestBody List<Map<String, Object>> rows) {
+        return this.scoreCardImportService.bulkImportScorecards(rows);
+    }
+
     @DeleteMapping(value={"/scorecard/{id}"})
     public ResponseEntity<ScoreCardResponseDTO> softDeleteScoreCard(@PathVariable long id) {
         ScoreCardResponseDTO cardResponseDTO = new ScoreCardResponseDTO();

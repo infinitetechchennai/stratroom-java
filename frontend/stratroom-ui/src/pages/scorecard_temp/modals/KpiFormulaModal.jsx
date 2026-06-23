@@ -1,5 +1,22 @@
 import React from 'react';
 
+const goBackToCallerModal = () => {
+  const calcModal = document.getElementById('kpiActual-calculator-modal');
+  const callerModalId = window._kpiCalcCallerModalId || 'kpi-view-modal';
+  const callerModal = document.getElementById(callerModalId);
+  if (!calcModal || !callerModal || !window.bootstrap) return;
+
+  const bsCalc = window.bootstrap.Modal.getInstance(calcModal);
+  if (bsCalc) {
+    calcModal.addEventListener('hidden.bs.modal', function reopenParent() {
+      calcModal.removeEventListener('hidden.bs.modal', reopenParent);
+      const bsCaller = window.bootstrap.Modal.getOrCreateInstance(callerModal);
+      bsCaller.show();
+    });
+    bsCalc.hide();
+  }
+};
+
 const KpiFormulaModal = () => {
   return (
     <div
@@ -24,8 +41,8 @@ const KpiFormulaModal = () => {
               type="button"
               id="closePopupId"
               className="btn-close"
-              data-bs-dismiss="modal"
               aria-label="Close"
+              onClick={goBackToCallerModal}
             ></button>
           </div>
           <div className="modal-body">

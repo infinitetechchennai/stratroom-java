@@ -112,7 +112,7 @@ export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel
                             <a href="#" onClick={handleImportClick}>
                                 <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
                                     data-bs-title={importing ? 'Importing…' : 'Import Excel'}>
-                                    <i style={{ width: '14px', height: '14px' }} data-feather="download"></i>
+                                    <i style={{ width: '14px', height: '14px' }} data-feather="upload"></i>
                                 </span>
                             </a>
                             <input
@@ -131,7 +131,7 @@ export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel
                         </li>
                         <li>
                             <a href="#" onClick={handleExport} data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Export">
-                                <i style={{ width: '14px', height: '14px' }} data-feather="upload"></i>
+                                <i style={{ width: '14px', height: '14px' }} data-feather="download"></i>
                             </a>
                         </li>
                         <li>

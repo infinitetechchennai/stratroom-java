@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -26,6 +28,7 @@ import jakarta.persistence.Table;
 @Table(name="subkpi", schema="orgstructure")
 public class SubKPI {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="ID")
     private long id;
     @Column(name="org_id")
@@ -51,6 +54,7 @@ public class SubKPI {
     @Column(name="subkpi_id")
     private String subKpiId;
     @Column(name="include_reportee")
+    @jakarta.persistence.Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     private boolean includeReportee;
     @Column(name="custom_repotees")
     private String customReportees;

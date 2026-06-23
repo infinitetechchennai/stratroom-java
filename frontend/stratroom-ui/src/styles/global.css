@@ -40,3 +40,20 @@
   --shell-input-bg: #0f172a;
   color-scheme: dark;
 }
+
+/* Make formula functions and KPIs clickable in calculator modals */
+.calculator-modal .list-group-item,
+.kpi_formula_popup .list-group-item {
+  cursor: pointer;
+}
+
+/* Ensure KPI/Measure/Function lists are consistently scrollable in ALL calculator/formula modals */
+.modal .panel-body .list-group {
+  max-height: 240px !important;
+  overflow-y: auto !important;
+}
+
+/* Ensure Air Datepicker appears above Bootstrap 5 modals */
+.datepickers-container {
+  z-index: 9999 !important;
+}
