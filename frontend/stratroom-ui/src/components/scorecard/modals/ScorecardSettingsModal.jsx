@@ -257,7 +257,12 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
                                                 <label className="form-label">Performance</label>
                                                 <input
                                                     type="text"
+                                                    id="scorecardSettingsPerformance"
                                                     className="form-control browser-default"
+                                                    style={{ cursor: 'pointer' }}
+                                                    placeholder="Click to build formula"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#kpi-calculator-modal"
                                                     value={performance}
                                                     onChange={(e) => setPerformance(e.target.value)}
                                                 />

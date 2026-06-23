@@ -87,6 +87,16 @@ function insertToken(textareaId, token) {
   try { box.setSelectionRange(pos, pos); } catch { /* unsupported */ }
 }
 
+// Writes a value into an input/textarea in a way React's controlled inputs detect.
+// Setting `.value` directly bypasses React's value tracker, so we use the native
+// prototype setter and then dispatch a bubbling input event to trigger onChange.
+function setInputValue(el, value) {
+  const proto = el.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+  const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+  if (setter) setter.call(el, value); else el.value = value;
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
 function setDescription(component, name, descKey) {
   const cfg = COMPONENTS[component];
   const modal = cfg && document.getElementById(cfg.modalId);
@@ -335,8 +345,7 @@ async function runValidate(mode, component) {
   box.style.border = '2px solid green';
   if (mode === 'Add') {
     if (activeInput) {
-      activeInput.value = formula;
-      activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+      setInputValue(activeInput, formula);
     }
     // If opened from the scorecard header + button (no parent modal), auto-save formula.
     if (component === 'SCORECARDCONFIG' && !parentModalId && window.saveScorecardFormula) {
