@@ -31,6 +31,8 @@ const CURRENCIES = ['US dollars', 'Euro', 'Indian Rupee', 'UAE Dirham', 'Saudi R
 const DATA_PERIODS = ['Month', 'Quarter', 'Half Year', 'Year']
 const IMPLEMENTATIONS = ['BSC', 'OKR', 'KPI']
 const IMPLEMENTATION_TYPES = ['Department', 'Employee', 'Organization']
+// Day-of-month options (1..31) for the KPI form open/close schedule.
+const DAYS_OF_MONTH = Array.from({ length: 31 }, (_, i) => String(i + 1))
 const LANGUAGES = ['English', 'Arabic', 'Amharic']
 const TIMEZONES = [
   '(GMT-12:00) International Date Line West',
@@ -534,10 +536,10 @@ function ScorecardSettingsUI() {
       <div style={{ fontSize: 15, fontWeight: 700, color: '#0b1437', marginBottom: 16 }}>Kpi Form Schedule settings</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
         <Field label="Open the form on">
-          <Select value={form.openFormOn} onChange={set('openFormOn')} options={['1', '2', '3', '4', '5']} />
+          <Select value={form.openFormOn} onChange={set('openFormOn')} options={DAYS_OF_MONTH} />
         </Field>
         <Field label="Close the form on">
-          <Select value={form.closeFormOn} onChange={set('closeFormOn')} options={['1', '2', '3', '4', '5']} />
+          <Select value={form.closeFormOn} onChange={set('closeFormOn')} options={DAYS_OF_MONTH} />
         </Field>
       </div>
 
