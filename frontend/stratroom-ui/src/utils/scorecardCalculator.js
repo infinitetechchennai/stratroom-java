@@ -20,7 +20,9 @@ let parentModalId = null;
 const COMPONENTS = {
   KPI: {
     modalId: 'kpiActual-calculator-modal',
-    textareaId: 'kpiActualPerformance',
+    // The KPI Actual calculator textarea is id="formula" (same target the keypad's
+    // window.updateFormula writes to), so measure clicks / Add / modal-show all use it.
+    textareaId: 'formula',
     lists: { main: 'measureNames', sub: 'kpisubmeasureNames', init: 'kpiinitiativeNames' },
   },
   KPIPERFORMANCE: {
@@ -30,7 +32,7 @@ const COMPONENTS = {
   },
   YTD: {
     modalId: 'ytd-calculator-modal',
-    textareaId: 'ytdPerformance',
+    textareaId: 'customYtdformula',
     lists: { main: 'ytdMeasureNames', sub: 'ytdsubMeasureNames', init: 'ytdinitiativeNames' },
   },
   SCORECARDCONFIG: {
@@ -50,7 +52,7 @@ const COMPONENTS = {
   },
   THRESSHOLD: {
     modalId: 'kpi_custom_threshold_popup',
-    textareaId: 'formulaCustomKPI',
+    textareaId: 'thresholdformula',
     lists: {},
   },
 };
