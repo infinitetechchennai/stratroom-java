@@ -116,6 +116,10 @@ public class ControlPanelGeneralController {
         this.updateCustomAuditDetails(controlPanelGeneralDTO);
         boolean checkStatus = this.checkThresholdValues(controlPanelGeneralDTO);
         ControlPanelCustomPerformance controlpanelgen = this.controlPanelGeneralService.findCustomPerformancebyid(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
+        if (controlpanelgen == null) {
+            // First save for this org: no existing record to merge from.
+            controlpanelgen = new ControlPanelCustomPerformance();
+        }
         ControlPanelCustomPerformance controlPanelGeneral = new ControlPanelCustomPerformance(controlPanelGeneralDTO, controlpanelgen);
         controlPanelGeneral.setOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
         controlPanelGeneral.setCreatedTime(LocalDateTime.now());
@@ -309,7 +313,7 @@ public class ControlPanelGeneralController {
             if (controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("Performance") && controlPanelGeneralDTO.getGeneralSettingValue().containsKey("performance")) {
                 this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Default Performance Modified");
             }
-            if (controlPanelGeneralDTO.getGeneralSettingValue().containsKey("aggregationType") && !((String)controlPanelGeneral.get("aggregationType")).equals(controlPanelGeneralDTO.getGeneralSettingValue().get("aggregationType").toString())) {
+            if (controlPanelGeneralDTO.getGeneralSettingValue().containsKey("aggregationType") && controlPanelGeneral != null && controlPanelGeneral.get("aggregationType") != null && !controlPanelGeneral.get("aggregationType").toString().equals(controlPanelGeneralDTO.getGeneralSettingValue().get("aggregationType").toString())) {
                 this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Aggregation Type Modified");
             }
             if (controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("customPerformance") && controlPanelGeneralDTO.getGeneralSettingValue().containsKey("customPerformance")) {
