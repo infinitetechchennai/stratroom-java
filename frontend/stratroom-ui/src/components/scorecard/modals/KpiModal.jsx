@@ -1,4 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getReporteeList } from '../../../services/scorecardApi';
+
+// Logged-in user from the stored profile (name + employee id).
+function currentUser() {
+    try {
+        const p = JSON.parse(localStorage.getItem('profile') || '{}');
+        const name = [p.firstName, p.lastName].filter(Boolean).join(' ')
+            || p.name || p.displayName || p.userName || p.emailAddress || p.email || '';
+        const id = p.empId ?? p.id ?? '';
+        return { id: String(id), name };
+    } catch {
+        return { id: '', name: '' };
+    }
+}
+
+// Owner dropdown: defaults to the logged-in user, then lists their reportees.
+// No hardcoded names.
+const OwnerSelect = ({ id, className }) => {
+    const me = currentUser();
+    const [owners, setOwners] = useState([]);
+    useEffect(() => {
+        let active = true;
+        getReporteeList()
+            .then((list) => { if (active && Array.isArray(list)) setOwners(list); })
+            .catch(() => {});
+        return () => { active = false; };
+    }, []);
+    const meValue = me.id || me.name;
+    return (
+        <select name={id} id={id} className={className} data-placeholder="Select Owner" defaultValue={meValue}>
+            {me.name && <option value={meValue}>{me.name}</option>}
+            {owners.map((o) => {
+                const oid = String(o.empId ?? o.id ?? o.employeeId ?? '');
+                const oname = [o.firstName, o.lastName].filter(Boolean).join(' ')
+                    || o.name || o.fullName || o.employeeName || o.emailAddress || '';
+                if (!oname || oid === me.id) return null;
+                return <option key={oid || oname} value={oid || oname}>{oname}</option>;
+            })}
+        </select>
+    );
+};
 
 export const KpiAddModal = () => {
     return (
@@ -63,13 +104,7 @@ export const KpiAddModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="akpiOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <select name="akpiOwner" id="akpiOwner"
-                                                className="form-select select-dropdown-add-kpi" data-placeholder="Select Owner" defaultValue="">
-                                                <option value="" disabled>Select Owner</option>
-                                                <option value="David Miller">David Miller</option>
-                                                <option value="Raman V">Raman V</option>
-                                                <option value="Bryan Adams">Bryan Adams</option>
-                                            </select>
+                                            <OwnerSelect id="akpiOwner" className="form-select select-dropdown-add-kpi" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-4">
@@ -288,12 +323,7 @@ export const KpiEditModal = () => {
                                     <div className="g-col-12 g-col-md-4">
                                         <div className="form-group">
                                             <label htmlFor="ekpiOwner" className="form-label">Owner</label>
-                                            <select name="ekpiOwner" id="ekpiOwner" className="form-select select-dropdown-edit-kpi" data-placeholder="Select Owner" defaultValue="">
-                                                <option value="" disabled>Select Owner</option>
-                                                <option value="David Miller">David Miller</option>
-                                                <option value="Raman V">Raman V</option>
-                                                <option value="Bryan Adams">Bryan Adams</option>
-                                            </select>
+                                            <OwnerSelect id="ekpiOwner" className="form-select select-dropdown-edit-kpi" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-4">
