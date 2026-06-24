@@ -1,6 +1,7 @@
 package com.estrat.backend.db.scv2;
 
 import java.math.BigDecimal;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,6 +29,40 @@ public class RAGStatusService {
             return fiveColor(score);
         }
         return threeColor(score);
+    }
+
+    // 3- and 5-color status/color palettes (low -> high) used when a KPI defines its
+    // own threshold band values; reuses the status strings the UI already renders.
+    private static final String[] STATUS_3 = {"red", "amber", "green"};
+    private static final String[] HEX_3 = {"#e84343", "#ffd500", "#1aa243"};
+    private static final String[] STATUS_5 = {"red", "amber", "light_green", "green", "exceeds"};
+    private static final String[] HEX_5 = {"#e84343", "#ffd500", "#5FCD5F", "#1aa243", "#0066cc"};
+
+    /**
+     * Per-KPI variant: `bands` are ascending upper-bound cutoffs the user entered in
+     * the Threshold selector (lowest colour first). The score falls into the first
+     * band it is &le;, otherwise the top colour. Falls back to the global-default
+     * logic when no bands are supplied.
+     */
+    public RAGResult determineStatus(BigDecimal score, String classificationType, List<BigDecimal> bands) {
+        if (bands == null || bands.isEmpty()) {
+            return determineStatus(score, classificationType);
+        }
+        if (score == null) {
+            return new RAGResult("unknown", "#808080", "No data available", score);
+        }
+        boolean five = "FIVE_COLOR".equalsIgnoreCase(classificationType) || bands.size() >= 4;
+        String[] statuses = five ? STATUS_5 : STATUS_3;
+        String[] hexes = five ? HEX_5 : HEX_3;
+        int n = Math.min(bands.size(), statuses.length);
+        for (int i = 0; i < n; i++) {
+            BigDecimal b = bands.get(i);
+            if (b != null && score.compareTo(b) <= 0) {
+                return new RAGResult(statuses[i], hexes[i], "Within threshold band " + (i + 1), score);
+            }
+        }
+        int top = statuses.length - 1;
+        return new RAGResult(statuses[top], hexes[top], "Above all thresholds", score);
     }
 
     private RAGResult threeColor(BigDecimal score) {

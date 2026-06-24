@@ -79,7 +79,7 @@ public class ScorecardCalculationService {
 
         Map<Long, List<Map<String, Object>>> kpiByObj = groupBy(
                 queryIn("SELECT id, name, code, polarity, target_value, min_target, max_target, weight, data_type, "
-                        + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id, formula "
+                        + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id, formula, thresholds "
                         + "FROM sc_kpis WHERE is_deleted = false AND objective_id IN (%s) ORDER BY display_order, id", objectiveIds),
                 "objective_id");
         List<Long> kpiIds = kpiByObj.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
@@ -360,7 +360,8 @@ public class ScorecardCalculationService {
             previous = achievementCalculator.calculate(dec(prev.get("actual_value")),
                     prevTarget != null ? prevTarget : target, polarity, minTarget, maxTarget, cap);
         }
-        RAGStatusService.RAGResult rag = ragStatusService.determineStatus(achievement, classType);
+        List<BigDecimal> bands = parseBands(str(k.get("thresholds")));
+        RAGStatusService.RAGResult rag = ragStatusService.determineStatus(achievement, classType, bands);
         String trend = ragStatusService.calculateTrend(achievement, previous);
 
         Map<String, Object> value = new LinkedHashMap<>();
@@ -743,6 +744,27 @@ public class ScorecardCalculationService {
             return new BigDecimal(o.toString());
         }
         return null;
+    }
+
+    /** Parse a JSON-ish array of numbers ("[50,80,100]") into ascending band cutoffs. */
+    private static List<BigDecimal> parseBands(String json) {
+        List<BigDecimal> bands = new ArrayList<>();
+        if (json == null || json.isBlank()) {
+            return bands;
+        }
+        String body = json.trim().replaceAll("^\\[|\\]$", "");
+        for (String part : body.split(",")) {
+            String t = part.trim().replaceAll("^\"|\"$", "");
+            if (t.isEmpty()) {
+                continue;
+            }
+            try {
+                bands.add(new BigDecimal(t));
+            } catch (NumberFormatException ignore) {
+                // skip non-numeric entries
+            }
+        }
+        return bands;
     }
 
     private static boolean bool(Object o) {

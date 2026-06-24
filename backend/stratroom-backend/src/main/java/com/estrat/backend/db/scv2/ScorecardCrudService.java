@@ -43,6 +43,13 @@ public class ScorecardCrudService {
         // Audit display names (who created / last modified the KPI).
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN created_by TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN updated_by TEXT"); } catch (Exception ignore) {}
+        // Extra KPI attributes collected in the modal (rollup numbers, source, owner,
+        // and the per-KPI RAG threshold band values as a JSON array).
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN contribution NUMERIC"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN sub_weight NUMERIC"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN data_source TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN owner TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN thresholds TEXT"); } catch (Exception ignore) {}
     }
 
     // ---------------- SCORECARD ----------------
@@ -175,7 +182,8 @@ public class ScorecardCrudService {
                 "SELECT id, objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, "
                         + "null_handling, achievement_cap, classification_type, formula, actual_formula, "
-                        + "ytd_formula, display_order, created_by, updated_by, created_at, updated_at "
+                        + "ytd_formula, display_order, created_by, updated_by, created_at, updated_at, "
+                        + "contribution, sub_weight, data_source, owner, thresholds "
                         + "FROM sc_kpis WHERE id = ?", id);
         return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
     }
@@ -185,15 +193,18 @@ public class ScorecardCrudService {
         return insert(
                 "INSERT INTO sc_kpis (objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, null_handling, "
-                        + "achievement_cap, classification_type, display_order, formula, created_by, updated_by) "
-                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "achievement_cap, classification_type, display_order, formula, created_by, updated_by, "
+                        + "contribution, sub_weight, data_source, owner, thresholds) "
+                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "objectiveId", 0L), str(b, "code", null), str(b, "name", "KPI"), str(b, "description", null),
                 str(b, "polarity", "HIGHER"), dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"),
                 decOrNull(b, "maxTarget"), str(b, "dataType", "NUMBER"), str(b, "currencyCode", null),
                 dec(b, "weight", BigDecimal.ZERO), str(b, "measurementFrequency", null),
                 str(b, "nullHandling", "EXCLUDE"), dec(b, "achievementCap", new BigDecimal("150")),
                 str(b, "classificationType", "THREE_COLOR"), intg(b, "displayOrder", 0), str(b, "formula", null),
-                str(b, "createdByName", null), str(b, "createdByName", null));
+                str(b, "createdByName", null), str(b, "createdByName", null),
+                decOrNull(b, "contribution"), decOrNull(b, "subWeight"), str(b, "dataSource", null),
+                str(b, "owner", null), str(b, "thresholds", null));
     }
 
     @Transactional
@@ -204,7 +215,8 @@ public class ScorecardCrudService {
         List<Map<String, Object>> exRows = jdbc.queryForList(
                 "SELECT name, description, polarity, target_value, min_target, max_target, data_type, "
                         + "currency_code, weight, measurement_frequency, null_handling, achievement_cap, "
-                        + "classification_type, display_order, formula, actual_formula, ytd_formula, created_by "
+                        + "classification_type, display_order, formula, actual_formula, ytd_formula, created_by, "
+                        + "contribution, sub_weight, data_source, owner, thresholds "
                         + "FROM sc_kpis WHERE id = ?", id);
         Map<String, Object> ex = exRows.isEmpty() ? java.util.Collections.emptyMap() : exRows.get(0);
         Integer exDisplay = ex.get("display_order") == null ? 0 : ((Number) ex.get("display_order")).intValue();
@@ -212,7 +224,8 @@ public class ScorecardCrudService {
                 "UPDATE sc_kpis SET name=?, description=?, polarity=?, target_value=?, min_target=?, max_target=?, "
                         + "data_type=?, currency_code=?, weight=?, measurement_frequency=?, null_handling=?, "
                         + "achievement_cap=?, classification_type=?, display_order=?, formula=?, "
-                        + "actual_formula=?, ytd_formula=?, updated_by=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+                        + "actual_formula=?, ytd_formula=?, updated_by=?, contribution=?, sub_weight=?, "
+                        + "data_source=?, owner=?, thresholds=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
                 str(b, "name", (String) ex.get("name")),
                 str(b, "description", (String) ex.get("description")),
                 str(b, "polarity", (String) ex.get("polarity")),
@@ -230,7 +243,12 @@ public class ScorecardCrudService {
                 str(b, "formula", (String) ex.get("formula")),
                 str(b, "actualFormula", (String) ex.get("actual_formula")),
                 str(b, "ytdFormula", (String) ex.get("ytd_formula")),
-                str(b, "updatedByName", (String) ex.get("created_by")), id) > 0;
+                str(b, "updatedByName", (String) ex.get("created_by")),
+                dec(b, "contribution", (BigDecimal) ex.get("contribution")),
+                dec(b, "subWeight", (BigDecimal) ex.get("sub_weight")),
+                str(b, "dataSource", (String) ex.get("data_source")),
+                str(b, "owner", (String) ex.get("owner")),
+                str(b, "thresholds", (String) ex.get("thresholds")), id) > 0;
     }
 
     @Transactional

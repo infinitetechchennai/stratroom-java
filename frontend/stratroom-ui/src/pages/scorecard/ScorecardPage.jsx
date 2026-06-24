@@ -61,6 +61,42 @@ const currentUserName = () => {
     }
 };
 
+// ThresholdSelector dropdown value -> sc_kpis.classification_type
+const classFromThreshold = (v) => (v === 'option_4' ? 'FIVE_COLOR' : 'THREE_COLOR');
+
+// Collect the visible threshold band inputs (option1color1.._<prefix>) as a JSON
+// array string, or undefined when none are filled in.
+const collectBands = (prefix) => {
+    const out = [];
+    for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById(`option1color${i}_${prefix}`);
+        const v = el?.value?.trim();
+        if (v) out.push(Number(v));
+    }
+    return out.length ? JSON.stringify(out) : undefined;
+};
+
+// Populate the ThresholdSelector (controlled dropdown + band inputs) from saved data.
+// The dropdown is React-controlled, so set it via the native setter + change event so
+// the component re-renders the right number of band inputs before we fill them.
+const setThreshold = (prefix, classificationType, thresholdsJson) => {
+    const sel = document.getElementById(`${prefix}Threshold`);
+    if (sel) {
+        const option = classificationType === 'FIVE_COLOR' ? 'option_4' : 'option_3';
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, 'value')?.set;
+        if (setter) setter.call(sel, option); else sel.value = option;
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    let bands = [];
+    try { bands = JSON.parse(thresholdsJson || '[]'); } catch { bands = []; }
+    setTimeout(() => {
+        bands.forEach((b, i) => {
+            const el = document.getElementById(`option1color${i + 1}_${prefix}`);
+            if (el) el.value = b ?? '';
+        });
+    }, 0);
+};
+
 // ─────────────────────────────────────────────────────────────
 // Inner page component — has access to ScorecardProvider context
 // ─────────────────────────────────────────────────────────────
@@ -231,6 +267,14 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     measurementFrequency: val('akpiMeasurementFrequency') || undefined,
                     weight: val('akpiWeight') || undefined,
                     formula: val('akpiPerformance') || undefined,
+                    contribution: val('akpiContribution') || undefined,
+                    subWeight: val('akipSubWeight') || undefined,
+                    dataSource: val('akpiDataSource') || undefined,
+                    dataType: val('akpiType') || undefined,
+                    currencyCode: val('akpiCurrency') || undefined,
+                    owner: val('akpiOwner') || undefined,
+                    classificationType: classFromThreshold(val('akpiThreshold')),
+                    thresholds: collectBands('akpi'),
                     createdBy: getEmpId(),
                     createdByName: currentUserName() || undefined,
                     objectiveId: window._editObjectiveId,
@@ -248,6 +292,14 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     formula: val('ekpiPerformance') || undefined,
                     actualFormula: val('ekpiActual') || undefined,
                     ytdFormula: val('ekpiYearToDate') || undefined,
+                    contribution: val('ekpiContribution') || undefined,
+                    subWeight: val('ekipSubWeight') || undefined,
+                    dataSource: val('ekpiDataSource') || undefined,
+                    dataType: val('ekpiType') || undefined,
+                    currencyCode: val('ekpiCurrency') || undefined,
+                    owner: val('ekpiOwner') || undefined,
+                    classificationType: classFromThreshold(val('ekpiThreshold')),
+                    thresholds: collectBands('ekpi'),
                     updatedByName: currentUserName() || undefined,
                     objectiveId: window._editObjectiveId,
                 });
@@ -407,6 +459,16 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         if (polEl && kpi.polarity) polEl.value = kpi.polarity;
                         const freqEl = document.getElementById('ekpiMeasurementFrequency');
                         if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
+                        set('ekpiContribution', kpi.contribution);
+                        set('ekipSubWeight', kpi.sub_weight);
+                        set('ekpiCurrency', kpi.currency_code);
+                        const dsEl = document.getElementById('ekpiDataSource');
+                        if (dsEl && kpi.data_source) dsEl.value = kpi.data_source;
+                        const typeEl = document.getElementById('ekpiType');
+                        if (typeEl && kpi.data_type) typeEl.value = kpi.data_type;
+                        const ownEl = document.getElementById('ekpiOwner');
+                        if (ownEl && kpi.owner) ownEl.value = kpi.owner;
+                        setThreshold('ekpi', kpi.classification_type, kpi.thresholds);
                         // Audit footer (created/modified by + dates)
                         const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
                         const fmtDate = (v) => {
@@ -451,6 +513,16 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         if (polEl && kpi.polarity) polEl.value = kpi.polarity;
                         const freqEl = document.getElementById('vkpiMeasurementFrequency');
                         if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
+                        set('vkpiContribution', kpi.contribution);
+                        set('vkipSubWeight', kpi.sub_weight);
+                        set('vkpiCurrency', kpi.currency_code);
+                        const dsEl = document.getElementById('vkpiDataSource');
+                        if (dsEl && kpi.data_source) dsEl.value = kpi.data_source;
+                        const typeEl = document.getElementById('vkpiType');
+                        if (typeEl && kpi.data_type) typeEl.value = kpi.data_type;
+                        const ownEl = document.getElementById('vkpiOwner');
+                        if (ownEl && kpi.owner) ownEl.value = kpi.owner;
+                        setThreshold('vkpi', kpi.classification_type, kpi.thresholds);
                         setText('vkpiCreatedBy', kpi.created_by);
                         setText('vkpiModifiedBy', kpi.updated_by);
                         setText('vkpiCreatedDate', fmtDate(kpi.created_at));

@@ -1,3 +1,4 @@
+import { ThresholdSelector } from './ThresholdSelector';
 import React, { useEffect, useRef, useState } from 'react';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -134,7 +135,7 @@ export const KpiAddModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="akpiDataSource" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.dataSource">Data Source</label>
-                                            <select name="akpiDataSource" className="form-select select-dropdown-add-kpi"
+                                            <select name="akpiDataSource" id="akpiDataSource" className="form-select select-dropdown-add-kpi"
                                                 data-placeholder="Select Data Source" defaultValue="">
                                                 <option value="" disabled>Select Data Source</option>
                                                 <option value="Manual">Manual</option>
@@ -172,59 +173,19 @@ export const KpiAddModal = () => {
                                             </select>
                                         </div>
                                     </div>
+                                    <div className="g-col-12 g-col-md-6">
+                                        <div className="form-group">
+                                            <label htmlFor="akpiCurrency" className="form-label"
+                                                data-translate="page.scorecard.scorecardItems.kpiCurrency">KPI Currency</label>
+                                            <input type="text" className="form-control" id="akpiCurrency"
+                                                placeholder="KPI Currency" />
+                                        </div>
+                                    </div>
                                     <div className="g-col-12">
                                         <div className="form-group">
                                             <label htmlFor="akpiThreshold" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.threshold">Threshold</label>
-                                            <div className="grid gap-3">
-                                                <div className="g-col-12">
-                                                    <select name="akpiThreshold" id="akpiThreshold"
-                                                        className="form-select select-dropdown-add-kpi"
-                                                        data-placeholder="Select Threshold" defaultValue="">
-                                                        <option value="" disabled>Select Threshold</option>
-                                                        <option value="option_1">One Status</option>
-                                                        <option value="option_2">Two Status</option>
-                                                        <option value="option_3">Three Status</option>
-                                                        <option value="option_4">Five Status</option>
-                                                    </select>
-                                                </div>
-                                                <div className="g-col-12">
-                                                    <div className="color-pickers">
-                                                        <div className="scorecard-color-pickers">
-                                                            <div className="input-group">
-                                                                <input id="option1color1_akpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-1" role="button"
-                                                                    aria-label="threshold"
-                                                                    style={{ backgroundColor: '#ff0000' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color2_akpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-2" role="button"
-                                                                    aria-label="threshold"
-                                                                    style={{ backgroundColor: '#FF4B3E' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color3_akpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-3" role="button"
-                                                                    aria-label="toggle color picker dialog"
-                                                                    style={{ backgroundColor: '#FFC107' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color4_akpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-4" role="button"
-                                                                    aria-label="threshold"
-                                                                    style={{ backgroundColor: '#5FCD5F' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color5_akpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-5" role="button"
-                                                                    aria-label="threshold"
-                                                                    style={{ backgroundColor: '#027D02' }}></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <ThresholdSelector idPrefix="akpi" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -283,7 +244,7 @@ export const KpiAddModal = () => {
                             data-translate="actions.cancel">
                             Cancel
                         </button>
-                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
+                        <button type="button" className="btn btn-primary" value="Save" data-translate="actions.save" data-bs-dismiss="modal" onClick={() => console.log('TODO: Implement Save KPI API call')}>Save</button>
                     </div>
                 </div>
             </div>
@@ -351,7 +312,7 @@ export const KpiEditModal = () => {
                                     <div className="g-col-12 g-col-md-4">
                                         <div className="form-group">
                                             <label htmlFor="ekpiDataSource" className="form-label">Data Source</label>
-                                            <select name="ekpiDataSource" className="form-select select-dropdown-edit-kpi" data-placeholder="Select Data Source" defaultValue="">
+                                            <select name="ekpiDataSource" id="ekpiDataSource" className="form-select select-dropdown-edit-kpi" data-placeholder="Select Data Source" defaultValue="">
                                                 <option value="" disabled>Select Data Source</option>
                                                 <option value="Manual">Manual</option>
                                                 <option value="Source">Source</option>
@@ -396,46 +357,16 @@ export const KpiEditModal = () => {
                                             </select>
                                         </div>
                                     </div>
+                                    <div className="g-col-12 g-col-md-6">
+                                        <div className="form-group">
+                                            <label htmlFor="ekpiCurrency" className="form-label">KPI Currency</label>
+                                            <input type="text" className="form-control" id="ekpiCurrency" placeholder="KPI Currency" />
+                                        </div>
+                                    </div>
                                     <div className="g-col-12">
                                         <div className="form-group">
                                             <label htmlFor="ekpiThreshold" className="form-label">Threshold</label>
-                                            <div className="grid gap-3">
-                                                <div className="g-col-12">
-                                                    <select name="ekpiThreshold" id="ekpiThreshold" className="form-select select-dropdown-edit-kpi" data-placeholder="Select Threshold" defaultValue="">
-                                                        <option value="" disabled>Select Threshold</option>
-                                                        <option value="option_1">One Status</option>
-                                                        <option value="option_2">Two Status</option>
-                                                        <option value="option_3">Three Status</option>
-                                                        <option value="option_4">Five Status</option>
-                                                    </select>
-                                                </div>
-                                                <div className="g-col-12">
-                                                    <div className="color-pickers">
-                                                        <div className="scorecard-color-pickers">
-                                                            <div className="input-group">
-                                                                <input id="option1color1_ekpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-1" role="button" aria-label="threshold" style={{ backgroundColor: '#ff0000' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color2_ekpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-2" role="button" aria-label="threshold" style={{ backgroundColor: '#FF4B3E' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color3_ekpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-3" role="button" aria-label="toggle color picker dialog" style={{ backgroundColor: '#FFC107' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color4_ekpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-4" role="button" aria-label="threshold" style={{ backgroundColor: '#5FCD5F' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color5_ekpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-5" role="button" aria-label="threshold" style={{ backgroundColor: '#027D02' }}></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <ThresholdSelector idPrefix="ekpi" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -467,9 +398,8 @@ export const KpiEditModal = () => {
                                             <label htmlFor="ekpiStatus" className="form-label">Status</label>
                                             <select name="ekpiStatus" id="ekpiStatus" data-placeholder="Select Status" className="form-select select-dropdown-edit-kpi" defaultValue="">
                                                 <option value="" disabled>Select Status</option>
-                                                <option value="David Miller">David Miller</option>
-                                                <option value="Raman V">Raman V</option>
-                                                <option value="Bryan Adams">Bryan Adams</option>
+                                                <option value="Manual">Manual</option>
+                                                <option value="Weighted">Weighted</option>
                                             </select>
                                         </div>
                                     </div>
@@ -479,7 +409,7 @@ export const KpiEditModal = () => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
+                        <button type="button" className="btn btn-primary" value="Save" data-translate="actions.save" data-bs-dismiss="modal" onClick={() => console.log('TODO: Implement Save KPI API call')}>Save</button>
                         <div className="modal-audit">
                             <div className="audit-listing">
                                 <div className="audit-box">
@@ -561,18 +491,13 @@ export const KpiViewModal = () => {
                                     <div className="g-col-12 g-col-md-4">
                                         <div className="form-group">
                                             <label htmlFor="vkpiOwner" className="form-label">Owner</label>
-                                            <select name="vkpiOwner" id="vkpiOwner" className="form-select select-dropdown-view-kpi" data-placeholder="Select Owner" defaultValue="">
-                                                <option value="" disabled>Select Owner</option>
-                                                <option value="David Miller">David Miller</option>
-                                                <option value="Raman V">Raman V</option>
-                                                <option value="Bryan Adams">Bryan Adams</option>
-                                            </select>
+                                            <OwnerSelect id="vkpiOwner" className="form-select select-dropdown-view-kpi" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-4">
                                         <div className="form-group">
                                             <label htmlFor="vkpiDataSource" className="form-label">Data Source</label>
-                                            <select name="vkpiDataSource" className="form-select select-dropdown-view-kpi" data-placeholder="Select Data Source" defaultValue="">
+                                            <select name="vkpiDataSource" id="vkpiDataSource" className="form-select select-dropdown-view-kpi" data-placeholder="Select Data Source" defaultValue="">
                                                 <option value="" disabled>Select Data Source</option>
                                                 <option value="Manual">Manual</option>
                                                 <option value="Source">Source</option>
@@ -617,46 +542,16 @@ export const KpiViewModal = () => {
                                             </select>
                                         </div>
                                     </div>
+                                    <div className="g-col-12 g-col-md-6">
+                                        <div className="form-group">
+                                            <label htmlFor="vkpiCurrency" className="form-label">KPI Currency</label>
+                                            <input type="text" className="form-control" id="vkpiCurrency" placeholder="KPI Currency" readOnly />
+                                        </div>
+                                    </div>
                                     <div className="g-col-12">
                                         <div className="form-group">
                                             <label htmlFor="vkpiThreshold" className="form-label">Threshold</label>
-                                            <div className="grid gap-3">
-                                                <div className="g-col-12">
-                                                    <select name="vkpiThreshold" id="vkpiThreshold" className="form-select select-dropdown-view-kpi" data-placeholder="Select Threshold" defaultValue="">
-                                                        <option value="" disabled>Select Threshold</option>
-                                                        <option value="option_1">One Status</option>
-                                                        <option value="option_2">Two Status</option>
-                                                        <option value="option_3">Three Status</option>
-                                                        <option value="option_4">Five Status</option>
-                                                    </select>
-                                                </div>
-                                                <div className="g-col-12">
-                                                    <div className="color-pickers">
-                                                        <div className="scorecard-color-pickers">
-                                                            <div className="input-group">
-                                                                <input id="option1color1_vkpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-1" role="button" aria-label="threshold" style={{ backgroundColor: '#ff0000' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color2_vkpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-2" role="button" aria-label="threshold" style={{ backgroundColor: '#FF4B3E' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color3_vkpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-3" role="button" aria-label="toggle color picker dialog" style={{ backgroundColor: '#FFC107' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color4_vkpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-4" role="button" aria-label="threshold" style={{ backgroundColor: '#5FCD5F' }}></span>
-                                                            </div>
-                                                            <div className="input-group">
-                                                                <input id="option1color5_vkpi" type="text" className="form-control" />
-                                                                <span className="input-group-text pickr" id="p-5" role="button" aria-label="threshold" style={{ backgroundColor: '#027D02' }}></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <ThresholdSelector idPrefix="vkpi" disabled />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -688,9 +583,8 @@ export const KpiViewModal = () => {
                                             <label htmlFor="vkpiStatus" className="form-label">Status</label>
                                             <select name="vkpiStatus" id="vkpiStatus" data-placeholder="Select Status" className="form-select select-dropdown-view-kpi" defaultValue="">
                                                 <option value="" disabled>Select Status</option>
-                                                <option value="David Miller">David Miller</option>
-                                                <option value="Raman V">Raman V</option>
-                                                <option value="Bryan Adams">Bryan Adams</option>
+                                                <option value="Manual">Manual</option>
+                                                <option value="Weighted">Weighted</option>
                                             </select>
                                         </div>
                                     </div>
@@ -700,7 +594,7 @@ export const KpiViewModal = () => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
+                        <button type="button" className="btn btn-primary" value="Save" data-translate="actions.save" data-bs-dismiss="modal" onClick={() => console.log('TODO: Implement Save KPI API call')}>Save</button>
                         <div className="modal-audit">
                             <div className="audit-listing">
                                 <div className="audit-box">
