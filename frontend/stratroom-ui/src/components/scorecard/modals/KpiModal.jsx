@@ -1,5 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 import { getReporteeList } from '../../../services/scorecardApi';
+
+// Single-box date range picker showing "MM/DD/YYYY - MM/DD/YYYY" (like the live app).
+const DateRangeInput = ({ id, disabled }) => {
+    const ref = useRef(null);
+    useEffect(() => {
+        if (!ref.current) return undefined;
+        const fp = flatpickr(ref.current, {
+            mode: 'range',
+            dateFormat: 'm/d/Y',
+            conjunction: ' - ',
+            clickOpens: !disabled,
+        });
+        return () => fp.destroy();
+    }, [disabled]);
+    return (
+        <input ref={ref} type="text" id={id} className="form-control"
+            placeholder="Start/End Date" readOnly={disabled} />
+    );
+};
 
 // Logged-in user from the stored profile (name + employee id).
 function currentUser() {
@@ -208,10 +229,7 @@ export const KpiAddModal = () => {
                                         <div className="form-group">
                                             <label className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.startEndDate">Start/End Date</label>
-                                            <div className="d-flex gap-2">
-                                                <input type="date" id="akpiStartDate" className="form-control" />
-                                                <input type="date" id="akpiEndDate" className="form-control" />
-                                            </div>
+                                            <DateRangeInput id="akpiStartEndDate" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -419,10 +437,7 @@ export const KpiEditModal = () => {
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
                                         <div className="form-group">
                                             <label className="form-label">Start/End Date</label>
-                                            <div className="d-flex gap-2">
-                                                <input type="date" id="ekpiStartDate" className="form-control" />
-                                                <input type="date" id="ekpiEndDate" className="form-control" />
-                                            </div>
+                                            <DateRangeInput id="ekpiStartEndDate" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -641,10 +656,7 @@ export const KpiViewModal = () => {
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
                                         <div className="form-group">
                                             <label className="form-label">Start/End Date</label>
-                                            <div className="d-flex gap-2">
-                                                <input type="date" id="vkpiStartDate" className="form-control" disabled />
-                                                <input type="date" id="vkpiEndDate" className="form-control" disabled />
-                                            </div>
+                                            <DateRangeInput id="vkpiStartEndDate" disabled />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
