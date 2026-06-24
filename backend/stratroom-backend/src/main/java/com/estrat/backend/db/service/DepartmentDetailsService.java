@@ -282,7 +282,9 @@ public class DepartmentDetailsService {
             if (employeeProfilePo.getDeptId() != null && deptId.longValue() == employeeProfilePo.getDeptId().getId()) {
                 checkstatus = true;
             }
-            if (!checkstatus && userRoleManagement != null && userRoleManagement.getUserRole().equalsIgnoreCase("Super User")) {
+            if (!checkstatus && userRoleManagement != null && userRoleManagement.getUserRole() != null
+                    && (userRoleManagement.getUserRole().equalsIgnoreCase("Super User")
+                        || userRoleManagement.getUserRole().equalsIgnoreCase("Admin"))) {
                 checkstatus = true;
             }
             List deptIDList = null;
@@ -296,7 +298,9 @@ public class DepartmentDetailsService {
             if (employeeProfilePo.getDeptId() != null && deptId.longValue() == employeeProfilePo.getDeptId().getId()) {
                 checkstatus = true;
             }
-            if (!checkstatus && userRoleManagement != null && userRoleManagement.getUserRole().equalsIgnoreCase("Super User")) {
+            if (!checkstatus && userRoleManagement != null && userRoleManagement.getUserRole() != null
+                    && (userRoleManagement.getUserRole().equalsIgnoreCase("Super User")
+                        || userRoleManagement.getUserRole().equalsIgnoreCase("Admin"))) {
                 checkstatus = true;
             }
             if (checkstatus) {
