@@ -192,24 +192,74 @@ public class PageController {
             List<Long> departmentlist = new ArrayList<>();
             com.estrat.backend.db.bean.Employee empCheck = new com.estrat.backend.db.bean.Employee();
             empCheck.setEmpId(empId);
-            if (this.employeeService.checkRole(empCheck)) {
+            
+            boolean isAdmin = this.employeeService.checkRole(empCheck);
+            List<Long> personalDeptList = new ArrayList<>(this.departmentDetailsService.getDeptList(empId));
+            EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
+            if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
+                personalDeptList.add(empProfilepo.getDeptId().getId());
+            }
+
+            if (isAdmin) {
                 System.out.println("User IS an admin! Fetching all departments.");
                 departmentlist = this.departmentChartMappingRepository.getAllDepartmentByOrgId(orgId, 0);
             } else {
                 System.out.println("User is NOT an admin. Fetching assigned departments only.");
-                departmentlist = this.departmentDetailsService.getDeptList(empId);
+                departmentlist = new ArrayList<>(personalDeptList);
             }
-            EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
-            if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
-                departmentlist.add(empProfilepo.getDeptId().getId());
-            }
+            
             System.out.println("Final department list size: " + (departmentlist != null ? departmentlist.size() : 0));
             if (CollectionUtils.isNotEmpty((Collection)(pageDTOS = this.pageService.findAllByDept(departmentlist)))) {
+                if (isAdmin) {
+                    List<Long> personalDeptIdsAsLongs = personalDeptList.stream()
+                        .filter(Objects::nonNull)
+                        .map(n -> ((Number)n).longValue())
+                        .collect(Collectors.toList());
+                    
+                    System.out.println("Filtering pages for admin. personalDeptIdsAsLongs: " + personalDeptIdsAsLongs);
+                    pageDTOS = pageDTOS.stream().filter(page -> {
+                        boolean isScorecard = "Standard_View".equalsIgnoreCase(page.getPageType()) || "Scorecardview".equalsIgnoreCase(page.getPageType());
+                        if (isScorecard) {
+                            if (page.getDeptId() != null) {
+                                return personalDeptIdsAsLongs.contains(page.getDeptId().longValue());
+                            }
+                            return false;
+                        }
+                        return true;
+                    }).collect(Collectors.toList());
+                }
                 return new ResponseEntity((Object)pageDTOS, HttpStatus.OK);
             }
         } else {
             List<PageDTO> pageDTOS = this.pageService.findAll(empId);
             if (CollectionUtils.isNotEmpty((Collection)pageDTOS)) {
+                com.estrat.backend.db.bean.Employee empCheck = new com.estrat.backend.db.bean.Employee();
+                empCheck.setEmpId(empId);
+                boolean isAdmin = this.employeeService.checkRole(empCheck);
+                
+                if (isAdmin) {
+                    List<Long> personalDeptList = new ArrayList<>(this.departmentDetailsService.getDeptList(empId));
+                    EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
+                    if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
+                        personalDeptList.add(empProfilepo.getDeptId().getId());
+                    }
+                    
+                    List<Long> personalDeptIdsAsLongs = personalDeptList.stream()
+                        .filter(Objects::nonNull)
+                        .map(n -> ((Number)n).longValue())
+                        .collect(Collectors.toList());
+
+                    pageDTOS = pageDTOS.stream().filter(page -> {
+                        boolean isScorecard = "Standard_View".equalsIgnoreCase(page.getPageType()) || "Scorecardview".equalsIgnoreCase(page.getPageType());
+                        if (isScorecard) {
+                            if (page.getDeptId() != null) {
+                                return personalDeptIdsAsLongs.contains(page.getDeptId().longValue());
+                            }
+                            return false;
+                        }
+                        return true;
+                    }).collect(Collectors.toList());
+                }
                 return new ResponseEntity((Object)pageDTOS, HttpStatus.OK);
             }
         }
@@ -268,26 +318,72 @@ public class PageController {
         ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(orgId);
         List<PageDTO> pageDTOS = new ArrayList<>();
         if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType() != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
-            // Resolve the user's FULL department set from the live org structure (admin -> all
-            // departments; otherwise their assigned departments + their own profile department),
-            // mirroring /pageList. This keeps scorecards visible to the right people as the org
-            // structure changes, without manually re-pointing page_details.dept_id.
             List<Long> departmentlist;
             com.estrat.backend.db.bean.Employee empCheck = new com.estrat.backend.db.bean.Employee();
             empCheck.setEmpId(empId);
-            if (this.employeeService.checkRole(empCheck)) {
-                departmentlist = this.departmentChartMappingRepository.getAllDepartmentByOrgId(orgId, 0);
-            } else {
-                departmentlist = this.departmentDetailsService.getDeptList(empId);
-            }
-            departmentlist = new ArrayList<>(departmentlist);
+            
+            boolean isAdmin = this.employeeService.checkRole(empCheck);
+            List<Long> personalDeptList = new ArrayList<>(this.departmentDetailsService.getDeptList(empId));
             EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
             if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
-                departmentlist.add(empProfilepo.getDeptId().getId());
+                personalDeptList.add(empProfilepo.getDeptId().getId());
             }
+
+            if (isAdmin) {
+                departmentlist = this.departmentChartMappingRepository.getAllDepartmentByOrgId(orgId, 0);
+            } else {
+                departmentlist = new ArrayList<>(personalDeptList);
+            }
+            
             pageDTOS = this.pageService.findAllByDept(departmentlist, pageType);
+
+            if (isAdmin) {
+                List<Long> personalDeptIdsAsLongs = personalDeptList.stream()
+                    .filter(Objects::nonNull)
+                    .map(n -> ((Number)n).longValue())
+                    .collect(Collectors.toList());
+
+                pageDTOS = pageDTOS.stream().filter(page -> {
+                    boolean isScorecard = "Standard_View".equalsIgnoreCase(page.getPageType()) || "Scorecardview".equalsIgnoreCase(page.getPageType());
+                    if (isScorecard) {
+                        if (page.getDeptId() != null) {
+                            return personalDeptIdsAsLongs.contains(page.getDeptId().longValue());
+                        }
+                        return false;
+                    }
+                    return true;
+                }).collect(Collectors.toList());
+            }
         } else {
             pageDTOS = this.pageService.findAll(empId, pageType);
+            
+            com.estrat.backend.db.bean.Employee empCheck = new com.estrat.backend.db.bean.Employee();
+            empCheck.setEmpId(empId);
+            boolean isAdmin = this.employeeService.checkRole(empCheck);
+            
+            if (isAdmin && CollectionUtils.isNotEmpty(pageDTOS)) {
+                List<Long> personalDeptList = new ArrayList<>(this.departmentDetailsService.getDeptList(empId));
+                EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
+                if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
+                    personalDeptList.add(empProfilepo.getDeptId().getId());
+                }
+                
+                List<Long> personalDeptIdsAsLongs = personalDeptList.stream()
+                    .filter(Objects::nonNull)
+                    .map(n -> ((Number)n).longValue())
+                    .collect(Collectors.toList());
+
+                pageDTOS = pageDTOS.stream().filter(page -> {
+                    boolean isScorecard = "Standard_View".equalsIgnoreCase(page.getPageType()) || "Scorecardview".equalsIgnoreCase(page.getPageType());
+                    if (isScorecard) {
+                        if (page.getDeptId() != null) {
+                            return personalDeptIdsAsLongs.contains(page.getDeptId().longValue());
+                        }
+                        return false;
+                    }
+                    return true;
+                }).collect(Collectors.toList());
+            }
         }
         if (CollectionUtils.isNotEmpty(pageDTOS)) {
             return new ResponseEntity(pageDTOS, HttpStatus.OK);
