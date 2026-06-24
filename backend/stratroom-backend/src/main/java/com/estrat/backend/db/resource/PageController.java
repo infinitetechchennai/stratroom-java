@@ -264,11 +264,28 @@ public class PageController {
 
     @GetMapping(value={"/pageListByPageType/{empId}"})
     public ResponseEntity<List<PageDTO>> pageListByPageType(@PathVariable(value="empId") long empId, @RequestParam(value="pageType") String pageType) throws RequestException {
-        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
+        Long orgId = Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue();
+        ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(orgId);
         List<PageDTO> pageDTOS = new ArrayList<>();
         if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType() != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
-            Employee emp = this.employeeService.getProfileDetails(empId);
-            pageDTOS = this.pageService.findAllByDept(emp.getDeptDetails().getId(), pageType);
+            // Resolve the user's FULL department set from the live org structure (admin -> all
+            // departments; otherwise their assigned departments + their own profile department),
+            // mirroring /pageList. This keeps scorecards visible to the right people as the org
+            // structure changes, without manually re-pointing page_details.dept_id.
+            List<Long> departmentlist;
+            com.estrat.backend.db.bean.Employee empCheck = new com.estrat.backend.db.bean.Employee();
+            empCheck.setEmpId(empId);
+            if (this.employeeService.checkRole(empCheck)) {
+                departmentlist = this.departmentChartMappingRepository.getAllDepartmentByOrgId(orgId, 0);
+            } else {
+                departmentlist = this.departmentDetailsService.getDeptList(empId);
+            }
+            departmentlist = new ArrayList<>(departmentlist);
+            EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
+            if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
+                departmentlist.add(empProfilepo.getDeptId().getId());
+            }
+            pageDTOS = this.pageService.findAllByDept(departmentlist, pageType);
         } else {
             pageDTOS = this.pageService.findAll(empId, pageType);
         }

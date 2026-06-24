@@ -452,6 +452,41 @@ public class PageService {
         return pageDTOList;
     }
 
+    // Department-mode listing across ALL of a user's departments (assigned + own +
+    // admin-all), so visibility follows the live org structure instead of a single
+    // statically-assigned department.
+    public List<PageDTO> findAllByDept(List<Long> deptIds, String pageType) {
+        if (deptIds == null || deptIds.isEmpty()) {
+            return new ArrayList<PageDTO>();
+        }
+        String dbType = pageTypeToDbType(pageType);
+        if (dbType == null) {
+            return new ArrayList<PageDTO>();
+        }
+        List<PagesDetails> dbList = this.pageRepository.findAllByDeptIdList(deptIds, dbType, 0);
+        return dbList.stream().map(dbValue -> new PageDTO((PagesDetails) dbValue)).collect(Collectors.toList());
+    }
+
+    private static String pageTypeToDbType(String pageType) {
+        if (pageType == null) {
+            return null;
+        }
+        switch (pageType) {
+            case "SCORECARD": return "Standard_View";
+            case "INITIATIVE": return "Initiatives & Projects";
+            case "RISK": return "Risk";
+            case "STRATEGYMAP": return "Strategy Map";
+            case "INITIATIVEMAP": return "Initiative Strategic";
+            case "SCORECARDDASHBOARD": return "Scorecard Dashboard";
+            case "RISKDASHBOARD": return "Risk Dashboard";
+            case "INITIATIVEDASHBOARD": return "Initiative Dashboard";
+            case "COMPLIANCEDASHBOARD": return "Compliance Dashboard";
+            case "RADAR": return "Risk Radar";
+            case "AUDITDASHBOARD": return "Audit Dashboard";
+            default: return null;
+        }
+    }
+
     public List<PageDTO> findAllByDeptList(String deptId, String pageType) {
         List<PagesDetails> dbList = null;
         List deptList = Arrays.stream(deptId.split(",")).map(Long::parseLong).collect(Collectors.toList());
