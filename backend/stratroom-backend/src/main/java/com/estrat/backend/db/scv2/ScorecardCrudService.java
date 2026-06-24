@@ -398,14 +398,21 @@ public class ScorecardCrudService {
     private long insert(String sql, Object... args) {
         KeyHolder kh = new GeneratedKeyHolder();
         jdbc.update(con -> {
-            PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            // Ask only for the "id" column; PostgreSQL otherwise returns every column,
+            // which makes KeyHolder.getKey() throw ("multiple keys").
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             for (int i = 0; i < args.length; i++) {
                 ps.setObject(i + 1, args[i]);
             }
             return ps;
         }, kh);
-        Number key = kh.getKey();
-        return key == null ? -1L : key.longValue();
+        Map<String, Object> keys = kh.getKeys();
+        Object id = null;
+        if (keys != null) {
+            id = keys.containsKey("id") ? keys.get("id")
+                    : (keys.size() == 1 ? keys.values().iterator().next() : null);
+        }
+        return id instanceof Number ? ((Number) id).longValue() : -1L;
     }
 
     private static String str(Map<String, Object> b, String k, String def) {
