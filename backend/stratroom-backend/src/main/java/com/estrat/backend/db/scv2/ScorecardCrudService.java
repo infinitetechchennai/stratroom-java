@@ -181,13 +181,13 @@ public class ScorecardCrudService {
         return insert(
                 "INSERT INTO sc_kpis (objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, null_handling, "
-                        + "achievement_cap, classification_type, display_order) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "achievement_cap, classification_type, display_order, formula) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "objectiveId", 0L), str(b, "code", null), str(b, "name", "KPI"), str(b, "description", null),
                 str(b, "polarity", "HIGHER"), dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"),
                 decOrNull(b, "maxTarget"), str(b, "dataType", "NUMBER"), str(b, "currencyCode", null),
                 dec(b, "weight", BigDecimal.ZERO), str(b, "measurementFrequency", null),
                 str(b, "nullHandling", "EXCLUDE"), dec(b, "achievementCap", new BigDecimal("150")),
-                str(b, "classificationType", "THREE_COLOR"), intg(b, "displayOrder", 0));
+                str(b, "classificationType", "THREE_COLOR"), intg(b, "displayOrder", 0), str(b, "formula", null));
     }
 
     @Transactional
