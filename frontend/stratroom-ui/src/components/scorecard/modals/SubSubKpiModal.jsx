@@ -25,8 +25,10 @@ export const SubSubKpiEditModal = () => {
                                             <label htmlFor="esskpiPolarity" className="form-label">Polarity</label>
                                             <select name="esskpiPolarity" id="esskpiPolarity" className="form-select select-dropdown-edit-subsubkpi" data-placeholder="Select Polarity" defaultValue="">
                                                 <option value="" disabled>Select Polarity</option>
-                                                <option value="1">Lead</option>
-                                                <option value="2">Lag</option>
+                                                <option value="HIGHER">Higher is Better</option>
+                                                <option value="LOWER">Lower is Better</option>
+                                                <option value="TARGET">On Target</option>
+                                                <option value="RANGE">Within Range</option>
                                             </select>
                                         </div>
                                     </div>
@@ -266,8 +268,10 @@ export const SubSubKpiViewModal = () => {
                                             <label htmlFor="vsskpiPolarity" className="form-label">Polarity</label>
                                             <select name="vsskpiPolarity" id="vsskpiPolarity" className="form-select select-dropdown-view-subsubkpi" data-placeholder="Select Polarity" defaultValue="">
                                                 <option value="" disabled>Select Polarity</option>
-                                                <option value="1">Lead</option>
-                                                <option value="2">Lag</option>
+                                                <option value="HIGHER">Higher is Better</option>
+                                                <option value="LOWER">Lower is Better</option>
+                                                <option value="TARGET">On Target</option>
+                                                <option value="RANGE">Within Range</option>
                                             </select>
                                         </div>
                                     </div>

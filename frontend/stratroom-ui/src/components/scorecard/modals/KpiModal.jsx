@@ -533,8 +533,10 @@ export const KpiViewModal = () => {
                                             <label htmlFor="vkpiPolarity" className="form-label">Polarity</label>
                                             <select name="vkpiPolarity" id="vkpiPolarity" className="form-select select-dropdown-view-kpi" data-placeholder="Select Polarity" defaultValue="">
                                                 <option value="" disabled>Select Polarity</option>
-                                                <option value="1">Lead</option>
-                                                <option value="2">Lag</option>
+                                                <option value="HIGHER">Higher is Better</option>
+                                                <option value="LOWER">Lower is Better</option>
+                                                <option value="TARGET">On Target</option>
+                                                <option value="RANGE">Within Range</option>
                                             </select>
                                         </div>
                                     </div>
