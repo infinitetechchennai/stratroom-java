@@ -92,8 +92,10 @@ export const KpiAddModal = () => {
                                                 className="form-select select-dropdown-add-kpi"
                                                 data-placeholder="Select Polarity" defaultValue="">
                                                 <option value="" disabled>Select Polarity</option>
-                                                <option value="1">Lead</option>
-                                                <option value="2">Lag</option>
+                                                <option value="HIGHER">Higher is Better</option>
+                                                <option value="LOWER">Lower is Better</option>
+                                                <option value="TARGET">On Target</option>
+                                                <option value="RANGE">Within Range</option>
                                             </select>
                                         </div>
                                     </div>
@@ -315,8 +317,10 @@ export const KpiEditModal = () => {
                                             <label htmlFor="ekpiPolarity" className="form-label">Polarity</label>
                                             <select name="ekpiPolarity" id="ekpiPolarity" className="form-select select-dropdown-edit-kpi" data-placeholder="Select Polarity" defaultValue="">
                                                 <option value="" disabled>Select Polarity</option>
-                                                <option value="1">Lead</option>
-                                                <option value="2">Lag</option>
+                                                <option value="HIGHER">Higher is Better</option>
+                                                <option value="LOWER">Lower is Better</option>
+                                                <option value="TARGET">On Target</option>
+                                                <option value="RANGE">Within Range</option>
                                             </select>
                                         </div>
                                     </div>
