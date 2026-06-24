@@ -40,6 +40,9 @@ public class ScorecardCrudService {
         // Separate storage for the KPI Actual and YTD calculators (formula = Performance).
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN actual_formula TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN ytd_formula TEXT"); } catch (Exception ignore) {}
+        // Audit display names (who created / last modified the KPI).
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN created_by TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN updated_by TEXT"); } catch (Exception ignore) {}
     }
 
     // ---------------- SCORECARD ----------------
@@ -172,7 +175,8 @@ public class ScorecardCrudService {
                 "SELECT id, objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, "
                         + "null_handling, achievement_cap, classification_type, formula, actual_formula, "
-                        + "ytd_formula, display_order FROM sc_kpis WHERE id = ?", id);
+                        + "ytd_formula, display_order, created_by, updated_by, created_at, updated_at "
+                        + "FROM sc_kpis WHERE id = ?", id);
         return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
     }
 
@@ -181,13 +185,15 @@ public class ScorecardCrudService {
         return insert(
                 "INSERT INTO sc_kpis (objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, null_handling, "
-                        + "achievement_cap, classification_type, display_order, formula) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "achievement_cap, classification_type, display_order, formula, created_by, updated_by) "
+                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "objectiveId", 0L), str(b, "code", null), str(b, "name", "KPI"), str(b, "description", null),
                 str(b, "polarity", "HIGHER"), dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"),
                 decOrNull(b, "maxTarget"), str(b, "dataType", "NUMBER"), str(b, "currencyCode", null),
                 dec(b, "weight", BigDecimal.ZERO), str(b, "measurementFrequency", null),
                 str(b, "nullHandling", "EXCLUDE"), dec(b, "achievementCap", new BigDecimal("150")),
-                str(b, "classificationType", "THREE_COLOR"), intg(b, "displayOrder", 0), str(b, "formula", null));
+                str(b, "classificationType", "THREE_COLOR"), intg(b, "displayOrder", 0), str(b, "formula", null),
+                str(b, "createdByName", null), str(b, "createdByName", null));
     }
 
     @Transactional
@@ -198,7 +204,7 @@ public class ScorecardCrudService {
         List<Map<String, Object>> exRows = jdbc.queryForList(
                 "SELECT name, description, polarity, target_value, min_target, max_target, data_type, "
                         + "currency_code, weight, measurement_frequency, null_handling, achievement_cap, "
-                        + "classification_type, display_order, formula, actual_formula, ytd_formula "
+                        + "classification_type, display_order, formula, actual_formula, ytd_formula, created_by "
                         + "FROM sc_kpis WHERE id = ?", id);
         Map<String, Object> ex = exRows.isEmpty() ? java.util.Collections.emptyMap() : exRows.get(0);
         Integer exDisplay = ex.get("display_order") == null ? 0 : ((Number) ex.get("display_order")).intValue();
@@ -206,7 +212,7 @@ public class ScorecardCrudService {
                 "UPDATE sc_kpis SET name=?, description=?, polarity=?, target_value=?, min_target=?, max_target=?, "
                         + "data_type=?, currency_code=?, weight=?, measurement_frequency=?, null_handling=?, "
                         + "achievement_cap=?, classification_type=?, display_order=?, formula=?, "
-                        + "actual_formula=?, ytd_formula=? WHERE id=?",
+                        + "actual_formula=?, ytd_formula=?, updated_by=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
                 str(b, "name", (String) ex.get("name")),
                 str(b, "description", (String) ex.get("description")),
                 str(b, "polarity", (String) ex.get("polarity")),
@@ -223,7 +229,8 @@ public class ScorecardCrudService {
                 intg(b, "displayOrder", exDisplay),
                 str(b, "formula", (String) ex.get("formula")),
                 str(b, "actualFormula", (String) ex.get("actual_formula")),
-                str(b, "ytdFormula", (String) ex.get("ytd_formula")), id) > 0;
+                str(b, "ytdFormula", (String) ex.get("ytd_formula")),
+                str(b, "updatedByName", (String) ex.get("created_by")), id) > 0;
     }
 
     @Transactional

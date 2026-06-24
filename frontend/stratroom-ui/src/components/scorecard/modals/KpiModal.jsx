@@ -484,19 +484,19 @@ export const KpiEditModal = () => {
                             <div className="audit-listing">
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdBy">Created By</span> :</div>
-                                    <div className="text">Arun</div>
+                                    <div className="text" id="ekpiCreatedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedBy">Modified By</span> :</div>
-                                    <div className="text">Karthik</div>
+                                    <div className="text" id="ekpiModifiedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdOn">Created Date</span> :</div>
-                                    <div className="text">Oct 02, 2019</div>
+                                    <div className="text" id="ekpiCreatedDate">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedOn">Modified Date</span> :</div>
-                                    <div className="text">Oct 02, 2019</div>
+                                    <div className="text" id="ekpiModifiedDate">-</div>
                                 </div>
                             </div>
                         </div>
@@ -703,19 +703,19 @@ export const KpiViewModal = () => {
                             <div className="audit-listing">
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdBy">Created By</span> :</div>
-                                    <div className="text">Arun</div>
+                                    <div className="text" id="vkpiCreatedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedBy">Modified By</span> :</div>
-                                    <div className="text">Karthik</div>
+                                    <div className="text" id="vkpiModifiedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdOn">Created Date</span> :</div>
-                                    <div className="text">Oct 02, 2019</div>
+                                    <div className="text" id="vkpiCreatedDate">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedOn">Modified Date</span> :</div>
-                                    <div className="text">Oct 02, 2019</div>
+                                    <div className="text" id="vkpiModifiedDate">-</div>
                                 </div>
                             </div>
                         </div>

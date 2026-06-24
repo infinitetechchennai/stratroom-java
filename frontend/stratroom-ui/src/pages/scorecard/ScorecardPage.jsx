@@ -50,6 +50,17 @@ const THEME_CSS_VARS = {
 // ─────────────────────────────────────────────────────────────
 const val = (id) => document.getElementById(id)?.value?.trim() ?? '';
 
+// Display name of the logged-in user (for created/modified-by audit fields).
+const currentUserName = () => {
+    try {
+        const p = JSON.parse(localStorage.getItem('profile') || '{}');
+        return [p.firstName, p.lastName].filter(Boolean).join(' ')
+            || p.name || p.displayName || p.userName || p.emailAddress || p.email || '';
+    } catch {
+        return '';
+    }
+};
+
 // ─────────────────────────────────────────────────────────────
 // Inner page component — has access to ScorecardProvider context
 // ─────────────────────────────────────────────────────────────
@@ -221,6 +232,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     weight: val('akpiWeight') || undefined,
                     formula: val('akpiPerformance') || undefined,
                     createdBy: getEmpId(),
+                    createdByName: currentUserName() || undefined,
                     objectiveId: window._editObjectiveId,
                 });
             },
@@ -236,6 +248,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     formula: val('ekpiPerformance') || undefined,
                     actualFormula: val('ekpiActual') || undefined,
                     ytdFormula: val('ekpiYearToDate') || undefined,
+                    updatedByName: currentUserName() || undefined,
                     objectiveId: window._editObjectiveId,
                 });
             },
@@ -394,6 +407,17 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         if (polEl && kpi.polarity) polEl.value = kpi.polarity;
                         const freqEl = document.getElementById('ekpiMeasurementFrequency');
                         if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
+                        // Audit footer (created/modified by + dates)
+                        const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
+                        const fmtDate = (v) => {
+                            if (!v) return '-';
+                            const d = new Date(v);
+                            return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+                        };
+                        setText('ekpiCreatedBy', kpi.created_by);
+                        setText('ekpiModifiedBy', kpi.updated_by);
+                        setText('ekpiCreatedDate', fmtDate(kpi.created_at));
+                        setText('ekpiModifiedDate', fmtDate(kpi.updated_at));
                     }
                 } catch (e) {
                     console.error('Failed to load KPI data', e);
