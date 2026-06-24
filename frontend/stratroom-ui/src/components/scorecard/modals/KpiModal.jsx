@@ -206,12 +206,12 @@ export const KpiAddModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
                                         <div className="form-group">
-                                            <label htmlFor="akpiStartEndDate" className="form-label"
+                                            <label className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.startEndDate">Start/End Date</label>
-                                            <input type="text" className="form-control" name="akpiStartEndDate"
-                                                id="akpiStartEndDate"
-                                                data-translate="page.scorecard.scorecardItems.startEndDate"
-                                                placeholder="Start/End Date" />
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="akpiStartDate" className="form-control" />
+                                                <input type="date" id="akpiEndDate" className="form-control" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -418,8 +418,11 @@ export const KpiEditModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
                                         <div className="form-group">
-                                            <label htmlFor="ekpiStartEndDate" className="form-label">Start/End Date</label>
-                                            <input type="text" className="form-control" name="ekpiStartEndDate" placeholder="Start/End Date" />
+                                            <label className="form-label">Start/End Date</label>
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="ekpiStartDate" className="form-control" />
+                                                <input type="date" id="ekpiEndDate" className="form-control" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -637,8 +640,11 @@ export const KpiViewModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
                                         <div className="form-group">
-                                            <label htmlFor="vkpiStartEndDate" className="form-label">Start/End Date</label>
-                                            <input type="text" className="form-control" name="vkpiStartEndDate" placeholder="Start/End Date" />
+                                            <label className="form-label">Start/End Date</label>
+                                            <div className="d-flex gap-2">
+                                                <input type="date" id="vkpiStartDate" className="form-control" disabled />
+                                                <input type="date" id="vkpiEndDate" className="form-control" disabled />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
