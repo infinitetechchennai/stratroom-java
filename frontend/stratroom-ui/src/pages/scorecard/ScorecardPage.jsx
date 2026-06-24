@@ -427,6 +427,43 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     if (el) new window.bootstrap.Modal(el).show();
                 }
             },
+            openViewKpi: async (id) => {
+                const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
+                const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
+                const fmtDate = (v) => {
+                    if (!v) return '-';
+                    const d = new Date(v);
+                    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+                };
+                ['vkpiName', 'vkpiDescription', 'vkpiWeight', 'vkpiContribution', 'vkipSubWeight',
+                 'vkpiActual', 'vkpiPerformance', 'vkpiYearToDate'].forEach(elId => set(elId, ''));
+                ['vkpiCreatedBy', 'vkpiModifiedBy', 'vkpiCreatedDate', 'vkpiModifiedDate'].forEach(elId => setText(elId, '-'));
+                try {
+                    const kpi = await getKpiById(id);
+                    if (kpi && kpi.id) {
+                        set('vkpiName', kpi.name);
+                        set('vkpiDescription', kpi.description);
+                        set('vkpiWeight', kpi.weight);
+                        set('vkpiPerformance', kpi.formula || '');
+                        set('vkpiActual', kpi.actual_formula || '');
+                        set('vkpiYearToDate', kpi.ytd_formula || '');
+                        const polEl = document.getElementById('vkpiPolarity');
+                        if (polEl && kpi.polarity) polEl.value = kpi.polarity;
+                        const freqEl = document.getElementById('vkpiMeasurementFrequency');
+                        if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
+                        setText('vkpiCreatedBy', kpi.created_by);
+                        setText('vkpiModifiedBy', kpi.updated_by);
+                        setText('vkpiCreatedDate', fmtDate(kpi.created_at));
+                        setText('vkpiModifiedDate', fmtDate(kpi.updated_at));
+                    }
+                } catch (e) {
+                    console.error('Failed to load KPI data', e);
+                }
+                if (window.bootstrap?.Modal) {
+                    const el = document.getElementById('kpi-view-modal');
+                    if (el) new window.bootstrap.Modal(el).show();
+                }
+            },
         };
         return () => { delete window.scorecardActions; };
     }, [removePerspective, removeObjective, removeKpi, removeSubKpi]);
