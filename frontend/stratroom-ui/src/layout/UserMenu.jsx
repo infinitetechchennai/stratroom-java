@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { usePermissions } from '../context/PermissionsContext'
 import { useI18n } from '../context/I18nContext'
 import { getDisplayName, getInitials } from '../pages/organization/landingPageUtils'
+import { getUserRole } from '../api/landingPageApi'
 import axiosClient from '../api/axiosClient'
 
 // Notification bell + settings gear + profile avatar cluster.
@@ -13,7 +14,10 @@ export default function UserMenu() {
   const { hasPermission } = usePermissions()
   const { t } = useI18n()
   const navigate = useNavigate()
-  const displayName = getDisplayName(user)
+  // Use the same employee profile the landing page uses so the name/avatar match
+  // the logged-in user everywhere (auth `user` can carry a different seed name).
+  const [userProfile, setUserProfile] = useState(null)
+  const displayName = getDisplayName(userProfile || user)
   const initials = getInitials(displayName)
 
   const [notifications, setNotifications] = useState([])
@@ -41,6 +45,12 @@ export default function UserMenu() {
       .then(r => setNotifications(Array.isArray(r.data) ? r.data : []))
       .catch(() => setNotifications([]))
   }, [user?.empId])
+
+  useEffect(() => {
+    const empId = user?.empId ?? user?.id
+    if (!empId) return
+    getUserRole(empId).then(setUserProfile).catch(() => {})
+  }, [user?.empId, user?.id])
 
   useEffect(() => {
     if (!notifOpen && !profileOpen && !settingsOpen) return
@@ -178,14 +188,12 @@ export default function UserMenu() {
             
             {/* Header Area */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '16px', borderBottom: '1px solid #f1f5f9' }}>
-              <div style={{ 
-                width: 44, height: 44, borderRadius: '50%', border: '1.5px solid #111827', 
-                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 
+              <div style={{
+                width: 44, height: 44, borderRadius: '50%', background: '#00C4C4', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                fontSize: 16, fontWeight: 700, letterSpacing: '.3px'
               }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+                {initials}
               </div>
               <div>
                 <p style={{ fontSize: '15px', fontWeight: 600, margin: 0, color: '#111827' }}>Hi {displayName}</p>
