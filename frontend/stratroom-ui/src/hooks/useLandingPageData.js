@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   getUserRole,
   getDepartmentReportees,
+  getAllDepartmentListByLoginUser,
   getPagesByDeptPageType,
   resolveLandingPages,
   getMeetingList,
@@ -164,7 +165,11 @@ export function useLandingPageData(empId) {
       try {
         const [profile, deptList] = await Promise.all([
           getUserRole(empId),
-          getDepartmentReportees()
+          // Admin -> all org departments; user -> own dept + downline (server-decided).
+          // Fall back to the reportee list if the endpoint is unavailable.
+          getAllDepartmentListByLoginUser(empId)
+            .catch(() => getDepartmentReportees())
+            .catch(() => [])
         ])
 
         if (cancelled) return

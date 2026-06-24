@@ -20,6 +20,16 @@ export const getDepartmentReportees = async () => {
   return response.data
 }
 
+// Departments the logged-in user may pick in "Choose department": admins get the
+// whole org, regular users get their own department + downline (resolved server-side
+// by findAllByEmpId). datePeriod/name are sent empty so the non-date admin branch runs.
+export const getAllDepartmentListByLoginUser = async (empId, datePeriod = '', name = '') => {
+  const response = await axiosClient.get(
+    `/api/allDepartmentListByLoginUser?empId=${empId}&datePeriod=${encodeURIComponent(datePeriod)}&name=${encodeURIComponent(name)}`
+  )
+  return response.data
+}
+
 export const getPagesByDeptPageType = async (deptId, pageType) => {
   const response = await axiosClient.get(
     `/api/pageListByDeptPageType/${deptId}?pageType=${encodeURIComponent(pageType)}`
