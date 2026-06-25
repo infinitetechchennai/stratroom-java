@@ -297,15 +297,23 @@ async function loadMeasures(component) {
     if (el) el.innerHTML = '';
   });
 
+  // Count how many elements share each display name. A name that appears once is shown and
+  // inserted as the plain (friendly) name; a name shared by 2+ elements gets its unique code
+  // appended so the user — and the backend — can tell them apart. The backend resolves both
+  // names and codes, so unique names work as-is and only true duplicates expose a code.
+  const nameCounts = {};
+  list.forEach((m) => { const n = m?.measureName; if (n) nameCounts[n] = (nameCounts[n] || 0) + 1; });
+
   list.forEach((nk) => {
     const name = nk?.measureName;
     if (!name) return;
     const type = Number(nk.measureType);
     const elementType = nk?.elementType || '';
-    // Insert the UNIQUE key (element code) into the formula so elements that share the
-    // same display name stay distinguishable; show name + code so the user can tell them
-    // apart in the list.
-    const key = nk?.measureKey || name;
+    const code = nk?.measureKey || name;
+    const isDuplicate = (nameCounts[name] || 0) > 1 && code !== name;
+    // Friendly: insert the plain name when it's unique; only duplicates insert the code.
+    const insertVal = isDuplicate ? code : name;
+    const displayVal = isDuplicate ? `${name}  ·  ${code}` : name;
 
     // KPI Actual + YTD: full tree — KPIs → Measures tab, Sub-KPIs → Sub Measures tab, skip everything else.
     if ((component === 'KPI' || component === 'YTD') && elementType) {
@@ -319,9 +327,9 @@ async function loadMeasures(component) {
     if (!ul) return;
     const li = document.createElement('li');
     li.className = 'list-group-item';
-    li.textContent = (key && key !== name) ? `${name}  ·  ${key}` : name;
+    li.textContent = displayVal;
     li.style.cursor = 'pointer';
-    li.addEventListener('click', () => insertMeasure(component, key));
+    li.addEventListener('click', () => insertMeasure(component, insertVal));
     ul.appendChild(li);
   });
 }
