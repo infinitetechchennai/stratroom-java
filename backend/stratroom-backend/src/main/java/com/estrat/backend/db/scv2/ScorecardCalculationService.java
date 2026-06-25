@@ -895,7 +895,11 @@ public class ScorecardCalculationService {
             String sc = score.toPlainString();
             String code = getCodeFromChild(child);
             String name = getNameFromChild(child);
-            if (code != null && !code.isBlank()) tokenScores.add(new String[]{code, sc});
+            // Use the code only when it is a real (alphanumeric) code. Code-less elements
+            // (perspectives/objectives) fall back to a numeric id which the UI never inserts
+            // and which, as a short digit string, could corrupt score numbers during
+            // substitution (e.g. id "58" inside score "158"); skip those — the name matches.
+            if (code != null && !code.isBlank() && !code.matches("\\d+")) tokenScores.add(new String[]{code, sc});
             if (name != null && !name.isBlank()) tokenScores.add(new String[]{name, sc});
         }
         tokenScores.sort((a, b) -> Integer.compare(b[0].length(), a[0].length()));
