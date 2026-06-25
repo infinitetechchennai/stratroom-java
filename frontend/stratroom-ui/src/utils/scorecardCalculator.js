@@ -302,6 +302,10 @@ async function loadMeasures(component) {
     if (!name) return;
     const type = Number(nk.measureType);
     const elementType = nk?.elementType || '';
+    // Insert the UNIQUE key (element code) into the formula so elements that share the
+    // same display name stay distinguishable; show name + code so the user can tell them
+    // apart in the list.
+    const key = nk?.measureKey || name;
 
     // KPI Actual + YTD: full tree — KPIs → Measures tab, Sub-KPIs → Sub Measures tab, skip everything else.
     if ((component === 'KPI' || component === 'YTD') && elementType) {
@@ -315,9 +319,9 @@ async function loadMeasures(component) {
     if (!ul) return;
     const li = document.createElement('li');
     li.className = 'list-group-item';
-    li.textContent = name;
+    li.textContent = (key && key !== name) ? `${name}  ·  ${key}` : name;
     li.style.cursor = 'pointer';
-    li.addEventListener('click', () => insertMeasure(component, name));
+    li.addEventListener('click', () => insertMeasure(component, key));
     ul.appendChild(li);
   });
 }
