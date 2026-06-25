@@ -38,7 +38,7 @@ function currentUser() {
 
 // Owner dropdown: defaults to the logged-in user, then lists their reportees.
 // No hardcoded names.
-const OwnerSelect = ({ id, className }) => {
+export const OwnerSelect = ({ id, className }) => {
     const me = currentUser();
     const [owners, setOwners] = useState([]);
     useEffect(() => {
