@@ -89,6 +89,23 @@ public class ScorecardCalculationService {
                         + "FROM sc_sub_kpis WHERE is_deleted = false AND kpi_id IN (%s) ORDER BY display_order, id", kpiIds),
                 "kpi_id");
 
+
+        List<Long> subKpiIds = subByKpi.values().stream().flatMap(java.util.List::stream).map(m -> num(m.get("id"))).collect(java.util.stream.Collectors.toList());
+        // 4th-level sub-measures: the sc_sub_measures table doesn't exist in every schema.
+        // Guard so a missing table (or empty id list) simply yields no sub-measures instead
+        // of aborting the entire scorecard load.
+        Map<Long, List<Map<String, Object>>> subMeasureBySubKpi = new java.util.HashMap<>();
+        if (subKpiIds != null && !subKpiIds.isEmpty()) {
+            try {
+                subMeasureBySubKpi = groupBy(
+                        queryIn("SELECT id, name, code, target_value, polarity, weight, data_type, achievement_cap, sub_kpi_id "
+                                + "FROM sc_sub_measures WHERE is_deleted = false AND sub_kpi_id IN (%s) ORDER BY display_order, id", subKpiIds),
+                        "sub_kpi_id");
+            } catch (Exception ignore) {
+                // sc_sub_measures not present in this schema — no 4th-level data to load.
+            }
+        }
+
         // all KPI history for these KPIs, ordered, grouped — current & previous picked in memory
         Map<Long, List<Map<String, Object>>> histByKpi = groupBy(
                 queryIn("SELECT kpi_id, period_start, period_end, actual_value "
@@ -101,7 +118,7 @@ public class ScorecardCalculationService {
         List<BigDecimal> perspectiveWeights = new ArrayList<>();
 
         for (Map<String, Object> p : perspectives) {
-            Map<String, Object> pDto = buildPerspective(p, objByPersp, kpiByObj, subByKpi, histByKpi, start, end, scClass);
+            Map<String, Object> pDto = buildPerspective(p, objByPersp, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi, start, end, scClass);
             perspectiveDtos.add(pDto);
             BigDecimal score = (BigDecimal) pDto.get("score");
             if (score != null) {
@@ -144,6 +161,7 @@ public class ScorecardCalculationService {
             Map<Long, List<Map<String, Object>>> objByPersp,
             Map<Long, List<Map<String, Object>>> kpiByObj,
             Map<Long, List<Map<String, Object>>> subByKpi,
+            Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
             LocalDate start, LocalDate end, String scClass) {
         Long perspectiveId = num(p.get("id"));
@@ -156,7 +174,7 @@ public class ScorecardCalculationService {
         List<BigDecimal> objWeights = new ArrayList<>();
 
         for (Map<String, Object> o : objByPersp.getOrDefault(perspectiveId, List.of())) {
-            Map<String, Object> oDto = buildObjective(o, kpiByObj, subByKpi, histByKpi, start, end, classType);
+            Map<String, Object> oDto = buildObjective(o, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi, start, end, classType);
             objectiveDtos.add(oDto);
             BigDecimal score = (BigDecimal) oDto.get("score");
             if (score != null) {
@@ -192,6 +210,7 @@ public class ScorecardCalculationService {
     private Map<String, Object> buildObjective(Map<String, Object> o,
             Map<Long, List<Map<String, Object>>> kpiByObj,
             Map<Long, List<Map<String, Object>>> subByKpi,
+            Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
             LocalDate start, LocalDate end, String parentClass) {
         Long objectiveId = num(o.get("id"));
@@ -207,7 +226,7 @@ public class ScorecardCalculationService {
         List<BigDecimal> kpiWeights = new ArrayList<>();
 
         for (Map<String, Object> k : kpiByObj.getOrDefault(objectiveId, List.of())) {
-            Map<String, Object> kDto = buildKpi(k, subByKpi, histByKpi, start, end, classType);
+            Map<String, Object> kDto = buildKpi(k, subByKpi, subMeasureBySubKpi, histByKpi, start, end, classType);
             kpiDtos.add(kDto);
             BigDecimal score = (BigDecimal) kDto.get("score");
             if (score != null) {
@@ -253,6 +272,7 @@ public class ScorecardCalculationService {
 
     private Map<String, Object> buildKpi(Map<String, Object> k,
             Map<Long, List<Map<String, Object>>> subByKpi,
+            Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
             LocalDate start, LocalDate end, String parentClass) {
         Long kpiId = num(k.get("id"));
@@ -298,6 +318,18 @@ public class ScorecardCalculationService {
                 subDto.put("id", subId);
                 subDto.put("subKpiId", str(sk.get("code")) != null ? str(sk.get("code")) : String.valueOf(subId));
                 subDto.put("subKpiValue", subVal);
+
+                List<Map<String, Object>> sms = subMeasureBySubKpi.getOrDefault(subId, List.of());
+                List<Map<String, Object>> smDtos = new ArrayList<>();
+                for (Map<String, Object> sm : sms) {
+                    Map<String, Object> smDto = new LinkedHashMap<>();
+                    smDto.put("id", num(sm.get("id")));
+                    smDto.put("name", str(sm.get("name")));
+                    smDto.put("targetValue", dec(sm.get("target_value")));
+                    smDtos.add(smDto);
+                }
+                subDto.put("subMeasureList", smDtos);
+
                 subKpiDtos.add(subDto);
             }
             achievement = aggregatorService.aggregate(subScores, subWeights, "WEIGHTED", null);
