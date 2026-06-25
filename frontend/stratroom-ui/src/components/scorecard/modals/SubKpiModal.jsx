@@ -1,5 +1,5 @@
 import { ThresholdSelector } from './ThresholdSelector';
-import { OwnerSelect } from './KpiModal';
+import { OwnerSelect, DateRangeInput } from './KpiModal';
 import React from 'react';
 
 export const SubKpiAddModal = () => {
@@ -95,7 +95,7 @@ export const SubKpiAddModal = () => {
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
                                         <div className="form-group">
                                             <label htmlFor="askpiStartEndDate" className="form-label">Start/End Date</label>
-                                            <input type="text" className="form-control" name="askpiStartEndDate" placeholder="Start/End Date" />
+                                            <DateRangeInput id="askpiStartEndDate" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -132,7 +132,7 @@ export const SubKpiAddModal = () => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button className="btn btn-primary" value="Save">Save</button>
+                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
                     </div>
                 </div>
             </div>
@@ -252,7 +252,7 @@ export const SubKpiEditModal = () => {
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
                                         <div className="form-group">
                                             <label htmlFor="eskpiStartEndDate" className="form-label">Start/End Date</label>
-                                            <input type="text" className="form-control" name="eskpiStartEndDate" placeholder="Start/End Date" />
+                                            <DateRangeInput id="eskpiStartEndDate" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -289,7 +289,7 @@ export const SubKpiEditModal = () => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button className="btn btn-primary" value="Save">Save</button>
+                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
                         <div className="modal-audit">
                             <div className="audit-listing">
                                 <div className="audit-box">
@@ -429,7 +429,7 @@ export const SubKpiViewModal = () => {
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
                                         <div className="form-group">
                                             <label htmlFor="vskpiStartEndDate" className="form-label">Start/End Date</label>
-                                            <input type="text" className="form-control" name="vskpiStartEndDate" placeholder="Start/End Date" />
+                                            <DateRangeInput id="vskpiStartEndDate" disabled />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6 g-col-lg-3">
@@ -460,7 +460,7 @@ export const SubKpiViewModal = () => {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        <button className="btn btn-primary" value="Save">Save</button>
+                        <button className="btn btn-primary" value="Save" data-translate="actions.save">Save</button>
                         <div className="modal-audit">
                             <div className="audit-listing">
                                 <div className="audit-box">

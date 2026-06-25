@@ -309,27 +309,24 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             // ── SubKPI Add ────────────────────────────────────────────────────
             'subkpi-add-modal': () => {
                 addSubKpi({
-                    name: val('askName'),
-                    description: val('askDescription'),
-                    targetValue: val('askTarget'),
-                    actualValue: val('askActual'),
-                    measurementFrequency: val('askMeasurement') || val('askFrequency'),
-                    weight: val('askWeight'),
+                    name: val('askpiName'),
+                    indicatorType: val('askpiPolarity') || undefined,
+                    measurementFrequency: val('askpiMeasurementFrequency') || undefined,
+                    weight: val('askpiWeight') || undefined,
+                    dataType: val('askpiType') || undefined,
                     createdBy: getEmpId(),
-                    kpiId: val('askKpiId') || window._editKpiId,
+                    kpiId: window._editKpiId,
                 });
             },
             // ── SubKPI Edit ────────────────────────────────────────────────────
             'subkpi-edit-modal': () => {
                 editSubKpi({
-                    id: val('eskId') || window._editSubKpiId,
-                    name: val('eskName'),
-                    description: val('eskDescription'),
-                    targetValue: val('eskTarget'),
-                    actualValue: val('eskActual'),
-                    measurementFrequency: val('eskMeasurement') || val('eskFrequency'),
-                    weight: val('eskWeight'),
-                    kpiId: val('eskKpiId') || window._editKpiId,
+                    id: val('eskpiId') || window._editSubKpiId,
+                    name: val('eskpiName') || undefined,
+                    indicatorType: val('eskpiPolarity') || undefined,
+                    measurementFrequency: val('eskpiMeasurementFrequency') || undefined,
+                    weight: val('eskpiWeight') || undefined,
+                    dataType: val('eskpiType') || undefined,
                 });
             },
         };

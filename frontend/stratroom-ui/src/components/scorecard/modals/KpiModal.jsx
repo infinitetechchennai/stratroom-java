@@ -5,7 +5,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { getReporteeList } from '../../../services/scorecardApi';
 
 // Single-box date range picker showing "MM/DD/YYYY - MM/DD/YYYY" (like the live app).
-const DateRangeInput = ({ id, disabled }) => {
+export const DateRangeInput = ({ id, disabled }) => {
     const ref = useRef(null);
     useEffect(() => {
         if (!ref.current) return undefined;
