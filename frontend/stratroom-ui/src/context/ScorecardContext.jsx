@@ -58,26 +58,37 @@ function showToast(message, type = 'success') {
   }
 }
 
-// Close a Bootstrap modal by ID
+// Close a Bootstrap modal by ID.
+// IMPORTANT: hide via the Bootstrap Modal API so the instance's internal _isShown
+// state is reset. A previous manual DOM-only close (remove .show / set display:none)
+// left _isShown = true, so the SAME modal could not be reopened a second time
+// (show()/toggle() became a no-op) until a full page refresh recreated the instance.
 function closeModal(modalId) {
   const el = document.getElementById(modalId);
   if (!el) return;
-  // Force manual hide to avoid Bootstrap 5 'backdrop' undefined bugs
-  // especially when React might have re-rendered the modal
-  el.classList.remove('show');
-  el.style.display = 'none';
-  el.setAttribute('aria-hidden', 'true');
-  el.removeAttribute('aria-modal');
-  el.removeAttribute('role');
-  
-  // Cleanup backdrop
-  const backdrop = document.querySelector('.modal-backdrop');
-  if (backdrop) backdrop.remove();
-  
-  // Cleanup body
-  document.body.classList.remove('modal-open');
-  document.body.style.overflow = '';
-  document.body.style.paddingRight = '';
+  const Modal = window.bootstrap?.Modal;
+  if (Modal) {
+    const inst = Modal.getInstance(el) || Modal.getOrCreateInstance(el);
+    inst.hide();
+  } else {
+    // Fallback only when Bootstrap isn't present.
+    el.classList.remove('show');
+    el.style.display = 'none';
+    el.setAttribute('aria-hidden', 'true');
+    el.removeAttribute('aria-modal');
+    el.removeAttribute('role');
+  }
+  // Safety net for stacked (nested calculator) modals: after the hide transition, if
+  // nothing is still open, clear any leftover backdrop / body lock that would otherwise
+  // sit on top of the page and swallow clicks (the "controls become unresponsive" symptom).
+  setTimeout(() => {
+    if (!document.querySelector('.modal.show')) {
+      document.querySelectorAll('.modal-backdrop').forEach((b) => b.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+  }, 300);
 }
 
 // ─────────────────────────────────────────────────────────────
