@@ -264,6 +264,13 @@ public class ScorecardCrudService {
 
     // ---------------- SUB-KPI ----------------
 
+    public Map<String, Object> getSubKpi(long id) {
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT id, kpi_id, code, name, target_value, polarity, weight, data_type, "
+                        + "achievement_cap, display_order, indicator_type FROM sc_sub_kpis WHERE id = ?", id);
+        return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
+    }
+
     @Transactional
     public long createSubKpi(Map<String, Object> b) {
         return insert(
@@ -278,13 +285,24 @@ public class ScorecardCrudService {
 
     @Transactional
     public boolean updateSubKpi(long id, Map<String, Object> b) {
+        // Non-destructive: the edit form only carries a subset of fields, so any column the
+        // caller doesn't supply keeps its current DB value instead of being reset to a default.
+        List<Map<String, Object>> exRows = jdbc.queryForList(
+                "SELECT name, target_value, polarity, weight, data_type, achievement_cap, "
+                        + "display_order, indicator_type FROM sc_sub_kpis WHERE id = ?", id);
+        Map<String, Object> ex = exRows.isEmpty() ? java.util.Collections.emptyMap() : exRows.get(0);
+        Integer exDisplay = ex.get("display_order") == null ? 0 : ((Number) ex.get("display_order")).intValue();
         return jdbc.update(
                 "UPDATE sc_sub_kpis SET name=?, target_value=?, polarity=?, weight=?, data_type=?, "
                         + "achievement_cap=?, display_order=?, indicator_type=? WHERE id=?",
-                str(b, "name", "Sub-KPI"), dec(b, "targetValue", BigDecimal.ZERO), str(b, "direction", "HIGHER"),
-                dec(b, "weight", BigDecimal.ONE), str(b, "dataType", "NUMBER"),
-                dec(b, "achievementCap", new BigDecimal("150")), intg(b, "displayOrder", 0),
-                str(b, "indicatorType", null), id) > 0;
+                str(b, "name", (String) ex.get("name")),
+                dec(b, "targetValue", (BigDecimal) ex.get("target_value")),
+                str(b, "direction", (String) ex.get("polarity")),
+                dec(b, "weight", (BigDecimal) ex.get("weight")),
+                str(b, "dataType", (String) ex.get("data_type")),
+                dec(b, "achievementCap", (BigDecimal) ex.get("achievement_cap")),
+                intg(b, "displayOrder", exDisplay),
+                str(b, "indicatorType", (String) ex.get("indicator_type")), id) > 0;
     }
 
     @Transactional

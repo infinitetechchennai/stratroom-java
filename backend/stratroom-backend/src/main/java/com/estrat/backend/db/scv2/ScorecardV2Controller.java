@@ -152,6 +152,11 @@ public class ScorecardV2Controller {
 
     // -------- sub-KPI CRUD --------
 
+    @GetMapping("/scorecardV2/subkpi/{id}")
+    public ResponseEntity<Map<String, Object>> getSubKpi(@PathVariable long id) {
+        return ResponseEntity.ok(crudService.getSubKpi(id));
+    }
+
     @PostMapping("/scorecardV2/subkpi")
     public ResponseEntity<Map<String, Object>> createSubKpi(@RequestBody Map<String, Object> body) {
         return ResponseEntity.ok(idResult(crudService.createSubKpi(body)));

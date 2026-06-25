@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getPerspectiveById, getObjectiveById, getKpiById, updateScorecardFormula } from '../../services/scorecardApi';
+import { getPerspectiveById, getObjectiveById, getKpiById, getSubKpiById, updateScorecardFormula } from '../../services/scorecardApi';
 import { useScorecard } from '../../hooks/useScorecard';
 import { cardDetailsToTabs } from '../../utils/scorecardTransform';
 import { ScorecardProvider, useScorecardContext } from '../../context/ScorecardContext';
@@ -439,6 +439,30 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('objective-edit-modal');
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
+                }
+            },
+            openEditSubKpi: async (id) => {
+                window._editSubKpiId = id;
+                const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
+                ['eskpiName', 'eskpiDescription', 'eskpiWeight', 'eskpiContribution',
+                 'eskpiPerformance', 'eskpiYearToDate'].forEach(elId => set(elId, ''));
+                try {
+                    const sk = await getSubKpiById(id);
+                    if (sk && sk.id) {
+                        set('eskpiName', sk.name);
+                        set('eskpiWeight', sk.weight);
+                        // Polarity dropdown holds the Lead/Lag indicator type.
+                        const polEl = document.getElementById('eskpiPolarity');
+                        if (polEl && sk.indicator_type) polEl.value = sk.indicator_type;
+                        const typeEl = document.getElementById('eskpiType');
+                        if (typeEl && sk.data_type) typeEl.value = sk.data_type;
+                    }
+                } catch (e) {
+                    console.error('Failed to load sub-KPI data', e);
+                }
+                if (window.bootstrap?.Modal) {
+                    const el = document.getElementById('subkpi-edit-modal');
                     if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
