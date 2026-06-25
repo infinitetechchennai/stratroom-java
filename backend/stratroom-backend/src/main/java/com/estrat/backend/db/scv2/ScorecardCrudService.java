@@ -150,7 +150,7 @@ public class ScorecardCrudService {
                 lng(b, "perspectiveId", 0L), str(b, "code", null), str(b, "name", "Objective"),
                 str(b, "description", null), intg(b, "displayOrder", 0), dec(b, "weight", BigDecimal.ZERO),
                 str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"),
-                bln(b, "knockoutEnabled") ? 1 : 0, dec(b, "knockoutThreshold", new BigDecimal("80")),
+                bln(b, "knockoutEnabled"), dec(b, "knockoutThreshold", new BigDecimal("80")),
                 dec(b, "passRateThreshold", new BigDecimal("95")), str(b, "formula", null));
     }
 
@@ -166,7 +166,7 @@ public class ScorecardCrudService {
                         + "display_order=?, formula=? WHERE id=?",
                 nameToSave, str(b, "description", null), dec(b, "weight", BigDecimal.ZERO),
                 str(b, "aggregationMethod", "WEIGHTED"), str(b, "classificationType", "THREE_COLOR"),
-                bln(b, "knockoutEnabled") ? 1 : 0, dec(b, "knockoutThreshold", new BigDecimal("80")),
+                bln(b, "knockoutEnabled"), dec(b, "knockoutThreshold", new BigDecimal("80")),
                 dec(b, "passRateThreshold", new BigDecimal("95")), intg(b, "displayOrder", 0), str(b, "formula", null), id) > 0;
     }
 
@@ -284,7 +284,106 @@ public class ScorecardCrudService {
         return jdbc.update("DELETE FROM sc_sub_kpis WHERE id=?", id) > 0;
     }
 
+
+    // ---------------- sc_sub_measures ----------------
+
+    @Transactional
+    public Long createSubMeasure(Map<String, Object> b) {
+        jdbc.update(
+                "INSERT INTO sc_sub_measures (sub_kpi_id, code, name, target_value, polarity, weight, data_type, "
+                        + "achievement_cap, display_order) VALUES (?,?,?,?,?,?,?,?,?)",
+                lng(b, "subKpiId", 0L), str(b, "code", null), str(b, "name", "Sub-Measure"),
+                dec(b, "targetValue", java.math.BigDecimal.ZERO), str(b, "polarity", "HIGHER"),
+                dec(b, "weight", java.math.BigDecimal.ONE), str(b, "dataType", "NUMBER"),
+                dec(b, "achievementCap", new java.math.BigDecimal("150")), intg(b, "displayOrder", 0));
+        return jdbc.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+    }
+
+    @Transactional
+    public boolean updateSubMeasure(long id, Map<String, Object> b) {
+        return jdbc.update(
+                "UPDATE sc_sub_measures SET name=?, target_value=?, polarity=?, weight=?, data_type=?, "
+                        + "achievement_cap=?, display_order=? WHERE id=?",
+                str(b, "name", "Sub-Measure"), dec(b, "targetValue", java.math.BigDecimal.ZERO),
+                str(b, "polarity", "HIGHER"), dec(b, "weight", java.math.BigDecimal.ONE),
+                str(b, "dataType", "NUMBER"), dec(b, "achievementCap", new java.math.BigDecimal("150")),
+                intg(b, "displayOrder", 0), id) > 0;
+    }
+
+    @Transactional
+    public boolean deleteSubMeasure(long id) {
+        return jdbc.update("DELETE FROM sc_sub_measures WHERE id=?", id) > 0;
+    }
+
+    public List<Map<String, Object>> getSubMeasureHistory(Long subMeasureId, String dateRange) {
+        return jdbc.queryForList(
+                "SELECT period_start, period_end, actual_value "
+                        + "FROM sc_sub_measure_history WHERE sub_measure_id = ? ORDER BY period_end", subMeasureId);
+    }
+
+    @Transactional
+    public void recordSubMeasureActualBatch(Map<String, Object> body) {
+        Long subMeasureId = lng(body, "subMeasureId", 0L);
+        List<Map<String, Object>> actuals = (List<Map<String, Object>>) body.get("actuals");
+        if (actuals == null || actuals.isEmpty()) return;
+
+        List<Object[]> batchArgs = actuals.stream().map(a -> new Object[]{
+                subMeasureId, str(a, "periodStart", null), str(a, "periodEnd", null), decOrNull(a, "actualValue")
+        }).collect(java.util.stream.Collectors.toList());
+
+        jdbc.batchUpdate(
+                "INSERT INTO sc_sub_measure_history (sub_measure_id, period_start, period_end, actual_value) VALUES (?,cast(? as date),cast(? as date),?) "
+                        + "ON CONFLICT (sub_measure_id, period_start, period_end) DO UPDATE SET actual_value=EXCLUDED.actual_value, calculated_at=NOW()",
+                batchArgs);
+    }
+
     // ---------------- ACTUALS (kpi_history) ----------------
+
+    @Transactional
+    public void recordKpiActualBatch(Map<String, Object> body) {
+        Long kpiId = lng(body, "kpiId", 0L);
+        List<Map<String, Object>> actuals = (List<Map<String, Object>>) body.get("actuals");
+        if (actuals == null || actuals.isEmpty()) return;
+        
+        List<Object[]> batchArgs = actuals.stream().map(a -> new Object[]{
+                kpiId, str(a, "periodStart", null), str(a, "periodEnd", null), decOrNull(a, "actualValue")
+        }).collect(java.util.stream.Collectors.toList());
+
+        jdbc.batchUpdate(
+                "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value) VALUES (?,cast(? as date),cast(? as date),?) "
+                        + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET actual_value=EXCLUDED.actual_value, calculated_at=NOW()",
+                batchArgs);
+    }
+
+    @Transactional
+    public void recordSubKpiActualBatch(Map<String, Object> body) {
+        Long subKpiId = lng(body, "subKpiId", 0L);
+        List<Map<String, Object>> actuals = (List<Map<String, Object>>) body.get("actuals");
+        if (actuals == null || actuals.isEmpty()) return;
+
+        List<Object[]> batchArgs = actuals.stream().map(a -> new Object[]{
+                subKpiId, str(a, "periodStart", null), str(a, "periodEnd", null), decOrNull(a, "actualValue")
+        }).collect(java.util.stream.Collectors.toList());
+
+        jdbc.batchUpdate(
+                "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value) VALUES (?,cast(? as date),cast(? as date),?) "
+                        + "ON CONFLICT (sub_kpi_id, period_start, period_end) DO UPDATE SET actual_value=EXCLUDED.actual_value, calculated_at=NOW()",
+                batchArgs);
+    }
+
+
+    public List<Map<String, Object>> getKpiHistory(Long kpiId, String dateRange) {
+        return jdbc.queryForList(
+                "SELECT period_start, period_end, actual_value "
+                        + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end", kpiId);
+    }
+
+    public List<Map<String, Object>> getSubKpiHistory(Long subKpiId, String dateRange) {
+        return jdbc.queryForList(
+                "SELECT period_start, period_end, actual_value "
+                        + "FROM sc_sub_kpi_history WHERE sub_kpi_id = ? ORDER BY period_end", subKpiId);
+    }
+
 
     @Transactional
     public void recordKpiActual(Map<String, Object> b) {
