@@ -515,30 +515,46 @@
 .deptPicker {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  max-height: 160px;
+  gap: 2px;
+  max-height: 180px;
   overflow-y: auto;
-  padding: 8px 10px;
+  padding: 6px;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   background: #fff;
 }
 
-.deptOption {
+/* Override the global `.formGrid label` (column/uppercase) so each option is a
+   left-aligned checkbox + text row instead of a stacked, centered field. */
+.deptPicker .deptOption {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 6px 8px;
   font-size: 13px;
   font-weight: 400;
   color: #374151;
   text-transform: none;
   letter-spacing: normal;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-.deptOption input {
-  width: auto;
+.deptPicker .deptOption:hover {
+  background: #f3f4f6;
+}
+
+.deptPicker .deptOption input {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
   margin: 0;
+  padding: 0;
+  accent-color: #2d2d6e;
+  cursor: pointer;
 }
 
 .deptEmpty {

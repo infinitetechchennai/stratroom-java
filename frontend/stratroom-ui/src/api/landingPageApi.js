@@ -1,6 +1,8 @@
 import axiosClient from './axiosClient'
 import { getPageList } from './pageApi'
+import { getScorecardV2 } from '../services/scorecardV2Api'
 import { PINNED_PAGE_TYPES } from '../pages/organization/landingPageConfig'
+import { extractKpis, extractKpisFromV2 } from '../pages/organization/landingPageUtils'
 
 const LANDING_PAGE_TYPES = [
   PINNED_PAGE_TYPES.MEETINGS,
@@ -17,6 +19,12 @@ export const getUserRole = async (empId) => {
 
 export const getDepartmentReportees = async () => {
   const response = await axiosClient.get('/api/departmentReportees')
+  return response.data
+}
+
+export const getDepartmentsByOrgId = async (orgId) => {
+  if (!orgId) return []
+  const response = await axiosClient.get(`/api/departmentListByOrgId?orgId=${orgId}`)
   return response.data
 }
 
@@ -65,6 +73,28 @@ function pickDeptPages(allPages, deptId) {
     if (page) picked.push(page)
   }
 
+  if (!picked.some((p) => p.pageType === PINNED_PAGE_TYPES.STANDARD_VIEW)) {
+    const scorecard = source.find(
+      (p) => p.pageType === PINNED_PAGE_TYPES.STANDARD_VIEW || p.groupType === 'Measure'
+    )
+    if (scorecard) picked.push(scorecard)
+  }
+
+  return picked
+}
+
+function pickAnyPages(allPages) {
+  const picked = []
+  for (const pageType of LANDING_PAGE_TYPES) {
+    const page = allPages.find((item) => item.pageType === pageType)
+    if (page) picked.push(page)
+  }
+  if (!picked.some((p) => p.pageType === PINNED_PAGE_TYPES.STANDARD_VIEW)) {
+    const scorecard = allPages.find(
+      (p) => p.pageType === PINNED_PAGE_TYPES.STANDARD_VIEW || p.groupType === 'Measure'
+    )
+    if (scorecard) picked.push(scorecard)
+  }
   return picked
 }
 
@@ -84,10 +114,83 @@ export async function resolveLandingPages(deptId, empId) {
 
   try {
     const allPages = await getPageList(empId)
-    return pickDeptPages(Array.isArray(allPages) ? allPages : [], deptId)
+    const pages = Array.isArray(allPages) ? allPages : []
+    const byDept = pickDeptPages(pages, deptId)
+    if (byDept.length > 0) return byDept
+    return pickAnyPages(pages)
   } catch {
     return []
   }
+}
+
+export async function loadLandingDashboard(pinnedPages, empId, dateRange) {
+  const result = {
+    meetings: 0,
+    tasks: { total: 0, completed: 0, inProgress: 0 },
+    initiatives: [],
+    risks: [],
+    kpis: [],
+    meetingPageUrl: null,
+    taskPageUrl: null
+  }
+  if (!Array.isArray(pinnedPages) || pinnedPages.length === 0) return result
+
+  for (const page of pinnedPages) {
+    const pageId = page.id
+    const createdBy = page.createdBy
+    const pageType = page.pageType
+
+    if (pageType === PINNED_PAGE_TYPES.MEETINGS) {
+      try {
+        const meetings = await getMeetingList(createdBy, pageId, dateRange)
+        result.meetings = Array.isArray(meetings) ? meetings.length : 0
+        result.meetingPageUrl = `/dashboard/${createdBy}?pageId=${pageId}`
+      } catch { /* optional module */ }
+    }
+
+    if (pageType === PINNED_PAGE_TYPES.TASK) {
+      try {
+        const stats = await getTaskStatusCount(empId, dateRange)
+        result.tasks = {
+          total: stats?.totalTask ?? 0,
+          completed: stats?.totalComplete ?? 0,
+          inProgress: stats?.totalInProgress ?? 0
+        }
+        result.taskPageUrl = `/task?pageId=${pageId}`
+      } catch { /* optional module */ }
+    }
+
+    if (pageType === PINNED_PAGE_TYPES.INITIATIVES) {
+      try {
+        const initiatives = await getInitiativesList(empId, pageId, true)
+        result.initiatives = Array.isArray(initiatives) ? initiatives : []
+      } catch { /* optional module */ }
+    }
+
+    if (pageType === PINNED_PAGE_TYPES.RISK) {
+      try {
+        const risks = await getRiskList(empId, pageId, dateRange)
+        result.risks = Array.isArray(risks) ? risks : []
+      } catch { /* optional module */ }
+    }
+
+    if (pageType === PINNED_PAGE_TYPES.STANDARD_VIEW || page.groupType === 'Measure') {
+      try {
+        const v2 = await getScorecardV2(pageId, dateRange)
+        const fromV2 = extractKpisFromV2(v2)
+        if (fromV2.length > 0) {
+          result.kpis = fromV2
+          continue
+        }
+      } catch { /* fall through to legacy */ }
+      try {
+        const details = await getScoreCardDetails(empId, pageId, dateRange)
+        result.kpis = extractKpis(details)
+      } catch { /* optional module */ }
+    }
+  }
+
+  return result
 }
 
 export const getMeetingList = async (empId, pageId, dateRange = '') => {

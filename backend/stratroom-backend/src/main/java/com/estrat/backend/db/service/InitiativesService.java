@@ -1025,12 +1025,12 @@ public class InitiativesService {
     }
 
     public List<InitiativesDTO> initiativesDashBoardListByDeptId(long deptId) throws ParseException {
-        List<InitiativesDTO> initiativesDTOS = null;
         ArrayList<InitiativesDTO> initiatives_out = new ArrayList<InitiativesDTO>();
-        List<Initiatives> dbList =this.initiativesRepository.findAllByDeptId(Long.valueOf(deptId), 0);
-        if (!dbList.isEmpty() && dbList != null) {
-            initiativesDTOS = dbList.stream().map(dbValue -> new InitiativesDTO(dbValue, true)).collect(Collectors.toList());
+        List<Initiatives> dbList = this.initiativesRepository.findAllByDeptId(Long.valueOf(deptId), 0);
+        if (dbList == null || dbList.isEmpty()) {
+            return initiatives_out;
         }
+        List<InitiativesDTO> initiativesDTOS = dbList.stream().map(dbValue -> new InitiativesDTO(dbValue, true)).collect(Collectors.toList());
         for (InitiativesDTO initdto : initiativesDTOS) {
             try {
                 this.populateActual(initdto);

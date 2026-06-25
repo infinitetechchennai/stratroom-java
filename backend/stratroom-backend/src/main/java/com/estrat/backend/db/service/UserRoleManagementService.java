@@ -80,6 +80,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserRoleManagementService {
@@ -109,7 +110,12 @@ public class UserRoleManagementService {
     protected DepartmentChartMappingRepository departmentChartMappingRepository;
     @Autowired
     protected DeptMultipleOwnersMappingRepository multipleOwnersMappingRepository;
+    @Autowired
+    protected DepartmentDetailsService departmentDetailsService;
 
+    // Transactional so the session stays open while reading the lazy RoleDetailsPo proxy
+    // (roleRepository.getOne -> getRoleName) and persisting the new user in one unit of work.
+    @Transactional
     public UserDTO saveUserRole(UserDTO userDTO) {
         DepartmentDetails departmentDetails;
         boolean status = false;
@@ -222,6 +228,9 @@ public class UserRoleManagementService {
         }
     }
 
+    // readOnly transaction keeps the Hibernate session open while mapping each row, so the lazy
+    // RoleDetailsPo proxy touched in getUserRole() can initialize (otherwise LazyInitializationException).
+    @Transactional(readOnly = true)
     public List<UserDTO> getUserList(FindDTO findDTO) {
         List<UserRoleManagement> dbList = null;
         dbList = findDTO.getOrgId() != 0L && findDTO.getRoles() != null && findDTO.getDeptIds() != null && !findDTO.getDeptIds().isEmpty() && !findDTO.getRoles().isEmpty() && findDTO.getStatus() != null ? this.userRoleManagementRepository.findBy(findDTO.getOrgId(), findDTO.getDeptIds(), findDTO.getRoles(), findDTO.getStatus(), 0) : this.userRoleManagementRepository.findBy(findDTO.getOrgId(), 0);
@@ -248,6 +257,7 @@ public class UserRoleManagementService {
         return userDTO;
     }
 
+    @Transactional(readOnly = true)
     public List<UserDTO> getFindUserList(FindDTO findDTO) {
         List empIds = null;
         if (findDTO.getDeptIds() != null && !findDTO.getDeptIds().isEmpty()) {
@@ -258,6 +268,7 @@ public class UserRoleManagementService {
         return dbList.stream().map(this::toUserDTO).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<UserDTO> getSearchUserList(FindDTO findDTO) {
         List empIds = null;
         Collection<UserRoleManagement> dbList = null;
@@ -296,6 +307,9 @@ public class UserRoleManagementService {
         return new HashSet<DeptDetails>();
     }
 
+    // Transactional so the session stays open while reading the lazy RoleDetailsPo proxy
+    // (roleRepository.getOne -> getRoleName) and persisting the updates in one unit of work.
+    @Transactional
     public UserDTO updateUserRole(UserDTO userDTO) {
         Object roledetails;
         EmployeeCredentialsPo employeeCredentialsPo;
@@ -452,9 +466,25 @@ public class UserRoleManagementService {
         if (userRoleManagement != null) {
             UserDTO response = new UserDTO(userRoleManagement);
             response.setDepartmentList(new ArrayList(this.updateDeptList(Long.valueOf(response.getUserId()))));
+            enrichDepartmentsForPrivilegedUser(response);
             return response;
         }
         return null;
+    }
+
+    private void enrichDepartmentsForPrivilegedUser(UserDTO response) {
+        if (response.getDepartmentList() != null && !response.getDepartmentList().isEmpty()) {
+            return;
+        }
+        String role = response.getUserRole();
+        if (role == null || (!role.equalsIgnoreCase("Super User") && !role.equalsIgnoreCase("Admin"))) {
+            return;
+        }
+        long orgId = response.getOrgId() > 0L ? response.getOrgId() : 1L;
+        List<DeptDetails> orgDepts = this.departmentDetailsService.findAllByOrgId(orgId);
+        if (orgDepts != null && !orgDepts.isEmpty()) {
+            response.setDepartmentList(orgDepts);
+        }
     }
 
     public void deleteOwnerMapping(Long id) {
@@ -649,8 +679,11 @@ public class UserRoleManagementService {
     }
 
     public Long superUserId() {
-        System.out.println("USER_ORG_ID === " + Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
-        Long userId = this.userRoleManagementRepository.findByID(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")), 0, 0);
+        String orgIdStr = UserThreadLocal.get("USER_ORG_ID");
+        if (StringUtils.isBlank(orgIdStr)) {
+            return 0L;
+        }
+        Long userId = this.userRoleManagementRepository.findByID(Long.valueOf(orgIdStr), 0, 0);
         if (userId != null) {
             return userId;
         }

@@ -24,12 +24,14 @@ package com.estrat.backend.db.bean.po;
 import com.estrat.backend.db.bean.po.PagesDetails;
 import com.estrat.backend.db.bean.po.RiskDetails;
 import com.estrat.backend.db.dto.RiskDTO;
+import com.estrat.backend.db.config.LongStringJpaConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Date;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -79,6 +81,7 @@ public class RiskDetailsHistory {
     private Date raisedDate;
     @Column(name="completed_date")
     private Date completedDate;
+    @Convert(converter = LongStringJpaConverter.class)
     @Column(name="department_id")
     private Long departmentId;
 

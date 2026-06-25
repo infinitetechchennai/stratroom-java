@@ -1,29 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { usePermissions } from '../context/PermissionsContext'
+import { pagesForNavModule, isScorecardPageType } from '../utils/navPageGroups'
 import styles from './LeftNavigation.module.css'
-
-const PAGE_TYPE_GROUPS = {
-  Measure: (p) =>
-    p.groupType === 'Measure' || ['Standard_View', 'Scorecardview'].includes(p.pageType),
-  Plan: (p) =>
-    p.groupType === 'Plan' ||
-    ['SWOT', 'PESTEL', 'Strategy Map', 'Strategy Formulation',
-      'Project Formulation', 'Audit Management', 'AuditManagement'].includes(p.pageType),
-  Execute: (p) =>
-    p.groupType === 'Execute' ||
-    ['Initiatives & Projects', 'Task', 'Budget', 'Approval Page'].includes(p.pageType),
-  Govern: (p) =>
-    p.groupType === 'Govern' ||
-    ['Risk', 'Risk Formulation', 'Risk View', 'RiskEvent', 'Risk Radar',
-      'Impact Assesment', 'Process Enabaler', 'Rpo', 'Compliance',
-      'Audit Management'].includes(p.pageType),
-  Meet: (p) =>
-    p.groupType === 'Meet' || p.pageType === 'Meetings',
-  Reports: (p) =>
-    p.groupType === 'Report' ||
-    ['Cockpit', 'Charts', 'My Performance', 'My Space'].includes(p.pageType),
-}
 
 const NAV_MODULES = [
   { key: 'Plan', label: 'Plan' },
@@ -40,15 +19,18 @@ export default function LeftNavigation() {
   const { pages, isModuleVisible } = usePermissions()
   const [openModule, setOpenModule] = useState(null)
 
-  const getPages = (moduleKey) =>
-    pages.filter((p) => PAGE_TYPE_GROUPS[moduleKey]?.(p) ?? false)
+  const getPages = (moduleKey) => pagesForNavModule(pages, moduleKey)
 
   const handleModuleClick = (key) => {
     setOpenModule((prev) => (prev === key ? null : key))
   }
 
   const handlePageClick = (page) => {
-    navigate(`/dashboard/${page.createdBy}?pageId=${page.id}`)
+    if (isScorecardPageType(page.pageType)) {
+      navigate(`/scorecard?pageId=${page.id}`)
+    } else {
+      navigate(`/dashboard/${page.createdBy}?pageId=${page.id}`)
+    }
     setOpenModule(null)
   }
 
@@ -72,12 +54,12 @@ export default function LeftNavigation() {
                 onClick={() => handleModuleClick(key)}
               >
                 <span className={styles.moduleLabel}>{label}</span>
-                {modulePages.length > 0 && (
+                {(modulePages.length > 0 || key === 'Govern' || key === 'Execute') && (
                   <ChevronIcon className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} />
                 )}
               </button>
 
-              {isOpen && modulePages.length > 0 && (
+              {isOpen && (modulePages.length > 0 || key === 'Govern' || key === 'Execute' || modulePages.length === 0) && (
                 <ul className={styles.submenu}>
                   {modulePages.map((page) => (
                     <li key={page.id}>
@@ -90,12 +72,67 @@ export default function LeftNavigation() {
                       </button>
                     </li>
                   ))}
-                </ul>
-              )}
-
-              {isOpen && modulePages.length === 0 && (
-                <ul className={styles.submenu}>
-                  <li className={styles.emptyItem}>No pages yet</li>
+                  {key === 'Execute' && (
+                    <>
+                      <li key="initiatives-register">
+                        <button
+                          className={styles.submenuItem}
+                          onClick={() => { navigate('/initiatives-register'); setOpenModule(null); }}
+                        >
+                          Initiatives Register
+                        </button>
+                      </li>
+                      <li key="initiatives-dashboard">
+                        <button
+                          className={styles.submenuItem}
+                          onClick={() => { navigate('/initiatives-dashboard'); setOpenModule(null); }}
+                        >
+                          Initiatives Dashboard
+                        </button>
+                      </li>
+                    </>
+                  )}
+                  {key === 'Govern' && (
+                    <>
+                      <li key="risk-register">
+                        <button
+                          className={styles.submenuItem}
+                          onClick={() => { navigate('/risk-register'); setOpenModule(null); }}
+                        >
+                          Risk Register
+                        </button>
+                      </li>
+                      <li key="risk-dashboard">
+                        <button
+                          className={styles.submenuItem}
+                          onClick={() => { navigate('/risk-dashboard'); setOpenModule(null); }}
+                        >
+                          Risk Dashboard
+                        </button>
+                      </li>
+                      <li key="compliance-register">
+                        <button
+                          className={styles.submenuItem}
+                          onClick={() => { navigate('/compliance-register'); setOpenModule(null); }}
+                        >
+                          Compliance Register
+                        </button>
+                      </li>
+                      <li key="compliance-dashboard">
+                        <button
+                          className={styles.submenuItem}
+                          onClick={() => { navigate('/compliance-dashboard'); setOpenModule(null); }}
+                        >
+                          Compliance Dashboard
+                        </button>
+                      </li>
+                    </>
+                  )}
+                  {modulePages.length === 0 && key !== 'Govern' && key !== 'Execute' && (
+                    <li className={styles.emptyItem}>
+                      {key === 'Measure' ? 'No scorecards yet' : 'No pages yet'}
+                    </li>
+                  )}
                 </ul>
               )}
             </li>

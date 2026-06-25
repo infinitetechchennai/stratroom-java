@@ -20,6 +20,12 @@ import MyFormsPage from '../pages/my-forms/MyFormsPage'
 import ProfilePage from '../pages/profile-menu/ProfilePage'
 import PerformanceContractPage from '../pages/profile-menu/PerformanceContractPage'
 import PerformanceImprovementPlanPage from '../pages/profile-menu/PerformanceImprovementPlanPage'
+import RiskDashboard from '../pages/risk/RiskDashboard'
+import RiskRegisterPage from '../pages/risk/RiskRegisterPage'
+import ComplianceRegisterPage from '../pages/compliance/ComplianceRegisterPage'
+import ComplianceDashboardPage from '../pages/compliance/ComplianceDashboardPage'
+import InitiativesRegisterPage from '../pages/initiatives/InitiativesRegisterPage'
+import InitiativesDashboardPage from '../pages/initiatives/InitiativesDashboardPage'
 
 function PrivateRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
@@ -86,6 +92,16 @@ export default function AppRoutes() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/performance-contract" element={<PerformanceContractPage />} />
         <Route path="/performance-improvement-plan" element={<PerformanceImprovementPlanPage />} />
+        <Route path="/risk-dashboard" element={<RiskDashboard />} />
+        <Route path="/risk-register" element={<RiskRegisterPage />} />
+        <Route path="/risk_register" element={<RiskRegisterPage />} />
+        <Route path="/risk" element={<RiskRegisterPage />} />
+        <Route path="/compliance-register" element={<ComplianceRegisterPage />} />
+        <Route path="/compliance" element={<ComplianceRegisterPage />} />
+        <Route path="/compliance-dashboard" element={<ComplianceDashboardPage />} />
+        <Route path="/initiatives-register" element={<InitiativesRegisterPage />} />
+        <Route path="/initiatives" element={<InitiativesRegisterPage />} />
+        <Route path="/initiatives-dashboard" element={<InitiativesDashboardPage />} />
 
         <Route path="/" element={<Navigate to="/home" replace />} />
       </Route>

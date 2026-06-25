@@ -361,17 +361,17 @@ export const downloadKpiExcel = async (kpiId) => {
 // ============================================================
 
 export const getStrategyMapData = (scorecardId) =>
-  request(`/db-service/strategyMapscorecard?scorecardId=${scorecardId}`);
+  request(`/api/strategyMap/${scorecardId}`);
 
 // ============================================================
 // MASTER DATA (for dropdowns inside modals)
 // ============================================================
 
 export const getMasterList = () =>
-  request(`/db-service/master`);
+  request(`/api/getMaster/0`);
 
 export const getMasterValues = (masterType) =>
-  request(`/db-service/mastervalue?masterType=${encodeURIComponent(masterType)}`);
+  request(`/api/masterValue/${encodeURIComponent(masterType)}`);
 
 // ============================================================
 // ETL / IMPORT

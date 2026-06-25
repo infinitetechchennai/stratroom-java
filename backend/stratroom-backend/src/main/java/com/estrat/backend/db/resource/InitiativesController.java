@@ -51,6 +51,7 @@ import com.estrat.backend.db.service.EmployeeService;
 import com.estrat.backend.db.service.InitiativesService;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -252,9 +253,18 @@ public class InitiativesController {
     }
 
     @GetMapping(value={"/initiativeDashBoardData"})
-    public ResponseEntity<InitiativeDashBoardResponseDTO> initiativeDashBoardDataDeptId(@RequestParam(value="deptId", required=false) Long deptId) throws RequestException, ParseException {
-        List responseRiskDTOList = this.initiativesService.initiativesDashBoardListByDeptId(deptId.longValue());
-        InitiativeDashBoardResponseDTO dashboardDTO = this.initiativesService.buildInitiativeDashboard(responseRiskDTOList);
+    public ResponseEntity<InitiativeDashBoardResponseDTO> initiativeDashBoardDataDeptId(
+            @RequestParam(value="deptId", required=false) Long deptId,
+            @RequestParam(value="empId", required=false) Long empId) throws RequestException, ParseException {
+        List responseList;
+        if (deptId != null && deptId != 0L) {
+            responseList = this.initiativesService.initiativesDashBoardListByDeptId(deptId.longValue());
+        } else if (empId != null && empId != 0L) {
+            responseList = this.initiativesService.findAll(empId.longValue(), true, null);
+        } else {
+            responseList = Collections.emptyList();
+        }
+        InitiativeDashBoardResponseDTO dashboardDTO = this.initiativesService.buildInitiativeDashboard(responseList);
         return new ResponseEntity((Object)dashboardDTO, HttpStatus.OK);
     }
 }

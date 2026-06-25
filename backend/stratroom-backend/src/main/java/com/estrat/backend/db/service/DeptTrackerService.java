@@ -353,7 +353,9 @@ public class DeptTrackerService {
             EmployeeProfilePo employeeProfilePo = this.employeeService.getEmployeeProfile(whoIsID);
             ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(employeeProfilePo.getOrgId().getId());
             DepartmentChartMapping departmentChart = this.departmentChartMappingRepository.getOne(((PagesDetails)pagesDetails.get()).getDeptId());
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
                 DeptTracker deptTracker = new DeptTracker();
                 deptTracker.setActive(0);
                 deptTracker.setCreatedTime(LocalDateTime.now());
@@ -389,7 +391,9 @@ public class DeptTrackerService {
             if (((PagesDetails)pagesDetails.get()).getDeptId() != 0L) {
                 departmentChart = this.departmentChartMappingRepository.getOne(((PagesDetails)pagesDetails.get()).getDeptId());
             }
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
                 DeptTracker findTracker = null;
                 findTracker = departmentChart != null ? this.deptTrackerRepository.findBy(departmentChart.getDeptId().longValue(), departmentChart.getDeptParentId().longValue(), pageId.longValue(), 0) : this.deptTrackerRepository.findBy(Long.valueOf(0L).longValue(), Long.valueOf(0L).longValue(), pageId.longValue(), 0);
                 if (findTracker == null) {
@@ -443,7 +447,9 @@ public class DeptTrackerService {
             if (((PagesDetails)pagesDetails.get()).getDeptId() != 0L) {
                 departmentChart = this.departmentChartMappingRepository.getOne(((PagesDetails)pagesDetails.get()).getDeptId());
             }
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
                 DeptTracker findTracker = null;
                 findTracker = departmentChart != null ? this.deptTrackerRepository.findBy(departmentChart.getDeptId().longValue(), departmentChart.getDeptParentId().longValue(), pageId.longValue(), 0) : this.deptTrackerRepository.findBy(Long.valueOf(0L).longValue(), Long.valueOf(0L).longValue(), pageId.longValue(), 0);
                 if (findTracker == null) {

@@ -40,7 +40,6 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -86,12 +85,7 @@ public class AuditDetailsService {
         auditDetails.setAction(action);
         auditDetails.setCreatedTime(this.getCurrentTimeUTC());
         auditDetails.setAccessDate(new Date(System.currentTimeMillis()));
-        if (Objects.isNull(UserThreadLocal.get((String)"USER_ORG_ID"))) {
-            Employee emp = this.employeeService.getProfileDetails(createdOrUpdatedBy);
-            auditDetails.setOrgId(emp.getOrgDetails().getOrgId());
-        } else {
-            auditDetails.setOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
-        }
+        auditDetails.setOrgId(this.resolveOrgId(createdOrUpdatedBy));
         auditDetails.setSystemIp(this.getIpAddress());
         this.auditDetailsRepository.save(auditDetails);
     }
@@ -108,12 +102,7 @@ public class AuditDetailsService {
         }
         auditDetails.setAction(action);
         auditDetails.setAccessDate(new Date(System.currentTimeMillis()));
-        if (Objects.isNull(UserThreadLocal.get((String)"USER_ORG_ID"))) {
-            Employee emp = this.employeeService.getProfileDetails(createdOrUpdatedBy);
-            auditDetails.setOrgId(emp.getOrgDetails().getOrgId());
-        } else {
-            auditDetails.setOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
-        }
+        auditDetails.setOrgId(this.resolveOrgId(createdOrUpdatedBy));
         auditDetails.setSystemIp(this.getIpAddress());
         auditDetails.setCreatedTime(this.getCurrentTimeUTC());
         this.auditDetailsRepository.save(auditDetails);
@@ -131,15 +120,30 @@ public class AuditDetailsService {
         }
         auditDetails.setCreatedTime(this.getCurrentTimeUTC());
         auditDetails.setAccessDate(new Date(System.currentTimeMillis()));
-        if (Objects.isNull(UserThreadLocal.get((String)"USER_ORG_ID"))) {
-            Employee emp = this.employeeService.getProfileDetails(createdOrUpdatedBy);
-            auditDetails.setOrgId(emp.getOrgDetails().getOrgId());
-        } else {
-            auditDetails.setOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
-        }
+        auditDetails.setOrgId(this.resolveOrgId(createdOrUpdatedBy));
         auditDetails.setSystemIp(this.getIpAddress());
         auditDetails.setAction(action);
         this.auditDetailsRepository.save(auditDetails);
+    }
+
+    private long resolveOrgId(long empId) {
+        String orgHeader = UserThreadLocal.get("USER_ORG_ID");
+        if (StringUtils.isNumeric(orgHeader)) {
+            return Long.parseLong(orgHeader);
+        }
+        try {
+            Employee emp = this.employeeService.getProfileDetails(empId);
+            if (emp != null && emp.getOrgDetails() != null) {
+                return emp.getOrgDetails().getOrgId();
+            }
+        } catch (Exception ignored) {
+            // fall through
+        }
+        EmployeeProfilePo profile = this.profilePoRepo.getOne(empId, "Active");
+        if (profile != null && profile.getOrgId() != null) {
+            return profile.getOrgId().getId();
+        }
+        return 1L;
     }
 
     public List<AuditDTO> findAuditDetails(FindDTO findDTO) {

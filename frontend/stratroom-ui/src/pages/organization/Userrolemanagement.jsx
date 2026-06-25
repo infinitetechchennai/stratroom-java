@@ -291,6 +291,15 @@ function PermissionTable({ defaultRoles, customRoles, loading, searchTerm }) {
   const [loadingModules, setLoadingModules] = useState(false)
   const [openModules, setOpenModules] = useState({})
   const [saving, setSaving] = useState(false)
+  // 'idle' | 'saving' | 'saved' | 'error' — drives the auto-save status pill so the user
+  // gets feedback even though there is no explicit Save button.
+  const [saveStatus, setSaveStatus] = useState('idle')
+
+  useEffect(() => {
+    if (saveStatus !== 'saved' && saveStatus !== 'error') return
+    const id = setTimeout(() => setSaveStatus('idle'), 2500)
+    return () => clearTimeout(id)
+  }, [saveStatus])
 
   const loadModules = useCallback(async (roleId, cachedPrivilegeList) => {
     setSelected(roleId)
@@ -373,6 +382,7 @@ function PermissionTable({ defaultRoles, customRoles, loading, searchTerm }) {
     }
 
     setSaving(true)
+    setSaveStatus('saving')
     try {
       const base = { roleId: selected, moduleName, tagName }
       if (newChecked) {
@@ -383,9 +393,10 @@ function PermissionTable({ defaultRoles, customRoles, loading, searchTerm }) {
       } else {
         await axiosClient.put('/api/deletePermissions', { ...base, privilegeName })
       }
+      setSaveStatus('saved')
     } catch {
       updateLocalPriv(moduleName, tagName, field, isPrivOn(prevVal))
-      alert('Failed to update permission.')
+      setSaveStatus('error')
     } finally {
       setSaving(false)
     }
@@ -420,6 +431,46 @@ function PermissionTable({ defaultRoles, customRoles, loading, searchTerm }) {
         {renderRoleList(customRoles, 'Custom Roles')}
       </div>
       <div className={styles.modulePanel}>
+        {saveStatus !== 'idle' && (
+          <div
+            role="status"
+            aria-live="polite"
+            style={{
+              position: 'sticky', top: 8, zIndex: 5, marginLeft: 'auto', width: 'fit-content',
+              display: 'flex', alignItems: 'center', gap: 7, padding: '6px 12px', borderRadius: 999,
+              fontSize: 12.5, fontWeight: 600, boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              color: saveStatus === 'error' ? '#b91c1c' : saveStatus === 'saved' ? '#15803d' : '#475569',
+              background: saveStatus === 'error' ? '#fef2f2' : saveStatus === 'saved' ? '#f0fdf4' : '#f8fafc',
+              border: `1px solid ${saveStatus === 'error' ? '#fecaca' : saveStatus === 'saved' ? '#bbf7d0' : '#e2e8f0'}`,
+            }}
+          >
+            {saveStatus === 'saving' && (
+              <>
+                <style>{'@keyframes urmSavePillSpin{to{transform:rotate(360deg)}}'}</style>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'urmSavePillSpin 0.7s linear infinite' }}>
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+                Saving…
+              </>
+            )}
+            {saveStatus === 'saved' && (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Saved
+              </>
+            )}
+            {saveStatus === 'error' && (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                Save failed — try again
+              </>
+            )}
+          </div>
+        )}
         {!selected && (
           <div className={styles.empty} style={{ height: '100%' }}>
             <p>Select a role to view permissions.</p>
@@ -687,6 +738,19 @@ function ViewModal({ user, onClose }) {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const COLORS = ['#6366f1','#14b8a6','#f59e0b','#ef4444','#8b5cf6','#10b981','#f97316','#06b6d4']
 
+// The backend reads privileges via a native query (queryForMap) and Postgres folds the unquoted
+// column labels to lowercase, so the API returns keys like "privilegeview". Read case-insensitively
+// so the matrix reflects saved permissions instead of rendering everything as FALSE.
+function readPriv(privObj, key) {
+  if (!privObj || typeof privObj !== 'object') return 'FALSE'
+  if (privObj[key] != null) return privObj[key]
+  const lowerKey = key.toLowerCase()
+  for (const k of Object.keys(privObj)) {
+    if (k.toLowerCase() === lowerKey) return privObj[k]
+  }
+  return 'FALSE'
+}
+
 function normalizeModulePrivilegeList(modulePrivilegeList) {
   if (!Array.isArray(modulePrivilegeList)) return []
   return modulePrivilegeList
@@ -696,10 +760,10 @@ function normalizeModulePrivilegeList(modulePrivilegeList) {
       tagNameList: (mod.tagNameList || []).map(tag => ({
         tagName: tag.tagName || '—',
         privileges: {
-          privilegeView: tag.privileges?.privilegeView ?? 'FALSE',
-          privilegeCreate: tag.privileges?.privilegeCreate ?? 'FALSE',
-          privilegeUpdate: tag.privileges?.privilegeUpdate ?? 'FALSE',
-          privilegeDelete: tag.privileges?.privilegeDelete ?? 'FALSE',
+          privilegeView: readPriv(tag.privileges, 'privilegeView'),
+          privilegeCreate: readPriv(tag.privileges, 'privilegeCreate'),
+          privilegeUpdate: readPriv(tag.privileges, 'privilegeUpdate'),
+          privilegeDelete: readPriv(tag.privileges, 'privilegeDelete'),
         },
       })),
     }))

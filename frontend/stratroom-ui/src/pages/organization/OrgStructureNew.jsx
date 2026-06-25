@@ -17,6 +17,12 @@ import {
   getPendingDeptImport,
   clearPendingDeptImport,
 } from '../../utils/orgStructureSession'
+import {
+  sortDepartmentsForImport,
+  validateBulkRiskImport,
+  saveBulkRiskImport,
+  mapRiskValidationErrors,
+} from '../../api/orgImportApi'
 import styles from './OrgStructureNew.module.css'
 import * as XLSX from 'xlsx'
 
@@ -250,14 +256,6 @@ function TreeView({ tree, permFlags, onAdd, onEdit, onDelete, onDrillDown }) {
           <h2 className={styles.sectionHeaderTitle}>{t('org.teamHierarchy')}</h2>
           <p className={styles.sectionHeaderSub}>{t('org.hierarchyHint')}</p>
         </div>
-        {permFlags.canCreate && (
-          <button className={`${styles.actionPill} ${styles.apAdd}`} onClick={() => onAdd(-1)}>
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            {t('org.addRoot')}
-          </button>
-        )}
       </div>
       <div className={styles.treeContainer}>
         {tree.length === 0 ? (
@@ -727,11 +725,7 @@ function OrgModal({ mode, node, onSave, onClose }) {
   const handleFile = e => setForm(f => ({ ...f, attachment: e.target.files[0] || null }))
 
   const handleOwnerChange = val => {
-    const emp = employees.find(em => String(em.id ?? em.empId) === String(val))
-    const name = emp
-      ? (emp.name || [emp.firstName, emp.lastName].filter(Boolean).join(' ') || val)
-      : form.name
-    setForm(f => ({ ...f, owner: String(val), name }))
+    setForm(f => ({ ...f, owner: String(val) }))
   }
 
   const handleSubmit = () => {
@@ -1089,10 +1083,19 @@ function TrackerView() {
 }
 
 // ── Import Wizard (Upload → Validation → Import) ─────────────────────────────────
+// Categories wired in this wizard (legacy JSP had more under file_upload_new.js).
 const IMPORT_CATEGORIES = [
-  'Organisation', 'Users', 'Data Upload', 'Excel File Upload', 'Scorecard', 'Budget',
-  'Initiatives Data Load', 'Initiatives Budget Load', 'Initiatives & Projects',
-  'Risk', 'Compliance',
+  { value: 'Organisation', wired: true },
+  { value: 'Users', wired: true },
+  { value: 'Scorecard', wired: true },
+  { value: 'Risk', wired: true },
+  { value: 'Compliance', wired: false },
+  { value: 'Budget', wired: false },
+  { value: 'Initiatives & Projects', wired: false },
+  { value: 'Initiatives Data Load', wired: false },
+  { value: 'Initiatives Budget Load', wired: false },
+  { value: 'Data Upload', wired: false },
+  { value: 'Excel File Upload', wired: false },
 ]
 
 // Reads a row value by any of several candidate column names (case/space/underscore-insensitive).
@@ -1122,7 +1125,7 @@ function mapDeptImportRow(row, orgName) {
   const { emailAddress, ownerName } = resolveImportContact(ownerRaw)
   return {
     parentDeptID: importColVal(row, 'Parent ID', 'ParentID', 'Parent Dept ID', 'parentDeptID') || null,
-    deptID: importColVal(row, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId'),
+    deptID: importColVal(row, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode'),
     deptName: importColVal(row, 'Department Name', 'DepartmentName', 'Dept Name'),
     emailAddress,
     ownerName,
@@ -1176,15 +1179,41 @@ function ImportWizard({ user, onClose, onComplete }) {
 
   const isOrg = category === 'Organisation'   // department-hierarchy file
   const isUsers = category === 'Users'         // people file
-  const isSupported = isOrg || isUsers
+  const isScorecard = category === 'Scorecard'
+  const isRisk = category === 'Risk'
+  const isSupported = isOrg || isUsers || isScorecard || isRisk
+  const categoryMeta = IMPORT_CATEGORIES.find(c => c.value === category)
 
   // Parse + validate the file (per file type), then advance to the Validation step.
   const handleNext = async () => {
     if (!category || !file) return
-    if (!isSupported) {
+    if (!categoryMeta?.wired) {
       setErrors([{ sheet: '—', row: '—', cell: 'Import Category',
-        reason: `"${category}" is imported from its own module, not from the Organisation module.` }])
+        reason: `"${category}" is not wired in Org Structure yet — use the dedicated module or legacy upload.` }])
       setRows([]); setStep(2); return
+    }
+    if (isRisk) {
+      setParsing(true)
+      try {
+        const data = await validateBulkRiskImport(file)
+        if (data?.result === 'success' || data?.result === 'Success') {
+          setRows([{ count: data.rowCount ?? '—' }])
+          setErrors([])
+        } else {
+          setRows([])
+          setErrors(mapRiskValidationErrors(data?.parsingError))
+          if (!data?.parsingError?.length) {
+            setErrors([{ sheet: '—', row: '—', cell: 'File', reason: data?.message || 'Risk validation failed' }])
+          }
+        }
+        setStep(2)
+      } catch (e) {
+        setErrors([{ sheet: '—', row: '—', cell: 'File', reason: e?.response?.data?.message || e?.message || 'Risk validation failed' }])
+        setRows([]); setStep(2)
+      } finally {
+        setParsing(false)
+      }
+      return
     }
     setParsing(true)
     try {
@@ -1198,18 +1227,32 @@ function ImportWizard({ user, onClose, onComplete }) {
       if (isUsers) {
         parsed.forEach((r, idx) => {
           const excelRow = idx + 2
+          const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode')
           const name = importColVal(r, 'Name', 'First Name', 'firstName', 'Full Name', 'Employee Name', 'Employee')
           const email = importColVal(r, 'Email Address', 'Email', 'emailAddress', 'Work Email')
-          const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId')
           if (!name) errs.push({ sheet: sheetName, row: excelRow, cell: 'Name', reason: 'Name is required' })
           if (!email) errs.push({ sheet: sheetName, row: excelRow, cell: 'Email Address', reason: 'Email is required' })
           else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.push({ sheet: sheetName, row: excelRow, cell: 'Email Address', reason: 'Email is not valid' })
           if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
         })
+      } else if (isScorecard) {
+        parsed.forEach((r, idx) => {
+          const excelRow = idx + 2
+          const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode')
+          const scorecardName = importColVal(r, 'ScoreCardName', 'Scorecard Name', 'ScorecardName', 'Score Card Name')
+          const perspective = importColVal(r, 'Perspective Name', 'PerspectiveName')
+          const objective = importColVal(r, 'Objective Name', 'ObjectiveName')
+          const kpiName = importColVal(r, 'KPI  NAME', 'KPI Name', 'KPI NAME', 'KPI', 'Kpi Name')
+          if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
+          if (!scorecardName) errs.push({ sheet: sheetName, row: excelRow, cell: 'ScoreCardName', reason: 'Scorecard name is required' })
+          if (!perspective) errs.push({ sheet: sheetName, row: excelRow, cell: 'Perspective Name', reason: 'Perspective name is required' })
+          if (!objective) errs.push({ sheet: sheetName, row: excelRow, cell: 'Objective Name', reason: 'Objective name is required' })
+          if (!kpiName) errs.push({ sheet: sheetName, row: excelRow, cell: 'KPI Name', reason: 'KPI name is required' })
+        })
       } else { // Organisation (department hierarchy)
         parsed.forEach((r, idx) => {
           const excelRow = idx + 2
-          const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId')
+          const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode')
           const deptName = importColVal(r, 'Department Name', 'DepartmentName', 'Dept Name')
           if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
           if (!deptName) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department Name', reason: 'Department Name is required' })
@@ -1228,21 +1271,28 @@ function ImportWizard({ user, onClose, onComplete }) {
   const handleImport = async () => {
     setImporting(true); setResult(null); setStep(3)
     try {
-      const orgName = user?.orgDetails?.orgName ?? user?.orgDetails?.name ?? 'Stratroom'
+      const orgName = user?.orgDetails?.name ?? user?.orgDetails?.orgName ?? 'Stratroom'
       const orgId = user?.orgDetails?.orgId ?? user?.orgId ?? 1
 
-      if (isUsers) {
+      if (isRisk) {
+        const data = await saveBulkRiskImport(file)
+        if (data?.result !== 'success' && data?.result !== 'Success') {
+          throw new Error(data?.message || 'Risk import failed on the server')
+        }
+        const saved = data?.saved ?? data?.rowCount ?? 1
+        setResult({ success: true, count: saved, kind: 'risk row(s)' })
+      } else if (isUsers) {
         // People file: placed into departments by Department ID (no parent-email in dept mode).
         const employees = rows.map(r => ({
           name:               importColVal(r, 'Name', 'First Name', 'firstName', 'Full Name', 'Employee Name', 'Employee'),
           lastName:           importColVal(r, 'Last Name', 'lastName', 'Surname'),
           email:              importColVal(r, 'Email Address', 'Email', 'emailAddress', 'Work Email'),
           title:              importColVal(r, 'Designation', 'designation', 'Title', 'Job Title', 'Position'),
-          deptUniqueId:       importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId'),
+          deptUniqueId:       importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode'),
           location:           importColVal(r, 'Location', 'location', 'Office', 'Branch', 'Site'),
           phoneNumber:        importColVal(r, 'Phone no', 'Phone', 'Phone Number', 'phoneNumber', 'Mobile'),
           // Manager reference — resolved on the backend by email (if it contains '@') or by name.
-          parentEmployeeName: importColVal(r, 'Parent Email', 'ParentEmail', 'Manager Email', 'Reports To Email', 'Parent Employee', 'Parent Employee Name', 'Reports To', 'Manager', 'Parent', 'parentEmployeeName') || null,
+          parentEmployeeName: importColVal(r, 'Parent Email', 'ParentEmail', 'Manager Email', 'Reports To Email', 'Parent Employee', 'Parent Employee Name', 'Reports To', 'Report Manager', 'Manager', 'Parent', 'parentEmployeeName') || null,
           userRole:           0,
           orgDetails:         { orgId, name: orgName },
         })).filter(e => e.email)
@@ -1251,7 +1301,7 @@ function ImportWizard({ user, onClose, onComplete }) {
         const pendingDepts = getPendingDeptImport(orgId)
         if (pendingDepts?.length) {
           try {
-            await createBulkDeptMapping(pendingDepts)
+            await createBulkDeptMapping(sortDepartmentsForImport(pendingDepts))
             clearPendingDeptImport()
             ownersLinked = true
           } catch (backfillErr) {
@@ -1259,9 +1309,17 @@ function ImportWizard({ user, onClose, onComplete }) {
           }
         }
         setResult({ success: true, count: employees.length, kind: 'user(s)', ownersLinked })
+      } else if (isScorecard) {
+        const res = await axiosClient.post('/api/scorecard/bulkImport', rows, { timeout: 600000 })
+        if (res.data?.flag === false) {
+          throw new Error(res.data?.message || 'Scorecard import failed on the server')
+        }
+        setResult({ success: true, count: rows.length, kind: 'scorecard row(s)' })
       } else {
         // Department file first: hierarchy is created; owners/members link when employees exist.
-        const depts = rows.map(r => mapDeptImportRow(r, orgName)).filter(d => d.deptID)
+        const depts = sortDepartmentsForImport(
+          rows.map(r => mapDeptImportRow(r, orgName)).filter(d => d.deptID),
+        )
         await createBulkDeptMapping(depts)
         savePendingDeptImport(orgId, depts)
         try { await setImplementationMode(orgId, 'Department') } catch { /* non-fatal */ }
@@ -1314,13 +1372,26 @@ function ImportWizard({ user, onClose, onComplete }) {
                 <select className={styles.headerSelect} style={{ width: '100%', marginTop: 4 }}
                   value={category} onChange={e => setCategory(e.target.value)}>
                   <option value="">Select Import Category</option>
-                  {IMPORT_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  {IMPORT_CATEGORIES.map(c => (
+                    <option key={c.value} value={c.value} disabled={!c.wired}>
+                      {c.value}{!c.wired ? ' (use module upload)' : ''}
+                    </option>
+                  ))}
                 </select>
-                {(isOrg || isUsers) && (
+                {(isOrg || isUsers || isScorecard || isRisk) && (
                   <p style={{ fontSize: 11.5, color: '#64748b', margin: '8px 2px 0', lineHeight: 1.5 }}>
                     {isUsers
-                      ? 'User file → Name, Email Address, Department ID, Designation, Location, Phone no. Import after the Organisation file.'
-                      : 'Org file → Parent ID, Department ID, Department Name, Owner (email preferred), Member. Import this first — switches the org to Department mode.'}
+                      ? 'User file → Name, Email Address, Department ID, Designation, Location, Phone no, Manager. Import Organisation first (or re-import Users to link owners from a prior Org import in this session).'
+                      : isScorecard
+                        ? 'Scorecard file → Department ID, ScoreCardName, Perspective Name, Objective Name, KPI columns. Import Organisation + Users first.'
+                        : isRisk
+                          ? 'Risk file → use 03-risk-register-simple.csv or full Risk.xlsx (Cause/Consequence rows supported). Import Organisation + Users first so Department ID and Owner emails resolve.'
+                          : 'Org file → Parent ID, Department ID, Department Name, Owner (name or email), Member. Import this first — switches the org to Department mode and updates existing departments by ID.'}
+                  </p>
+                )}
+                {category && !categoryMeta?.wired && (
+                  <p style={{ fontSize: 11.5, color: '#b45309', margin: '8px 2px 0', lineHeight: 1.5 }}>
+                    This category is listed for parity with legacy Stratroom but is not handled here yet.
                   </p>
                 )}
               </div>
@@ -1353,7 +1424,11 @@ function ImportWizard({ user, onClose, onComplete }) {
                 <div style={{ textAlign: 'center', padding: '10px 0' }}>
                   <div style={{ fontSize: 40, lineHeight: 1, color: '#16a34a' }}>✓</div>
                   <p style={{ fontSize: 14, fontWeight: 600, color: '#166534', margin: '10px 0 4px' }}>File validated successfully</p>
-                  <p style={{ fontSize: 12.5, color: '#64748b', margin: 0 }}>{rows.length} row(s) ready to import.</p>
+                  <p style={{ fontSize: 12.5, color: '#64748b', margin: 0 }}>
+                    {isRisk
+                      ? 'File validated — ready to import risks.'
+                      : `${rows.length} row(s) ready to import.`}
+                  </p>
                 </div>
               ) : (
                 <>
@@ -1454,6 +1529,12 @@ function ImportWizard({ user, onClose, onComplete }) {
   )
 }
 
+const ORG_PERIOD_PRESET_KEY = 'orgPeriodPreset'
+
+function readPeriodPreset() {
+  return localStorage.getItem(ORG_PERIOD_PRESET_KEY) || 'current'
+}
+
 // Derives the "as of" date for the historical org chart from the global period picker
 // (localStorage 'customperiod' = "MM/DD/YYYY-MM/DD/YYYY"). Returns YYYY-MM-DD only when
 // the selected period END is in the PAST — current/future periods show the live tree.
@@ -1471,7 +1552,7 @@ function getHistoricalAsOf() {
 // ── Main Component ─────────────────────────────────────────────────────────────
 export default function OrgStructureNew() {
   const { user, loading: authLoading } = useAuth()
-  const { hasPermission, loading: permsLoading } = usePermissions()
+  const { hasPermission, loading: permsLoading, reload: reloadPerms } = usePermissions()
   const { t } = useI18n()
   const [tree, setTree] = useState([])
   const [apiLoading, setApiLoading] = useState(true)
@@ -1485,6 +1566,7 @@ export default function OrgStructureNew() {
   const [deptMode, setDeptMode] = useState(false)
   const [importOpen, setImportOpen] = useState(false)
   const [historicalDate, setHistoricalDate] = useState(null)
+  const [periodPreset, setPeriodPreset] = useState(readPeriodPreset)
   const [userRoleName, setUserRoleName] = useState('')
   const [chartEmpId, setChartEmpId] = useState(null)
 
@@ -1712,7 +1794,9 @@ export default function OrgStructureNew() {
       case 'q4': from = fmt(10, 1); to = fmt(12, 31); break
       default: from = fmt(1, 1); to = fmt(12, 31); break
     }
+    localStorage.setItem(ORG_PERIOD_PRESET_KEY, value)
     localStorage.setItem('customperiod', `${from}-${to}`)
+    setPeriodPreset(value)
     window.location.reload()
   }
 
@@ -1782,7 +1866,7 @@ export default function OrgStructureNew() {
               value={search} onChange={e => setSearch(e.target.value)} />
           </div>
 
-          <select className={styles.headerSelect} defaultValue="current" onChange={e => applyPeriod(e.target.value)}>
+          <select className={styles.headerSelect} value={periodPreset} onChange={e => applyPeriod(e.target.value)}>
             <option value="current">{t('org.current')}</option>
             <option value="ytd">YTD</option>
             <option value="q1">Q1</option>
@@ -1879,7 +1963,10 @@ export default function OrgStructureNew() {
         <ImportWizard
           user={user}
           onClose={() => setImportOpen(false)}
-          onComplete={loadOrg}
+          onComplete={async () => {
+            await loadOrg()
+            await reloadPerms?.()
+          }}
         />
       )}
     </div>

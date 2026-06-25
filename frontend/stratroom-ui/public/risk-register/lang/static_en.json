@@ -1,0 +1,100 @@
+{
+    "pageloading": "Loading",
+    "loaderTitle": "“While we load, grab your espresso and stay caffeinated.”",
+    "loaderDescription": "“it takes 42 beans for a single shot. StratRoom uses countless data points to deliver powerful insights!”",
+    "topbar": {
+        "orgStructure": "OrgStructure",
+        "templates": "Templates",
+         "etl": "ETL",
+        "masters": "Masters",
+        "mastersItems": {
+            "products": "Products/Services",
+            "process": "Process (POS)",
+            "vitalRecords": "Vital Records",
+            "technology": "Technology & IT",
+            "facilities": "Facilities & Utilities",
+            "personal": "Personal (HR)",
+            "iso": "ISO",
+            "budget": "Budget"
+        },
+        "settings": "Settings",
+        "settingsItems": {
+            "controlPanel": "Control Panel",
+            "auditTrail": "Audit Trail",
+            "userRoles": "User Roles"
+        },
+        "profile": "Profile",
+        "hi": "Hi",
+        "welcomeToPortal": "Welcome to your Multi-Governance Portal",
+        "profileItems": {
+            "myProfile": "My Profile",
+            "myForms": "My Forms",
+            "performanceContract": "Performance Contract",
+            "performanceImprovementPlan": "Performance Improvement Plan",
+            "auditTrail": "Audit Trail",
+            "logout": "Logout"
+        }
+    },
+    "menu": {
+        "plan": "Plan",
+        "planItems": {
+            "strategyPlanner": "Strategy Planner",
+            "swot": "SWOT",
+            "pestel": "PESTEL"
+        },
+        "measure": "Measure",
+        "measureItems": {
+            "scorecard": "Scorecard"
+        },
+        "execute": "Execute",
+        "executeItems": {
+            "initiatives": "Risks & Initiatives",
+            "tasks": "Tasks",
+            "budgetApproval": "Budget Approval",
+            "budgets": "Budgets"
+        },
+        "govern": "Govern",
+        "governItems": {
+            "riskRegister": "Risk Register",
+            "riskApproval": "Risk Approval",
+            "compliance": "Compliance"
+        },
+        "meet": "Meet",
+        "meetItems": {
+            "meetings": "Meetings"
+        },
+        "report": "Report",
+        "reportItems": {
+            "myCockpit": "My Cockpit",
+            "myPerformance": "My Performance",
+            "whiteboard": "Whiteboard"
+        }
+    },
+    "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "moveUp": "Move Up",
+    "moveDown": "Move Down",
+    "save": "Save",
+    "cancel": "Cancel",
+    "view": "View",
+    "add": "Add",
+    "update": "Update",
+    "submit": "Submit",
+    "close": "Close",
+    "more": "More",
+    "next": "Next",
+    "previous": "Previous",
+    "done": "Done",
+    "back": "Back",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "upload": "Upload"
+  },
+
+    "footer": {
+        "copyright": "Copyright © 2025 StratRoom. All rights reserved."
+    }
+    }

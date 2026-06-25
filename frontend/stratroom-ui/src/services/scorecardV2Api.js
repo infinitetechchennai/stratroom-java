@@ -80,6 +80,23 @@ export const deleteSubKpi = (id) => del(`${V2}/subkpi/${id}`);
 export const recordKpiActual = (data) => post(`${V2}/kpi/actual`, data);
 export const recordSubKpiActual = (data) => post(`${V2}/subkpi/actual`, data);
 
-// Bulk Actual/Target import from an uploaded scorecard Excel (rows matched by KPI code).
-export const importScorecardActuals = (pageId, dateRange, rows) =>
-  post(`${V2}/import/actuals?pageId=${pageId}&dateRange=${encodeURIComponent(dateRange)}`, rows);
+// Bulk Actual/Target import — chunked to avoid proxy/backend timeouts on large ETL files.
+export const importScorecardActuals = async (pageId, dateRange, rows) => {
+  const CHUNK = 350;
+  const url = `${V2}/import/actuals?pageId=${pageId}&dateRange=${encodeURIComponent(dateRange)}`;
+  if (!rows?.length) {
+    return { updated: 0, skipped: 0, unmatched: 0 };
+  }
+  if (rows.length <= CHUNK) {
+    return post(url, rows);
+  }
+  const totals = { updated: 0, skipped: 0, unmatched: 0, message: '' };
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    const res = await post(url, rows.slice(i, i + CHUNK));
+    totals.updated += res.updated ?? 0;
+    totals.skipped += res.skipped ?? 0;
+    totals.unmatched += res.unmatched ?? 0;
+    if (res.message) totals.message = res.message;
+  }
+  return totals;
+};

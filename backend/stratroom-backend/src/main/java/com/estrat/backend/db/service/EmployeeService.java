@@ -804,6 +804,17 @@ public class EmployeeService {
 
     private void populateDepartmentFromRequest(Employee employee) {
         DeptDetails departmentDetails = null;
+        if (employee.getOrgDetails() != null
+                && employee.getDeptUniqueId() != null
+                && !employee.getDeptUniqueId().isEmpty()) {
+            DepartmentDetails byUniqueId = this.departmentDetailsRepository.findByDeptUniqueId(
+                    employee.getDeptUniqueId(), employee.getOrgDetails().getOrgId(), "Active");
+            if (byUniqueId != null) {
+                employee.setDeptDetails(new DeptDetails(byUniqueId));
+                employee.setDepartment(byUniqueId.getName());
+                return;
+            }
+        }
         if (employee.getDeptDetails() != null && employee.getDeptDetails().getName() != "") {
             if (employee.getDeptDetails().getDeptID() != null && employee.getDeptDetails().getDeptID() != "") {
                 departmentDetails = this.getDepartmentDetailsByDeptUniqueId(employee.getDeptDetails().getDeptID(), Long.valueOf(employee.getOrgDetails().getOrgId()));
@@ -1032,21 +1043,32 @@ public class EmployeeService {
         return result;
     }
 
-    /** Like buildParentObject but does not surface the org system super-user (userAccess=0) node. */
+    /** Like buildParentObject but does not surface the org system super-user / super-admin node. */
     private Employee buildParentObjectStoppingAtSuperUser(Employee parentEmployee, Employee childEmployee, long superUserId) {
+        // Never surface the super-admin / org root account (the seeded "amira@superadmin.com",
+        // whose parent_emp_id = 0). When the next parent up is that root — or the configured
+        // super-user id — stop climbing and make the child the visible top of the chart.
+        //
+        // The org root is identified by parent_emp_id = 0 rather than by role: mid-level managers
+        // can also carry a "Super Admin"/"Super User" role, and the userAccess=0 row that
+        // superUserId() relies on may be missing in the data (leaving superUserId() == 0), so the
+        // root link is the only reliable signal.
+        if (parentEmployee == null
+                || parentEmployee.getParentEmpId() == 0L
+                || (superUserId != 0L && parentEmployee.getEmpId() == superUserId)) {
+            childEmployee.setParentEmpId(0L);
+            return childEmployee;
+        }
         parentEmployee.setCanMaintain(false);
         parentEmployee.setReporteeList(Arrays.asList(childEmployee));
         parentEmployee.setScoreCardLandingUrl("");
         parentEmployee.setInitiativeLandingUrl("");
         parentEmployee.setKpiLandingUrl("");
         parentEmployee.setAppraisalUrl("");
-        if (parentEmployee.getParentEmpId() != 0L && parentEmployee.getParentEmpId() != superUserId) {
-            EmployeeDTO employeeDTO = new EmployeeDTO();
-            employeeDTO.setEmployeeId(parentEmployee.getParentEmpId());
-            Employee currentParentEmployee = this.getEmployee(employeeDTO);
-            return this.buildParentObjectStoppingAtSuperUser(currentParentEmployee, parentEmployee, superUserId);
-        }
-        return parentEmployee;
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeId(parentEmployee.getParentEmpId());
+        Employee currentParentEmployee = this.getEmployee(employeeDTO);
+        return this.buildParentObjectStoppingAtSuperUser(currentParentEmployee, parentEmployee, superUserId);
     }
 
     private Employee getEmployeeHierarchyList(Employee employee) {
@@ -1798,6 +1820,12 @@ public class EmployeeService {
         DepartmentDetails departmentDetails;
         boolean status = false;
         Long oldParent = null;
+        if (StringUtils.isBlank(createdBy)) {
+            createdBy = UserThreadLocal.get();
+        }
+        if (StringUtils.isBlank(createdBy)) {
+            createdBy = "0";
+        }
         OrganizationDetails organizationDetails = this.getOrgDetails(deptImportDTO.getOrgName());
         if (organizationDetails == null) {
             // org name from Excel didn't match — fall back to the creator's org
@@ -1851,8 +1879,16 @@ public class EmployeeService {
             departmentChartDTO.setDeptUniqueId(departmentDetails.getDeptUniqueID());
             status = true;
         }
-        if (deptImportDTO.getParentDeptID() != null) {
-            departmentChartDTO.setDeptParentId(Long.valueOf(this.getDepartmentDetailsByDeptUniqueId(deptImportDTO.getParentDeptID(), Long.valueOf(organizationDetails.getOrgId())).getId()));
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(deptImportDTO.getParentDeptID())) {
+            DeptDetails parentDept = this.getDepartmentDetailsByDeptUniqueId(
+                    deptImportDTO.getParentDeptID(), Long.valueOf(organizationDetails.getOrgId()));
+            if (parentDept != null) {
+                departmentChartDTO.setDeptParentId(Long.valueOf(parentDept.getId()));
+            } else {
+                this.log.warn("createBulkDeptMapping: parent dept '" + deptImportDTO.getParentDeptID()
+                        + "' not found for '" + deptImportDTO.getDeptID() + "', using root");
+                departmentChartDTO.setDeptParentId(Long.valueOf(0L));
+            }
         } else {
             departmentChartDTO.setDeptParentId(Long.valueOf(0L));
         }

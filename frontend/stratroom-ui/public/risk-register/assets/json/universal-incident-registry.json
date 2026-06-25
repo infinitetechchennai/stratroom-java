@@ -1,0 +1,1073 @@
+[
+  {
+    "pageTitle": "INCIDENT REGISTRY",
+    "userName": "Sajin",
+    "period": "3/01/2026 - 3/22/2026",
+    "kpis": [
+      {
+        "label": "TOTAL LOGGED",
+        "value": 25,
+        "sub": "all time incidents"
+      },
+      {
+        "label": "OPEN INCIDENTS",
+        "value": 20,
+        "sub": "awaiting resolution"
+      },
+      {
+        "label": "CRITICAL SEVERITY",
+        "value": 8,
+        "sub": "requires attention"
+      },
+      {
+        "label": "CLOSED",
+        "value": 5,
+        "sub": "resolved successfully"
+      }
+    ],
+    "incidents": [
+      {
+        "id": "INC-2025-0012",
+        "cat": "safety",
+        "title": "Forklift collision in Warehouse B",
+        "sev": "High",
+        "status": "Under Investigation",
+        "dept": "Plant A – Warehouse B",
+        "root": "Operational Lapse",
+        "rby": "Mark Lewis",
+        "ato": "John Smith",
+        "idate": "2025-10-29T15:15",
+        "rdate": "2025-10-29",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "John Smith"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "John Smith"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Mark Lewis",
+            "time": "2025-10-29 15:15",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Forklift collision in Warehouse B. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Floor 3",
+        "witnesses": "None reported",
+        "impact": "Significant",
+        "regflag": "GDPR Notifiable",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "COO"
+      },
+      {
+        "id": "INC-2025-0013",
+        "cat": "it",
+        "title": "Server downtime – HRMS system outage",
+        "sev": "Medium",
+        "status": "Closed",
+        "dept": "HQ – Data Center",
+        "root": "System Failure",
+        "rby": "Rina Patel",
+        "ato": "IT Ops Team",
+        "idate": "2025-10-30T09:20",
+        "rdate": "2025-10-30",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "IT Ops Team"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "IT Ops Team"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Rina Patel",
+            "time": "2025-10-30 09:20",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Server downtime – HRMS system outage. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Distribution Center",
+        "witnesses": "None reported",
+        "impact": "Moderate",
+        "regflag": "SOX Relevant",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "COO"
+      },
+      {
+        "id": "INC-2025-0014",
+        "cat": "security",
+        "title": "Unauthorized access attempt on server room",
+        "sev": "Critical",
+        "status": "Escalated",
+        "dept": "HQ – Server Room",
+        "root": "Cyber Threat",
+        "rby": "Security Bot",
+        "ato": "—",
+        "idate": "2025-10-31T01:40",
+        "rdate": "2025-10-31",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "—"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "—"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Security Bot",
+            "time": "2025-10-31 01:40",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Unauthorized access attempt on server room. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Lab C",
+        "witnesses": "Multiple staff members present",
+        "impact": "Minor",
+        "regflag": "ISO 45001",
+        "team": [
+          "Mark Lewis",
+          "Rina Patel"
+        ],
+        "due": "2025-12-15",
+        "esc": "COO"
+      },
+      {
+        "id": "INC-2025-0015",
+        "cat": "environmental",
+        "title": "Chemical spill in Lab C – dilute acid leak",
+        "sev": "Medium",
+        "status": "In Review",
+        "dept": "Plant B – Lab C",
+        "root": "Equipment Failure",
+        "rby": "Dr. Chen",
+        "ato": "HSE Officer",
+        "idate": "2025-10-31T11:10",
+        "rdate": "2025-10-31",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "HSE Officer"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "HSE Officer"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Dr. Chen",
+            "time": "2025-10-31 11:10",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Chemical spill in Lab C – dilute acid leak. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Server Room",
+        "witnesses": "Multiple staff members present",
+        "impact": "Severe",
+        "regflag": "OSHA Reportable",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0016",
+        "cat": "hr",
+        "title": "Workplace harassment complaint – Floor 3",
+        "sev": "High",
+        "status": "Under Investigation",
+        "dept": "HR – HQ Floor 3",
+        "root": "Policy Violation",
+        "rby": "Priya Sharma",
+        "ato": "HR Manager",
+        "idate": "2025-11-01T10:00",
+        "rdate": "2025-11-01",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "HR Manager"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "HR Manager"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Priya Sharma",
+            "time": "2025-11-01 10:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Workplace harassment complaint – Floor 3. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Warehouse B",
+        "witnesses": "None reported",
+        "impact": "Significant",
+        "regflag": "OSHA Reportable",
+        "team": [
+          "Mark Lewis",
+          "Rina Patel"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0017",
+        "cat": "it",
+        "title": "Ransomware attack on finance workstations",
+        "sev": "Critical",
+        "status": "Escalated",
+        "dept": "Finance – HQ Floor 5",
+        "root": "Cyber Threat",
+        "rby": "IT Ops Team",
+        "ato": "CISO",
+        "idate": "2025-11-01T14:30",
+        "rdate": "2025-11-01",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "CISO"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "CISO"
+          }
+        ],
+        "comments": [
+          {
+            "user": "IT Ops Team",
+            "time": "2025-11-01 14:30",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Ransomware attack on finance workstations. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Data Center",
+        "witnesses": "None reported",
+        "impact": "Significant",
+        "regflag": "SOX Relevant",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0018",
+        "cat": "safety",
+        "title": "Slip and fall near loading dock – Site D",
+        "sev": "Low",
+        "status": "Closed",
+        "dept": "Facilities – Site D",
+        "root": "Operational Lapse",
+        "rby": "Tom Wilson",
+        "ato": "Safety Officer",
+        "idate": "2025-11-02T08:45",
+        "rdate": "2025-11-02",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Safety Officer"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Safety Officer"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Tom Wilson",
+            "time": "2025-11-02 08:45",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Slip and fall near loading dock – Site D. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Plant C",
+        "witnesses": "Multiple staff members present",
+        "impact": "Significant",
+        "regflag": "SOX Relevant",
+        "team": [],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0019",
+        "cat": "quality",
+        "title": "Batch defect – Product line QX-7 substandard coating",
+        "sev": "High",
+        "status": "In Review",
+        "dept": "Quality – Plant C",
+        "root": "Process Gap",
+        "rby": "Arjun Mehta",
+        "ato": "QA Lead",
+        "idate": "2025-11-02T12:00",
+        "rdate": "2025-11-02",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "QA Lead"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "QA Lead"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Arjun Mehta",
+            "time": "2025-11-02 12:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Batch defect – Product line QX-7 substandard coating. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Distribution Center",
+        "witnesses": "Multiple staff members present",
+        "impact": "Moderate",
+        "regflag": "SOX Relevant",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0020",
+        "cat": "compliance",
+        "title": "GDPR data breach – customer PII exposed",
+        "sev": "Critical",
+        "status": "Escalated",
+        "dept": "HQ – Data Center",
+        "root": "System Failure",
+        "rby": "System Auto Log",
+        "ato": "DPO",
+        "idate": "2025-11-02T23:55",
+        "rdate": "2025-11-03",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "DPO"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "DPO"
+          }
+        ],
+        "comments": [
+          {
+            "user": "System Auto Log",
+            "time": "2025-11-02 23:55",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding GDPR data breach – customer PII exposed. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Floor 5",
+        "witnesses": "Multiple staff members present",
+        "impact": "Significant",
+        "regflag": "ISO 45001",
+        "team": [
+          "Mark Lewis",
+          "Rina Patel"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0021",
+        "cat": "facilities",
+        "title": "HVAC system failure – Plant A Block 2",
+        "sev": "Medium",
+        "status": "Under Investigation",
+        "dept": "Plant A – Warehouse B",
+        "root": "Equipment Failure",
+        "rby": "Tom Wilson",
+        "ato": "Facilities Manager",
+        "idate": "2025-11-03T07:00",
+        "rdate": "2025-11-03",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Facilities Manager"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Facilities Manager"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Tom Wilson",
+            "time": "2025-11-03 07:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding HVAC system failure – Plant A Block 2. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Site D",
+        "witnesses": "Multiple staff members present",
+        "impact": "Minor",
+        "regflag": "SOX Relevant",
+        "team": [],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0022",
+        "cat": "environmental",
+        "title": "Effluent discharge exceeding permissible limits",
+        "sev": "High",
+        "status": "In Review",
+        "dept": "Plant B – Lab C",
+        "root": "Process Gap",
+        "rby": "Dr. Chen",
+        "ato": "HSE Officer",
+        "idate": "2025-11-03T15:00",
+        "rdate": "2025-11-03",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "HSE Officer"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "HSE Officer"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Dr. Chen",
+            "time": "2025-11-03 15:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Effluent discharge exceeding permissible limits. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Warehouse B",
+        "witnesses": "None reported",
+        "impact": "Moderate",
+        "regflag": "GDPR Notifiable",
+        "team": [
+          "Mark Lewis",
+          "Rina Patel"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0023",
+        "cat": "legal",
+        "title": "Contractual breach – Vendor non-delivery",
+        "sev": "Medium",
+        "status": "New",
+        "dept": "Legal – HQ Floor 6",
+        "root": "Third-Party Failure",
+        "rby": "Sarah Okafor",
+        "ato": "Legal Counsel",
+        "idate": "2025-11-04T09:00",
+        "rdate": "2025-11-04",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Legal Counsel"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Legal Counsel"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Sarah Okafor",
+            "time": "2025-11-04 09:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Contractual breach – Vendor non-delivery. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Distribution Center",
+        "witnesses": "None reported",
+        "impact": "Severe",
+        "regflag": "SOX Relevant",
+        "team": [],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0024",
+        "cat": "finance",
+        "title": "Duplicate payment processing error – ERP glitch",
+        "sev": "High",
+        "status": "Under Investigation",
+        "dept": "Finance – HQ Floor 5",
+        "root": "System Failure",
+        "rby": "Rina Patel",
+        "ato": "Finance Controller",
+        "idate": "2025-11-04T11:30",
+        "rdate": "2025-11-04",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Finance Controller"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Finance Controller"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Rina Patel",
+            "time": "2025-11-04 11:30",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Duplicate payment processing error – ERP glitch. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Lab C",
+        "witnesses": "Multiple staff members present",
+        "impact": "Minor",
+        "regflag": "ISO 45001",
+        "team": [],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0025",
+        "cat": "safety",
+        "title": "Electrical arc flash – Switchgear Room 1",
+        "sev": "Critical",
+        "status": "Escalated",
+        "dept": "Facilities – Site D",
+        "root": "Equipment Failure",
+        "rby": "Tom Wilson",
+        "ato": "Safety Officer",
+        "idate": "2025-11-04T16:15",
+        "rdate": "2025-11-04",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Safety Officer"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Safety Officer"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Tom Wilson",
+            "time": "2025-11-04 16:15",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Electrical arc flash – Switchgear Room 1. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Plant C",
+        "witnesses": "None reported",
+        "impact": "Significant",
+        "regflag": "None",
+        "team": [],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0026",
+        "cat": "hr",
+        "title": "Unauthorized overtime approvals – Ops team",
+        "sev": "Low",
+        "status": "Closed",
+        "dept": "Operations – Distribution",
+        "root": "Policy Violation",
+        "rby": "Mark Lewis",
+        "ato": "HR Manager",
+        "idate": "2025-11-05T09:00",
+        "rdate": "2025-11-05",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "HR Manager"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "HR Manager"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Mark Lewis",
+            "time": "2025-11-05 09:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Unauthorized overtime approvals – Ops team. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Distribution Center",
+        "witnesses": "Multiple staff members present",
+        "impact": "Severe",
+        "regflag": "ISO 45001",
+        "team": [],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0027",
+        "cat": "it",
+        "title": "Phishing campaign – 14 employees clicked malicious link",
+        "sev": "High",
+        "status": "Under Investigation",
+        "dept": "HQ – Server Room",
+        "root": "Human Error",
+        "rby": "IT Ops Team",
+        "ato": "CISO",
+        "idate": "2025-11-05T10:45",
+        "rdate": "2025-11-05",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "CISO"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "CISO"
+          }
+        ],
+        "comments": [
+          {
+            "user": "IT Ops Team",
+            "time": "2025-11-05 10:45",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Phishing campaign – 14 employees clicked malicious link. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Site D",
+        "witnesses": "Multiple staff members present",
+        "impact": "Significant",
+        "regflag": "ISO 45001",
+        "team": [
+          "Mark Lewis",
+          "Rina Patel"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0028",
+        "cat": "quality",
+        "title": "Customer complaint – contamination in Batch QX-9",
+        "sev": "Critical",
+        "status": "Escalated",
+        "dept": "Quality – Plant C",
+        "root": "Process Gap",
+        "rby": "Arjun Mehta",
+        "ato": "QA Lead",
+        "idate": "2025-11-05T14:00",
+        "rdate": "2025-11-05",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "QA Lead"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "QA Lead"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Arjun Mehta",
+            "time": "2025-11-05 14:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Customer complaint – contamination in Batch QX-9. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Server Room",
+        "witnesses": "None reported",
+        "impact": "Severe",
+        "regflag": "None",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "COO"
+      },
+      {
+        "id": "INC-2025-0029",
+        "cat": "security",
+        "title": "Tailgating incident – R&D restricted access zone",
+        "sev": "Medium",
+        "status": "New",
+        "dept": "HQ – Server Room",
+        "root": "Operational Lapse",
+        "rby": "Security Bot",
+        "ato": "Security Manager",
+        "idate": "2025-11-06T08:15",
+        "rdate": "2025-11-06",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Security Manager"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Security Manager"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Security Bot",
+            "time": "2025-11-06 08:15",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Tailgating incident – R&D restricted access zone. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Lab C",
+        "witnesses": "Multiple staff members present",
+        "impact": "Significant",
+        "regflag": "GDPR Notifiable",
+        "team": [],
+        "due": "2025-12-15",
+        "esc": "COO"
+      },
+      {
+        "id": "INC-2025-0030",
+        "cat": "compliance",
+        "title": "SOX audit finding – missing approval trail",
+        "sev": "High",
+        "status": "In Review",
+        "dept": "Finance – HQ Floor 5",
+        "root": "Process Gap",
+        "rby": "Sarah Okafor",
+        "ato": "Compliance Officer",
+        "idate": "2025-11-06T11:00",
+        "rdate": "2025-11-06",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Compliance Officer"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Compliance Officer"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Sarah Okafor",
+            "time": "2025-11-06 11:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding SOX audit finding – missing approval trail. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Distribution Center",
+        "witnesses": "None reported",
+        "impact": "Severe",
+        "regflag": "None",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "COO"
+      },
+      {
+        "id": "INC-2025-0031",
+        "cat": "environmental",
+        "title": "Asbestos discovered during Building C renovation",
+        "sev": "Critical",
+        "status": "New",
+        "dept": "Facilities – Site D",
+        "root": "Natural Cause",
+        "rby": "Tom Wilson",
+        "ato": "HSE Officer",
+        "idate": "2025-11-06T13:30",
+        "rdate": "2025-11-06",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "HSE Officer"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "HSE Officer"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Tom Wilson",
+            "time": "2025-11-06 13:30",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Asbestos discovered during Building C renovation. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Plant C",
+        "witnesses": "Multiple staff members present",
+        "impact": "Severe",
+        "regflag": "ISO 45001",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0032",
+        "cat": "facilities",
+        "title": "Roof leak causing archive room damage",
+        "sev": "Low",
+        "status": "Closed",
+        "dept": "Facilities – Site D",
+        "root": "Equipment Failure",
+        "rby": "Tom Wilson",
+        "ato": "Facilities Manager",
+        "idate": "2025-11-06T15:00",
+        "rdate": "2025-11-06",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Facilities Manager"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Facilities Manager"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Tom Wilson",
+            "time": "2025-11-06 15:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Roof leak causing archive room damage. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Server Room",
+        "witnesses": "None reported",
+        "impact": "Moderate",
+        "regflag": "GDPR Notifiable",
+        "team": [
+          "Mark Lewis",
+          "Rina Patel"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0033",
+        "cat": "legal",
+        "title": "IP infringement claim filed by competitor",
+        "sev": "High",
+        "status": "Under Investigation",
+        "dept": "Legal – HQ Floor 6",
+        "root": "Third-Party Failure",
+        "rby": "Sarah Okafor",
+        "ato": "Legal Counsel",
+        "idate": "2025-11-07T10:00",
+        "rdate": "2025-11-07",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Legal Counsel"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Legal Counsel"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Sarah Okafor",
+            "time": "2025-11-07 10:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding IP infringement claim filed by competitor. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Plant C",
+        "witnesses": "None reported",
+        "impact": "Severe",
+        "regflag": "OSHA Reportable",
+        "team": [
+          "Mark Lewis",
+          "Rina Patel"
+        ],
+        "due": "2025-12-15",
+        "esc": "COO"
+      },
+      {
+        "id": "INC-2025-0034",
+        "cat": "hr",
+        "title": "Data privacy breach – employee health records accessed",
+        "sev": "Critical",
+        "status": "Escalated",
+        "dept": "HR – HQ Floor 3",
+        "root": "Human Error",
+        "rby": "Priya Sharma",
+        "ato": "DPO",
+        "idate": "2025-11-07T14:00",
+        "rdate": "2025-11-07",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "DPO"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "DPO"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Priya Sharma",
+            "time": "2025-11-07 14:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Data privacy breach – employee health records accessed. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Floor 6",
+        "witnesses": "Multiple staff members present",
+        "impact": "Moderate",
+        "regflag": "SOX Relevant",
+        "team": [
+          "Mark Lewis"
+        ],
+        "due": "2025-12-15",
+        "esc": "COO"
+      },
+      {
+        "id": "INC-2025-0035",
+        "cat": "finance",
+        "title": "Petty cash discrepancy – Operations site",
+        "sev": "Low",
+        "status": "Closed",
+        "dept": "Operations – Distribution",
+        "root": "Human Error",
+        "rby": "Rina Patel",
+        "ato": "Finance Controller",
+        "idate": "2025-11-07T16:00",
+        "rdate": "2025-11-07",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "Finance Controller"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "Finance Controller"
+          }
+        ],
+        "comments": [
+          {
+            "user": "Rina Patel",
+            "time": "2025-11-07 16:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Petty cash discrepancy – Operations site. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Floor 6",
+        "witnesses": "None reported",
+        "impact": "Severe",
+        "regflag": "SOX Relevant",
+        "team": [
+          "Mark Lewis",
+          "Rina Patel"
+        ],
+        "due": "2025-12-15",
+        "esc": "None"
+      },
+      {
+        "id": "INC-2025-0036",
+        "cat": "it",
+        "title": "Cloud storage misconfiguration – public bucket exposed",
+        "sev": "Critical",
+        "status": "Under Investigation",
+        "dept": "HQ – Data Center",
+        "root": "Human Error",
+        "rby": "System Auto Log",
+        "ato": "CISO",
+        "idate": "2025-11-08T06:00",
+        "rdate": "2025-11-08",
+        "tasks": [
+          {
+            "title": "Initial investigation and securing the area",
+            "status": "Completed",
+            "owner": "CISO"
+          },
+          {
+            "title": "Root cause analysis review",
+            "status": "In Progress",
+            "owner": "CISO"
+          }
+        ],
+        "comments": [
+          {
+            "user": "System Auto Log",
+            "time": "2025-11-08 06:00",
+            "text": "Incident reported and initial logs attached."
+          }
+        ],
+        "desc": "Detailed report regarding Cloud storage misconfiguration – public bucket exposed. Initial observations indicate that the situation is being monitored and immediate corrective actions have been initiated.",
+        "location": "Lab C",
+        "witnesses": "None reported",
+        "impact": "Significant",
+        "regflag": "SOX Relevant",
+        "team": [],
+        "due": "2025-12-15",
+        "esc": "None"
+      }
+    ]
+  }
+]

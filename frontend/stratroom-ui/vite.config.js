@@ -12,7 +12,9 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8085',
         changeOrigin: true,
-        secure: false
+        secure: false,
+        timeout: 600000,
+        proxyTimeout: 600000,
       },
       '/authservice': {
         target: 'http://localhost:8081',

@@ -1,0 +1,99 @@
+{
+  "pageloading": "جارٍ التحميل",
+  "loaderTitle": "أثناء التحميل، احصل على قهوتك وابقَ نشيطًا.",
+  "loaderDescription": "يحتاج الأمر إلى 42 حبة لصنع جرعة واحدة. ستراتروم يستخدم عددًا لا يحصى من نقاط البيانات لتقديم رؤى قوية!",
+  "topbar": {
+    "orgStructure": "الهيكل التنظيمي",
+    "templates": "القوالب",
+    "etl": "ETL",
+    "masters": "الرؤساء",
+    "mastersItems": {
+      "products": "المنتجات / الخدمات",
+      "process": "العملية (POS)",
+      "vitalRecords": "السجلات الحيوية",
+      "technology": "التكنولوجيا وتكنولوجيا المعلومات",
+      "facilities": "المرافق والخدمات",
+      "personal": "شؤون الموظفين",
+      "iso": "ISO",
+      "budget": "الميزانية"
+    },
+    "settings": "الإعدادات",
+  "settingsItems": {
+    "controlPanel": "لوحة التحكم",
+    "auditTrail": "سجل التدقيق",
+    "userRoles": "أدوار المستخدمين"
+  },
+    "profile": "الملف الشخصي",
+    "hi": "مرحبًا",
+    "welcomeToPortal": "مرحبًا بك في بوابة الحوكمة المتعددة",
+    "profileItems": {
+      "myProfile": "ملفي الشخصي",
+      "myForms": "نماذجي",
+      "performanceContract": "عقد الأداء",
+      "performanceImprovementPlan": "خطة تحسين الأداء",
+      "auditTrail": "سجل التدقيق",
+      "logout": "تسجيل الخروج"
+    }
+  },
+  "menu": {
+    "plan": "خطة",
+     "planItems": {
+    "strategyPlanner": "مخطط الاستراتيجية",
+    "swot": "SWOT",
+    "pestel": "PESTEL"
+    },
+    "measure": "قياس",
+    "measureItems": {
+    "scorecard": "بطاقة الأداء"
+    },
+    "execute": "تنفيذ",
+     "executeItems": {
+    "initiatives": "المخاطر والمبادرات",
+    "tasks": "المهام",
+    "budgetApproval": "اعتماد الميزانية",
+    "budgets": "الميزانيات"
+     },
+    "govern": "حوكمة",
+    "governItems": {
+    "riskRegister": "سجل المخاطر",
+    "riskApproval": "اعتماد المخاطر",
+    "compliance": "الامتثال"
+    },
+    "meet": "اجتماع",
+     "meetItems": {
+    "meetings": "الاجتماعات"
+},
+    "report": "تقرير",
+    "reportItems": {
+    "myCockpit": "لوحة التحكم",
+    "myPerformance": "أدائي",
+    "whiteboard": "اللوحة البيضاء"
+    }
+  },
+    "actions": {
+    "edit": "تعديل",
+    "delete": "حذف",
+    "moveUp": "تحريك لأعلى",
+    "moveDown": "تحريك لأسفل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "view": "عرض",
+    "add": "إضافة",
+    "update": "تحديث",
+    "submit": "إرسال",
+    "close": "إغلاق",
+    "more": "المزيد",
+    "next": "التالي",
+    "previous": "السابق",
+    "done": "تم",
+    "back": "عودة",
+    "confirm": "تأكيد",
+    "search": "بحث",
+    "filter": "تصفية",
+    "reset": "إعادة تعيين",
+    "upload": "رفع"
+  },
+   "footer": {
+        "copyright": "حقوق الطبع والنشر © 2025 ستراتروم. جميع الحقوق محفوظة"
+    }
+}

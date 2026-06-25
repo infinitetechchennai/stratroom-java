@@ -1,5 +1,8 @@
 export function getDateRange() {
-  return localStorage.getItem('customperiod') || ''
+  const stored = localStorage.getItem('customperiod')
+  if (stored && stored.includes('-')) return stored
+  const y = new Date().getFullYear()
+  return `01/01/${y}-12/31/${y}`
 }
 
 export function getProgressClass(status) {
@@ -106,10 +109,41 @@ export function extractKpis(scoreCardDetails) {
 }
 
 export function getDisplayName(user) {
+  if (user?.name && !String(user.name).includes('@')) {
+    return user.name
+  }
   if (user?.firstName) {
     return `${user.firstName}${user.lastName ? ` ${user.lastName}` : ''}`
   }
-  return user?.emailAddress || user?.name || 'User'
+  const email = user?.emailAddress || user?.email
+  if (email && email.includes('@')) {
+    return email.split('@')[0]
+  }
+  return user?.name || email || 'User'
+}
+
+/** Pull KPI cards from scorecard V2 API response for the landing page. */
+export function extractKpisFromV2(v2Json) {
+  const kpis = []
+  const perspectives = v2Json?.cardDetailsDTO?.scoreCardDTOS ?? []
+  perspectives.forEach((perspective) => {
+    perspective.objectiveList?.forEach((objective) => {
+      objective.kpiList?.forEach((kpi) => {
+        const kv = kpi.kpiValue ?? kpi
+        const target = kv?.target ?? kpi.target
+        if (!hasValidKpiTarget(target)) return
+        kpis.push({
+          id: kpi.id ?? kpi.kpiId,
+          name: kpi.kpiName || kv?.name || kpi.name || 'KPI',
+          actual: kv?.actual ?? kpi.actual ?? '',
+          target,
+          trend: kv?.trend ?? kpi.trend,
+          objectiveName: objective.objectivesName || objective.name || ''
+        })
+      })
+    })
+  })
+  return kpis.slice(0, 12)
 }
 
 export function getInitials(name) {

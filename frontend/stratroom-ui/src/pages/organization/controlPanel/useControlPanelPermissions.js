@@ -45,10 +45,14 @@ export function useControlPanelPermissions() {
 
   const canViewTab = (tabKey) => {
     const cfg = TAB_PERMISSIONS[tabKey]
+    // okr / workflow have no submodule in the permission catalog — they are not individually
+    // grantable, so they follow page-level access.
     if (!cfg) return canAccessPage
+    // A tab backed by a submodule shows ONLY when that submodule grants View. Previously this
+    // fell back to the module-level "Control Panel: View" privilege, which made every tab visible
+    // as soon as any single submodule (e.g. Theme) was granted.
     const mod = submodules?.[cfg.submodule]
-    if (mod && isTrueFlag(mod.privilegeView)) return true
-    return canAccessPage && hasPermission('Control Panel', 'View')
+    return !!(mod && isTrueFlag(mod.privilegeView))
   }
 
   const canEditTab = (tabKey) => {
