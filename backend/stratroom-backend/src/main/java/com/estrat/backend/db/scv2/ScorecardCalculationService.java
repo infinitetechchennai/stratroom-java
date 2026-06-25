@@ -91,20 +91,12 @@ public class ScorecardCalculationService {
 
 
         List<Long> subKpiIds = subByKpi.values().stream().flatMap(java.util.List::stream).map(m -> num(m.get("id"))).collect(java.util.stream.Collectors.toList());
-        // 4th-level sub-measures: the sc_sub_measures table doesn't exist in every schema.
-        // Guard so a missing table (or empty id list) simply yields no sub-measures instead
-        // of aborting the entire scorecard load.
+        // 4th-level sub-measures (sc_sub_measures) do NOT exist in this schema. The load runs
+        // inside a single transaction, so issuing a query against a missing table aborts the
+        // entire transaction (SQLSTATE 25P02) and every later query fails. A try/catch is not
+        // enough — the DB transaction is already poisoned. So we skip the query entirely and
+        // treat sub-measures as empty. Re-enable once an sc_sub_measures table exists.
         Map<Long, List<Map<String, Object>>> subMeasureBySubKpi = new java.util.HashMap<>();
-        if (subKpiIds != null && !subKpiIds.isEmpty()) {
-            try {
-                subMeasureBySubKpi = groupBy(
-                        queryIn("SELECT id, name, code, target_value, polarity, weight, data_type, achievement_cap, sub_kpi_id "
-                                + "FROM sc_sub_measures WHERE is_deleted = false AND sub_kpi_id IN (%s) ORDER BY display_order, id", subKpiIds),
-                        "sub_kpi_id");
-            } catch (Exception ignore) {
-                // sc_sub_measures not present in this schema — no 4th-level data to load.
-            }
-        }
 
         // all KPI history for these KPIs, ordered, grouped — current & previous picked in memory
         Map<Long, List<Map<String, Object>>> histByKpi = groupBy(
