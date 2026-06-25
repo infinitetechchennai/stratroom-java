@@ -426,6 +426,10 @@ function onModalShow(e) {
     box.value = activeInput ? activeInput.value || '' : box.value;
     box.style.border = '';
   }
+  // Always refetch on open: the scorecard tree may have changed since the last open
+  // (a KPI/sub-KPI/objective was just added, edited or deleted), so a cached list would
+  // be stale and miss the newly added element.
+  nodeKeyCache = null;
   loadMeasures(component);
 }
 

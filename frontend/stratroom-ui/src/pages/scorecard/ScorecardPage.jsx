@@ -422,7 +422,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             openEditObjective: async (id) => {
                 window._editObjectiveId = id;
                 const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
-                ['eodId', 'eodName', 'eodDescription', 'eodWeight'].forEach(elId => set(elId, ''));
+                ['eodId', 'eodName', 'eodDescription', 'eodWeight', 'eodPerformance'].forEach(elId => set(elId, ''));
                 try {
                     const o = await getObjectiveById(id);
                     if (o && o.id) {
@@ -430,6 +430,9 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('eodName', o.name);
                         set('eodDescription', o.description);
                         set('eodWeight', o.weight);
+                        // Pre-fill the saved Performance formula so editing other fields and
+                        // saving doesn't wipe it (Save sends eodPerformance back as the formula).
+                        set('eodPerformance', o.formula || '');
                     }
                 } catch (e) {
                     console.error('Failed to load objective data', e);
