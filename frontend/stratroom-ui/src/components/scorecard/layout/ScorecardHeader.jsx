@@ -101,10 +101,9 @@ export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel
                 <div className="page-icons">
                     <ul>
                         <li>
-                            <a className="active" href="#kpi-calculator-modal" data-bs-toggle="modal"
-                               data-scorecard-formula-launcher="true">
+                            <a className="active" href="#prespective-add-modal" data-bs-toggle="modal">
                                 <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                    data-bs-title="Scorecard Formula" data-translate="page.scorecard.scorecardFormula">
+                                    data-bs-title="Add Perspective" data-translate="page.scorecard.addPerspective">
                                     <i data-feather="plus" style={{ width: '14px', height: '14px' }}></i>
                                 </span>
                             </a>

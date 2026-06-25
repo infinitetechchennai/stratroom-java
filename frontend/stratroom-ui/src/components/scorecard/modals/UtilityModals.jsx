@@ -84,7 +84,7 @@ export const ImportModal = () => {
                         <div className="card custom-card" id="file-validate" style={{ display: 'none' }}>
                             <div className="card-body grid gap-3">
                                 <div className="g-col-12 img-center">
-                                    <img src="/stratroom/images/Not-Verified.png" alt="Not-Verified" />
+                                    <img src="/images/Not-Verified.png" alt="Not-Verified" />
                                     <div className="error-div">
                                         <table className="error-table">
                                             <thead>
@@ -116,7 +116,7 @@ export const ImportModal = () => {
                             <div className="card-body grid gap-3">
                                 <div className="g-col-12">
                                     <div className="text-center">
-                                        <img src="/stratroom/images/Success.png" alt="Verified" width="140" />
+                                        <img src="/images/Success.png" alt="Verified" width="140" />
                                     </div>
                                 </div>
                             </div>
@@ -152,7 +152,7 @@ export const KpiStoryCardModal = () => {
                                     <div className="row">
                                         <div className="col-12 col-form-text">
                                             <div className="avatar m-auto">
-                                                <img src="/stratroom/images/user/user7.jpg" width="72" height="72" className="rounded-circle" alt="User" />
+                                                <img src="/images/user/user7.jpg" width="72" height="72" className="rounded-circle" alt="User" />
                                             </div>
                                         </div>
                                     </div>

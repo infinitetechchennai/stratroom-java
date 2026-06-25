@@ -551,76 +551,6 @@ const StandardView = ({ pageId = '1' }) => {
       </div>
 
       <main className="pt-2 pb-2">
-        <div className="container-lg">
-          <div className="page-header grid gap-2 pb-1">
-            <div className="g-col-8 d-flex align-items-center">
-              <h4 className="title">
-                <span className="icon">
-                  <img src="/stratroom/images/scorecard-i.svg" alt="Scorecard" width="16" height="16" />
-                </span>
-                <span className="sorecardTitleHeader">Scorecard</span>{' '}
-                <span className="badge text-bg-success scorecardValue">100%</span>
-              </h4>
-            </div>
-            <div className="load-page page-actions g-col-4">
-              <div className="page-icons">
-                <ul>
-                  <li>
-                    <a href="#import-modal" data-toggle="modal" data-target=".file_upload_popup">
-                      <span
-                        className="icon"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="bottom"
-                        data-bs-title="Import"
-                      >
-                        <img src="/stratroom/images/import-i.svg" width="12" height="12" alt="import" />
-                      </span>
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (window.loadDataAndGeneratePDF) window.loadDataAndGeneratePDF();
-                      }}
-                    >
-                      <img src="/stratroom/images/stamp-i.svg" width="12" height="12" alt="import" />
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      href="#"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="bottom"
-                      data-bs-title="Export"
-                      target="_blank"
-                      className="exceldownloadlink"
-                    >
-                      <img src="/stratroom/images/export-i.svg" width="12" height="12" alt="export" />
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      href="#add-settings-modal"
-                      data-toggle="modal"
-                      data-target=".scorecard_description_popup"
-                      onClick={() => window.handleScoreCardEvent && window.handleScoreCardEvent()}
-                    >
-                      <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Settings">
-                        <img src="/stratroom/images/control-panel-i.svg" width="12" height="12" alt="Settings" />
-                      </span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="container-lg py-2">
           {/* TAB NAVIGATION */}
           <div className="dropdown dropdown-tab dropdown-tab-ellipsis mb-2" id="tab-navigationWrap">
@@ -709,12 +639,12 @@ const StandardView = ({ pageId = '1' }) => {
       <div className="floating-box shadow-sm">
         <a className="control-link" href="#">
           <span className="icon">
-            <img src="/stratroom/images/organization-i.svg" width="18" height="18" alt="organization" />
+            <img src="/images/organization-i.svg" width="18" height="18" alt="organization" />
           </span>
         </a>
         <a className="control-link" href="#">
           <span className="icon">
-            <img src="/stratroom/images/template.svg" width="18" height="18" alt="organization" />
+            <img src="/images/template.svg" width="18" height="18" alt="organization" />
           </span>
         </a>
       </div>

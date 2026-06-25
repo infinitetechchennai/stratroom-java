@@ -118,7 +118,7 @@ function insertMeasure(component, name) {
 function closeModal(modalId) {
   const el = document.getElementById(modalId);
   if (!el || !window.bootstrap?.Modal) return;
-  const inst = window.bootstrap.Modal.getInstance(el) || new window.bootstrap.Modal(el);
+  const inst = window.bootstrap.Modal.getInstance(el) || window.bootstrap.Modal.getOrCreateInstance(el);
   inst.hide();
 }
 
@@ -395,7 +395,7 @@ function onModalHidden(e) {
   if (component && parentModalId) {
     const parentEl = document.getElementById(parentModalId);
     if (parentEl && window.bootstrap?.Modal) {
-      const inst = window.bootstrap.Modal.getInstance(parentEl) || new window.bootstrap.Modal(parentEl);
+      const inst = window.bootstrap.Modal.getInstance(parentEl) || window.bootstrap.Modal.getOrCreateInstance(parentEl);
       inst.show();
     } else if (parentEl && window.jQuery) {
       window.jQuery(parentEl).modal('show');

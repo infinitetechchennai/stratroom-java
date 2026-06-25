@@ -5,7 +5,7 @@ import {
     getPageListByType,
     getEmpId,
 } from '../../services/scorecardApi';
-import { getScorecardV2, recordKpiActual, recordSubKpiActual } from '../../services/scorecardV2Api';
+import { getScorecardV2, getKpiHistory, getSubKpiHistory, getSubMeasureHistory, recordKpiActualBatch, recordSubKpiActualBatch, recordSubMeasureActualBatch } from '../../services/scorecardV2Api';
 
 // ─────────────────────────────────────────────────────────────
 // Helpers
@@ -71,11 +71,13 @@ export default function MyFormsPage() {
     // ── State ──────────────────────────────────────────────
     const [pages, setPages] = useState([]);           // available scorecards (pages)
     const [kpis, setKpis] = useState([]);             // flat list of kpis for selected scorecard
-    const [subKpis, setSubKpis] = useState([]);       // sub-kpis for selected kpi
+    const [subKpis, setSubKpis] = useState([]);
+    const [subMeasures, setSubMeasures] = useState([]);       // sub-kpis for selected kpi
 
     const [selectedPageId, setSelectedPageId] = useState('');
     const [selectedKpiId, setSelectedKpiId] = useState('');
     const [selectedSubKpiId, setSelectedSubKpiId] = useState('');
+    const [selectedSubMeasureId, setSelectedSubMeasureId] = useState('');
 
     // Auto-filled display fields
     const [fields, setFields] = useState({
@@ -184,54 +186,173 @@ export default function MyFormsPage() {
         setFields({ departmentName: '', measurementFrequency: '', kpiType: '', actual: '', target: '', startEndDate: '', period: '', validTill: '', comment: '' });
     }
 
+
+    const loadHistory = useCallback(async () => {
+        if (!selectedKpiId) return;
+        try {
+            let hist = [];
+            if (selectedSubMeasureId) {
+                hist = await getSubMeasureHistory(selectedSubMeasureId, getDateRange());
+            } else if (selectedSubKpiId) {
+                hist = await getSubKpiHistory(selectedSubKpiId, getDateRange());
+            } else {
+                hist = await getKpiHistory(selectedKpiId, getDateRange());
+            }
+            
+            // Reset arrays
+            const mData = Array.from({length: 12}, () => ({ actual: '', target: '' }));
+            const qData = Array.from({length: 4}, () => ({ actual: '', target: '' }));
+            const hyData = Array.from({length: 2}, () => ({ actual: '', target: '' }));
+            let aData = { actual: '', target: '' };
+
+            const year = new Date().getFullYear();
+            
+            hist.forEach(h => {
+                const start = new Date(h.period_start);
+                const end = new Date(h.period_end);
+                const actual = h.actual_value != null ? h.actual_value : '';
+                const target = fields.target || '';
+                
+                // Monthly mapping
+                if (start.getDate() === 1 && end.getDate() >= 28 && end.getDate() <= 31 && start.getMonth() === end.getMonth()) {
+                    mData[start.getMonth()] = { actual, target };
+                }
+                // Quarterly mapping
+                else if (start.getDate() === 1 && (end.getMonth() - start.getMonth() === 2)) {
+                    qData[Math.floor(start.getMonth() / 3)] = { actual, target };
+                }
+                // Half-yearly mapping
+                else if (start.getDate() === 1 && (end.getMonth() - start.getMonth() === 5)) {
+                    hyData[Math.floor(start.getMonth() / 6)] = { actual, target };
+                }
+                // Annual mapping
+                else if (start.getDate() === 1 && start.getMonth() === 0 && end.getDate() === 31 && end.getMonth() === 11) {
+                    aData = { actual, target };
+                }
+            });
+
+            setMonthlyData(mData);
+            setQuarterlyData(qData);
+            setHalfYearlyData(hyData);
+            setAnnualData([aData]);
+        } catch (error) {
+            console.error(error);
+            showToast('Failed to load history.', 'error');
+        }
+    }, [selectedKpiId, selectedSubKpiId, selectedSubMeasureId]);
+
+    useEffect(() => {
+        loadHistory();
+    }, [loadHistory]);
+
     function showToast(msg, type = 'success') {
         setToast({ msg, type });
         setTimeout(() => setToast(null), 3500);
     }
 
     // ── Save: upsert the actual into sc_kpi_history (V2), then refresh ─────
-    const handleSave = async () => {
+        const handleSave = async () => {
         if (!selectedKpiId) return showToast('Please select a KPI first.', 'error');
         setSaving(true);
         try {
-            const dateRange = getDateRange();
-            const [start, end] = dateRange.split('-');
-            const toIso = (s) => (s || '').trim().replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$1-$2');
-            const payload = {
-                periodStart: toIso(start),
-                periodEnd: toIso(end),
-                actualValue: fields.actual !== '' ? Number(fields.actual) : null,
-            };
-            // recordKpiActual/recordSubKpiActual throw on a non-2xx response, so a
-            // failed save no longer reports success.
-            if (selectedSubKpiId) {
-                await recordSubKpiActual({ ...payload, subKpiId: Number(selectedSubKpiId) });
-            } else {
-                await recordKpiActual({ ...payload, kpiId: Number(selectedKpiId) });
+            const year = new Date().getFullYear();
+            const pad = (n) => String(n).padStart(2, '0');
+            const getLastDay = (y, m) => new Date(y, m + 1, 0).getDate();
+            
+            let actuals = [];
+            
+            if (perfPeriod === "M") {
+                monthlyData.forEach((data, index) => {
+                    actuals.push({
+                        periodStart: `${year}-${pad(index + 1)}-01`,
+                        periodEnd: `${year}-${pad(index + 1)}-${pad(getLastDay(year, index))}`,
+                        actualValue: data.actual === '' ? null : Number(data.actual)
+                    });
+                });
+            } else if (perfPeriod === "Q") {
+                quarterlyData.forEach((data, index) => {
+                    const startMonth = index * 3;
+                    const endMonth = startMonth + 2;
+                    actuals.push({
+                        periodStart: `${year}-${pad(startMonth + 1)}-01`,
+                        periodEnd: `${year}-${pad(endMonth + 1)}-${pad(getLastDay(year, endMonth))}`,
+                        actualValue: data.actual === '' ? null : Number(data.actual)
+                    });
+                });
+            } else if (perfPeriod === "HY") {
+                halfYearlyData.forEach((data, index) => {
+                    const startMonth = index * 6;
+                    const endMonth = startMonth + 5;
+                    actuals.push({
+                        periodStart: `${year}-${pad(startMonth + 1)}-01`,
+                        periodEnd: `${year}-${pad(endMonth + 1)}-${pad(getLastDay(year, endMonth))}`,
+                        actualValue: data.actual === '' ? null : Number(data.actual)
+                    });
+                });
+            } else if (perfPeriod === "A") {
+                actuals.push({
+                    periodStart: `${year}-01-01`,
+                    periodEnd: `${year}-12-31`,
+                    actualValue: annualData.actual === '' ? null : Number(annualData.actual)
+                });
             }
-            showToast('Saved successfully!', 'success');
-            // Re-fetch so the saved actual is reflected. The selection persists, so the
-            // auto-fill effect repopulates the fields from the refreshed KPI list.
-            await loadKpis(selectedPageId);
-        } catch (err) {
-            showToast(err.message || 'Save failed.', 'error');
+
+            if (actuals.length === 0) {
+                showToast('No actual values entered to save.', 'info');
+                setSaving(false);
+                return;
+            }
+
+            if (selectedSubMeasureId) {
+                await recordSubMeasureActualBatch({ subMeasureId: Number(selectedSubMeasureId), actuals });
+            } else if (selectedSubKpiId) {
+                await recordSubKpiActualBatch({ subKpiId: Number(selectedSubKpiId), actuals });
+            } else {
+                await recordKpiActualBatch({ kpiId: Number(selectedKpiId), actuals });
+            }
+            
+            showToast('Saved successfully! Redirecting...', 'success');
+            setTimeout(() => {
+                window.location.href = '/scorecard?pageId=' + selectedPageId;
+            }, 800);
+        } catch (error) {
+            console.error(error);
+            showToast('Save failed.', 'error');
         } finally {
             setSaving(false);
         }
     };
 
     // ── Render ─────────────────────────────────────────────
-    return (
-        <div style={{ background: '#ffffff', minHeight: 'calc(100vh - 60px)', paddingBottom: '60px' }}>
-            {/* Header */}
-            <div style={{ padding: '12px 24px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>
-                </svg>
-                <span style={{ fontSize: '14px', fontWeight: '700', color: '#111827', textTransform: 'uppercase' }}>DATA ENTRY FORM</span>
-            </div>
+    const [perfPeriod, setPerfPeriod] = useState('M');
+    const [monthlyData, setMonthlyData] = useState(Array.from({length: 12}, () => ({ actual: '', target: '' })));
+    const [quarterlyData, setQuarterlyData] = useState(Array.from({length: 4}, () => ({ actual: '', target: '' })));
+    const [halfYearlyData, setHalfYearlyData] = useState(Array.from({length: 2}, () => ({ actual: '', target: '' })));
+    const [annualData, setAnnualData] = useState(Array.from({length: 1}, () => ({ actual: '', target: '' })));
+    
+    const handleDataChange = (period, index, field, value) => {
+        if (period === 'M') {
+            const newData = [...monthlyData];
+            newData[index] = { ...newData[index], [field]: value };
+            setMonthlyData(newData);
+        } else if (period === 'Q') {
+            const newData = [...quarterlyData];
+            newData[index] = { ...newData[index], [field]: value };
+            setQuarterlyData(newData);
+        } else if (period === 'HY') {
+            const newData = [...halfYearlyData];
+            newData[index] = { ...newData[index], [field]: value };
+            setHalfYearlyData(newData);
+        } else if (period === 'A') {
+            const newData = [...annualData];
+            newData[index] = { ...newData[index], [field]: value };
+            setAnnualData(newData);
+        }
+    };
+return (
+<>
+    <main className="pt-2 pb-2">
 
-            {/* Toast */}
             {toast && (
                 <div style={{
                     position: 'fixed', top: 20, right: 20, zIndex: 9999,
@@ -244,176 +365,347 @@ export default function MyFormsPage() {
                 </div>
             )}
 
-            {/* Form */}
-            <div style={{ maxWidth: '750px', margin: '30px auto', background: '#fff', borderRadius: '6px', border: '1px solid #e5e7eb', padding: '30px' }}>
-
-                {/* Avatar */}
-                <div style={{ width: 50, height: 50, borderRadius: '50%', border: '1px solid #9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '600', color: '#111827', marginBottom: '24px' }}>
-                    {initials}
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-
-                    {/* Scorecard */}
-                    <div>
-                        <label style={labelStyle}>Scorecard</label>
-                        <select
-                            style={selectStyle}
-                            value={selectedPageId}
-                            onChange={e => setSelectedPageId(e.target.value)}
-                        >
-                            <option value="">Select Scorecard</option>
-                            {pages.map(p => (
-                                <option key={p.id || p.pageId} value={p.id || p.pageId}>
-                                    {p.name || p.pageName || `Page ${p.id || p.pageId}`}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* KPI */}
-                    <div>
-                        <label style={labelStyle}>KPI</label>
-                        <select
-                            style={selectStyle}
-                            value={selectedKpiId}
-                            onChange={e => setSelectedKpiId(e.target.value)}
-                            disabled={!selectedPageId || loadingKpis}
-                        >
-                            <option value="">
-                                {loadingKpis
-                                    ? 'Loading…'
-                                    : (selectedPageId && kpis.length === 0
-                                        ? 'No record found'
-                                        : 'Select KPI')}
-                            </option>
-                            {kpis.map(k => (
-                                <option key={k.id} value={k.id}>{k.name}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Measures (Sub-KPI list) */}
-                    <div>
-                        <label style={labelStyle}>Measures</label>
-                        <select
-                            style={selectStyle}
-                            value={selectedSubKpiId}
-                            onChange={e => setSelectedSubKpiId(e.target.value)}
-                            disabled={!selectedKpiId || subKpis.length === 0}
-                        >
-                            <option value="">Select Measures</option>
-                            {subKpis.map(s => (
-                                <option key={s.id} value={s.id}>
-                                    {s.subKpiValue?.subMeasureName || s.name || `Sub-KPI ${s.id}`}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Sub Measures */}
-                    <div>
-                        <label style={labelStyle}>Sub Measures</label>
-                        <select style={selectStyle} disabled>
-                            <option value="">Select Sub Measures</option>
-                        </select>
-                    </div>
-
-                    {/* Department Name */}
-                    <div>
-                        <label style={labelStyle}>Department Name</label>
-                        <input type="text" style={inputStyle} value={fields.departmentName}
-                            onChange={e => setFields(prev => ({ ...prev, departmentName: e.target.value }))} />
-                    </div>
-
-                    {/* Measurement Frequency */}
-                    <div>
-                        <label style={labelStyle}>Measurement Frequency</label>
-                        <input type="text" style={readonlyStyle} readOnly value={fields.measurementFrequency} />
-                    </div>
-
-                    {/* KPI Type */}
-                    <div>
-                        <label style={labelStyle}>KPI Type</label>
-                        <input type="text" style={readonlyStyle} readOnly value={fields.kpiType} />
-                    </div>
-
-                    {/* Actual — editable */}
-                    <div>
-                        <label style={labelStyle}>Actual</label>
-                        <input type="number" style={inputStyle} value={fields.actual}
-                            onChange={e => setFields(prev => ({ ...prev, actual: e.target.value }))}
-                            placeholder="Enter actual value" />
-                    </div>
-
-                    {/* Target — editable */}
-                    <div>
-                        <label style={labelStyle}>Target</label>
-                        <input type="number" style={inputStyle} value={fields.target}
-                            onChange={e => setFields(prev => ({ ...prev, target: e.target.value }))}
-                            placeholder="Enter target value" />
-                    </div>
-
-                    {/* Start / End Date — readonly */}
-                    <div>
-                        <label style={labelStyle}>Start / End Date</label>
-                        <input type="text" style={readonlyStyle} readOnly value={fields.startEndDate} />
-                    </div>
-
-                    {/* Period — readonly */}
-                    <div>
-                        <label style={labelStyle}>Period</label>
-                        <input type="text" style={readonlyStyle} readOnly value={fields.period} />
-                    </div>
-
-                    {/* Valid Till — readonly */}
-                    <div>
-                        <label style={labelStyle}>Valid Till</label>
-                        <input type="text" style={readonlyStyle} readOnly value={fields.validTill} />
-                    </div>
-
-                    {/* Comment */}
-                    <div>
-                        <label style={labelStyle}>Comment</label>
-                        <textarea style={{ ...inputStyle, height: 'auto', resize: 'vertical' }} rows="3"
-                            placeholder="Comment" value={fields.comment}
-                            onChange={e => setFields(prev => ({ ...prev, comment: e.target.value }))} />
-                    </div>
-
-                    {/* Upload */}
-                    <div>
-                        <label style={labelStyle}>Upload</label>
-                        <div style={{ display: 'flex', border: '1px solid #d1d5db', borderRadius: '4px', overflow: 'hidden', height: '36px' }}>
-                            <label style={{ background: '#f9fafb', borderRight: '1px solid #d1d5db', padding: '0 16px', fontSize: '13px', fontWeight: '600', color: '#111827', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                Choose File
-                                <input type="file" accept=".jpeg,.jpg,.pdf,.pptx,.xlsx,.docx" style={{ display: 'none' }} onChange={e => setFile(e.target.files[0])} />
-                            </label>
-                            <div style={{ padding: '0 16px', fontSize: '13px', color: '#111827', display: 'flex', alignItems: 'center' }}>
-                                {file ? file.name : 'No file chosen'}
-                            </div>
-                        </div>
-                        <div style={{ fontSize: '11.5px', color: '#6b7280', marginTop: '6px' }}>Supported file type (jpeg, pdf, pptx, xlsx, docx)</div>
-                    </div>
-
-                    {/* Save Button */}
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', paddingTop: '8px' }}>
-                        <button
-                            type="button"
-                            onClick={handleSave}
-                            disabled={saving || !selectedKpiId}
-                            style={{
-                                background: saving || !selectedKpiId ? '#9ca3af' : '#1e293b',
-                                color: '#fff', border: 'none', borderRadius: '6px',
-                                padding: '10px 28px', fontSize: '13px', fontWeight: '600',
-                                cursor: saving || !selectedKpiId ? 'not-allowed' : 'pointer',
-                            }}
-                        >
-                            {saving ? 'Saving…' : 'Save'}
-                        </button>
-                    </div>
-
+        <div className="container-lg">
+            <div className="page-header grid gap-2 pb-1">
+                <div className="g-col-8 d-flex align-items-center">
+                    <h4 className="title">
+                        <span className="icon">
+                            <img src="/images/meetings-i.svg" alt="meetings" width="18" height="18" />
+                        </span>
+                        Data Entry Form
+                    </h4>
                 </div>
             </div>
         </div>
-    );
+
+        <div className="container-lg py-2">
+            <form>
+                <div className="card mx-auto" style={{maxWidth: "600px"}}>
+                    <div className="card-body p-3">
+                        <div className="grid gap-3">
+                            <div className="g-col-12 d-flex justify-content-between flex-wrap align-items-center gap-2">
+                                <div className="user-card ">
+                                    <div className="user-image user-image-lg overflow-hidden">
+                                        {/* <img src="assets/images/user/user7.jpg" alt="George" width="48" height="48" /> */}
+                                        <span className="img-initial">{initials}</span>
+                                    </div>
+                                    <div className="user-text d-flex flex-column">
+                                        <h6 className="text-heading text-truncate">{displayName}</h6>
+                                        <small>Chairman Board of Directors</small>
+                                    </div>
+                                </div>
+                                <div className="performance-period-selector">
+                                    <div className="radio-segmented-group">
+                                        <input type="radio" name="perf_period" id="periodM" value="M" checked={perfPeriod === "M"} onChange={(e) => setPerfPeriod(e.target.value)} />
+                                        <label htmlFor="periodM">M</label>
+                                        <input type="radio" name="perf_period" id="periodQ" value="Q" checked={perfPeriod === "Q"} onChange={(e) => setPerfPeriod(e.target.value)} />
+                                        <label htmlFor="periodQ">Q</label>
+                                        <input type="radio" name="perf_period" id="periodHY" value="HY" checked={perfPeriod === "HY"} onChange={(e) => setPerfPeriod(e.target.value)} />
+                                        <label htmlFor="periodHY">HY</label>
+                                        <input type="radio" name="perf_period" id="periodA" value="A" checked={perfPeriod === "A"} onChange={(e) => setPerfPeriod(e.target.value)} />
+                                        <label htmlFor="periodA">A</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="g-col-12">
+
+
+                                <div className="form-group">
+                                    <label className="form-label">Scorecard</label>
+                                    <select className="form-select select-dropdown" value={selectedPageId} onChange={e => setSelectedPageId(e.target.value)}>
+                                        <option value="" disabled hidden>Select Scorecard</option>
+                                        {pages.map(p => (
+                                            <option key={p.id || p.pageId} value={p.id || p.pageId}>
+                                                {p.name || p.pageName || `Page ${p.id || p.pageId}`}
+                                            </option>
+                                        ))}
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="g-col-12">
+                                <div className="form-group">
+                                    <label className="form-label">Kpi</label>
+                                    <select className="form-select select-dropdown" value={selectedKpiId} onChange={e => setSelectedKpiId(e.target.value)} disabled={!selectedPageId || loadingKpis}>
+                                        <option value="" disabled hidden>
+                                            {loadingKpis ? 'Loading…' : (selectedPageId && kpis.length === 0 ? 'No record found' : 'Select Kpi')}
+                                        </option>
+                                        {kpis.map(k => (
+                                            <option key={k.id} value={k.id}>{k.name}</option>
+                                        ))}
+
+                                        <option value="Kpi 4">Kpi 4</option>
+                                        <option value="Kpi 5">Kpi 5</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+
+                            <div className="g-col-12 g-col-lg-6">
+                                <div className="form-group">
+                                    <label className="form-label">Measures</label>
+                                    <select className="form-select select-dropdown" value={selectedSubKpiId} onChange={e => setSelectedSubKpiId(e.target.value)} disabled={!selectedKpiId || subKpis.length === 0}>
+                                        <option value="" disabled hidden>Select Measures</option>
+                                        {subKpis.map(s => (
+                                            <option key={s.id} value={s.id}>
+                                                {s.subKpiValue?.subMeasureName || s.name || `Sub-KPI ${s.id}`}
+                                            </option>
+                                        ))}
+
+                                    </select>
+                                </div>
+                            </div>
+                                                        <div className="g-col-12 g-col-lg-6">
+                                <div className="form-group">
+                                    <label className="form-label">Sub Measures</label>
+                                    <select className="form-select select-dropdown" value={selectedSubMeasureId} onChange={e => setSelectedSubMeasureId(e.target.value)} disabled={!selectedSubKpiId || subMeasures.length === 0}>
+                                        <option value="" disabled hidden>Select Sub Measures</option>
+                                        {subMeasures.map(sm => (
+                                            <option key={sm.id} value={sm.id}>{sm.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="g-col-12 g-col-lg-6">
+                                <div className="form-group">
+                                    <label className="form-label">KPI Type</label>
+                                    <input type="text" className="form-control" placeholder="KPI Type" readOnly value={fields.kpiType} />
+                                </div>
+                            </div>
+                            <div className="g-col-12 g-col-lg-6">
+                                <div className="form-group">
+                                    <label className="form-label">Department Name</label>
+                                    <input type="text" className="form-control" placeholder="Department Name" readOnly value={fields.departmentName} />
+                                </div>
+                            </div>
+                            <div className="g-col-12 g-col-lg-6">
+                                <div className="form-group">
+                                    <label className="form-label">Measurement Frequency</label>
+                                    <input type="text" className="form-control" placeholder="Measurement Frequency" readOnly value={fields.measurementFrequency} />
+                                </div>
+                            </div>
+                            {/* Only show grid if lowest level is selected */}
+                            {((!selectedKpiId) || (subKpis.length > 0 && !selectedSubKpiId) || (subMeasures.length > 0 && !selectedSubMeasureId)) ? null : (
+                            <>
+                            {/* Performance Data */}
+                            <div className="g-col-12">
+                                {/* <div className="performance-section-title">PERFORMANCE DATA — ACTUAL & TARGET</div> */}
+
+
+                                {/* Monthly Section */}
+                                <div id="perf-section-M" className="perf-period-section" style={{display: perfPeriod === "M" ? "block" : "none"}}>
+                                    <div className="performance-head mb-3">
+                                        <h4 className="title">MONTHLY PERFORMANCE DATA</h4>
+                                        <div className="legend-container">
+                                            <div className="legend-item">
+                                                <div className="legend-box actual"></div>
+                                                <span>Actual</span>
+                                            </div>
+                                            <div className="legend-item">
+                                                <div className="legend-box target"></div>
+                                                <span>Target</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="performance-data-container">
+                                        <div className="perf-grid">
+                                            <div className="perf-column">
+                                                <div className="perf-table-row perf-header">
+                                                    <div className="perf-cell">MONTH</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-green)"}}>ACTUAL</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-red)"}}>TARGET</div>
+                                                </div>
+                                                {monthlyData.slice(0, 6).map((data, index) => (
+                                                    <div className="perf-table-row" key={index}>
+                                                        <div className="perf-cell perf-month">{['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][index]}</div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('M', index, 'actual', e.target.value)} />
+                                                        </div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="perf-column">
+                                                <div className="perf-table-row perf-header">
+                                                    <div className="perf-cell">MONTH</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-green)"}}>ACTUAL</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-red)"}}>TARGET</div>
+                                                </div>
+                                                {monthlyData.slice(6, 12).map((data, index) => (
+                                                    <div className="perf-table-row" key={index + 6}>
+                                                        <div className="perf-cell perf-month">{['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][index]}</div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('M', index + 6, 'actual', e.target.value)} />
+                                                        </div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="perf-section-Q" className="perf-period-section" style={{display: perfPeriod === "Q" ? "block" : "none"}}>
+                                    <div className="performance-head mb-3">
+                                        <h4 className="title">QUARTERLY PERFORMANCE DATA</h4>
+                                        <div className="legend-container">
+                                            <div className="legend-item"><div className="legend-box actual"></div><span>Actual</span></div>
+                                            <div className="legend-item"><div className="legend-box target"></div><span>Target</span></div>
+                                        </div>
+                                    </div>
+                                    <div className="performance-data-container">
+                                        <div className="perf-grid single-column">
+                                            <div className="perf-column">
+                                                <div className="perf-table-row perf-header">
+                                                    <div className="perf-cell">QUARTER</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-green)"}}>ACTUAL</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-red)"}}>TARGET</div>
+                                                </div>
+                                                {quarterlyData.map((data, index) => (
+                                                    <div className="perf-table-row" key={index}>
+                                                        <div className="perf-cell perf-month">{['Q1', 'Q2', 'Q3', 'Q4'][index]}</div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('Q', index, 'actual', e.target.value)} />
+                                                        </div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="perf-section-HY" className="perf-period-section" style={{display: perfPeriod === "HY" ? "block" : "none"}}>
+                                    <div className="performance-head mb-3">
+                                        <h4 className="title">HALF-YEARLY PERFORMANCE DATA</h4>
+                                        <div className="legend-container">
+                                            <div className="legend-item"><div className="legend-box actual"></div><span>Actual</span></div>
+                                            <div className="legend-item"><div className="legend-box target"></div><span>Target</span></div>
+                                        </div>
+                                    </div>
+                                    <div className="performance-data-container">
+                                        <div className="perf-grid single-column">
+                                            <div className="perf-column">
+                                                <div className="perf-table-row perf-header">
+                                                    <div className="perf-cell">HALF-YEAR</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-green)"}}>ACTUAL</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-red)"}}>TARGET</div>
+                                                </div>
+                                                {halfYearlyData.map((data, index) => (
+                                                    <div className="perf-table-row" key={index}>
+                                                        <div className="perf-cell perf-month">{['H1', 'H2'][index]}</div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('HY', index, 'actual', e.target.value)} />
+                                                        </div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="perf-section-A" className="perf-period-section" style={{display: perfPeriod === "A" ? "block" : "none"}}>
+                                    <div className="performance-head mb-3">
+                                        <h4 className="title">ANNUAL PERFORMANCE DATA</h4>
+                                        <div className="legend-container">
+                                            <div className="legend-item"><div className="legend-box actual"></div><span>Actual</span></div>
+                                            <div className="legend-item"><div className="legend-box target"></div><span>Target</span></div>
+                                        </div>
+                                    </div>
+                                    <div className="performance-data-container">
+                                        <div className="perf-grid single-column">
+                                            <div className="perf-column">
+                                                <div className="perf-table-row perf-header">
+                                                    <div className="perf-cell">YEAR</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-green)"}}>ACTUAL</div>
+                            </div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-red)"}}>TARGET</div>
+                                                </div>
+                                                {annualData.map((data, index) => (
+                                                    <div className="perf-table-row" key={index}>
+                                                        <div className="perf-cell perf-month">Annual</div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('A', index, 'actual', e.target.value)} />
+                                                        </div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </>
+
+
+                            )}
+
+
+                            <div className="g-col-12 g-col-lg-6">
+                                <div className="form-group">
+                                    <label className="form-label">Start / End Date</label>
+                                    <input type="text" id="dateRangePicker" className="form-control"
+                                        placeholder="Select Date Range" readOnly value={fields.startEndDate} />
+                                </div>
+                            </div>
+                            <div className="g-col-12 g-col-lg-6">
+                                <div className="form-group">
+                                    <label className="form-label">Period</label>
+                                    <input type="text" className="form-control" placeholder="Period" readOnly value={fields.period} />
+                                </div>
+                            </div>
+                            <div className="g-col-12 g-col-lg-6">
+                                <div className="form-group">
+                                    <label className="form-label">Valid Till</label>
+                                    <input type="text" className="form-control" placeholder="Valid Till" readOnly value={fields.validTill} />
+                                </div>
+                            </div>
+                            <div className="g-col-12">
+                                <div className="form-group">
+                                    <label className="form-label">Comment</label>
+                                    <textarea className="form-control browser-default" placeholder="Comment"
+                                        rows="2" value={fields.comment} onChange={e => setFields(prev => ({ ...prev, comment: e.target.value }))}></textarea>
+                                </div>
+                            </div>
+                            <div className="g-col-12">
+                                <div className="form-group">
+                                    <label className="form-label">Upload</label>
+                                    <div className="attachment-upload">
+                                        <div className="input-group mb-1">
+                                            <input type="file" className="form-control" id="inputGroupFile02"
+                                                accept=".pdf,.ppt,.jpeg,.xlsx,.doc,.docx" onChange={e => setFile(e.target.files[0])} />
+                                        </div>
+                                        <div className="mb-3 form-text">Supported file type (jpeg,pdf,pptx,xlsx,docx)</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div className="card-footer text-end">
+                        <button type="button" className="btn btn-primary" onClick={handleSave} disabled={saving || !selectedKpiId}>
+                            {saving ? 'Saving…' : 'Save'}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+</>
+);
 }

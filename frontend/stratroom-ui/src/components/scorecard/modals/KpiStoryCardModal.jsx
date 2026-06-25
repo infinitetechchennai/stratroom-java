@@ -46,6 +46,33 @@ export const KpiStoryCardModal = () => {
     const frequency = item.period || item.frequency || 'N/A';
     const alignment = item.alignment || 'N/A';
 
+    const handleSave = () => {
+        const container = document.getElementById('scorecard-toast-container');
+        if (container) {
+            const id = `sc-toast-${Date.now()}`;
+            const html = `
+              <div id="${id}" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                  <div class="toast-body">Support Needed saved successfully.</div>
+                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+              </div>`;
+            container.insertAdjacentHTML('beforeend', html);
+            const el = document.getElementById(id);
+            if (window.bootstrap?.Toast) {
+                const t = new window.bootstrap.Toast(el, { delay: 3500 });
+                t.show();
+                el.addEventListener('hidden.bs.toast', () => el.remove());
+            }
+        }
+
+        const modalEl = document.getElementById('kpi-story-card-modal');
+        if (modalEl && window.bootstrap?.Modal) {
+            const inst = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+            if (inst) inst.hide();
+        }
+    };
+
     return (
         <div className="modal fade" id="kpi-story-card-modal" tabIndex="-1" role="dialog" aria-hidden="true" style={{ zIndex: 1060 }}>
             <div className="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -115,7 +142,7 @@ export const KpiStoryCardModal = () => {
                     {/* Footer */}
                     <div className="modal-footer" style={{ padding: '16px 24px', borderTop: 'none' }}>
                         <button type="button" className="btn btn-light btn-sm px-3 py-2" data-bs-dismiss="modal" style={{ background: '#f1f5f9', border: 'none', color: '#475569', fontWeight: 500, borderRadius: '6px' }}>Cancel</button>
-                        <button type="button" className="btn btn-sm px-4 py-2" style={{ background: '#1e293b', color: '#fff', fontWeight: 500, borderRadius: '6px' }}>Save</button>
+                        <button type="button" onClick={handleSave} className="btn btn-primary btn-sm px-4 py-2"  style={{ background: '#1e293b', color: '#fff', fontWeight: 500, borderRadius: '6px' }}>Save</button>
                     </div>
 
                 </div>

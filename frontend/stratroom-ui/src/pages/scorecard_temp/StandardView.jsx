@@ -556,7 +556,7 @@ const StandardView = ({ pageId = '1' }) => {
             <div className="g-col-8 d-flex align-items-center">
               <h4 className="title">
                 <span className="icon">
-                  <img src="/stratroom/images/scorecard-i.svg" alt="Scorecard" width="16" height="16" />
+                  <img src="/images/scorecard-i.svg" alt="Scorecard" width="16" height="16" />
                 </span>
                 <span className="sorecardTitleHeader">Scorecard</span>{' '}
                 <span className="badge text-bg-success scorecardValue">100%</span>
@@ -573,7 +573,7 @@ const StandardView = ({ pageId = '1' }) => {
                         data-bs-placement="bottom"
                         data-bs-title="Import"
                       >
-                        <img src="/stratroom/images/import-i.svg" width="12" height="12" alt="import" />
+                        <img src="/images/import-i.svg" width="12" height="12" alt="import" />
                       </span>
                     </a>
                   </li>
@@ -586,7 +586,7 @@ const StandardView = ({ pageId = '1' }) => {
                         if (window.loadDataAndGeneratePDF) window.loadDataAndGeneratePDF();
                       }}
                     >
-                      <img src="/stratroom/images/stamp-i.svg" width="12" height="12" alt="import" />
+                      <img src="/images/stamp-i.svg" width="12" height="12" alt="import" />
                     </a>
                   </li>
 
@@ -599,7 +599,7 @@ const StandardView = ({ pageId = '1' }) => {
                       target="_blank"
                       className="exceldownloadlink"
                     >
-                      <img src="/stratroom/images/export-i.svg" width="12" height="12" alt="export" />
+                      <img src="/images/export-i.svg" width="12" height="12" alt="export" />
                     </a>
                   </li>
 
@@ -611,7 +611,7 @@ const StandardView = ({ pageId = '1' }) => {
                       onClick={() => window.handleScoreCardEvent && window.handleScoreCardEvent()}
                     >
                       <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Settings">
-                        <img src="/stratroom/images/control-panel-i.svg" width="12" height="12" alt="Settings" />
+                        <img src="/images/control-panel-i.svg" width="12" height="12" alt="Settings" />
                       </span>
                     </a>
                   </li>
@@ -709,12 +709,12 @@ const StandardView = ({ pageId = '1' }) => {
       <div className="floating-box shadow-sm">
         <a className="control-link" href="#">
           <span className="icon">
-            <img src="/stratroom/images/organization-i.svg" width="18" height="18" alt="organization" />
+            <img src="/images/organization-i.svg" width="18" height="18" alt="organization" />
           </span>
         </a>
         <a className="control-link" href="#">
           <span className="icon">
-            <img src="/stratroom/images/template.svg" width="18" height="18" alt="organization" />
+            <img src="/images/template.svg" width="18" height="18" alt="organization" />
           </span>
         </a>
       </div>

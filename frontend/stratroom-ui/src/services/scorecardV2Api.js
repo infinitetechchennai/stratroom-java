@@ -5,51 +5,29 @@
 // Backend controller: com.estrat.backend.db.scv2.ScorecardV2Controller
 // ============================================================
 
+import axiosClient from '../api/axiosClient';
+
 const V2 = '/api/scorecardV2';
 
-function authHeaders() {
-  const headers = { 'Content-Type': 'application/json' };
-  const token = localStorage.getItem('accessToken');
-  if (token) headers.Authorization = `Bearer ${token}`;
-  const userInfo = localStorage.getItem('userInfo');
-  if (typeof userInfo === 'string' && userInfo.startsWith('ENC(')) {
-    headers.USER_INFO = userInfo;
-  }
-  try {
-    const raw = localStorage.getItem('profile');
-    if (raw) {
-      const p = JSON.parse(raw);
-      const empId = p.empId ?? p.id;
-      if (empId != null && empId !== '') {
-        headers.LOGGED_IN_EMPLOYEE_ID = String(empId);
-        headers.SUPER_USER_ID = String(empId);
-      }
-      const orgId = p.orgDetails?.orgId ?? p.orgId;
-      if (orgId != null && orgId !== '') headers.USER_ORG_ID = String(orgId);
-    }
-  } catch {
-    // ignore malformed profile
-  }
-  return headers;
-}
+const get = (url, params) => {
+  return axiosClient.get(url, { params }).then(res => res.data);
+};
 
-async function req(url, options = {}) {
-  const res = await fetch(url, { headers: authHeaders(), ...options });
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`[${res.status}] ${res.statusText}${text ? ': ' + text : ''}`);
-  }
-  const ct = res.headers.get('content-type') || '';
-  return ct.includes('application/json') ? res.json() : res.text();
-}
+const post = (url, body) => {
+  return axiosClient.post(url, body).then(res => res.data);
+};
 
-const post = (url, body) => req(url, { method: 'POST', body: JSON.stringify(body) });
-const put = (url, body) => req(url, { method: 'PUT', body: JSON.stringify(body) });
-const del = (url) => req(url, { method: 'DELETE' });
+const put = (url, body) => {
+  return axiosClient.put(url, body).then(res => res.data);
+};
+
+const del = (url) => {
+  return axiosClient.delete(url).then(res => res.data);
+};
 
 // ---------- calculation / load ----------
 export const getScorecardV2 = (pageId, dateRange) =>
-  req(`${V2}/${pageId}${dateRange ? `?dateRange=${encodeURIComponent(dateRange)}` : ''}`);
+  get(`${V2}/${pageId}${dateRange ? `?dateRange=${encodeURIComponent(dateRange)}` : ''}`);
 
 // ---------- scorecard ----------
 export const createScorecard = (data) => post(`${V2}/scorecard`, data);
@@ -83,3 +61,11 @@ export const recordSubKpiActual = (data) => post(`${V2}/subkpi/actual`, data);
 // Bulk Actual/Target import from an uploaded scorecard Excel (rows matched by KPI code).
 export const importScorecardActuals = (pageId, dateRange, rows) =>
   post(`${V2}/import/actuals?pageId=${pageId}&dateRange=${encodeURIComponent(dateRange)}`, rows);
+
+export const getKpiHistory = (id, dateRange) => get(`${V2}/kpi/${id}/history`, { dateRange });
+export const getSubKpiHistory = (id, dateRange) => get(`${V2}/subkpi/${id}/history`, { dateRange });
+export const recordKpiActualBatch = (data) => post(`${V2}/kpi/actuals/batch`, data);
+export const recordSubKpiActualBatch = (data) => post(`${V2}/subkpi/actuals/batch`, data);
+
+export const getSubMeasureHistory = (id, dateRange) => get(`${V2}/submeasure/${id}/history`, { dateRange });
+export const recordSubMeasureActualBatch = (data) => post(`${V2}/submeasure/actuals/batch`, data);

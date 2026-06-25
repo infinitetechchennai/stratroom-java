@@ -167,7 +167,64 @@ public class ScorecardV2Controller {
         return ResponseEntity.ok(okResult(crudService.deleteSubKpi(id)));
     }
 
+
+    @PostMapping("/scorecardV2/submeasure")
+    public ResponseEntity<Map<String, Object>> createSubMeasure(@RequestBody Map<String, Object> body) {
+        return ResponseEntity.ok(idResult(crudService.createSubMeasure(body)));
+    }
+
+    @PutMapping("/scorecardV2/submeasure/{id}")
+    public ResponseEntity<Map<String, Object>> updateSubMeasure(@PathVariable("id") Long id, @RequestBody Map<String, Object> body) {
+        return ResponseEntity.ok(okResult(crudService.updateSubMeasure(id, body)));
+    }
+
+    @DeleteMapping("/scorecardV2/submeasure/{id}")
+    public ResponseEntity<Map<String, Object>> deleteSubMeasure(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(okResult(crudService.deleteSubMeasure(id)));
+    }
+
+    @GetMapping("/scorecardV2/submeasure/{id}/history")
+    public ResponseEntity<List<Map<String, Object>>> getSubMeasureHistory(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "dateRange", required = false) String dateRange) {
+        return ResponseEntity.ok(crudService.getSubMeasureHistory(id, dateRange));
+    }
+
+    @PostMapping("/scorecardV2/submeasure/actuals/batch")
+    public ResponseEntity<Map<String, Object>> recordSubMeasureActualBatch(@RequestBody Map<String, Object> body) {
+        crudService.recordSubMeasureActualBatch(body);
+        return ResponseEntity.ok(okResult(true));
+    }
+
     // -------- actuals --------
+
+    @PostMapping("/scorecardV2/kpi/actuals/batch")
+    public ResponseEntity<Map<String, Object>> recordKpiActualBatch(@RequestBody Map<String, Object> body) {
+        crudService.recordKpiActualBatch(body);
+        return ResponseEntity.ok(okResult(true));
+    }
+
+    @PostMapping("/scorecardV2/subkpi/actuals/batch")
+    public ResponseEntity<Map<String, Object>> recordSubKpiActualBatch(@RequestBody Map<String, Object> body) {
+        crudService.recordSubKpiActualBatch(body);
+        return ResponseEntity.ok(okResult(true));
+    }
+
+
+    @GetMapping("/scorecardV2/kpi/{id}/history")
+    public ResponseEntity<List<Map<String, Object>>> getKpiHistory(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "dateRange", required = false) String dateRange) {
+        return ResponseEntity.ok(crudService.getKpiHistory(id, dateRange));
+    }
+
+    @GetMapping("/scorecardV2/subkpi/{id}/history")
+    public ResponseEntity<List<Map<String, Object>>> getSubKpiHistory(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "dateRange", required = false) String dateRange) {
+        return ResponseEntity.ok(crudService.getSubKpiHistory(id, dateRange));
+    }
+
 
     @PostMapping("/scorecardV2/kpi/actual")
     public ResponseEntity<Map<String, Object>> recordKpiActual(@RequestBody Map<String, Object> body) {
