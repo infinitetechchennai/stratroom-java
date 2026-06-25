@@ -50,6 +50,10 @@ public class ScorecardCrudService {
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN data_source TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN owner TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN thresholds TEXT"); } catch (Exception ignore) {}
+        // Lead/Lag indicator classification (separate from `polarity`, which is the
+        // scoring direction HIGHER/LOWER/TARGET/RANGE used by AchievementCalculator).
+        try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
     }
 
     // ---------------- SCORECARD ----------------
@@ -183,7 +187,7 @@ public class ScorecardCrudService {
                         + "max_target, data_type, currency_code, weight, measurement_frequency, "
                         + "null_handling, achievement_cap, classification_type, formula, actual_formula, "
                         + "ytd_formula, display_order, created_by, updated_by, created_at, updated_at, "
-                        + "contribution, sub_weight, data_source, owner, thresholds "
+                        + "contribution, sub_weight, data_source, owner, thresholds, indicator_type "
                         + "FROM sc_kpis WHERE id = ?", id);
         return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
     }
@@ -194,17 +198,18 @@ public class ScorecardCrudService {
                 "INSERT INTO sc_kpis (objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, null_handling, "
                         + "achievement_cap, classification_type, display_order, formula, created_by, updated_by, "
-                        + "contribution, sub_weight, data_source, owner, thresholds) "
-                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "contribution, sub_weight, data_source, owner, thresholds, indicator_type) "
+                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "objectiveId", 0L), str(b, "code", null), str(b, "name", "KPI"), str(b, "description", null),
-                str(b, "polarity", "HIGHER"), dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"),
+                // polarity = scoring direction (HIGHER/LOWER/TARGET/RANGE); Lead/Lag goes to indicator_type
+                str(b, "direction", "HIGHER"), dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"),
                 decOrNull(b, "maxTarget"), str(b, "dataType", "NUMBER"), str(b, "currencyCode", null),
                 dec(b, "weight", BigDecimal.ZERO), str(b, "measurementFrequency", null),
                 str(b, "nullHandling", "EXCLUDE"), dec(b, "achievementCap", new BigDecimal("150")),
                 str(b, "classificationType", "THREE_COLOR"), intg(b, "displayOrder", 0), str(b, "formula", null),
                 str(b, "createdByName", null), str(b, "createdByName", null),
                 decOrNull(b, "contribution"), decOrNull(b, "subWeight"), str(b, "dataSource", null),
-                str(b, "owner", null), str(b, "thresholds", null));
+                str(b, "owner", null), str(b, "thresholds", null), str(b, "indicatorType", null));
     }
 
     @Transactional
@@ -216,7 +221,7 @@ public class ScorecardCrudService {
                 "SELECT name, description, polarity, target_value, min_target, max_target, data_type, "
                         + "currency_code, weight, measurement_frequency, null_handling, achievement_cap, "
                         + "classification_type, display_order, formula, actual_formula, ytd_formula, created_by, "
-                        + "contribution, sub_weight, data_source, owner, thresholds "
+                        + "contribution, sub_weight, data_source, owner, thresholds, indicator_type "
                         + "FROM sc_kpis WHERE id = ?", id);
         Map<String, Object> ex = exRows.isEmpty() ? java.util.Collections.emptyMap() : exRows.get(0);
         Integer exDisplay = ex.get("display_order") == null ? 0 : ((Number) ex.get("display_order")).intValue();
@@ -225,10 +230,10 @@ public class ScorecardCrudService {
                         + "data_type=?, currency_code=?, weight=?, measurement_frequency=?, null_handling=?, "
                         + "achievement_cap=?, classification_type=?, display_order=?, formula=?, "
                         + "actual_formula=?, ytd_formula=?, updated_by=?, contribution=?, sub_weight=?, "
-                        + "data_source=?, owner=?, thresholds=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+                        + "data_source=?, owner=?, thresholds=?, indicator_type=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
                 str(b, "name", (String) ex.get("name")),
                 str(b, "description", (String) ex.get("description")),
-                str(b, "polarity", (String) ex.get("polarity")),
+                str(b, "direction", (String) ex.get("polarity")),
                 dec(b, "targetValue", (BigDecimal) ex.get("target_value")),
                 dec(b, "minTarget", (BigDecimal) ex.get("min_target")),
                 dec(b, "maxTarget", (BigDecimal) ex.get("max_target")),
@@ -248,7 +253,8 @@ public class ScorecardCrudService {
                 dec(b, "subWeight", (BigDecimal) ex.get("sub_weight")),
                 str(b, "dataSource", (String) ex.get("data_source")),
                 str(b, "owner", (String) ex.get("owner")),
-                str(b, "thresholds", (String) ex.get("thresholds")), id) > 0;
+                str(b, "thresholds", (String) ex.get("thresholds")),
+                str(b, "indicatorType", (String) ex.get("indicator_type")), id) > 0;
     }
 
     @Transactional
@@ -262,21 +268,23 @@ public class ScorecardCrudService {
     public long createSubKpi(Map<String, Object> b) {
         return insert(
                 "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
-                        + "achievement_cap, display_order) VALUES (?,?,?,?,?,?,?,?,?)",
+                        + "achievement_cap, display_order, indicator_type) VALUES (?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "kpiId", 0L), str(b, "code", null), str(b, "name", "Sub-KPI"),
-                dec(b, "targetValue", BigDecimal.ZERO), str(b, "polarity", "HIGHER"),
+                dec(b, "targetValue", BigDecimal.ZERO), str(b, "direction", "HIGHER"),
                 dec(b, "weight", BigDecimal.ONE), str(b, "dataType", "NUMBER"),
-                dec(b, "achievementCap", new BigDecimal("150")), intg(b, "displayOrder", 0));
+                dec(b, "achievementCap", new BigDecimal("150")), intg(b, "displayOrder", 0),
+                str(b, "indicatorType", null));
     }
 
     @Transactional
     public boolean updateSubKpi(long id, Map<String, Object> b) {
         return jdbc.update(
                 "UPDATE sc_sub_kpis SET name=?, target_value=?, polarity=?, weight=?, data_type=?, "
-                        + "achievement_cap=?, display_order=? WHERE id=?",
-                str(b, "name", "Sub-KPI"), dec(b, "targetValue", BigDecimal.ZERO), str(b, "polarity", "HIGHER"),
+                        + "achievement_cap=?, display_order=?, indicator_type=? WHERE id=?",
+                str(b, "name", "Sub-KPI"), dec(b, "targetValue", BigDecimal.ZERO), str(b, "direction", "HIGHER"),
                 dec(b, "weight", BigDecimal.ONE), str(b, "dataType", "NUMBER"),
-                dec(b, "achievementCap", new BigDecimal("150")), intg(b, "displayOrder", 0), id) > 0;
+                dec(b, "achievementCap", new BigDecimal("150")), intg(b, "displayOrder", 0),
+                str(b, "indicatorType", null), id) > 0;
     }
 
     @Transactional

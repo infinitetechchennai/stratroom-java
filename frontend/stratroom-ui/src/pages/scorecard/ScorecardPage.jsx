@@ -129,7 +129,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         const handleCalculatorHidden = () => {
             document.querySelectorAll('.kpi_setting').forEach(el => el.classList.remove('modal-static'));
             if (lastOpenedModal) {
-                if (window.bootstrap?.Modal) new window.bootstrap.Modal(lastOpenedModal).show();
+                if (window.bootstrap?.Modal) window.bootstrap.Modal.getOrCreateInstance(lastOpenedModal).show();
             }
         };
         calculatorIds.forEach(id => {
@@ -263,7 +263,8 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 addKpi({
                     name: val('akpiName'),
                     description: val('akpiDescription'),
-                    polarity: val('akpiPolarity') || undefined,
+                    indicatorType: val('akpiPolarity') || undefined,
+                    direction: val('akpiDirection') || undefined,
                     measurementFrequency: val('akpiMeasurementFrequency') || undefined,
                     weight: val('akpiWeight') || undefined,
                     formula: val('akpiPerformance') || undefined,
@@ -286,7 +287,8 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     id: val('ekpiId') || window._editKpiId,
                     name: val('ekpiName') || undefined,
                     description: val('ekpiDescription') || undefined,
-                    polarity: val('ekpiPolarity') || undefined,
+                    indicatorType: val('ekpiPolarity') || undefined,
+                    direction: val('ekpiDirection') || undefined,
                     measurementFrequency: val('ekpiMeasurementFrequency') || undefined,
                     weight: val('ekpiWeight') || undefined,
                     formula: val('ekpiPerformance') || undefined,
@@ -375,28 +377,28 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 window._deleteTarget = { type, id };
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('delete-modal');
-                    if (el) new window.bootstrap.Modal(el).show();
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
             openAddObjective: (perspectiveId) => {
                 window._editPerspectiveId = perspectiveId;
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('objective-add-modal');
-                    if (el) new window.bootstrap.Modal(el).show();
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
             openAddKpi: (objectiveId) => {
                 window._editObjectiveId = objectiveId;
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('kpi-add-modal');
-                    if (el) new window.bootstrap.Modal(el).show();
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
             openAddSubKpi: (kpiId) => {
                 window._editKpiId = kpiId;
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('subkpi-add-modal');
-                    if (el) new window.bootstrap.Modal(el).show();
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
             openEditPerspective: async (id) => {
@@ -417,7 +419,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('prespective-edit-modal');
-                    if (el) new window.bootstrap.Modal(el).show();
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
             openEditObjective: async (id) => {
@@ -437,7 +439,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('objective-edit-modal');
-                    if (el) new window.bootstrap.Modal(el).show();
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
             openEditKpi: async (id) => {
@@ -456,7 +458,9 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('ekpiActual', kpi.actual_formula || '');
                         set('ekpiYearToDate', kpi.ytd_formula || '');
                         const polEl = document.getElementById('ekpiPolarity');
-                        if (polEl && kpi.polarity) polEl.value = kpi.polarity;
+                        if (polEl && kpi.indicator_type) polEl.value = kpi.indicator_type;
+                        const dirEl = document.getElementById('ekpiDirection');
+                        if (dirEl && kpi.polarity) dirEl.value = kpi.polarity;
                         const freqEl = document.getElementById('ekpiMeasurementFrequency');
                         if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
                         set('ekpiContribution', kpi.contribution);
@@ -486,7 +490,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('kpi-edit-modal');
-                    if (el) new window.bootstrap.Modal(el).show();
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
             openViewKpi: async (id) => {
@@ -510,7 +514,9 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vkpiActual', kpi.actual_formula || '');
                         set('vkpiYearToDate', kpi.ytd_formula || '');
                         const polEl = document.getElementById('vkpiPolarity');
-                        if (polEl && kpi.polarity) polEl.value = kpi.polarity;
+                        if (polEl && kpi.indicator_type) polEl.value = kpi.indicator_type;
+                        const vdirEl = document.getElementById('vkpiDirection');
+                        if (vdirEl && kpi.polarity) vdirEl.value = kpi.polarity;
                         const freqEl = document.getElementById('vkpiMeasurementFrequency');
                         if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
                         set('vkpiContribution', kpi.contribution);
@@ -533,7 +539,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 }
                 if (window.bootstrap?.Modal) {
                     const el = document.getElementById('kpi-view-modal');
-                    if (el) new window.bootstrap.Modal(el).show();
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
         };
