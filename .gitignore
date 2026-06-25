@@ -45,3 +45,11 @@ orgpsql
 orgstructurev2.sql
 Risk Full Logic.html
 backend/Risk Full Logic (1).html
+
+# Legacy root scratch files (scorecard/calendar experiments)
+extracted_cal.css
+org-structure_calendar_dw_*
+
+# Local import spreadsheets and one-off scripts (use import-templates/ instead)
+import files/
+import-files/
