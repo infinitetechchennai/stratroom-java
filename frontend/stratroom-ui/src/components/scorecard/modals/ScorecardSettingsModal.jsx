@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useScorecardContext } from '../../../context/ScorecardContext';
 import { getReporteeList, updateScorecardV2 } from '../../../services/scorecardApi';
 import { getAllDepartmentList } from '../../../api/scorecardApi';
+import { getOrgId, saveCustomPerformance } from '../../../api/controlPanelApi';
+import { useScorecardSettings } from '../../../hooks/useScorecardSettings';
 
 export const ScorecardSettingsModal = ({ scorecardData }) => {
     const { reload } = useScorecardContext();
+    const { settings, refreshSettings } = useScorecardSettings();
     const rawCard = scorecardData?.rawCard || {};
     const [saving, setSaving] = useState(false);
 
@@ -122,6 +125,30 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
                 formula: performance || null,
                 aggregationMethod: performance ? 'FORMULA' : 'WEIGHTED',
             });
+            
+            const orgId = getOrgId();
+            if (orgId) {
+                const dto = {
+                    orgId,
+                    generalSettingValue: {
+                        ...(settings || {}),
+                        audittrailtype: 'customPerformance',
+                        scorecardactual: fields.Actual ? "true" : "false",
+                        scorecardtarget: fields.Target ? "true" : "false",
+                        scorecardstrech: fields.Budget ? "true" : "false",
+                        scorecardstable: fields.Forecast ? "true" : "false",
+                        scorecardbaseline: fields.Baseline ? "true" : "false",
+                        scorecardindex: fields.Index ? "true" : "false",
+                        scorecardtrend: fields.Trend ? "true" : "false",
+                        scorecardrisk: fields.Risk ? "true" : "false",
+                        scorecardshrink: fields.Decline ? "true" : "false",
+                        type: fields.Type ? "true" : "false",
+                    }
+                };
+                await saveCustomPerformance(dto);
+                if (refreshSettings) await refreshSettings();
+            }
+            
             const modalEl = document.getElementById('add-settings-modal');
             if (modalEl && window.bootstrap) {
                 const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
