@@ -8,6 +8,15 @@ function isTrueFlag(value) {
   return value === 'TRUE' || value === true
 }
 
+// The backend serves these flags from a JDBC `queryForMap`, so Postgres returns the column names
+// lowercased (`privilegeview`), while JPA-backed responses use camelCase (`privilegeView`). Read
+// either form so the gating works regardless of which path produced the data.
+function readFlag(mod, key) {
+  if (!mod) return undefined
+  const camel = mod[key]
+  return camel !== undefined ? camel : mod[key.toLowerCase()]
+}
+
 export function useControlPanelPermissions() {
   const { hasPermission, permissions } = usePermissions()
   const { user } = useAuth()
@@ -40,7 +49,7 @@ export function useControlPanelPermissions() {
     const cp = permissions['Control Panel']
     if (Array.isArray(cp) && cp.some((p) => ['View', 'Create', 'Update', 'Delete'].includes(p))) return true
     if (!submodules || typeof submodules !== 'object') return hasPermission('Control Panel', 'View')
-    return Object.values(submodules).some((mod) => mod && isTrueFlag(mod.privilegeView))
+    return Object.values(submodules).some((mod) => isTrueFlag(readFlag(mod, 'privilegeView')))
   }, [permissions, submodules, hasPermission])
 
   const canViewTab = (tabKey) => {
@@ -52,7 +61,7 @@ export function useControlPanelPermissions() {
     // fell back to the module-level "Control Panel: View" privilege, which made every tab visible
     // as soon as any single submodule (e.g. Theme) was granted.
     const mod = submodules?.[cfg.submodule]
-    return !!(mod && isTrueFlag(mod.privilegeView))
+    return !!(mod && isTrueFlag(readFlag(mod, 'privilegeView')))
   }
 
   const canEditTab = (tabKey) => {
@@ -60,7 +69,7 @@ export function useControlPanelPermissions() {
     const cfg = TAB_PERMISSIONS[tabKey]
     if (!cfg) return cpUpdate
     const mod = submodules?.[cfg.submodule]
-    if (cfg.editKey && mod && isTrueFlag(mod[cfg.editKey])) return true
+    if (cfg.editKey && mod && isTrueFlag(readFlag(mod, cfg.editKey))) return true
     if (!cfg.editKey && tabKey === 'scheduler') return cpUpdate
     if (!cfg.editKey) return false
     return cpUpdate

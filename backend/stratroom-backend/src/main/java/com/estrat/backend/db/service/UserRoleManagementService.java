@@ -331,8 +331,11 @@ public class UserRoleManagementService {
             this.updateProfile(employeeProfilePo, profilePo);
         }
         UserRoleManagement userroleManagement = this.userRoleManagementRepository.findByID(Long.valueOf(userDTO.getUserId()));
-        if (!userroleManagement.getRole().equals(userDTO.getUserRole())) {
-            this.auditService.saveAudit("User", profilePo.getEmpId(), Long.valueOf(UserThreadLocal.get()).longValue(), "User Role Assigned");
+        String threadLocalId = UserThreadLocal.get();
+        if (userroleManagement != null && userroleManagement.getRole() != null
+                && !userroleManagement.getRole().equals(userDTO.getUserRole())
+                && StringUtils.isNotEmpty(threadLocalId)) {
+            this.auditService.saveAudit("User", profilePo.getEmpId(), Long.valueOf(threadLocalId).longValue(), "User Role Assigned");
         }
         List<UserDeptMapping> userDeptMappingList = this.userDeptMappingRepository.findAllByIdEmpId(Long.valueOf(profilePo.getEmpId()));
         if (userDTO.getDeptIds() != null && !userDTO.getDeptIds().isEmpty() || userDTO.getDeptValue() != null && !userDTO.getDeptValue().isEmpty()) {
@@ -414,7 +417,7 @@ public class UserRoleManagementService {
         }
         employeeCredentialsPo.setUserName(profilePo.getEmailAddress());
         this.employeeDAO.updateEmployeeCredentials(employeeCredentialsPo);
-        if (userDTO.getRoleId() != null) {
+        if (userDTO.getRoleId() != null && userDTO.getRoleId() != 0L) {
             roledetails = (RoleDetailsPo)this.roleRepository.getOne(userDTO.getRoleId());
             if (roledetails != null) {
                 userRoleManagement.setRole(((RoleDetailsPo)roledetails).getRoleName());
@@ -441,7 +444,9 @@ public class UserRoleManagementService {
         UserDTO response = new UserDTO(responseRole);
         this.updateRole(response);
         response.setDepartmentList(new ArrayList(this.updateDeptList(Long.valueOf(response.getUserId()))));
-        this.auditService.saveAudit("User", response.getUserId(), Long.valueOf(UserThreadLocal.get()).longValue(), "User Modified");
+        if (StringUtils.isNotEmpty(threadLocalId)) {
+            this.auditService.saveAudit("User", response.getUserId(), Long.valueOf(threadLocalId).longValue(), "User Modified");
+        }
         return response;
     }
 

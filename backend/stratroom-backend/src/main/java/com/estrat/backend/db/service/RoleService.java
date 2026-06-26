@@ -438,7 +438,9 @@ public class RoleService {
             }
             finalPrivMap.put(roleDetailsPo.getRoleName(), finalMap);
         }
-        if (finalPrivMap.containsKey("Super User")) {
+        if (finalPrivMap.containsKey("Super Admin")) {
+            result.put(moduleName, finalPrivMap.get("Super Admin"));
+        } else if (finalPrivMap.containsKey("Super User")) {
             result.put(moduleName, finalPrivMap.get("Super User"));
         } else if (finalPrivMap.containsKey("Admin")) {
             result.put(moduleName, finalPrivMap.get("Admin"));

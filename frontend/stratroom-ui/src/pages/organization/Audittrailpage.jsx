@@ -119,7 +119,7 @@ export default function Audittrailpage() {
                       <td className={styles.tdLeft}>{trail.userName || trail.performedBy || trail.userId || '—'}</td>
                       <td className={styles.tdCenter}>{trail.action || '—'}</td>
                       <td className={styles.tdCenter}>{trail.type || trail.additionalInfo || trail.description || '—'}</td>
-                      <td className={styles.tdCenter}>{formatDate(trail.accessDate || trail.createdTime || trail.dateTime)}</td>
+                      <td className={styles.tdCenter}>{formatDate(trail.createdTime || trail.accessDate || trail.dateTime)}</td>
                       <td className={styles.tdCenter}>{trail.systemIp || trail.ipAddress || '—'}</td>
                     </tr>
                   ))
@@ -137,15 +137,25 @@ export default function Audittrailpage() {
               >
                 <ArrowLeftIcon />
               </button>
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  className={`${styles.pageLink} ${p === currentPage ? styles.pageLinkActive : ''}`}
-                  onClick={() => setCurrentPage(p)}
-                >
-                  {p}
-                </button>
-              ))}
+              {(() => {
+                const windowSize = 5
+                const half = Math.floor(windowSize / 2)
+                let start = Math.max(1, currentPage - half)
+                let end = start + windowSize - 1
+                if (end > totalPages) {
+                  end = totalPages
+                  start = Math.max(1, end - windowSize + 1)
+                }
+                return Array.from({ length: end - start + 1 }, (_, i) => start + i).map((p) => (
+                  <button
+                    key={p}
+                    className={`${styles.pageLink} ${p === currentPage ? styles.pageLinkActive : ''}`}
+                    onClick={() => setCurrentPage(p)}
+                  >
+                    {p}
+                  </button>
+                ))
+              })()}
               <button
                 className={`${styles.pageLink} ${currentPage >= totalPages ? styles.pageLinkDisabled : ''}`}
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
@@ -164,7 +174,16 @@ export default function Audittrailpage() {
 function formatDate(dt) {
   if (!dt) return '—'
   try {
-    return new Date(dt).toLocaleString('en-GB', {
+    let d
+    if (Array.isArray(dt)) {
+      // Jackson serializes LocalDateTime as [year, month, day, hour, minute, second, nano]
+      // JS months are 0-indexed
+      d = new Date(dt[0], (dt[1] ?? 1) - 1, dt[2] ?? 1, dt[3] ?? 0, dt[4] ?? 0, dt[5] ?? 0)
+    } else {
+      d = new Date(dt)
+    }
+    if (isNaN(d.getTime())) return String(dt)
+    return d.toLocaleString('en-GB', {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit'
     })

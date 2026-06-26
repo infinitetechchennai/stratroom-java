@@ -160,11 +160,11 @@ public class AuditDetailsService {
             catch (ParseException e) {
                 throw new RuntimeException(e);
             }
-        } else {
-            findDTO.setDateRange("presented");
-            firstDate = this.getDate();
-            secondDate = new Date();
         }
+        // No date filter → return the full audit history (most recent first) rather than only the
+        // last day. Leaving dateRange null routes to the un-dated repository queries below, so the
+        // audit trail page shows the complete log by default and the action/performedBy filters
+        // still apply across all dates.
         if (findDTO.getDateRange() != null && findDTO.getDateRange().equalsIgnoreCase("presented") && findDTO.getAction() != null && findDTO.getPerformedBy() != null) {
             dbList = this.auditDetailsRepository.findAllByDateRangeAndUserIdWithAction(findDTO.getOrgId(), findDTO.getPerformedBy(), findDTO.getAction(), firstDate, secondDate);
         } else if (findDTO.getDateRange() != null && findDTO.getDateRange().equalsIgnoreCase("presented") && findDTO.getAction() == null && findDTO.getPerformedBy() == null) {
@@ -202,7 +202,7 @@ public class AuditDetailsService {
         Optional profilePo = this.profilePoRepo.findById(auditDTO.getUserId());
         if (profilePo.isPresent()) {
             auditDTO.setEmailAddress(((EmployeeProfilePo)profilePo.get()).getEmailAddress());
-            if (auditDTO.getCreatedBy() != null || auditDTO.getCreatedBy() != 0L) {
+            if (auditDTO.getCreatedBy() != null && auditDTO.getCreatedBy() != 0L) {
                 Optional check = this.profilePoRepo.findById(auditDTO.getCreatedBy());
                 if (check.isPresent()) {
                     auditDTO.setUserName(((EmployeeProfilePo)check.get()).getFirstName());

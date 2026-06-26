@@ -23,9 +23,9 @@
 
 /* ── CSS Variables ─────────────────────────── */
 .root {
-  --cyan: #00C4C4;
-  --cyan-dk: #009999;
-  --cyan-lt: #F0FFFE;
+  --cyan: var(--primary, #00C4C4);
+  --cyan-dk: var(--primary-dark, #009999);
+  --cyan-lt: var(--primary-light, #F0FFFE);
   --pink: #E91E8C;
   --amber: #F59E0B;
   --gold: #D4A017;
@@ -48,6 +48,17 @@
   min-height: 100vh;
   color: var(--text-pri);
   box-sizing: border-box;
+}
+
+:global([data-theme='dark']) .root {
+  --bg: var(--shell-bg, #0f172a);
+  --surface: var(--shell-surface, #1e293b);
+  --navy: var(--shell-text, #e2e8f0);
+  --text-pri: var(--shell-text, #e2e8f0);
+  --text-sec: var(--shell-muted, #94a3b8);
+  --text-ter: #64748b;
+  --border: var(--shell-border, rgba(255, 255, 255, 0.08));
+  --border-subtle: rgba(255, 255, 255, 0.05);
 }
 
 .root *,
@@ -84,9 +95,10 @@
 
 /* ── Page Header ───────────────────────────── */
 .pageHeader {
-  background: #fff;
+  background: var(--surface);
   border-bottom: 1.5px solid var(--border-subtle);
   position: sticky;
+
   top: 0;
   z-index: 30;
   animation: fadeUp .45s .05s ease both;
@@ -155,10 +167,10 @@
   font-size: 12px;
   border: 1.5px solid var(--border);
   border-radius: 9px;
-  background: #fff;
+  background: var(--surface);
   width: 162px;
   font-family: var(--font);
-  color: var(--navy);
+  color: var(--text-pri);
   outline: none;
   transition: border-color .15s, box-shadow .15s;
 }
@@ -177,10 +189,10 @@
   padding: 6px 28px 6px 10px;
   font-size: 12px;
   font-family: var(--font);
-  color: var(--navy);
+  color: var(--text-pri);
   border: 1.5px solid var(--border);
   border-radius: 9px;
-  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A97B0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 9px center;
+  background: var(--surface) url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMCcgaGVpZ2h0PSc2JyB2aWV3Qm94PScwIDAgMTAgNic+PHBhdGggZD0nTTEgMWw0IDQgNC00JyBzdHJva2U9JyM4QTk3QjAnIHN0cm9rZS13aWR0aD0nMS41JyBmaWxsPSdub25lJyBzdHJva2UtbGluZWNhcD0ncm91bmQnLz48L3N2Zz4=") no-repeat calc(100% - 9px) center !important;
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
@@ -1219,3 +1231,113 @@
 @media (max-width: 480px) {
   .main { padding: 8px; }
 }
+
+/* ── Dark mode ─────────────────────────────── */
+:global(.stratroom-shell.dark) .root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --text-pri: #e2e8f0;
+  --text-sec: #94a3b8;
+  --text-ter: #64748b;
+  --border: rgba(255,255,255,.1);
+  --border-subtle: rgba(255,255,255,.06);
+  --navy: #e2e8f0;
+  --cyan-lt: rgba(0,196,196,.14);
+}
+
+:global(.stratroom-shell.dark) .pageHeader,
+:global(.stratroom-shell.dark) .sectionHeader,
+:global(.stratroom-shell.dark) .sectionCard {
+  background: #1e293b;
+  border-color: rgba(255,255,255,.06);
+}
+
+:global(.stratroom-shell.dark) .sectionCard {
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+
+:global(.stratroom-shell.dark) .treeRow {
+  background: #1e293b;
+  border-color: rgba(255,255,255,.07);
+}
+
+:global(.stratroom-shell.dark) .treeRow:hover {
+  background: #1a3045;
+}
+
+:global(.stratroom-shell.dark) .searchInput,
+:global(.stratroom-shell.dark) .headerSelect {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-color: rgba(255,255,255,.1);
+}
+
+:global(.stratroom-shell.dark) .headerSelect {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+:global(.stratroom-shell.dark) .searchInput::placeholder { color: #4b5563; }
+
+:global(.stratroom-shell.dark) .pageIcons { background: #334155; }
+
+:global(.stratroom-shell.dark) .pageIconBtn:hover,
+:global(.stratroom-shell.dark) .pageIconBtn.active {
+  background: #1e293b;
+}
+
+:global(.stratroom-shell.dark) .apEdit,
+:global(.stratroom-shell.dark) .apTog,
+:global(.stratroom-shell.dark) .apDel {
+  background: #0f172a;
+  border-color: rgba(255,255,255,.1);
+}
+
+:global(.stratroom-shell.dark) .apTog:hover { background: rgba(0,196,196,.12); }
+
+:global(.stratroom-shell.dark) .badgeMuted {
+  background: #334155;
+  border-color: rgba(255,255,255,.08);
+  color: #94a3b8;
+}
+
+:global(.stratroom-shell.dark) .btnGhost {
+  background: #1e293b;
+  border-color: rgba(255,255,255,.1);
+  color: #94a3b8;
+}
+:global(.stratroom-shell.dark) .btnGhost:hover {
+  background: #334155;
+  border-color: rgba(255,255,255,.18);
+}
+
+:global(.stratroom-shell.dark) .modal { background: #1e293b; }
+:global(.stratroom-shell.dark) .inputRow,
+:global(.stratroom-shell.dark) .selectRow { background: #0f172a; }
+:global(.stratroom-shell.dark) .fileInputBtn { background: #334155; color: #94a3b8; }
+
+:global(.stratroom-shell.dark) .canvasArea {
+  background-color: #0f172a;
+  background-image: radial-gradient(rgba(0,196,196,.08) 1px, transparent 1px);
+}
+
+:global(.stratroom-shell.dark) .cnBody {
+  background: #1e293b;
+  border-color: rgba(255,255,255,.07);
+}
+:global(.stratroom-shell.dark) .cnActions { background: rgba(30,41,59,.97); }
+:global(.stratroom-shell.dark) .cnNodeMeta { border-top-color: rgba(255,255,255,.06); }
+
+:global(.stratroom-shell.dark) .gridCard {
+  background: #1e293b;
+  border-color: rgba(255,255,255,.06);
+}
+:global(.stratroom-shell.dark) .gridCardActions { background: rgba(30,41,59,.96); }
+
+:global(.stratroom-shell.dark) .ddList {
+  background: #1e293b;
+  border-color: rgba(255,255,255,.1);
+}
+:global(.stratroom-shell.dark) .ddItem { color: #e2e8f0; }
+:global(.stratroom-shell.dark) .ddItem:hover { background: rgba(0,196,196,.1); }
+
+:global(.stratroom-shell.dark) .avatar { border-color: #1e293b; }
