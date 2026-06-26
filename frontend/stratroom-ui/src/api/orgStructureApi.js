@@ -43,6 +43,7 @@ function normalizeDeptNode(node) {
     location: '',
     email: node.emailAddress || '',
     photo: node.deptImage || null,
+    canMaintain: node.canMaintain !== false,
     children: (node.children || []).map(normalizeDeptNode).filter(Boolean)
   }
 }
@@ -92,6 +93,7 @@ function normalizeEmployeeNode(node) {
     email: node.email || node.emailAddress || '',
     photo: node.image || node.profileImage || null,
     members: node.allRepoteeCount ?? '',
+    canMaintain: node.canMaintain !== false,
     children: children.map(normalizeEmployeeNode).filter(Boolean)
   }
 }
@@ -114,6 +116,14 @@ export async function fetchOrgTrackList(flagType, datePeriod = '', id = '') {
   const params = new URLSearchParams({ flagType, datePeriod })
   if (id) params.set('id', id)
   const response = await axiosClient.get(`/api/orgTrackList?${params}`)
+  return response.data
+}
+
+/** Full org-change log for the selected period (Organisation Tracker tab). */
+export async function fetchOrgTrackAllList(datePeriod = '') {
+  const params = new URLSearchParams()
+  if (datePeriod) params.set('datePeriod', datePeriod)
+  const response = await axiosClient.get(`/api/orgTrackAllList?${params}`)
   return response.data
 }
 
@@ -142,11 +152,33 @@ export async function deleteEmployee(empId) {
   return response.data
 }
 
+// Deletes a department chart node (dept-mode). Removes the dept from the hierarchy;
+// the owner employee record is kept intact.
+export async function deleteDepartmentMapping(deptId) {
+  const response = await axiosClient.get(`/api/deleteOrgDept/${deptId}`)
+  return response.data
+}
+
 // Creates a department-chart node (department + owner + parent link) and assigns members.
 // This is how subordinates are added in Department-mode orgs — a loose employee record
 // alone is invisible because the hierarchy is driven by department_chart_details.
 export async function addDepartmentMapping(payload) {
   const response = await axiosClient.post('/api/addDepartmentMapping', payload)
+  return response.data
+}
+
+// Bulk department-hierarchy import (the "Org" file): each row is a department with a
+// parent department, an owner (resolved by name on the backend), and members.
+export async function createBulkDeptMapping(deptList) {
+  const response = await axiosClient.post('/api/createBulkDeptMapping', deptList, { timeout: 300000 })
+  return response.data
+}
+
+// Switches the org between 'Employee' and 'Department' implementation modes.
+export async function setImplementationMode(orgId, type) {
+  const response = await axiosClient.post(
+    `/api/implementationType?orgId=${encodeURIComponent(orgId)}&type=${encodeURIComponent(type)}`
+  )
   return response.data
 }
 
@@ -168,6 +200,9 @@ export async function fetchOrgStructure(empId, orgId, asOf = null) {
   if (useDepartmentChart) {
     try {
       const root = await getDepartmentChart(empId, '0')
+      if (root?.message === 'no OrgStructure Access') {
+        return { nodes: [], departmentMode: true, accessDenied: true }
+      }
       const normalized = normalizeDeptNode(root)
       if (normalized) {
         try {
@@ -186,6 +221,9 @@ export async function fetchOrgStructure(empId, orgId, asOf = null) {
   const root = asOf
     ? await getEmployeeOrgChartAsOf(empId, asOf)
     : await getEmployeeOrgChart(empId)
+  if (root?.message === 'no OrgStructure Access') {
+    return { nodes: [], departmentMode: false, accessDenied: true }
+  }
   const normalized = normalizeEmployeeNode(root)
   return { nodes: normalized ? [normalized] : [], departmentMode: false }
 }

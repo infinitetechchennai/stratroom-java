@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrgDetailsRepository
 extends JpaRepository<OrgDetails, Long> {
-    @Query(value="SELECT o FROM OrgDetails o where o.name = :name  AND o.status = :active")
+    @Query(value="SELECT o FROM OrgDetails o where LOWER(o.name) = LOWER(:name) AND o.status = :active")
     public OrgDetails findByName(@Param(value="name") String var1, @Param(value="active") String var2);
 
     public Optional<OrgDetails> findByNameAndStatus(String var1, String var2);

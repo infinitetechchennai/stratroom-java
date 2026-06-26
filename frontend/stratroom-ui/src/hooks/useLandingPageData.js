@@ -3,99 +3,38 @@ import {
   getUserRole,
   getDepartmentReportees,
   getAllDepartmentListByLoginUser,
+  getDepartmentsByOrgId,
   getPagesByDeptPageType,
   resolveLandingPages,
-  getMeetingList,
-  getTaskStatusCount,
-  getInitiativesList,
-  getRiskList,
-  getScoreCardDetails
+  loadLandingDashboard
 } from '../api/landingPageApi'
-import { PINNED_PAGE_TYPES } from '../pages/organization/landingPageConfig'
-import { extractKpis, getDateRange } from '../pages/organization/landingPageUtils'
+import { getDateRange } from '../pages/organization/landingPageUtils'
 
 const EMPTY_TASKS = { total: 0, completed: 0, inProgress: 0 }
 
-async function loadPinnedDashboardData(pinnedPages, empId, dateRange) {
-  const result = {
-    meetings: 0,
-    tasks: { ...EMPTY_TASKS },
-    initiatives: [],
-    risks: [],
-    kpis: [],
-    meetingPageUrl: null,
-    taskPageUrl: null
-  }
+const EMPTY_DASHBOARD = {
+  meetings: 0,
+  tasks: { ...EMPTY_TASKS },
+  initiatives: [],
+  risks: [],
+  kpis: [],
+  meetingPageUrl: null,
+  taskPageUrl: null
+}
 
-  if (!Array.isArray(pinnedPages) || pinnedPages.length === 0) {
-    return result
-  }
-
-  for (const page of pinnedPages) {
-    const pageId = page.id
-    const createdBy = page.createdBy
-    const pageType = page.pageType
-
-    if (pageType === PINNED_PAGE_TYPES.MEETINGS) {
-      try {
-        const meetings = await getMeetingList(createdBy, pageId, dateRange)
-        result.meetings = Array.isArray(meetings) ? meetings.length : 0
-        result.meetingPageUrl = `/dashboard/${createdBy}?pageId=${pageId}`
-      } catch {
-        result.meetings = 0
-      }
-    }
-
-    if (pageType === PINNED_PAGE_TYPES.TASK) {
-      try {
-        const stats = await getTaskStatusCount(empId, dateRange)
-        result.tasks = {
-          total: stats?.totalTask ?? 0,
-          completed: stats?.totalComplete ?? 0,
-          inProgress: stats?.totalInProgress ?? 0
-        }
-        result.taskPageUrl = `/task?pageId=${pageId}`
-      } catch {
-        result.tasks = { ...EMPTY_TASKS }
-      }
-    }
-
-    if (pageType === PINNED_PAGE_TYPES.INITIATIVES) {
-      try {
-        const initiatives = await getInitiativesList(empId, pageId, true)
-        result.initiatives = Array.isArray(initiatives) ? initiatives : []
-        const taskCount = result.initiatives.reduce(
-          (sum, item) => sum + (item.taskList?.length || 0),
-          0
-        )
-        if (taskCount > 0) {
-          result.tasks.total = taskCount
-        }
-      } catch {
-        result.initiatives = []
-      }
-    }
-
-    if (pageType === PINNED_PAGE_TYPES.RISK) {
-      try {
-        const risks = await getRiskList(empId, pageId, dateRange)
-        result.risks = Array.isArray(risks) ? risks : []
-      } catch {
-        result.risks = []
-      }
-    }
-
-    if (pageType === PINNED_PAGE_TYPES.STANDARD_VIEW) {
-      try {
-        const details = await getScoreCardDetails(empId, pageId, dateRange)
-        result.kpis = extractKpis(details)
-      } catch {
-        result.kpis = []
-      }
+function mergeDepartments(profileDepts, reporteeDepts, orgDepts) {
+  const merged = []
+  const seen = new Set()
+  for (const list of [reporteeDepts, profileDepts, orgDepts]) {
+    if (!Array.isArray(list)) continue
+    for (const dept of list) {
+      const id = dept?.id ?? dept?.deptId
+      if (id == null || seen.has(String(id))) continue
+      seen.add(String(id))
+      merged.push({ id, name: dept.name ?? dept.deptName ?? `Dept ${id}` })
     }
   }
-
-  return result
+  return merged
 }
 
 export function useLandingPageData(empId) {
@@ -107,34 +46,19 @@ export function useLandingPageData(empId) {
   const [selectedPageType, setSelectedPageType] = useState('')
   const [filterPages, setFilterPages] = useState([])
   const [selectedPageId, setSelectedPageId] = useState('')
-  const [dashboard, setDashboard] = useState({
-    meetings: 0,
-    tasks: { ...EMPTY_TASKS },
-    initiatives: [],
-    risks: [],
-    kpis: [],
-    meetingPageUrl: null,
-    taskPageUrl: null
-  })
+  const [dashboard, setDashboard] = useState({ ...EMPTY_DASHBOARD })
 
   const loadDashboard = useCallback(async (deptId) => {
     if (!empId || !deptId) return
     const dateRange = getDateRange()
     try {
       const pinnedPages = await resolveLandingPages(deptId, empId)
-      const data = await loadPinnedDashboardData(pinnedPages, empId, dateRange)
+      const data = await loadLandingDashboard(pinnedPages, empId, dateRange)
       setDashboard(data)
+      setError(null)
     } catch (err) {
       setError(err?.message || 'Failed to load landing page data')
-      setDashboard({
-        meetings: 0,
-        tasks: { ...EMPTY_TASKS },
-        initiatives: [],
-        risks: [],
-        kpis: [],
-        meetingPageUrl: null,
-        taskPageUrl: null
-      })
+      setDashboard({ ...EMPTY_DASHBOARD })
     }
   }, [empId])
 
@@ -163,13 +87,14 @@ export function useLandingPageData(empId) {
       setLoading(true)
       setError(null)
       try {
-        const [profile, deptList] = await Promise.all([
+        const [profile, reporteeDepts] = await Promise.all([
           getUserRole(empId),
           // Admin -> all org departments; user -> own dept + downline (server-decided).
           // Fall back to the reportee list if the endpoint is unavailable.
           getAllDepartmentListByLoginUser(empId)
             .catch(() => getDepartmentReportees())
             .catch(() => [])
+          // getDepartmentReportees().catch(() => [])
         ])
 
         if (cancelled) return
@@ -177,18 +102,28 @@ export function useLandingPageData(empId) {
         setUserProfile(profile)
 
         const profileDepts = Array.isArray(profile?.departmentList) ? profile.departmentList : []
-        const reporteeDepts = Array.isArray(deptList) ? deptList : []
-        const mergedDepts = reporteeDepts.length > 0 ? reporteeDepts : profileDepts
+        const orgId = profile?.orgId ?? profile?.orgDetails?.orgId
+        let orgDepts = []
+        if (profileDepts.length === 0 && reporteeDepts?.length === 0 && orgId) {
+          orgDepts = await getDepartmentsByOrgId(orgId).catch(() => [])
+        }
+
+        const mergedDepts = mergeDepartments(profileDepts, reporteeDepts, orgDepts)
         setDepartments(mergedDepts)
 
-        const defaultDeptId =
-          profileDepts[0]?.id ||
-          reporteeDepts[0]?.id ||
+        const defaultDeptId = String(
+          profileDepts[0]?.id ??
+          reporteeDepts?.[0]?.id ??
+          orgDepts?.[0]?.id ??
+          mergedDepts[0]?.id ??
           ''
+        )
 
         if (defaultDeptId) {
-          setSelectedDeptId(String(defaultDeptId))
+          setSelectedDeptId(defaultDeptId)
           await loadDashboard(defaultDeptId)
+        } else {
+          setError('No departments found — import Organisation data or assign a department to your user.')
         }
       } catch (err) {
         if (!cancelled) {

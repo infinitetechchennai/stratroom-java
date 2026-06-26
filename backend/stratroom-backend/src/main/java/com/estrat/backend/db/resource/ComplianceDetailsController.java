@@ -103,7 +103,7 @@ public class ComplianceDetailsController {
     }
 
     @GetMapping(value={"/retrieveComplinValue"})
-    public ResponseEntity<List<ComplianceAreaDTO>> findAllValue(@RequestParam(value="pageId", required=false) String pageId, @RequestParam(value="dateRange") String dateRange) {
+    public ResponseEntity<List<ComplianceAreaDTO>> findAllValue(@RequestParam(value="pageId", required=false) String pageId, @RequestParam(value="dateRange", required=false) String dateRange) {
         return ResponseEntity.ok(this.complianceDetailsService.findAllValue(dateRange, pageId));
     }
 

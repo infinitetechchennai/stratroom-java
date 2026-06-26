@@ -12,6 +12,7 @@ package com.estrat.backend.db.dto;
 
 import com.estrat.backend.db.bean.po.SubKPI;
 import com.estrat.backend.db.dto.KPIFormula;
+import com.estrat.backend.db.dto.SubKPIEntrysDTO;
 import com.estrat.backend.db.resource.util.KPIUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -42,6 +43,7 @@ public class SubKPIDTO {
     private KPIFormula kpiFormula;
     private long empId;
     private long kpiId;
+    private SubKPIEntrysDTO subKPIEntrysDTO;
 
     public SubKPIDTO() {
     }
@@ -274,6 +276,14 @@ public class SubKPIDTO {
 
     public void setObjectiveId(long objectiveId) {
         this.objectiveId = objectiveId;
+    }
+
+    public SubKPIEntrysDTO getSubKPIEntrysDTO() {
+        return this.subKPIEntrysDTO;
+    }
+
+    public void setSubKPIEntrysDTO(SubKPIEntrysDTO subKPIEntrysDTO) {
+        this.subKPIEntrysDTO = subKPIEntrysDTO;
     }
 }
 

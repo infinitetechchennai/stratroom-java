@@ -33,6 +33,7 @@ import com.estrat.backend.db.bean.po.DepartmentChartMapping;
 import com.estrat.backend.db.bean.po.KPI;
 import com.estrat.backend.db.bean.po.PagesDetails;
 import com.estrat.backend.db.dto.EmployeeDTO;
+import com.estrat.backend.db.dto.DeptDetails;
 import com.estrat.backend.db.dto.KPIDTO;
 import com.estrat.backend.db.dto.RiskCommentsDTO;
 import com.estrat.backend.db.dto.RiskDTO;
@@ -160,10 +161,19 @@ public class RiskUtil {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setEmployeeId(riskDTO.getCreatedBy());
         Employee employee = this.employeeService.getEmployeeWithAllStatus(employeeDTO);
-        System.out.println("riskDTO.getDepartmentId () :: " + riskDTO.getDepartmentId());
+        if (employee == null) {
+            employee = new Employee();
+        }
         if (Objects.nonNull(riskDTO.getDepartmentId()) && riskDTO.getDepartmentId() != 0L) {
             DepartmentChartMapping deptData = this.deptMappingDetailRepository.getOne(riskDTO.getDepartmentId());
-            riskDTO.getRiskValue().put("department", deptData.getDeptName());
+            if (deptData != null) {
+                riskDTO.getRiskValue().put("department", deptData.getDeptName());
+            } else if (StringUtils.isBlank((String) riskDTO.getRiskValue().get("department"))) {
+                DeptDetails deptDetails = this.departmentDetailsService.findById(riskDTO.getDepartmentId());
+                if (deptDetails != null && StringUtils.isNotBlank(deptDetails.getName())) {
+                    riskDTO.getRiskValue().put("department", deptDetails.getName());
+                }
+            }
         } else if (riskDTO.getCreatedBy() != 0L) {
             if (employee.getDeptDetails() != null) {
                 riskDTO.setDepartmentId(Long.valueOf(employee.getDeptDetails().getId()));
@@ -177,12 +187,18 @@ public class RiskUtil {
                 }
             }
         }
-        riskDTO.getRiskValue().put("riskImage", employee.getProfileImage());
+        riskDTO.getRiskValue().put("riskImage", employee.getProfileImage() != null ? employee.getProfileImage() : "");
         this.formatDates(riskDTO);
         if (flag) {
-            riskDTO.setPageName(((PagesDetails)this.pageService.findById(riskDTO.getPageId()).get()).getPageName());
+            if (riskDTO.getPageId() != 0L) {
+                Optional<PagesDetails> page = this.pageService.findById(riskDTO.getPageId());
+                page.ifPresent(pagesDetails -> riskDTO.setPageName(pagesDetails.getPageName()));
+            }
             if (riskDTO.getDepartmentId() != null) {
-                riskDTO.setDeptUniqueId(this.departmentDetailsService.findById(riskDTO.getDepartmentId()).getDeptID());
+                DeptDetails deptMeta = this.departmentDetailsService.findById(riskDTO.getDepartmentId());
+                if (deptMeta != null && StringUtils.isNotBlank(deptMeta.getDeptID())) {
+                    riskDTO.setDeptUniqueId(deptMeta.getDeptID());
+                }
             }
             if (CollectionUtils.isEmpty((Collection)riskDTO.getRiskCauseAndConsequenceList())) {
                 riskDTO.setRiskCauseAndConsequenceList(this.causeAndConsequenceService.findAllByRiskDetailsId(Long.valueOf(riskDTO.getId())));
@@ -208,8 +224,10 @@ public class RiskUtil {
         Employee employee = this.employeeService.getEmployeeWithAllStatus(employeeDTO);
         if (Objects.nonNull(riskDTO.getDepartmentId()) && riskDTO.getDepartmentId() != 0L) {
             DepartmentChartMapping deptData = this.deptMappingDetailRepository.getOne(riskDTO.getDepartmentId());
-            riskDTO.getRiskValue().put("department", deptData.getDeptName());
-        } else if (riskDTO.getCreatedBy() != 0L && employee.getDeptDetails() != null) {
+            if (deptData != null) {
+                riskDTO.getRiskValue().put("department", deptData.getDeptName());
+            }
+        } else if (riskDTO.getCreatedBy() != 0L && employee != null && employee.getDeptDetails() != null) {
             riskDTO.setDepartmentId(Long.valueOf(employee.getDeptDetails().getId()));
             riskDTO.getRiskValue().put("department", employee.getDeptDetails().getName());
         }
@@ -218,9 +236,15 @@ public class RiskUtil {
         Date createdDate = Date.from(riskDTO.getCreatedTime().atZone(ZoneId.systemDefault()).toInstant());
         riskDTO.getRiskValue().put("ch_dateRaised", simpleDateFormat.format(createdDate));
         if (flag) {
-            riskDTO.setPageName(((PagesDetails)this.pageService.findById(riskDTO.getPageId()).get()).getPageName());
+            if (riskDTO.getPageId() != 0L) {
+                Optional<PagesDetails> page = this.pageService.findById(riskDTO.getPageId());
+                page.ifPresent(pagesDetails -> riskDTO.setPageName(pagesDetails.getPageName()));
+            }
             if (riskDTO.getDepartmentId() != null) {
-                riskDTO.setDeptUniqueId(this.departmentDetailsService.findById(riskDTO.getDepartmentId()).getDeptID());
+                DeptDetails deptMeta = this.departmentDetailsService.findById(riskDTO.getDepartmentId());
+                if (deptMeta != null && StringUtils.isNotBlank(deptMeta.getDeptID())) {
+                    riskDTO.setDeptUniqueId(deptMeta.getDeptID());
+                }
             }
             if (CollectionUtils.isEmpty((Collection)riskDTO.getRiskCauseAndConsequenceList())) {
                 riskDTO.setRiskCauseAndConsequenceList(this.causeAndConsequenceService.findAllByRiskVersion(Long.valueOf(riskDTO.getId()), riskDTO.getVersion()));

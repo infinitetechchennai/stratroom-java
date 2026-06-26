@@ -1,7 +1,7 @@
 .topbar {
   height: 56px;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--shell-surface, #fff);
+  border-bottom: 1px solid var(--shell-border, #e5e7eb);
   display: flex;
   align-items: center;
   padding: 0 20px;
@@ -17,14 +17,14 @@
   cursor: pointer;
   padding: 6px;
   border-radius: 6px;
-  color: #374151;
+  color: var(--shell-text, #374151);
   display: flex;
   align-items: center;
   transition: background 0.15s;
 }
 
 .menuToggle:hover {
-  background: #f3f4f6;
+  background: var(--shell-tab-bg, #f3f4f6);
 }
 
 .right {
@@ -44,7 +44,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #883b71;
+  background: var(--primary, #883b71);
   color: #fff;
   display: flex;
   align-items: center;
@@ -57,7 +57,7 @@
 .name {
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: var(--shell-text, #374151);
   max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -69,10 +69,10 @@
   align-items: center;
   gap: 6px;
   padding: 7px 14px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--shell-border, #e5e7eb);
   border-radius: 6px;
-  background: #fff;
-  color: #374151;
+  background: var(--shell-surface, #fff);
+  color: var(--shell-text, #374151);
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;

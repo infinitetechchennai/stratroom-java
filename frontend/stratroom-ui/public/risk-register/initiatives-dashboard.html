@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Initiatives Dashboard</title>
+    <script>
+      (function () {
+        if (new URLSearchParams(window.location.search).get('embedded') === '1') {
+          document.documentElement.classList.add('stratroom-embedded');
+        }
+      })();
+    </script>
+    <style>
+        html.stratroom-embedded .navbar-topbar,
+        html.stratroom-embedded #header.header,
+        html.stratroom-embedded footer.copyright {
+            display: none !important;
+        }
+        html.stratroom-embedded main.pt-2 {
+            padding-top: 0.5rem !important;
+        }
+    </style>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="assets/css/basic.css?v1" rel="stylesheet">
+    <link href="assets/css/main.css?v1" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body data-bs-theme="light" data-page="initiatives-dashboard">
+
+    <header id="header" class="header shadow-sm sticky-top">
+        <!-- Same standard Topbar as other dashboards -->
+        <div class="navbar-topbar">
+            <div class="container-lg d-flex flex-wrap justify-content-between">
+                <div class="menu-controls d-flex">
+                    <a class="control-link" href="org-structure.html" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="Org Structure" data-translate="topbar.orgStructure">
+                        <span class="icon network"><i data-lucide="network"
+                                style="width:18px; height: 18px;"></i></span>
+                    </a>
+                    <a class="control-link" href="#create-template" data-bs-toggle="modal" onclick="return false;">
+                        <span class="icon layout-template" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Templates" data-translate="topbar.templates">
+                            <i data-lucide="layout-template" style="width: 18px; height: 18px;"></i>
+                        </span>
+                    </a>
+                    <a class="control-link" href="others.html" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="ETL" data-translate="topbar.etl">
+                        <span class="icon layout-grid"><i data-lucide="layout-grid"
+                                style="width: 18px; height: 18px;"></i></span>
+                    </a>
+                    <!-- Masters Menu -->
+                    <div class="nav-item dropdown dropdown-top-header">
+                        <a class="nav-link control-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-translate="topbar.masters"></a>
+                        <ul class="dropdown-menu dropdown-menu-start border-0 shadow-sm"
+                            aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.products"></a></li>
+                            <li><a class="dropdown-item" href="masters.html"
+                                    data-translate="topbar.mastersItems.process"></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap ms-auto">
+                    <div class="top-date-picker">
+                        <input class="top_datepicker form-control form-control-sm" value="Feb, 2026 - Mar, 2026"
+                            id="datePickerHeader" />
+                    </div>
+                </div>
+                <div class="menu-controls d-flex flex-wrap">
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="icon"><i data-lucide="globe" style="width: 14px; height: 14px;"></i></span>
+                            <span id="currentLanguage">EN</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm"
+                            aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md navbar-light">
+            <div class="container-lg gap-2 gap-md-3">
+                <div class="position-relative logo me-auto">
+                    <a href="landing.html" class="logo-preview" id="logoPreview">
+                        <img class="img-fluid" src="assets/images/logo.png" alt="startroom" width="180" height="30">
+                    </a>
+                </div>
+
+                <div class="offcanvas offcanvas-start offcanvas-navbar" tabindex="-1" id="mobileMenu"
+                    aria-labelledby="mobileMenuLabel">
+                    <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="navbar-collapse">
+                            <ul class="navbar-nav p-0 ms-md-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="planningDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false" data-translate="menu.plan"></a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu"
+                                        aria-labelledby="planningDropdown">
+                                        <li><a class="dropdown-item" href="strategy-planner.html">Strategy Planner</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown">Measure</a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu">
+                                        <li><a class="dropdown-item" href="scorecard-dashboard.html">Scorecard
+                                                Dashboard</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle active" href="#" role="button"
+                                        data-bs-toggle="dropdown" style="font-weight:700;">Execute</a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu">
+                                        <li><a class="dropdown-item active"
+                                                href="initiatives-dashboard.html">Initiatives Projects</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown">Govern</a>
+                                    <ul class="dropdown-menu border-0 shadow-sm submenu">
+                                        <li><a class="dropdown-item" href="compliance-dashboard.html">Compliance
+                                                Dashboard</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown">Meet</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown">Report</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-controls global-control d-flex flex-wrap">
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" role="button" data-bs-toggle="dropdown">
+                            <span class="icon"><i data-lucide="bell-dot" style="width: 18px; height: 18px;"></i></span>
+                        </a>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" role="button" data-bs-toggle="dropdown">
+                            <span class="icon"><i data-lucide="settings" style="width: 18px; height: 18px;"></i></span>
+                        </a>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a class="control-link" href="#" role="button" data-bs-toggle="dropdown">
+                            <span class="icon"><i data-lucide="user" style="width: 18px; height: 18px;"></i></span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-2 pb-2">
+        <!-- Page Header -->
+        <div class="container-lg">
+            <div class="page-header grid gap-2 pb-1">
+                <div class="g-col-12 g-col-md-8 d-flex align-items-center">
+                    <h4 class="title mb-0 fs-5 fw-bold d-flex align-items-center gap-2 text-uppercase"
+                        style="letter-spacing: 0.05em; color: var(--bs-body-color);">
+                        <span class="icon d-flex align-items-center" style="color: var(--bs-body-color);">
+                            <i data-lucide="presentation" style="width: 20px; height: 20px; stroke-width: 2px;"></i>
+                        </span>
+                        <span>STRATEGIC INITIATIVES DASHBOARD</span>
+                    </h4>
+                </div>
+                <div
+                    class="g-col-12 g-col-md-4 d-flex justify-content-md-end justify-content-start align-items-center mt-2 mt-md-0">
+                    <div class="overall-score-v2 d-flex">
+                        <div>
+                            <div class="score-label">PORTFOLIO PROGRESS</div>
+                            <div class="score-detail" id="portfolio-detail">0 active initiatives</div>
+                        </div>
+                        <div class="score-percent" id="portfolio-percent" style="color: #2980b9;">0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-lg py-3">
+
+            <!-- Summary KPI Cards -->
+            <div class="row g-3 mb-3">
+                <div class="col-lg col-md-6">
+                    <div class="compliance-kpi-card">
+                        <div class="kpi-label text-uppercase">Initiatives</div>
+                        <div class="kpi-value text-primary">0</div>
+                        <div class="kpi-sub">active this cycle</div>
+                    </div>
+                </div>
+                <div class="col-lg col-md-6">
+                    <div class="compliance-kpi-card">
+                        <div class="kpi-label text-uppercase">Sub-Initiatives</div>
+                        <div class="kpi-value" style="color:#9b59b6;">0</div>
+                        <div class="kpi-sub">across all initiatives</div>
+                    </div>
+                </div>
+                <div class="col-lg col-md-6">
+                    <div class="compliance-kpi-card">
+                        <div class="kpi-label text-uppercase">Activities</div>
+                        <div class="kpi-value text-success">0</div>
+                        <div class="kpi-sub">0 in progress</div>
+                    </div>
+                </div>
+                <div class="col-lg col-md-6">
+                    <div class="compliance-kpi-card">
+                        <div class="kpi-label text-uppercase">Tasks</div>
+                        <div class="kpi-value" style="color:#e67e22;">0</div>
+                        <div class="kpi-sub">0 completed</div>
+                    </div>
+                </div>
+                <div class="col-lg col-md-6">
+                    <div class="compliance-kpi-card">
+                        <div class="kpi-label text-uppercase">Milestones</div>
+                        <div class="kpi-value text-danger">0</div>
+                        <div class="kpi-sub">0 overdue</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Initiatives Grid -->
+            <div class="mb-4">
+                <div class="text-uppercase fw-bold text-muted mb-3" style="font-size:11px; letter-spacing:0.5px;">
+                    INITIATIVES – CLICK TO EXPAND HIERARCHY
+                </div>
+                <div class="row g-3" id="initiativeCards">
+                    <!-- JS Rendered -->
+                </div>
+            </div>
+
+            <!-- Hierarchy Tree Panel -->
+            <div id="treePanel" class="tree-panel" style="display:none;"></div>
+
+            <!-- Gantt Timeline -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="gantt-card mb-0">
+                        <div class="gantt-title">TIMELINE – GANTT VIEW</div>
+                        <div class="table-responsive">
+                            <div style="min-width: 700px;">
+                                <div class="gantt-months">
+                                    <span class="gantt-month">Jan</span><span class="gantt-month">Feb</span><span
+                                        class="gantt-month">Mar</span>
+                                    <span class="gantt-month">Apr</span><span class="gantt-month">May</span><span
+                                        class="gantt-month">Jun</span>
+                                    <span class="gantt-month">Jul</span><span class="gantt-month">Aug</span><span
+                                        class="gantt-month">Sep</span>
+                                    <span class="gantt-month">Oct</span><span class="gantt-month">Nov</span><span
+                                        class="gantt-month">Dec</span>
+                                </div>
+                                <div class="gantt-table" id="ganttContainer">
+                                    <!-- JS Rendered -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row g-3 mb-4">
+                <div class="col-lg-4">
+                    <div class="chart-card h-100">
+                        <div class="chart-title">ACTIVITY STATUS MIX</div>
+                        <div class="chart-container d-flex align-items-center justify-content-center position-relative">
+                            <canvas id="actDonut" style="max-width:160px;max-height:160px;"></canvas>
+                            <div class="sc-donut-center-text" style="position:absolute; text-align:center;">
+                                <div class="fs-4 fw-bold text-dark" id="act-donut-total">0</div>
+                                <div class="text-muted" style="font-size:11px;">Activities</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center gap-3 mt-3" id="act-donut-legend">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="chart-card h-100">
+                        <div class="chart-title">MILESTONE STATUS</div>
+                        <div class="chart-container d-flex align-items-center justify-content-center position-relative">
+                            <canvas id="msDonut" style="max-width:160px;max-height:160px;"></canvas>
+                            <div class="sc-donut-center-text" style="position:absolute; text-align:center;">
+                                <div class="fs-4 fw-bold text-dark" id="ms-donut-total">0</div>
+                                <div class="text-muted" style="font-size:11px;">Milestones</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center gap-3 mt-3" id="ms-donut-legend">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="chart-card h-100">
+                        <div class="chart-title">TASK COMPLETION BY INITIATIVE</div>
+                        <div style="height: 180px;"><canvas id="taskBar"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MILESTONE REGISTER (DataTable) -->
+            <div class="ms-card mb-3">
+                <div class="ms-title">MILESTONE REGISTER</div>
+                <div class="table-responsive">
+                    <table class="table sc-table align-middle" id="msTable" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>MILESTONE</th>
+                                <th>INITIATIVE</th>
+                                <th>OWNER</th>
+                                <th>DUE DATE</th>
+                                <th>COMPLETION</th>
+                                <th>STATUS</th>
+                                <th>DAYS LEFT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="msTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="col-12 text-center py-2 copyright">
+        <p class="mb-0">Copyright &copy; <span id="year"></span> <strong>StratRoom</strong></p>
+        <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/datatables/1.13.6/jquery.dataTables.min.js"></script>
+    <script src="assets/datatables/1.13.6/dataTables.bootstrap5.min.js"></script>
+    <script src="assets/sortablejs/1.15.0/sortable.min.js"></script>
+    <script src="assets/js/lucide.js"></script>
+
+    <link href="assets/css/jquery-ui.min.css" rel="stylesheet">
+    <script src="assets/js/jquery-ui.min.js"></script>
+
+    <link href="assets/css/daterangepicker.min.css" rel="stylesheet">
+    <script src="assets/js/moment.js"></script>
+    <script src="assets/js/knockout-3.5.0.js"></script>
+    <script src="assets/js/daterangepicker.min.js"></script>
+
+    <script src="assets/js/initiatives-api-bridge.js"></script>
+
+    <script>
+        window.INITIATIVES = [];
+        window.__initiativeCharts = {};
+
+        function getStatusClass(status) {
+            if (status === 'On Track' || status === 'Complete') return 'pill-green';
+            if (status === 'In Progress') return 'pill-blue';
+            if (status === 'At Risk') return 'pill-orange';
+            if (status === 'Critical' || status === 'Overdue') return 'pill-red';
+            return 'pill-gray';
+        }
+
+        // ===== RENDER INITIATIVES GRID =====
+        let activeInit = null;
+
+        function renderInitiatives() {
+            const g = document.getElementById('initiativeCards');
+            if (!g) return;
+            const items = window.INITIATIVES || [];
+            if (!items.length) {
+                g.innerHTML = '<div class="col-12"><div class="text-muted text-center py-4">No initiatives found for this period.</div></div>';
+                return;
+            }
+            g.innerHTML = items.map(i => {
+                const activeClass = i.id === activeInit ? 'active' : '';
+                return `<div class="col-lg-4 col-md-6">
+          <div class="init-card ${activeClass}" onclick="toggleTree('${i.id}')" style="--stratroom-primary: ${i.color}">
+            <div class="init-top">
+              <span class="init-id">${i.id}</span>
+              <span class="sc-pill ${getStatusClass(i.status)}">${i.status}</span>
+            </div>
+            <div class="init-name">${i.name}</div>
+            <div class="init-owner"><i data-lucide="user" style="width:12px; height:12px;"></i> ${i.owner} · Due: ${i.due}</div>
+            <div class="init-prog-bg"><div class="init-prog-fill" style="background:${i.color};width:${i.progress}%;"></div></div>
+            <div class="init-prog-row"><span>Progress</span><strong style="color:${i.color};">${i.progress}%</strong></div>
+            <div class="init-counts">
+              <span class="count-badge pill-purple">${i.counts.sub} Sub-Init</span>
+              <span class="count-badge" style="background:#e8f3fb;color:#2980b9;">${i.counts.act} Activities</span>
+              <span class="count-badge" style="background:#fef3e2;color:#e67e22;">${i.counts.ms} Milestones</span>
+            </div>
+          </div>
+        </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // ===== HIERARCHY TREE =====
+        function toggleTree(id) {
+            const panel = document.getElementById('treePanel');
+            if (activeInit === id || id === null) {
+                activeInit = null;
+                panel.style.display = 'none';
+                renderInitiatives();
+                return;
+            }
+            activeInit = id;
+            renderInitiatives();
+
+            const init = window.INITIATIVES.find(i => i.id === id);
+            if (!init || !init.tree) {
+                panel.style.display = 'none';
+                return;
+            }
+
+            panel.style.display = 'block';
+            panel.style.borderLeft = `4px solid ${init.color}`;
+
+            let html = `
+        <div class="tree-header">
+          <div>
+            <span class="tree-title d-block mb-1" style="color:${init.color}">${init.id} · ${init.name}</span>
+            <span class="text-muted" style="font-size:12px;">Hierarchy View</span>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" onclick="toggleTree(null)">✕ Close</button>
+        </div>
+      `;
+
+            // Render root node
+            html += `
+        <div class="tree-node" style="background:var(--stratroom-secondary-bg, #f8f8ff);">
+          <div class="tree-indent" style="width:0px;"></div>
+          <div class="tree-icon" style="background:#2d2d6b;">I</div>
+          <span class="tree-label">${init.name}</span>
+          <span class="tree-sublabel">${init.id} · ${init.owner}</span>
+          <div class="tree-right">
+            <div class="tree-bar-bg"><div class="tree-bar-fill" style="background:${init.color};width:${init.progress}%;"></div></div>
+            <span class="tree-pct">${init.progress}%</span>
+            <span class="tree-date">${init.due}</span>
+            <span class="sc-pill ${getStatusClass(init.status)}">${init.status}</span>
+          </div>
+        </div>
+      `;
+
+            // Render child nodes
+            init.tree.forEach(t => {
+                const isMilestone = t.type === 'M';
+                const rightSide = isMilestone ?
+                    `<span style="font-size:11px;color:${t.color};font-weight:600;">${t.date}</span>
+           <span class="sc-pill ${getStatusClass(t.status)}">${t.status}</span>`
+                    :
+                    `<div class="tree-bar-bg"><div class="tree-bar-fill" style="background:${t.color};width:${t.prog}%;"></div></div>
+           <span class="tree-pct">${t.prog}%</span>
+           <span class="tree-date">${t.date}</span>
+           <span class="sc-pill ${getStatusClass(t.status)}">${t.status}</span>`;
+
+                html += `
+          <div class="tree-node">
+            <div class="tree-indent" style="width:${t.indent}px;${t.indent > 0 ? 'border-left:2px solid #ddd; margin-right:8px; height:100%;' : ''}"></div>
+            <div class="tree-icon" style="background:${t.color};">${t.type}</div>
+            <span class="tree-label">${t.name}</span>
+            <span class="tree-sublabel">${t.desc}</span>
+            <div class="tree-right">${rightSide}</div>
+          </div>
+        `;
+            });
+
+            panel.innerHTML = html;
+        }
+
+        // ===== GANTT CHART =====
+        function renderGantt() {
+            const container = document.getElementById('ganttContainer');
+            const items = window.INITIATIVES || [];
+            if (!items.length) {
+                container.innerHTML = '<div class="text-muted text-center py-3">No timeline data.</div>';
+                return;
+            }
+            container.innerHTML = items.map(i => {
+                const msObj = i.gantt.milestone ? `<div class="gantt-milestone" style="left:${i.gantt.milestone};"></div>` : '';
+                return `<div class="gantt-row">
+          <div class="gantt-label"><strong class="badge" style="background:${i.color};">${i.id}</strong> ${i.gantt.label}</div>
+          <div class="gantt-track">
+            <div class="gantt-bar" style="background:${i.color};left:${i.gantt.left};width:${i.gantt.width};">${i.gantt.label}</div>
+            ${msObj}
+          </div>
+        </div>`;
+            }).join('');
+        }
+
+        function destroyChart(key) {
+            if (window.__initiativeCharts[key]) {
+                window.__initiativeCharts[key].destroy();
+                window.__initiativeCharts[key] = null;
+            }
+        }
+
+        function renderDonutLegend(containerId, items) {
+            const el = document.getElementById(containerId);
+            if (!el) return;
+            el.innerHTML = items.map(function (item) {
+                return '<div class="text-muted" style="font-size:12px;"><span class="d-inline-block rounded-circle me-1" style="width:8px;height:8px;background:' + item.color + ';"></span>' +
+                    item.label + ' <strong style="color:' + item.color + ';">' + item.value + '</strong></div>';
+            }).join('');
+        }
+
+        function renderMilestoneRegister() {
+            const tbody = document.getElementById('msTableBody');
+            if (!tbody) return;
+            const rows = [];
+            (window.__initiativeDashboard?.initiveDTO || []).forEach(function (dto) {
+                const iv = dto.initiativeValue || {};
+                const initId = String(dto.initiativeId || dto.id);
+                const initName = iv.name || iv.desc || initId;
+                (dto.mileStonesList || []).forEach(function (m) {
+                    const mv = m.mileStonesValue || {};
+                    const progress = Number(mv.progress || mv.completion) || 0;
+                    const status = mv.status || 'Pending';
+                    const statusClass = getStatusClass(status === 'Completed' ? 'Complete' : status);
+                    const color = progress >= 70 ? '#27ae60' : progress >= 40 ? '#2980b9' : '#e74c3c';
+                    rows.push(
+                        '<tr>' +
+                        '<td><strong>' + (mv.name || mv.desc || 'Milestone') + '</strong></td>' +
+                        '<td>' + initName + '</td>' +
+                        '<td>' + (mv.ownerName || iv.ownerName || '-') + '</td>' +
+                        '<td>' + (mv.date || mv.endDate || '-') + '</td>' +
+                        '<td><span class="sc-prog-bar d-inline-block me-2 align-middle" style="width:70px;"><span class="sc-prog-fill" style="background:' + color + ';width:' + progress + '%;"></span></span>' + progress + '%</td>' +
+                        '<td><span class="sc-pill ' + statusClass + '">' + status + '</span></td>' +
+                        '<td style="color:' + color + ';font-weight:600;">' + (mv.remainingDays != null ? mv.remainingDays : '-') + '</td>' +
+                        '</tr>'
+                    );
+                });
+            });
+            tbody.innerHTML = rows.join('');
+
+            if ($.fn.DataTable.isDataTable('#msTable')) {
+                $('#msTable').DataTable().clear().destroy();
+            }
+            $('#msTable').DataTable({
+                lengthChange: false,
+                ordering: true,
+                autoWidth: false,
+                responsive: true,
+                scrollX: true,
+                info: false,
+                dom: 't',
+                language: { emptyTable: 'No milestones found.' }
+            });
+            $('.dataTables_filter input').addClass('form-control form-control-sm');
+        }
+
+        // ===== CHARTS =====
+        function initCharts() {
+            const dash = window.__initiativeDashboard || {};
+            const actMap = dash.activityStatusDTO || {};
+            const msMap = dash.milestoneStatusCount || {};
+            const done = actMap.Complete || 0;
+            const active = actMap.Inprogress || actMap['In Progress'] || 0;
+            const totalAct = dash.totalActivity || (done + active);
+            const pending = Math.max(0, totalAct - done - active);
+
+            const met = msMap.Met || msMap.Completed || msMap.Complete || 0;
+            const upcoming = msMap.Upcoming || msMap.Pending || 0;
+            const overdue = msMap.Overdue || msMap.overdue || 0;
+            const totalMs = dash.totalMilestone || (met + upcoming + overdue);
+
+            const actTotalEl = document.getElementById('act-donut-total');
+            const msTotalEl = document.getElementById('ms-donut-total');
+            if (actTotalEl) actTotalEl.textContent = totalAct;
+            if (msTotalEl) msTotalEl.textContent = totalMs;
+            renderDonutLegend('act-donut-legend', [
+                { label: 'Done', value: done, color: '#27ae60' },
+                { label: 'Active', value: active, color: '#2980b9' },
+                { label: 'Pending', value: pending, color: '#e67e22' }
+            ]);
+            renderDonutLegend('ms-donut-legend', [
+                { label: 'Met', value: met, color: '#27ae60' },
+                { label: 'Upcoming', value: upcoming, color: '#e67e22' },
+                { label: 'Overdue', value: overdue, color: '#e74c3c' }
+            ]);
+
+            destroyChart('actDonut');
+            destroyChart('msDonut');
+            destroyChart('taskBar');
+
+            window.__initiativeCharts.actDonut = new Chart(document.getElementById('actDonut'), {
+                type: 'doughnut',
+                data: { labels: ['Done', 'Active', 'Pending'], datasets: [{ data: [done, active, pending], backgroundColor: ['#27ae60', '#2980b9', '#e67e22'], borderWidth: 1, borderColor: '#fff' }] },
+                options: { cutout: '65%', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: true }
+            });
+            window.__initiativeCharts.msDonut = new Chart(document.getElementById('msDonut'), {
+                type: 'doughnut',
+                data: { labels: ['Met', 'Upcoming', 'Overdue'], datasets: [{ data: [met, upcoming, overdue], backgroundColor: ['#27ae60', '#e67e22', '#e74c3c'], borderWidth: 1, borderColor: '#fff' }] },
+                options: { cutout: '65%', plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: true }
+            });
+
+            const items = window.INITIATIVES || [];
+            const labels = items.map(function (i) { return i.id; });
+            const doneTasks = items.map(function (i) { return Number(i._raw?.taskCompleteCount) || 0; });
+            const openTasks = items.map(function (i) {
+                const total = Number(i._raw?.taskCount) || 0;
+                const complete = Number(i._raw?.taskCompleteCount) || 0;
+                return Math.max(0, total - complete);
+            });
+
+            window.__initiativeCharts.taskBar = new Chart(document.getElementById('taskBar'), {
+                type: 'bar',
+                data: {
+                    labels: labels.length ? labels : ['—'],
+                    datasets: [
+                        { label: 'Done', data: labels.length ? doneTasks : [0], backgroundColor: '#27ae60' },
+                        { label: 'Open', data: labels.length ? openTasks : [0], backgroundColor: '#e0e0e0' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: { color: '#f0f0f0' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // ===== INITIALIZE =====
+        window.initInitiativesDashboard = function () {
+            renderInitiatives();
+            renderGantt();
+            initCharts();
+            renderMilestoneRegister();
+            try { lucide.createIcons(); } catch (e) { console.error(e); }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!window.InitiativesApiBridge || !window.InitiativesApiBridge.enabled) {
+                window.initInitiativesDashboard();
+            }
+        });
+    </script>
+    <script src="assets/js/initiatives-dashboard-bridge.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

@@ -3,211 +3,844 @@ import { useAuth } from '../../context/AuthContext'
 import axiosClient from '../../api/axiosClient'
 import styles from './Userrolemanagement.module.css'
 
+const TABS = ['User', 'Permission']
+
+const USER_TYPE_OPTIONS = {
+  internal: [{ value: 'employees', text: 'Employees' }],
+  external: [
+    { value: 'vendor', text: 'Vendor' },
+    { value: 'independent_director', text: 'Independent Director' },
+    { value: 'non_executive_director', text: 'Non Executive Director' },
+    { value: 'external_auditor', text: 'External Auditor' },
+  ],
+}
+
+async function fetchRoleGroups(empId) {
+  const [defaultRes, customRes] = await Promise.all([
+    axiosClient.get(`/api/roleList/${empId}?type=DEFAULT`),
+    axiosClient.get(`/api/roleList/${empId}?type=CUSTOM`),
+  ])
+  return {
+    defaultRoles: Array.isArray(defaultRes.data) ? defaultRes.data : [],
+    customRoles: Array.isArray(customRes.data) ? customRes.data : [],
+  }
+}
+
+async function fetchAllRoles(empId) {
+  const { defaultRoles, customRoles } = await fetchRoleGroups(empId)
+  const seen = new Set()
+  return [...defaultRoles, ...customRoles].filter(r => {
+    if (!r?.roleId || seen.has(r.roleId)) return false
+    seen.add(r.roleId)
+    return true
+  })
+}
+
 export default function Userrolemanagement() {
   const { user } = useAuth()
+  const [activeTab, setActiveTab] = useState('User')
   const [users, setUsers] = useState([])
+  const [defaultRoles, setDefaultRoles] = useState([])
+  const [customRoles, setCustomRoles] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [permissionSearch, setPermissionSearch] = useState('')
+  const [editUser, setEditUser] = useState(null)
+  const [viewUser, setViewUser] = useState(null)
   const [showAddModal, setShowAddModal] = useState(false)
 
+  const orgId = user?.orgDetails?.orgId ?? user?.orgId
+  const empId = user?.empId
+
   const fetchUsers = useCallback(async () => {
-    if (!user?.empId) return
+    if (!orgId) return
     setLoading(true)
     try {
-      const res = await axiosClient.get(`/stratroom/userRoleList/${user.empId}`)
+      const res = await axiosClient.get(`/api/userList/org/${orgId}`)
       setUsers(Array.isArray(res.data) ? res.data : [])
     } catch {
       setUsers([])
     } finally {
       setLoading(false)
     }
-  }, [user?.empId])
+  }, [orgId])
 
-  useEffect(() => { fetchUsers() }, [fetchUsers])
-
-  const filteredUsers = searchTerm
-    ? users.filter((u) =>
-        (u.firstName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (u.lastName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (u.emailAddress || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (u.userRoleName || '').toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : users
-
-  const handleExport = async () => {
+  const fetchRoles = useCallback(async () => {
+    if (!empId) return
+    setLoading(true)
     try {
-      window.open('/stratroom/downloadUserRole', '_blank')
+      const groups = await fetchRoleGroups(empId)
+      setDefaultRoles(groups.defaultRoles)
+      setCustomRoles(groups.customRoles)
     } catch {
-      // best-effort
+      setDefaultRoles([])
+      setCustomRoles([])
+    } finally {
+      setLoading(false)
+    }
+  }, [empId])
+
+  useEffect(() => {
+    if (activeTab === 'User') fetchUsers()
+    else fetchRoles()
+  }, [activeTab, fetchUsers, fetchRoles])
+
+  const handleDeleteUser = async (userId) => {
+    if (!window.confirm('Remove this user?')) return
+    try {
+      await axiosClient.delete(`/api/userRole/${userId}`)
+      setUsers(prev => prev.filter(u => u.userId !== userId))
+    } catch {
+      alert('Failed to remove user.')
     }
   }
 
-  const handleImport = () => {
-    // Will be connected to file upload modal
+  const handleSaveUser = async (dto) => {
+    try {
+      if (dto.userId) {
+        await axiosClient.put('/api/userRole', dto)
+      } else {
+        await axiosClient.post('/api/userRole', dto)
+      }
+      setShowAddModal(false)
+      setEditUser(null)
+      fetchUsers()
+    } catch {
+      alert('Failed to save user.')
+    }
   }
+
+  const filteredUsers = searchTerm
+    ? users.filter(u =>
+        (u.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (u.emailAddress || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (u.userRole || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (u.departmentList || []).some(d => (d.name || d.deptName || '').toLowerCase().includes(searchTerm.toLowerCase()))
+      )
+    : users
 
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <h4 className={styles.title}>
-            <span className={styles.icon}>
-              <UserRoleIcon />
-            </span>
-            Users & Permissions
-          </h4>
+          <button className={styles.backBtn} onClick={() => window.history.back()}>
+            <ChevronIcon /> <UserRoleIcon />
+          </button>
+          <h4 className={styles.title}>USERS &amp; PERMISSIONS</h4>
         </div>
         <div className={styles.headerRight}>
-          <button className={styles.actionBtn} onClick={() => setShowAddModal(true)} title="Add User">
-            <PlusIcon />
-          </button>
-          <button className={styles.actionBtn} onClick={handleExport} title="Import Template">
-            <ImportIcon />
-          </button>
-          <button className={styles.actionBtn} onClick={handleImport} title="Export">
-            <ExportIcon />
-          </button>
+          <button className={styles.iconBtn} onClick={() => { setEditUser(null); setShowAddModal(true) }} title="Add User"><PlusIcon /></button>
+          <button className={styles.iconBtn} title="Export"><DownloadIcon /></button>
+          <button className={styles.iconBtn} title="Import"><UploadIcon /></button>
         </div>
       </div>
 
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={styles.cardHeaderLeft}>
-            <h5 className={styles.cardTitle}>User List</h5>
-          </div>
-          <div className={styles.searchBox}>
+      <div className={styles.tabRow}>
+        {TABS.map(t => (
+          <button key={t}
+            className={`${styles.tab} ${activeTab === t ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab(t)}>
+            {t}
+          </button>
+        ))}
+        {activeTab === 'User' ? (
+          <div className={styles.tabSearch}>
             <SearchIcon />
             <input
               type="text"
-              placeholder="Search users..."
+              placeholder="Search by name, email, role..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <button className={styles.plusCircle} onClick={() => { setEditUser(null); setShowAddModal(true) }}>
+              <PlusIcon />
+            </button>
+          </div>
+        ) : (
+          <div className={styles.tabSearch}>
+            <SearchIcon />
+            <input
+              type="text"
+              placeholder="Search by name, email, role..."
+              value={permissionSearch}
+              onChange={e => setPermissionSearch(e.target.value)}
             />
           </div>
-        </div>
-        <div className={styles.cardBody}>
-          {loading ? (
-            <div className={styles.loader}>
-              <div className={styles.spinner} />
-            </div>
-          ) : filteredUsers.length === 0 ? (
-            <div className={styles.empty}>
-              <h3>No users found</h3>
-              <p>{searchTerm ? 'Try adjusting your search.' : 'Add users to manage roles and permissions.'}</p>
-            </div>
-          ) : (
-            <div className={styles.tableResponsive}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th className={styles.thLeft}>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Department</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.map((u, i) => (
-                    <tr key={u.empId || u.id || i}>
-                      <td className={styles.tdLeft}>
-                        <div className={styles.userCell}>
-                          <div className={styles.userAvatar}>
-                            {((u.firstName || '?')[0] + (u.lastName || '')[0]).toUpperCase()}
-                          </div>
-                          <span>{`${u.firstName || ''} ${u.lastName || ''}`.trim() || '—'}</span>
-                        </div>
-                      </td>
-                      <td className={styles.tdCenter}>{u.emailAddress || '—'}</td>
-                      <td className={styles.tdCenter}>
-                        <span className={styles.roleBadge}>{u.userRoleName || u.roleName || '—'}</span>
-                      </td>
-                      <td className={styles.tdCenter}>{u.departmentName || u.deptName || '—'}</td>
-                      <td className={styles.tdCenter}>
-                        <span className={`${styles.statusBadge} ${u.active !== false ? styles.statusActive : styles.statusInactive}`}>
-                          {u.active !== false ? 'Active' : 'Inactive'}
-                        </span>
-                      </td>
-                      <td className={styles.tdCenter}>
-                        <button className={styles.editBtn} title="Edit">
-                          <EditIcon />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
-      {showAddModal && (
-        <div className={styles.modalBackdrop} onClick={() => setShowAddModal(false)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h4>Add User</h4>
-              <button className={styles.modalClose} onClick={() => setShowAddModal(false)}>&times;</button>
-            </div>
-            <div className={styles.modalBody}>
-              <p style={{ textAlign: 'center', color: '#9ca3af', padding: '20px' }}>
-                User creation form will be implemented here.
-              </p>
-            </div>
-          </div>
-        </div>
+      {activeTab === 'User' ? (
+        <UserTable
+          users={filteredUsers}
+          loading={loading}
+          onEdit={u => { setEditUser(u); setShowAddModal(true) }}
+          onView={u => setViewUser(u)}
+          onDelete={u => handleDeleteUser(u.userId)}
+        />
+      ) : (
+        <PermissionTable
+          defaultRoles={defaultRoles}
+          customRoles={customRoles}
+          loading={loading}
+          searchTerm={permissionSearch}
+        />
+      )}
+
+      {(showAddModal) && (
+        <UserModal
+          user={editUser}
+          orgId={orgId}
+          empId={empId}
+          onSave={handleSaveUser}
+          onClose={() => { setShowAddModal(false); setEditUser(null) }}
+        />
+      )}
+
+      {viewUser && (
+        <ViewModal user={viewUser} onClose={() => setViewUser(null)} />
       )}
     </div>
   )
 }
 
+// ── User Table ────────────────────────────────────────────────────────────────
+function UserTable({ users, loading, onEdit, onView, onDelete }) {
+  if (loading) return <div className={styles.loader}><div className={styles.spinner} /></div>
+
+  if (users.length === 0) return (
+    <div className={styles.empty}>
+      <h3>No users found</h3>
+      <p>Add users to manage roles and permissions.</p>
+    </div>
+  )
+
+  return (
+    <div className={styles.tableWrap}>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>NAME</th>
+            <th>ROLE</th>
+            <th>DEPARTMENT</th>
+            <th>USER CATEGORY</th>
+            <th>USER TYPE</th>
+            <th>STATUS</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((u, i) => {
+            const nameParts = (u.name || '').trim().split(/\s+/)
+            const initials = nameParts.length >= 2
+              ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+              : (u.name || '?')[0].toUpperCase()
+            const deptName = u.departmentList?.length
+              ? u.departmentList.map(d => d.name || d.deptName || '').filter(Boolean).join(', ')
+              : (u.departments || '')
+            const isActive = (u.status || '').toLowerCase() === 'active'
+
+            return (
+              <tr key={u.userId || i}>
+                <td>
+                  <div className={styles.userCell}>
+                    <div className={styles.avatar} style={{ background: COLORS[i % COLORS.length] }}>
+                      {initials}
+                      <span className={`${styles.dot} ${isActive ? styles.dotActive : styles.dotInactive}`} />
+                    </div>
+                    <div>
+                      <div className={styles.userName}>{u.name || '—'}</div>
+                      <div className={styles.userEmail}>{u.emailAddress || ''}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span className={`${styles.roleBadge} ${getRoleClass(u.userRole, styles)}`}>
+                    {u.userRole || '—'}
+                  </span>
+                </td>
+                <td>
+                  {deptName ? <span className={styles.deptBadge}>{deptName}</span> : '—'}
+                </td>
+                <td>{u.userCategory || '—'}</td>
+                <td>{u.userType || '—'}</td>
+                <td>
+                  <span className={`${styles.statusBadge} ${isActive ? styles.statusActive : styles.statusInactive}`}>
+                    {isActive ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
+                <td>
+                  <div className={styles.actions}>
+                    <button className={styles.actionIcon} onClick={() => onEdit(u)} title="Edit"><EditIcon /></button>
+                    <button className={styles.actionIcon} onClick={() => onView(u)} title="View"><ViewIcon /></button>
+                    <button className={`${styles.actionIcon} ${styles.actionDanger}`} onClick={() => onDelete(u)} title="Delete"><TrashIcon /></button>
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+// ── Permission Table ──────────────────────────────────────────────────────────
+function PermissionTable({ defaultRoles, customRoles, loading, searchTerm }) {
+  const [selected, setSelected] = useState(null)
+  const [moduleGroups, setModuleGroups] = useState([])
+  const [loadingModules, setLoadingModules] = useState(false)
+  const [openModules, setOpenModules] = useState({})
+  const [saving, setSaving] = useState(false)
+  // 'idle' | 'saving' | 'saved' | 'error' — drives the auto-save status pill so the user
+  // gets feedback even though there is no explicit Save button.
+  const [saveStatus, setSaveStatus] = useState('idle')
+
+  useEffect(() => {
+    if (saveStatus !== 'saved' && saveStatus !== 'error') return
+    const id = setTimeout(() => setSaveStatus('idle'), 2500)
+    return () => clearTimeout(id)
+  }, [saveStatus])
+
+  const loadModules = useCallback(async (roleId, cachedPrivilegeList) => {
+    setSelected(roleId)
+    setLoadingModules(true)
+    try {
+      let raw = cachedPrivilegeList
+      if (!Array.isArray(raw) || raw.length === 0) {
+        const res = await axiosClient.get(`/api/roleDetails/${roleId}`)
+        raw = res.data?.modulePrivilegeList || res.data?.moduleList
+      }
+      const groups = normalizeModulePrivilegeList(raw)
+      setModuleGroups(groups)
+      setOpenModules(Object.fromEntries(groups.map(g => [g.moduleName, true])))
+    } catch {
+      setModuleGroups([])
+      setOpenModules({})
+    } finally {
+      setLoadingModules(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    const roles = [...defaultRoles, ...customRoles]
+    if (!roles.length) {
+      setSelected(null)
+      setModuleGroups([])
+      return
+    }
+    const preferred =
+      defaultRoles.find(r => r.roleName === 'Super User') ||
+      defaultRoles[0] ||
+      roles[0]
+    loadModules(preferred.roleId, preferred.modulePrivilegeList)
+  }, [defaultRoles, customRoles, loadModules])
+
+  const filteredGroups = filterModuleGroups(moduleGroups, searchTerm)
+
+  const updateLocalPriv = (moduleName, tagName, field, value) => {
+    setModuleGroups(prev => prev.map(mod => {
+      if (mod.moduleName !== moduleName) return mod
+      return {
+        ...mod,
+        tagNameList: mod.tagNameList.map(tag => {
+          if (tag.tagName !== tagName) return tag
+          return {
+            ...tag,
+            privileges: { ...tag.privileges, [field]: value ? 'TRUE' : 'FALSE' },
+          }
+        }),
+      }
+    }))
+  }
+
+  const togglePermission = async (moduleName, tagName, privKey, newChecked) => {
+    if (!selected || saving) return
+    const fieldMap = {
+      view: 'privilegeView',
+      add: 'privilegeCreate',
+      edit: 'privilegeUpdate',
+      delete: 'privilegeDelete',
+    }
+    const apiName = {
+      view: 'View',
+      add: 'Create',
+      edit: 'Update',
+      delete: 'Delete',
+    }
+    const field = fieldMap[privKey]
+    const privilegeName = apiName[privKey]
+    if (!field || !privilegeName) return
+
+    const prevVal = moduleGroups
+      .find(m => m.moduleName === moduleName)
+      ?.tagNameList.find(t => t.tagName === tagName)
+      ?.privileges?.[field]
+
+    updateLocalPriv(moduleName, tagName, field, newChecked)
+    if (newChecked && privKey !== 'view') {
+      updateLocalPriv(moduleName, tagName, 'privilegeView', true)
+    }
+
+    setSaving(true)
+    setSaveStatus('saving')
+    try {
+      const base = { roleId: selected, moduleName, tagName }
+      if (newChecked) {
+        await axiosClient.put('/api/updatePermissions', { ...base, privilegeName })
+        if (privKey !== 'view') {
+          await axiosClient.put('/api/updatePermissions', { ...base, privilegeName: 'View' })
+        }
+      } else {
+        await axiosClient.put('/api/deletePermissions', { ...base, privilegeName })
+      }
+      setSaveStatus('saved')
+    } catch {
+      updateLocalPriv(moduleName, tagName, field, isPrivOn(prevVal))
+      setSaveStatus('error')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const renderRoleList = (roles, label) => (
+    <>
+      <div className={styles.roleGroupHeader}>{label} ({roles.length})</div>
+      {roles.length === 0 && (
+        <div className={styles.roleGroupEmpty}>No roles</div>
+      )}
+      {roles.map(r => (
+        <button
+          key={r.roleId}
+          type="button"
+          className={`${styles.roleItem} ${selected === r.roleId ? styles.roleItemActive : ''}`}
+          onClick={() => loadModules(r.roleId, r.modulePrivilegeList)}
+        >
+          {r.roleName}
+        </button>
+      ))}
+    </>
+  )
+
+  if (loading) return <div className={styles.loader}><div className={styles.spinner} /></div>
+
+  return (
+    <div className={styles.permissionLayout}>
+      <div className={styles.roleList}>
+        {renderRoleList(defaultRoles, 'Default Roles')}
+        <div className={styles.roleGroupDivider} />
+        {renderRoleList(customRoles, 'Custom Roles')}
+      </div>
+      <div className={styles.modulePanel}>
+        {saveStatus !== 'idle' && (
+          <div
+            role="status"
+            aria-live="polite"
+            style={{
+              position: 'sticky', top: 8, zIndex: 5, marginLeft: 'auto', width: 'fit-content',
+              display: 'flex', alignItems: 'center', gap: 7, padding: '6px 12px', borderRadius: 999,
+              fontSize: 12.5, fontWeight: 600, boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              color: saveStatus === 'error' ? '#b91c1c' : saveStatus === 'saved' ? '#15803d' : '#475569',
+              background: saveStatus === 'error' ? '#fef2f2' : saveStatus === 'saved' ? '#f0fdf4' : '#f8fafc',
+              border: `1px solid ${saveStatus === 'error' ? '#fecaca' : saveStatus === 'saved' ? '#bbf7d0' : '#e2e8f0'}`,
+            }}
+          >
+            {saveStatus === 'saving' && (
+              <>
+                <style>{'@keyframes urmSavePillSpin{to{transform:rotate(360deg)}}'}</style>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'urmSavePillSpin 0.7s linear infinite' }}>
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+                Saving…
+              </>
+            )}
+            {saveStatus === 'saved' && (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Saved
+              </>
+            )}
+            {saveStatus === 'error' && (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                Save failed — try again
+              </>
+            )}
+          </div>
+        )}
+        {!selected && (
+          <div className={styles.empty} style={{ height: '100%' }}>
+            <p>Select a role to view permissions.</p>
+          </div>
+        )}
+        {selected && loadingModules && (
+          <div className={styles.loader}><div className={styles.spinner} /></div>
+        )}
+        {selected && !loadingModules && (
+          <div className={styles.moduleAccordionWrap}>
+            {filteredGroups.length === 0 ? (
+              <p className={styles.moduleEmpty}>No modules configured for this role.</p>
+            ) : (
+              filteredGroups.map(mod => {
+                const isOpen = openModules[mod.moduleName] !== false
+                return (
+                  <div key={mod.moduleName} className={styles.accordionItem}>
+                    <button
+                      type="button"
+                      className={`${styles.accordionHeader} ${isOpen ? styles.accordionHeaderOpen : ''}`}
+                      onClick={() => setOpenModules(prev => ({ ...prev, [mod.moduleName]: !isOpen }))}
+                    >
+                      <span className={styles.accordionIcon}><ModuleIcon /></span>
+                      <span className={styles.accordionTitle}>{mod.moduleName}</span>
+                      <span className={styles.accordionChevron}>{isOpen ? '▾' : '▸'}</span>
+                    </button>
+                    {isOpen && (
+                      <div className={styles.accordionBody}>
+                        <table className={styles.permTable}>
+                          <thead>
+                            <tr>
+                              <th>Actions</th>
+                              <th>View</th>
+                              <th>Add</th>
+                              <th>Edit</th>
+                              <th>Delete</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {mod.tagNameList.map(tag => (
+                              <tr key={`${mod.moduleName}-${tag.tagName}`}>
+                                <td>
+                                  <label className={styles.permActionLabel}>
+                                    <input type="checkbox" readOnly checked={tagHasAnyPriv(tag)} className={styles.permCheck} />
+                                    {tag.tagName}
+                                  </label>
+                                </td>
+                                {['view', 'add', 'edit', 'delete'].map(key => {
+                                  const field = {
+                                    view: 'privilegeView',
+                                    add: 'privilegeCreate',
+                                    edit: 'privilegeUpdate',
+                                    delete: 'privilegeDelete',
+                                  }[key]
+                                  const val = tag.privileges?.[field]
+                                  const disabled = isPrivNa(val)
+                                  return (
+                                    <td key={key} className={styles.permCell}>
+                                      <input
+                                        type="checkbox"
+                                        className={styles.permCheck}
+                                        checked={isPrivOn(val)}
+                                        disabled={disabled || saving}
+                                        onChange={e => togglePermission(mod.moduleName, tag.tagName, key, e.target.checked)}
+                                      />
+                                    </td>
+                                  )
+                                })}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                )
+              })
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Add / Edit User Modal ────────────────────────────────────────────────────
+function UserModal({ user, orgId, empId, onSave, onClose }) {
+  const initialDeptIds = (user?.departmentList || []).map(d => String(d.id)).filter(Boolean)
+  const [form, setForm] = useState({
+    userId: user?.userId || 0,
+    name: user?.name || '',
+    emailAddress: user?.emailAddress || '',
+    userRole: user?.userRole || 'User',
+    roleId: user?.roleId || 0,
+    userCategory: (user?.userCategory || '').toLowerCase(),
+    userType: user?.userType || '',
+    status: user?.status || 'Active',
+    orgId: orgId || 0,
+    deptIds: initialDeptIds.join(','),
+  })
+  const [roles, setRoles] = useState([])
+  const [departments, setDepartments] = useState([])
+  const [selectedDeptIds, setSelectedDeptIds] = useState(initialDeptIds)
+
+  useEffect(() => {
+    if (!empId) return
+    fetchAllRoles(empId)
+      .then(setRoles)
+      .catch(() => setRoles([]))
+  }, [empId])
+
+  useEffect(() => {
+    if (!orgId) return
+    axiosClient.get(`/api/departmentListByOrgId?orgId=${orgId}`)
+      .then(r => setDepartments(Array.isArray(r.data) ? r.data : []))
+      .catch(() => setDepartments([]))
+  }, [orgId])
+
+  useEffect(() => {
+    if (!roles.length || form.roleId) return
+    const match = roles.find(r => r.roleName === form.userRole) || roles.find(r => r.roleName === 'User') || roles[0]
+    if (match) {
+      setForm(f => ({ ...f, roleId: match.roleId, userRole: match.roleName }))
+    }
+  }, [roles, form.roleId, form.userRole])
+
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+  const typeOptions = USER_TYPE_OPTIONS[form.userCategory] || []
+
+  const toggleDept = (deptId) => {
+    const id = String(deptId)
+    setSelectedDeptIds(prev => {
+      const next = prev.includes(id) ? prev.filter(d => d !== id) : [...prev, id]
+      setForm(f => ({ ...f, deptIds: next.join(',') }))
+      return next
+    })
+  }
+
+  const handleSave = () => {
+    onSave({ ...form, deptIds: selectedDeptIds.join(',') })
+  }
+
+  return (
+    <div className={styles.backdrop} onClick={onClose}>
+      <div className={styles.modal} onClick={e => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h4>{user ? 'Edit User' : 'Add User'}</h4>
+          <button className={styles.closeBtn} onClick={onClose}>&times;</button>
+        </div>
+        <div className={styles.modalBody}>
+          <div className={styles.formGrid}>
+            <label>
+              Full Name
+              <input value={form.name} onChange={e => set('name', e.target.value)} placeholder="Full name" />
+            </label>
+            <label>
+              Email Address
+              <input value={form.emailAddress} onChange={e => set('emailAddress', e.target.value)} placeholder="email@example.com" />
+            </label>
+            <label>
+              Role
+              <select
+                value={form.roleId || ''}
+                onChange={e => {
+                  const role = roles.find(r => String(r.roleId) === e.target.value)
+                  setForm(f => ({
+                    ...f,
+                    roleId: role?.roleId || 0,
+                    userRole: role?.roleName || f.userRole,
+                  }))
+                }}>
+                <option value="">Select role</option>
+                {roles.map(r => (
+                  <option key={r.roleId} value={r.roleId}>{r.roleName}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Status
+              <select value={form.status} onChange={e => set('status', e.target.value)}>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </label>
+            <label>
+              User Category
+              <select
+                value={form.userCategory}
+                onChange={e => setForm(f => ({ ...f, userCategory: e.target.value, userType: '' }))}>
+                <option value="">Select category</option>
+                <option value="internal">Internal</option>
+                <option value="external">External</option>
+              </select>
+            </label>
+            <label>
+              User Type
+              <select
+                value={form.userType}
+                onChange={e => set('userType', e.target.value)}
+                disabled={!form.userCategory}>
+                <option value="">Select type</option>
+                {typeOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.text}</option>
+                ))}
+              </select>
+            </label>
+            <label className={styles.fullWidth}>
+              Department
+              <div className={styles.deptPicker}>
+                {departments.length === 0 && <span className={styles.deptEmpty}>No departments available</span>}
+                {departments.map(d => (
+                  <label key={d.id} className={styles.deptOption}>
+                    <input
+                      type="checkbox"
+                      checked={selectedDeptIds.includes(String(d.id))}
+                      onChange={() => toggleDept(d.id)}
+                    />
+                    {d.name || d.deptName || `Dept ${d.id}`}
+                  </label>
+                ))}
+              </div>
+            </label>
+          </div>
+        </div>
+        <div className={styles.modalFooter}>
+          <button className={styles.cancelBtn} onClick={onClose}>Cancel</button>
+          <button className={styles.saveBtn} onClick={handleSave}>Save</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── View User Modal ──────────────────────────────────────────────────────────
+function ViewModal({ user, onClose }) {
+  const deptName = user.departmentList?.length
+    ? user.departmentList.map(d => d.name || d.deptName || '').filter(Boolean).join(', ')
+    : (user.departments || '—')
+  return (
+    <div className={styles.backdrop} onClick={onClose}>
+      <div className={styles.modal} onClick={e => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h4>User Details</h4>
+          <button className={styles.closeBtn} onClick={onClose}>&times;</button>
+        </div>
+        <div className={styles.modalBody}>
+          <div className={styles.viewGrid}>
+            <div><span>Name</span><p>{user.name || '—'}</p></div>
+            <div><span>Email</span><p>{user.emailAddress || '—'}</p></div>
+            <div><span>Role</span><p>{user.userRole || '—'}</p></div>
+            <div><span>Department</span><p>{deptName}</p></div>
+            <div><span>User Category</span><p>{user.userCategory || '—'}</p></div>
+            <div><span>User Type</span><p>{user.userType || '—'}</p></div>
+            <div><span>Status</span><p>{user.status || '—'}</p></div>
+            <div><span>Designation</span><p>{user.designation || '—'}</p></div>
+            <div><span>Location</span><p>{user.location || '—'}</p></div>
+            <div><span>Phone</span><p>{user.phoneNumber || '—'}</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+const COLORS = ['#6366f1','#14b8a6','#f59e0b','#ef4444','#8b5cf6','#10b981','#f97316','#06b6d4']
+
+// The backend reads privileges via a native query (queryForMap) and Postgres folds the unquoted
+// column labels to lowercase, so the API returns keys like "privilegeview". Read case-insensitively
+// so the matrix reflects saved permissions instead of rendering everything as FALSE.
+function readPriv(privObj, key) {
+  if (!privObj || typeof privObj !== 'object') return 'FALSE'
+  if (privObj[key] != null) return privObj[key]
+  const lowerKey = key.toLowerCase()
+  for (const k of Object.keys(privObj)) {
+    if (k.toLowerCase() === lowerKey) return privObj[k]
+  }
+  return 'FALSE'
+}
+
+function normalizeModulePrivilegeList(modulePrivilegeList) {
+  if (!Array.isArray(modulePrivilegeList)) return []
+  return modulePrivilegeList
+    .map(mod => ({
+      moduleName: mod.moduleName,
+      roleId: mod.roleId,
+      tagNameList: (mod.tagNameList || []).map(tag => ({
+        tagName: tag.tagName || '—',
+        privileges: {
+          privilegeView: readPriv(tag.privileges, 'privilegeView'),
+          privilegeCreate: readPriv(tag.privileges, 'privilegeCreate'),
+          privilegeUpdate: readPriv(tag.privileges, 'privilegeUpdate'),
+          privilegeDelete: readPriv(tag.privileges, 'privilegeDelete'),
+        },
+      })),
+    }))
+    .filter(mod => mod.tagNameList.length > 0)
+}
+
+function filterModuleGroups(groups, searchTerm) {
+  const q = (searchTerm || '').trim().toLowerCase()
+  if (!q) return groups
+  return groups
+    .map(mod => ({
+      ...mod,
+      tagNameList: mod.tagNameList.filter(tag =>
+        (mod.moduleName || '').toLowerCase().includes(q) ||
+        (tag.tagName || '').toLowerCase().includes(q)
+      ),
+    }))
+    .filter(mod => mod.tagNameList.length > 0)
+}
+
+function isPrivOn(val) {
+  return val === true || val === 'TRUE' || val === 'true' || val === 1
+}
+
+function isPrivNa(val) {
+  return typeof val === 'string' && val.toUpperCase() === 'NA'
+}
+
+function tagHasAnyPriv(tag) {
+  const p = tag.privileges || {}
+  return isPrivOn(p.privilegeView) || isPrivOn(p.privilegeCreate) ||
+    isPrivOn(p.privilegeUpdate) || isPrivOn(p.privilegeDelete)
+}
+
+function getRoleClass(role, styles) {
+  const r = (role || '').toLowerCase()
+  if (r.includes('super')) return styles.roleSuper
+  if (r.includes('admin')) return styles.roleAdmin
+  return styles.roleUser
+}
+
+// ── Icons ─────────────────────────────────────────────────────────────────────
+function ModuleIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  )
+}
+
 function UserRoleIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  )
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
 }
-
+function ChevronIcon() {
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+}
 function PlusIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-  )
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
 }
-
-function ImportIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
-    </svg>
-  )
+function DownloadIcon() {
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
 }
-
-function ExportIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
-  )
+function UploadIcon() {
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
 }
-
 function SearchIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  )
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
 }
-
 function EditIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-    </svg>
-  )
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+}
+function ViewIcon() {
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+}
+function TrashIcon() {
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
 }

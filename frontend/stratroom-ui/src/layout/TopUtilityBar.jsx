@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useI18n } from '../context/I18nContext'
+import { usePermissions } from '../context/PermissionsContext'
+import { canShowOrgStructureNav } from '../utils/orgStructureSession'
 import DatePeriodPicker from './DatePeriodPicker'
 
 const LANGS = [
@@ -49,8 +51,13 @@ export default function TopUtilityBar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { lang, setLang, t } = useI18n()
+  const { hasPermission } = usePermissions()
   const [langOpen, setLangOpen] = useState(false)
   const langRef = useRef(null)
+
+  const visibleIcons = APP_ICONS.filter(({ key }) =>
+    key !== 'orgStructure' || canShowOrgStructureNav(hasPermission)
+  )
 
   useEffect(() => {
     if (!langOpen) return
@@ -65,7 +72,7 @@ export default function TopUtilityBar() {
     <div className="navbar-topbar">
       <div className="container-lg d-flex flex-wrap justify-content-between align-items-stretch" style={{ minHeight: 38 }}>
         <div className="menu-controls d-flex align-items-center gap-1">
-          {APP_ICONS.map(({ key, path, icon }) => {
+          {visibleIcons.map(({ key, path, icon }) => {
             const active = path && location.pathname === path
             return (
               <button

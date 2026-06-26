@@ -3,32 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { usePermissions } from '../context/PermissionsContext'
 import { useI18n } from '../context/I18nContext'
 import UserMenu from './UserMenu'
+import { pagesForNavModule, isScorecardPageType } from '../utils/navPageGroups'
 
 const NAV_LABEL_KEYS = {
   Plan: 'nav.plan', Measure: 'nav.measure', Execute: 'nav.execute',
   Govern: 'nav.govern', Meet: 'nav.meet', Report: 'nav.report',
-}
-
-const PAGE_TYPE_GROUPS = {
-  Plan: (p) =>
-    p.groupType === 'Plan' ||
-    ['SWOT', 'PESTEL', 'Strategy Map', 'Strategy Formulation',
-      'Project Formulation', 'Audit Management', 'AuditManagement'].includes(p.pageType),
-  Measure: (p) =>
-    p.groupType === 'Measure' || ['Standard_View', 'Scorecardview'].includes(p.pageType),
-  Execute: (p) =>
-    p.groupType === 'Execute' ||
-    ['Initiatives & Projects', 'Task', 'Budget', 'Approval Page'].includes(p.pageType),
-  Govern: (p) =>
-    p.groupType === 'Govern' ||
-    ['Risk', 'Risk Formulation', 'Risk View', 'RiskEvent', 'Risk Radar',
-      'Impact Assesment', 'Process Enabaler', 'Rpo', 'Compliance',
-      'Audit Management'].includes(p.pageType),
-  Meet: (p) =>
-    p.groupType === 'Meet' || p.pageType === 'Meetings',
-  Report: (p) =>
-    p.groupType === 'Report' ||
-    ['Cockpit', 'Charts', 'My Performance', 'My Space'].includes(p.pageType),
 }
 
 const NAV_MODULES = [
@@ -46,13 +25,8 @@ export default function MainNavigation() {
   const { t } = useI18n()
   const [openModule, setOpenModule] = useState(null)
 
-  const getPages = (moduleKey) =>
-    pages.filter((p) => PAGE_TYPE_GROUPS[moduleKey]?.(p) ?? false)
-
-  const SCORECARD_PAGE_TYPES = ['Standard_View', 'Scorecardview']
-
   const handlePageClick = (page) => {
-    if (SCORECARD_PAGE_TYPES.includes(page.pageType)) {
+    if (isScorecardPageType(page.pageType)) {
       navigate(`/scorecard?pageId=${page.id}`)
     } else {
       navigate(`/dashboard/${page.createdBy}?pageId=${page.id}`)
@@ -82,21 +56,25 @@ export default function MainNavigation() {
           <ul className="navbar-nav ms-auto menulistaccess">
             {NAV_MODULES.map(({ key, label }) => {
               if (!isModuleVisible(key === 'Report' ? 'Reports' : key)) return null
-              const modulePages = getPages(key)
+              const modulePages = pagesForNavModule(pages, key)
               const isOpen = openModule === key
 
               return (
-                <li key={key} className="nav-item dropdown">
+                <li key={key} className="nav-item dropdown position-relative">
                   <button
                     type="button"
                     className="nav-link dropdown-toggle border-0 bg-transparent"
+                    aria-expanded={isOpen}
                     onClick={() => setOpenModule(isOpen ? null : key)}
                   >
                     {t(NAV_LABEL_KEYS[key]) || label}
                   </button>
-                  {isOpen && modulePages.length > 0 && (
-                    <ul className="dropdown-menu border-0 shadow-sm submenu show" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-                      {modulePages.map((page) => (
+                  {isOpen && (
+                    <ul
+                      className="dropdown-menu border-0 shadow-sm submenu show"
+                      style={{ maxHeight: '70vh', overflowY: 'auto', minWidth: '12rem' }}
+                    >
+                      {modulePages.length > 0 ? modulePages.map((page) => (
                         <li key={page.id}>
                           <button
                             type="button"
@@ -106,7 +84,77 @@ export default function MainNavigation() {
                             {page.pageName}
                           </button>
                         </li>
-                      ))}
+                      )                      ) : (
+                        key !== 'Govern' && key !== 'Execute' && (
+                          <li>
+                            <span className="dropdown-item text-muted" style={{ cursor: 'default' }}>
+                              {key === 'Measure' ? 'No scorecards yet' : 'No pages yet'}
+                            </span>
+                          </li>
+                        )
+                      )}
+                      {key === 'Execute' && (
+                        <>
+                          <li key="initiatives-register">
+                            <button
+                              type="button"
+                              className="dropdown-item"
+                              onClick={() => { navigate('/initiatives-register'); setOpenModule(null); }}
+                            >
+                              Initiatives Register
+                            </button>
+                          </li>
+                          <li key="initiatives-dashboard">
+                            <button
+                              type="button"
+                              className="dropdown-item"
+                              onClick={() => { navigate('/initiatives-dashboard'); setOpenModule(null); }}
+                            >
+                              Initiatives Dashboard
+                            </button>
+                          </li>
+                        </>
+                      )}
+                      {key === 'Govern' && (
+                        <>
+                          <li key="risk-register">
+                            <button
+                              type="button"
+                              className="dropdown-item"
+                              onClick={() => { navigate('/risk-register'); setOpenModule(null); }}
+                            >
+                              Risk Register
+                            </button>
+                          </li>
+                          <li key="risk-dashboard">
+                            <button
+                              type="button"
+                              className="dropdown-item"
+                              onClick={() => { navigate('/risk-dashboard'); setOpenModule(null); }}
+                            >
+                              Risk Dashboard
+                            </button>
+                          </li>
+                          <li key="compliance-register">
+                            <button
+                              type="button"
+                              className="dropdown-item"
+                              onClick={() => { navigate('/compliance-register'); setOpenModule(null); }}
+                            >
+                              Compliance Register
+                            </button>
+                          </li>
+                          <li key="compliance-dashboard">
+                            <button
+                              type="button"
+                              className="dropdown-item"
+                              onClick={() => { navigate('/compliance-dashboard'); setOpenModule(null); }}
+                            >
+                              Compliance Dashboard
+                            </button>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   )}
                 </li>

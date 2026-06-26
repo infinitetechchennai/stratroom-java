@@ -77,6 +77,7 @@ import com.estrat.backend.db.service.EmployeeService;
 import com.estrat.backend.db.service.KPIService;
 import com.estrat.backend.db.service.StagingChangeService;
 import com.estrat.backend.db.service.UserRoleManagementService;
+import com.estrat.backend.reactive.UserThreadLocalHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,6 +101,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @RestController
 public class KPIController {
@@ -125,6 +129,23 @@ public class KPIController {
     ControlPanelWorkFlowRepository workflowRepository;
     @Autowired
     StagingChangeRepository stagingChangesRepository;
+
+    /**
+     * Runs blocking work on a worker thread with the request's identity headers restored into
+     * {@link UserThreadLocal}. The ReactiveContextWebFilter only populates the thread-local on the
+     * request thread, so blocking controllers that read {@code UserThreadLocal.get()} must re-bind
+     * it on their execution thread (otherwise the value is null -> NumberFormatException).
+     */
+    private <T> Mono<T> withRequestContext(ServerWebExchange exchange, java.util.concurrent.Callable<T> work) {
+        return Mono.fromCallable(() -> {
+            UserThreadLocalHelper.populateFromExchange(exchange);
+            try {
+                return work.call();
+            } finally {
+                UserThreadLocalHelper.clear();
+            }
+        }).subscribeOn(Schedulers.boundedElastic());
+    }
 
     @GetMapping(value={"/kpi/{id}"})
     public ResponseEntity<KPIDTO> geKPIById(@PathVariable long id) {
@@ -197,8 +218,9 @@ public class KPIController {
     }
 
     @GetMapping(value={"/retrieveNodeKeyList"})
-    public ResponseEntity<List<KPIDetailsDTO>> retrieveNodeKeyList() {
-        return new ResponseEntity((Object)this.kpiService.retrieveKpiDetailsList(), HttpStatus.OK);
+    public Mono<ResponseEntity<List<KPIDetailsDTO>>> retrieveNodeKeyList(ServerWebExchange exchange) {
+        return this.withRequestContext(exchange,
+                () -> new ResponseEntity<>(this.kpiService.retrieveKpiDetailsList(), HttpStatus.OK));
     }
 
     @PostMapping(value={"/validateFormula"})

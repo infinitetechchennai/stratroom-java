@@ -41,10 +41,10 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
             try {
                 const [repRes, deptRes] = await Promise.all([
                     getReporteeList().catch(() => []),
-                    getAllDepartmentList().catch(() => ({ data: [] }))
+                    getAllDepartmentList().catch(() => []),
                 ]);
                 setOwners(Array.isArray(repRes) ? repRes : []);
-                setDepartments(Array.isArray(deptRes?.data) ? deptRes.data : []);
+                setDepartments(Array.isArray(deptRes) ? deptRes : (Array.isArray(deptRes?.data) ? deptRes.data : []));
             } catch (err) {
                 console.error("Failed to load options", err);
             }

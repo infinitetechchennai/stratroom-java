@@ -266,7 +266,9 @@ public class OrgTrackerService {
         if (pagesDetails.isPresent()) {
             EmployeeProfilePo employeeProfilePo = this.employeeService.getEmployeeProfile(whoIsID);
             ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(employeeProfilePo.getOrgId().getId());
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Employee")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Employee")) {
                 OrgTracker orgTracker = new OrgTracker();
                 orgTracker.setActive(0);
                 orgTracker.setCreatedTime(LocalDateTime.now());
@@ -292,7 +294,9 @@ public class OrgTrackerService {
         if (pagesDetails.isPresent()) {
             EmployeeProfilePo employeeProfilePo = this.employeeService.getEmployeeProfile(whoIsID);
             ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(employeeProfilePo.getOrgId().getId());
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Employee")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Employee")) {
                 OrgTracker findTracker = this.orgTrackerRepository.findBy(employeeProfilePo.getEmpId(), employeeProfilePo.getParentEmpId(), ((PagesDetails)pagesDetails.get()).getId(), 0);
                 if (findTracker == null) {
                     OrgTracker checkTracker = this.orgTrackerRepository.findPageBy(employeeProfilePo.getEmpId(), ((PagesDetails)pagesDetails.get()).getId(), 0);
@@ -334,7 +338,9 @@ public class OrgTrackerService {
         if (pagesDetails.isPresent()) {
             EmployeeProfilePo employeeProfilePo = this.employeeService.getEmployeeProfile(whoIsID);
             ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(employeeProfilePo.getOrgId().getId());
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Employee")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Employee")) {
                 OrgTracker findTracker = this.orgTrackerRepository.findBy(employeeProfilePo.getEmpId(), employeeProfilePo.getParentEmpId(), ((PagesDetails)pagesDetails.get()).getId(), 0);
                 if (findTracker == null) {
                     OrgTracker checkTracker = this.orgTrackerRepository.findPageBy(employeeProfilePo.getEmpId(), ((PagesDetails)pagesDetails.get()).getId(), 0);

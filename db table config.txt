@@ -1,4 +1,4 @@
-control panel db config
+######control panel db config
 
 INSERT INTO orgstructure.control_panel_general
   (orgId, site_name, site_language, admin_email_id, currency_type, calendar_year,
@@ -8,3 +8,74 @@ VALUES
   (1, 'Stratroom', 'English', 'admin@stratroom.in', 'USD', '2026',
    'Asia/Kolkata', 'Employee', 'Employee', 'Actual', 'Month',
    'January', 'December', now());
+
+######Alter the table
+
+ALTER TABLE orgstructure.user_role_management
+  ALTER COLUMN name TYPE varchar(255),
+  ALTER COLUMN status TYPE varchar(100),
+  ALTER COLUMN designation TYPE varchar(255),
+  ALTER COLUMN role TYPE varchar(255),
+  ALTER COLUMN login_status TYPE varchar(100),
+  ALTER COLUMN location TYPE varchar(255),
+  ALTER COLUMN email_address TYPE varchar(255),
+  ALTER COLUMN phone_number TYPE varchar(100);
+
+######see what got saved
+
+SELECT emp_id, first_name, last_name, email_address, status 
+FROM orgstructure.employee_details 
+WHERE email_address <> 'amira@new.com'
+ORDER BY created_date DESC;
+
+#######clean the DB 
+
+SET search_path TO orgstructure;
+
+DELETE FROM employee_department_mapping
+WHERE empId NOT IN (
+    SELECT emp_id FROM employee_details WHERE email_address = 'amira@new.com'
+);
+
+DELETE FROM employee_credentials
+WHERE email_address <> 'amira@new.com';
+
+DELETE FROM employee_details
+WHERE email_address <> 'amira@new.com';
+
+
+#####wipe clean
+
+SET search_path TO orgstructure;
+
+-- Step 1: Clean employee_department_mapping (uses "empid" not "emp_id")
+DELETE FROM employee_department_mapping
+WHERE empid != (SELECT emp_id FROM employee_details WHERE email_address = 'amira@new.com');
+
+-- Step 2: Clean dept_owner_mapping (uses "empid")
+DELETE FROM dept_owner_mapping
+WHERE empid != (SELECT emp_id FROM employee_details WHERE email_address = 'amira@new.com');
+
+DELETE FROM dept_owner_mapping_his
+WHERE empid != (SELECT emp_id FROM employee_details WHERE email_address = 'amira@new.com');
+
+-- Step 3: Wipe all department chart data (full re-import needed anyway)
+DELETE FROM department_chart_details;
+DELETE FROM department_chart_details_his;
+
+-- Step 4: Clean credentials
+DELETE FROM employee_credentials
+WHERE email_address != 'amira@new.com';
+
+-- Step 5: Clean user_role_management
+DELETE FROM user_role_management
+WHERE email_address != 'amira@new.com';
+
+-- Step 6: Clean employees (last — other tables reference this)
+DELETE FROM employee_details
+WHERE email_address != 'amira@new.com';
+
+-- Step 7: Reset amira's parent back to superUser root
+UPDATE employee_details
+SET parent_emp_id = 1
+WHERE email_address = 'amira@new.com';

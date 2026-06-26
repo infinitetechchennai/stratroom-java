@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { loginApi, validateTokenApi, postPreAuditTrail } from '../api/authApi'
+import { resetOrgChartSession } from '../utils/orgStructureSession'
+import { loadAndApplyOrgTheme } from '../utils/stratroomTheme'
 
 const AuthContext = createContext(null)
 
@@ -32,6 +34,11 @@ function captureSystemIp() {
   } catch (_) { /* best-effort */ }
 }
 
+/** Legacy JSP pages read useraccessid / rootuseraccessid from localStorage. */
+function syncLegacyAccessIds(profile) {
+  resetOrgChartSession(profile)
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -52,7 +59,9 @@ export function AuthProvider({ children }) {
         if (result.validationSuccess && !result.tokenExpired) {
           const parsed = JSON.parse(profile)
           if (!parsed.empId && parsed.id) parsed.empId = parsed.id
+          syncLegacyAccessIds(parsed)
           setUser(parsed)
+          loadAndApplyOrgTheme(parsed.orgDetails?.orgId ?? parsed.orgId)
         } else {
           clearSession()
         }
@@ -65,6 +74,10 @@ export function AuthProvider({ children }) {
 
   const clearSession = () => {
     Object.values(SESSION_KEYS).forEach((k) => localStorage.removeItem(k))
+    localStorage.removeItem('useraccessid')
+    localStorage.removeItem('rootuseraccessid')
+    localStorage.removeItem('orguseraccessid')
+    localStorage.removeItem('orglink')
     setUser(null)
   }
 
@@ -101,7 +114,9 @@ export function AuthProvider({ children }) {
       profile.empId = profile.id
     }
     localStorage.setItem(SESSION_KEYS.PROFILE, JSON.stringify(profile))
+    syncLegacyAccessIds(profile)
     setUser(profile)
+    loadAndApplyOrgTheme(profile.orgDetails?.orgId ?? profile.orgId)
 
     return data
   }, [])

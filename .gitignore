@@ -1,4 +1,4 @@
-# Node
+﻿# Node
 node_modules/
 dist/
 .env*
@@ -19,6 +19,7 @@ target/
 .idea/
 *.iml
 .vscode/
+.metadata/
 
 # OS
 .DS_Store
@@ -27,3 +28,28 @@ Thumbs.db
 # Logs
 *.log
 *.gz
+
+# Archives / binaries
+*.zip
+
+# Office docs
+*.docx
+*.doc
+
+# Local-only / reference material (not part of the migration project)
+stratroom-java-master/
+backend/my-new-update-06/
+frontend/Untitled/
+testing-data/
+orgpsql
+orgstructurev2.sql
+Risk Full Logic.html
+backend/Risk Full Logic (1).html
+
+# Legacy root scratch files (scorecard/calendar experiments)
+extracted_cal.css
+org-structure_calendar_dw_*
+
+# Local import spreadsheets and one-off scripts (use import-templates/ instead)
+import files/
+import-files/

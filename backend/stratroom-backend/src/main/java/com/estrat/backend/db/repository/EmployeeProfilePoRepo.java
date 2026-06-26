@@ -207,6 +207,10 @@ extends JpaRepository<EmployeeProfilePo, Long> {
 
     public List<EmployeeProfilePo> findByFirstNameAndStatusAndOrgId(String var1, String var2, OrgDetails var3);
 
+    public List<EmployeeProfilePo> findByFirstNameAndLastNameAndStatusAndOrgId(String var1, String var2, String var3, OrgDetails var4);
+
+    public List<EmployeeProfilePo> findByFirstNameAndLastNameAndStatus(String var1, String var2, String var3);
+
     public List<EmployeeProfilePo> findByEmailAddressAndStatus(String var1, String var2);
 
     public Long countByOrgIdAndStatus(OrgDetails var1, String var2);

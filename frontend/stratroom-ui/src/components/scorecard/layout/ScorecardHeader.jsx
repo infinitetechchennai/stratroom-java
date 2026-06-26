@@ -51,7 +51,14 @@ export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel
                 return;
             }
             const res = await importScorecardActuals(pageId, currentDateRange(), rows);
-            alert(`Import complete — ${res.updated ?? 0} updated, ${res.skipped ?? 0} skipped.`);
+            let msg = `Import complete — ${res.updated ?? 0} updated, ${res.skipped ?? 0} skipped.`;
+            if (res.unmatched > 0) {
+                msg += `\n${res.unmatched} row(s) did not match any KPI on this scorecard.`;
+            }
+            if (res.message) {
+                msg += `\n\n${res.message}`;
+            }
+            alert(msg);
             if (onReload) onReload();
         } catch (err) {
             alert('Import failed: ' + (err?.message || err));
