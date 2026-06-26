@@ -465,19 +465,19 @@ export const SubKpiViewModal = () => {
                             <div className="audit-listing">
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdBy">Created By</span> :</div>
-                                    <div className="text">Arun</div>
+                                    <div className="text" id="vskpiCreatedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedBy">Modified By</span> :</div>
-                                    <div className="text">Karthik</div>
+                                    <div className="text" id="vskpiModifiedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdOn">Created Date</span> :</div>
-                                    <div className="text">Oct 02, 2019</div>
+                                    <div className="text" id="vskpiCreatedDate">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedOn">Modified Date</span> :</div>
-                                    <div className="text">Oct 02, 2019</div>
+                                    <div className="text" id="vskpiModifiedDate">-</div>
                                 </div>
                             </div>
                         </div>

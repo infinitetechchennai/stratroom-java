@@ -513,6 +513,133 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
                 }
             },
+            openViewPerspective: async (id) => {
+                const set = (elId, v) => { const el = document.getElementById(elId); if (el) { if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') el.value = v ?? ''; else el.textContent = v ?? ''; } };
+                const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
+                const fmtDate = (v) => {
+                    if (!v) return '-';
+                    const d = new Date(v);
+                    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+                };
+                
+                // Clear fields
+                ['vpid', 'vpName', 'vpDescription', 'vpOwner', 'vpPerformance', 'vpWeight', 'vpSubWeight', 'vpStatus'].forEach(elId => set(elId, ''));
+                ['vpCreatedBy', 'vpModifiedBy', 'vpCreatedDate', 'vpModifiedDate'].forEach(elId => setText(elId, '-'));
+                set('vpStartDate', '');
+                set('vpEndDate', '');
+                
+                try {
+                    const p = await getPerspectiveById(id);
+                    if (p && p.id) {
+                        set('vpid', p.id);
+                        set('vpName', p.name);
+                        set('vpDescription', p.description);
+                        set('vpOwner', p.owner || '');
+                        
+                        if (p.start_date) set('vpStartDate', p.start_date.split('T')[0]);
+                        if (p.end_date) set('vpEndDate', p.end_date.split('T')[0]);
+                        
+                        set('vpPerformance', p.formula || '');
+                        set('vpWeight', p.weight);
+                        set('vpSubWeight', p.sub_weight);
+                        set('vpStatus', p.status || '');
+                        
+                        setText('vpCreatedBy', p.created_by);
+                        setText('vpModifiedBy', p.updated_by);
+                        setText('vpCreatedDate', fmtDate(p.created_at));
+                        setText('vpModifiedDate', fmtDate(p.updated_at));
+                    }
+                } catch (e) {
+                    console.error('Failed to load perspective view data', e);
+                }
+                if (window.bootstrap?.Modal) {
+                    const el = document.getElementById('prespective-view-modal');
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
+                }
+            },
+            openViewObjective: async (id) => {
+                const set = (elId, v) => { const el = document.getElementById(elId); if (el) { if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') el.value = v ?? ''; else el.textContent = v ?? ''; } };
+                const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
+                const fmtDate = (v) => {
+                    if (!v) return '-';
+                    const d = new Date(v);
+                    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+                };
+                
+                // Clear fields
+                ['vodID', 'vodName', 'vodDescription', 'vodOwner', 'vodPerformance', 'vodWeight', 'vodSubWeight', 'vodStatus'].forEach(elId => set(elId, ''));
+                ['vodCreatedBy', 'vodModifiedBy', 'vodCreatedDate', 'vodModifiedDate'].forEach(elId => setText(elId, '-'));
+                set('vodStartDate', '');
+                set('vodEndDate', '');
+                
+                try {
+                    const o = await getObjectiveById(id);
+                    if (o && o.id) {
+                        set('vodID', o.id);
+                        set('vodName', o.name);
+                        set('vodDescription', o.description);
+                        set('vodOwner', o.owner || '');
+                        
+                        if (o.start_date) set('vodStartDate', o.start_date.split('T')[0]);
+                        if (o.end_date) set('vodEndDate', o.end_date.split('T')[0]);
+                        
+                        set('vodPerformance', o.formula || '');
+                        set('vodWeight', o.weight);
+                        set('vodSubWeight', o.sub_weight);
+                        set('vodStatus', o.status || '');
+                        
+                        setText('vodCreatedBy', o.created_by);
+                        setText('vodModifiedBy', o.updated_by);
+                        setText('vodCreatedDate', fmtDate(o.created_at));
+                        setText('vodModifiedDate', fmtDate(o.updated_at));
+                    }
+                } catch (e) {
+                    console.error('Failed to load objective view data', e);
+                }
+                if (window.bootstrap?.Modal) {
+                    const el = document.getElementById('objective-view-modal');
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
+                }
+            },
+            openViewSubKpi: async (id) => {
+                const set = (elId, v) => { const el = document.getElementById(elId); if (el) { if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') el.value = v ?? ''; else el.textContent = v ?? ''; } };
+                const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
+                const fmtDate = (v) => {
+                    if (!v) return '-';
+                    const d = new Date(v);
+                    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+                };
+                
+                // Clear fields
+                ['vskpiName', 'vskpiDescription', 'vskpiPolarity', 'vskpiMeasurementFrequency', 'vskpiOwner', 'vskpiPerformance', 'vskpiType', 'vskpiWeight', 'vskpiStatus'].forEach(elId => set(elId, ''));
+                ['vskpiCreatedBy', 'vskpiModifiedBy', 'vskpiCreatedDate', 'vskpiModifiedDate'].forEach(elId => setText(elId, '-'));
+                
+                try {
+                    const sk = await getSubKpiById(id);
+                    if (sk && sk.id) {
+                        set('vskpiName', sk.name);
+                        set('vskpiDescription', sk.description);
+                        set('vskpiPolarity', sk.indicator_type || '');
+                        set('vskpiMeasurementFrequency', sk.measurement_frequency || '');
+                        set('vskpiOwner', sk.owner || '');
+                        set('vskpiPerformance', sk.formula || '');
+                        set('vskpiType', sk.data_type || '');
+                        set('vskpiWeight', sk.weight);
+                        set('vskpiStatus', sk.status || '');
+                        
+                        setText('vskpiCreatedBy', sk.created_by);
+                        setText('vskpiModifiedBy', sk.updated_by);
+                        setText('vskpiCreatedDate', fmtDate(sk.created_at));
+                        setText('vskpiModifiedDate', fmtDate(sk.updated_at));
+                    }
+                } catch (e) {
+                    console.error('Failed to load sub kpi view data', e);
+                }
+                if (window.bootstrap?.Modal) {
+                    const el = document.getElementById('subkpi-view-modal');
+                    if (el) window.bootstrap.Modal.getOrCreateInstance(el).show();
+                }
+            },
             openViewKpi: async (id) => {
                 const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
                 const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
