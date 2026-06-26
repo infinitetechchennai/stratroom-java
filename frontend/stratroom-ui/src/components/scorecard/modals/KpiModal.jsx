@@ -98,20 +98,6 @@ export const KpiAddModal = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="g-col-12 g-col-md-4">
-                                        <div className="form-group">
-                                            <label htmlFor="akpiDirection" className="form-label">Direction</label>
-                                            <select name="akpiDirection" id="akpiDirection"
-                                                className="form-select select-dropdown-add-kpi"
-                                                data-placeholder="Select Direction" defaultValue="">
-                                                <option value="" disabled>Select Direction</option>
-                                                <option value="HIGHER">Higher is Better</option>
-                                                <option value="LOWER">Lower is Better</option>
-                                                <option value="TARGET">On Target</option>
-                                                <option value="RANGE">Within Range</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div className="g-col-12">
                                         <div className="form-group">
                                             <label htmlFor="akpiDescription" className="form-label"
@@ -292,18 +278,6 @@ export const KpiEditModal = () => {
                                                 <option value="" disabled>Select Polarity</option>
                                                 <option value="LEAD">Lead</option>
                                                 <option value="LAG">Lag</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="g-col-12 g-col-md-4">
-                                        <div className="form-group">
-                                            <label htmlFor="ekpiDirection" className="form-label">Direction</label>
-                                            <select name="ekpiDirection" id="ekpiDirection" className="form-select select-dropdown-edit-kpi" data-placeholder="Select Direction" defaultValue="">
-                                                <option value="" disabled>Select Direction</option>
-                                                <option value="HIGHER">Higher is Better</option>
-                                                <option value="LOWER">Lower is Better</option>
-                                                <option value="TARGET">On Target</option>
-                                                <option value="RANGE">Within Range</option>
                                             </select>
                                         </div>
                                     </div>

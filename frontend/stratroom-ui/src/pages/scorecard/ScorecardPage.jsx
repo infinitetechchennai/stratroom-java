@@ -264,7 +264,6 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     name: val('akpiName'),
                     description: val('akpiDescription'),
                     indicatorType: val('akpiPolarity') || undefined,
-                    direction: val('akpiDirection') || undefined,
                     measurementFrequency: val('akpiMeasurementFrequency') || undefined,
                     weight: val('akpiWeight') || undefined,
                     formula: val('akpiPerformance') || undefined,
@@ -288,7 +287,6 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     name: val('ekpiName') || undefined,
                     description: val('ekpiDescription') || undefined,
                     indicatorType: val('ekpiPolarity') || undefined,
-                    direction: val('ekpiDirection') || undefined,
                     measurementFrequency: val('ekpiMeasurementFrequency') || undefined,
                     weight: val('ekpiWeight') || undefined,
                     formula: val('ekpiPerformance') || undefined,
@@ -483,8 +481,6 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('ekpiYearToDate', kpi.ytd_formula || '');
                         const polEl = document.getElementById('ekpiPolarity');
                         if (polEl && kpi.indicator_type) polEl.value = kpi.indicator_type;
-                        const dirEl = document.getElementById('ekpiDirection');
-                        if (dirEl && kpi.polarity) dirEl.value = kpi.polarity;
                         const freqEl = document.getElementById('ekpiMeasurementFrequency');
                         if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
                         set('ekpiContribution', kpi.contribution);
@@ -539,8 +535,6 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vkpiYearToDate', kpi.ytd_formula || '');
                         const polEl = document.getElementById('vkpiPolarity');
                         if (polEl && kpi.indicator_type) polEl.value = kpi.indicator_type;
-                        const vdirEl = document.getElementById('vkpiDirection');
-                        if (vdirEl && kpi.polarity) vdirEl.value = kpi.polarity;
                         const freqEl = document.getElementById('vkpiMeasurementFrequency');
                         if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
                         set('vkpiContribution', kpi.contribution);
