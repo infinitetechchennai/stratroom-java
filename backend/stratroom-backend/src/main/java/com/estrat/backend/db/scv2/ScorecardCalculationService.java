@@ -331,9 +331,9 @@ public class ScorecardCalculationService {
             // wide range (e.g. a whole financial year) surfaces the real actual instead of
             // an empty trailing month. Fall back to the latest in-range period (for the
             // target/baseline display) only when no value was reported within the range.
-            Map<String, Object> current = latestActualInRange(hist, start, end);
+            Map<String, Object> current = latestActualInRange(hist, start, end, frequency);
             if (current == null) {
-                current = latestInRange(hist, start, end);
+                current = latestInRange(hist, start, end, frequency);
             }
             if (current != null) {
                 actual = dec(current.get("actual_value"));
@@ -413,29 +413,44 @@ public class ScorecardCalculationService {
 
     // ----- in-memory history selection (history list is ordered by period_end asc) -----
 
-    private Map<String, Object> latestInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end) {
+    private Map<String, Object> latestInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end, String frequency) {
         Map<String, Object> chosen = null;
         for (Map<String, Object> row : hist) {
             LocalDate ps = toLocalDate(row.get("period_start"));
             LocalDate pe = toLocalDate(row.get("period_end"));
-            if (ps != null && pe != null && !ps.isBefore(start) && !pe.isAfter(end)) {
-                chosen = row; // list is ascending by period_end, so last match wins (latest)
+            if (ps != null && pe != null && !ps.isAfter(end) && !pe.isBefore(start) && matchesFrequency(ps, pe, frequency)) {
+                chosen = row;
             }
         }
         return chosen;
     }
 
     // Latest in-range period that has a non-null reported actual value.
-    private Map<String, Object> latestActualInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end) {
+    private Map<String, Object> latestActualInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end, String frequency) {
         Map<String, Object> chosen = null;
         for (Map<String, Object> row : hist) {
             LocalDate ps = toLocalDate(row.get("period_start"));
             LocalDate pe = toLocalDate(row.get("period_end"));
-            if (ps != null && pe != null && !ps.isBefore(start) && !pe.isAfter(end) && dec(row.get("actual_value")) != null) {
+            if (ps != null && pe != null && !ps.isAfter(end) && !pe.isBefore(start) && matchesFrequency(ps, pe, frequency) && dec(row.get("actual_value")) != null) {
                 chosen = row; // list is ascending by period_end, so last match wins (latest with a value)
             }
         }
         return chosen;
+    }
+
+    /** Returns true when the history row's period duration matches the KPI measurement frequency. */
+    private boolean matchesFrequency(LocalDate ps, LocalDate pe, String frequency) {
+        if (frequency == null || frequency.isBlank()) return true;
+        long days = java.time.temporal.ChronoUnit.DAYS.between(ps, pe) + 1;
+        switch (frequency.toLowerCase().replace("-", " ").trim()) {
+            case "daily":       return days <= 1;
+            case "weekly":      return days >= 6  && days <= 8;
+            case "monthly":     return days >= 28 && days <= 31;
+            case "quarterly":   return days >= 89 && days <= 92;
+            case "half yearly": return days >= 181 && days <= 184;
+            case "annual":      return days >= 365 && days <= 366;
+            default:            return true;
+        }
     }
 
     private Map<String, Object> previousBefore(List<Map<String, Object>> hist, LocalDate start) {

@@ -301,7 +301,10 @@ export const PerspectiveViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vpOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <OwnerSelect id="vpOwner" className="form-select select-dropdown-view-prespective" />
+                                            <select name="vpOwner" id="vpOwner" data-placeholder="Select Owner"
+                                                className="form-select select-dropdown-view-prespective" defaultValue="" disabled>
+                                                <option value="" disabled hidden>Select Owner</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">

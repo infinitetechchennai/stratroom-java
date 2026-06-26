@@ -436,7 +436,7 @@ return (
 
                                 <div className="form-group">
                                     <label className="form-label">Scorecard</label>
-                                    <select className="form-select select-dropdown" value={selectedPageId} onChange={e => setSelectedPageId(e.target.value)}>
+                                    <select className="form-select" value={selectedPageId} onChange={e => setSelectedPageId(e.target.value)}>
                                         <option value="" disabled hidden>Select Scorecard</option>
                                         {pages.map(p => (
                                             <option key={p.id || p.pageId} value={p.id || p.pageId}>
@@ -450,12 +450,12 @@ return (
                             <div className="g-col-12">
                                 <div className="form-group">
                                     <label className="form-label">Measures</label>
-                                    <select className="form-select select-dropdown" value={selectedKpiId} onChange={e => setSelectedKpiId(e.target.value)} disabled={!selectedPageId || loadingKpis}>
+                                    <select className="form-select" value={selectedKpiId} onChange={e => setSelectedKpiId(e.target.value)} disabled={!selectedPageId || loadingKpis}>
                                         <option value="" disabled hidden>
                                             {loadingKpis ? 'Loading…' : (selectedPageId && filteredKpis.length === 0 ? 'No record found' : 'Select Measure')}
                                         </option>
                                         {filteredKpis.map(k => (
-                                            <option key={k.id} value={k.id}>{k.name}</option>
+                                            <option key={k.id} value={k.id}>{k.code ? `${k.name} (${k.code})` : k.name}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -467,7 +467,7 @@ return (
                             <div className="g-col-12 g-col-lg-6">
                                 <div className="form-group">
                                     <label className="form-label">Sub Measures</label>
-                                    <select className="form-select select-dropdown" value={selectedSubKpiId} onChange={e => setSelectedSubKpiId(e.target.value)} disabled={!selectedKpiId || subKpis.length === 0}>
+                                    <select className="form-select" value={selectedSubKpiId} onChange={e => setSelectedSubKpiId(e.target.value)} disabled={!selectedKpiId || subKpis.length === 0}>
                                         <option value="" disabled hidden>Select Sub Measures</option>
                                         {subKpis.map(s => (
                                             <option key={s.id} value={s.id}>

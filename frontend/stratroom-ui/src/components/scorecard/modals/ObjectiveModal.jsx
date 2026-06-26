@@ -310,7 +310,10 @@ export const ObjectiveViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vodOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <OwnerSelect id="vodOwner" className="form-select select-dropdown-view-objective" />
+                                            <select name="vodOwner" id="vodOwner" data-placeholder="Select Owner"
+                                                className="form-select select-dropdown-view-objective" defaultValue="" disabled>
+                                                <option value="" disabled hidden>Select Owner</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
