@@ -425,7 +425,12 @@ public class KPIService {
     // db-layer controller can serve POST /validateFormula for the calculators.
     public String validateFormula(String formula, String type) {
         com.estrat.backend.db.util.FormulaUtil formulaUtil = new com.estrat.backend.db.util.FormulaUtil();
-        if ("OBJECTIVE".equalsIgnoreCase(type) || "PERSPECTIVE".equalsIgnoreCase(type)) {
+        // OBJECTIVE/PERSPECTIVE and the KPI Actual / YTD calculators all build formulas from
+        // the sc_ scorecard's node-key list (measures referenced as [code] or [name]). Validate
+        // them by the math shape (tokens -> 1) instead of the legacy checkNodekey path, which
+        // only knows the legacy KPI tables (keyed by name) and rejects the new sc_ codes.
+        if ("OBJECTIVE".equalsIgnoreCase(type) || "PERSPECTIVE".equalsIgnoreCase(type)
+                || "KPI".equalsIgnoreCase(type) || "YTD".equalsIgnoreCase(type)) {
             formula = StringUtils.replaceEach(formula, new String[]{"weight", "Weight", "WEIGHT"}, new String[]{"1", "1", "1"});
             return this.validateCustomFormula(formula);
         }
