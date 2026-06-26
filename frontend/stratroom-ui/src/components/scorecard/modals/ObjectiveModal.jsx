@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { OwnerSelect } from './KpiModal';
 
 export const ObjectiveAddModal = () => {
 
@@ -37,12 +38,7 @@ export const ObjectiveAddModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="abOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <select name="abOwner" id="abOwner"
-                                                className="form-select select-dropdown-add-objective"
-                                                data-placeholder="Select Owner" defaultValue="">
-                                                <option value="" disabled hidden>Select Owner</option>
-                                                <option value="1">Nizam Goolam</option>
-                                            </select>
+                                            <OwnerSelect id="abOwner" className="form-select select-dropdown-add-objective" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
@@ -165,14 +161,7 @@ export const ObjectiveEditModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="eodOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <select name="eodOwner" id="eodOwner"
-                                                className="form-select select-dropdown-edit-objective"
-                                                data-placeholder="Select Owner" defaultValue="">
-                                                <option value="" disabled hidden></option>
-                                                <option value="1">Option 1</option>
-                                                <option value="2">Option 2</option>
-                                                <option value="3">Option 3</option>
-                                            </select>
+                                            <OwnerSelect id="eodOwner" className="form-select select-dropdown-edit-objective" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
@@ -321,13 +310,7 @@ export const ObjectiveViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vodOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <select name="vodOwner" id="vodOwner" data-placeholder="Select Owner"
-                                                className="form-select select-dropdown-view-objective" defaultValue="">
-                                                <option value="" disabled hidden>Select Owner</option>
-                                                <option value="1">Option 1</option>
-                                                <option value="2">Option 2</option>
-                                                <option value="3">Option 3</option>
-                                            </select>
+                                            <OwnerSelect id="vodOwner" className="form-select select-dropdown-view-objective" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">

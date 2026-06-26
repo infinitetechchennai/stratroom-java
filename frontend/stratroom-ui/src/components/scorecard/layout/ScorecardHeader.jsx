@@ -93,7 +93,7 @@ export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel
                     <span className="icon">
                         <i data-lucide="bar-chart-2" style={{ width: '16px', height: '16px' }}></i>
                     </span>
-                    <span data-translate="page.scorecard.title">Scorecard</span>{' '}
+                    <span className="scorecard-title">{scorecardData?.scorecardName || 'Scorecard'}</span>{' '}
                     <span className="badge text-bg-success">{scorecardData?.overallScore || '100%'}</span>
                 </h4>
             </div>

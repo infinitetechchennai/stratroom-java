@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { OwnerSelect } from './KpiModal';
 
 export const PerspectiveAddModal = () => {
     useEffect(() => {
@@ -38,11 +39,7 @@ export const PerspectiveAddModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="apOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <select name="apOwner" id="apOwner" data-placeholder="Select Owner"
-                                                className="form-select select-dropdown-add-prespective" defaultValue="">
-                                                <option value="" disabled hidden>Select Owner</option>
-                                                <option value="1">Nizam Goolam</option>
-                                            </select>
+                                            <OwnerSelect id="apOwner" className="form-select select-dropdown-add-prespective" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
@@ -162,11 +159,7 @@ export const PerspectiveEditModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="epOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <select name="epOwner" id="epOwner" data-placeholder="Select Owner"
-                                                className="form-select select-dropdown-edit-prespective" defaultValue="">
-                                                <option value="" disabled hidden>Select Owner</option>
-                                                <option value="1">Nizam Goolam</option>
-                                            </select>
+                                            <OwnerSelect id="epOwner" className="form-select select-dropdown-edit-prespective" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
@@ -308,11 +301,7 @@ export const PerspectiveViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vpOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <select name="vpOwner" id="vpOwner" data-placeholder="Select Owner"
-                                                className="form-select select-dropdown-view-prespective" defaultValue="">
-                                                <option value="" disabled hidden>Select Owner</option>
-                                                <option value="1">Nizam Goolam</option>
-                                            </select>
+                                            <OwnerSelect id="vpOwner" className="form-select select-dropdown-view-prespective" />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">

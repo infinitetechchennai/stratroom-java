@@ -72,12 +72,10 @@ export default function MyFormsPage() {
     const [pages, setPages] = useState([]);           // available scorecards (pages)
     const [kpis, setKpis] = useState([]);             // flat list of kpis for selected scorecard
     const [subKpis, setSubKpis] = useState([]);
-    const [subMeasures, setSubMeasures] = useState([]);       // sub-kpis for selected kpi
 
     const [selectedPageId, setSelectedPageId] = useState('');
     const [selectedKpiId, setSelectedKpiId] = useState('');
     const [selectedSubKpiId, setSelectedSubKpiId] = useState('');
-    const [selectedSubMeasureId, setSelectedSubMeasureId] = useState('');
 
     // Auto-filled display fields
     const [fields, setFields] = useState({
@@ -96,6 +94,37 @@ export default function MyFormsPage() {
     const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState(null);
     const [loadingKpis, setLoadingKpis] = useState(false);
+
+    const [perfPeriod, setPerfPeriod] = useState('M');
+    const [dailyData, setDailyData] = useState(Array.from({length: 1}, () => ({ actual: '', target: '' })));
+    const [monthlyData, setMonthlyData] = useState(Array.from({length: 12}, () => ({ actual: '', target: '' })));
+    const [quarterlyData, setQuarterlyData] = useState(Array.from({length: 4}, () => ({ actual: '', target: '' })));
+    const [halfYearlyData, setHalfYearlyData] = useState(Array.from({length: 2}, () => ({ actual: '', target: '' })));
+    const [annualData, setAnnualData] = useState(Array.from({length: 1}, () => ({ actual: '', target: '' })));
+    
+    const handleDataChange = (period, index, field, value) => {
+        if (period === 'D') {
+            const newData = [...dailyData];
+            newData[index] = { ...newData[index], [field]: value };
+            setDailyData(newData);
+        } else if (period === 'M') {
+            const newData = [...monthlyData];
+            newData[index] = { ...newData[index], [field]: value };
+            setMonthlyData(newData);
+        } else if (period === 'Q') {
+            const newData = [...quarterlyData];
+            newData[index] = { ...newData[index], [field]: value };
+            setQuarterlyData(newData);
+        } else if (period === 'HY') {
+            const newData = [...halfYearlyData];
+            newData[index] = { ...newData[index], [field]: value };
+            setHalfYearlyData(newData);
+        } else if (period === 'A') {
+            const newData = [...annualData];
+            newData[index] = { ...newData[index], [field]: value };
+            setAnnualData(newData);
+        }
+    };
 
     // ── Load scorecard pages on mount ─────────────────────
     useEffect(() => {
@@ -182,6 +211,16 @@ export default function MyFormsPage() {
         }));
     }, [selectedSubKpiId, subKpis]);
 
+    useEffect(() => {
+        const mapping = { 'D': 'Daily', 'M': 'Monthly', 'Q': 'Quarterly', 'HY': 'Half Yearly', 'A': 'Annually' };
+        const validKpis = kpis.filter(k => k.measurement === mapping[perfPeriod] || k.measurement === perfPeriod);
+        if (selectedKpiId && !validKpis.find(k => String(k.id) === String(selectedKpiId))) {
+            setSelectedKpiId('');
+            setSelectedSubKpiId('');
+            resetFields();
+        }
+    }, [perfPeriod, kpis, selectedKpiId]);
+
     function resetFields() {
         setFields({ departmentName: '', measurementFrequency: '', kpiType: '', actual: '', target: '', startEndDate: '', period: '', validTill: '', comment: '' });
     }
@@ -191,9 +230,7 @@ export default function MyFormsPage() {
         if (!selectedKpiId) return;
         try {
             let hist = [];
-            if (selectedSubMeasureId) {
-                hist = await getSubMeasureHistory(selectedSubMeasureId, getDateRange());
-            } else if (selectedSubKpiId) {
+            if (selectedSubKpiId) {
                 hist = await getSubKpiHistory(selectedSubKpiId, getDateRange());
             } else {
                 hist = await getKpiHistory(selectedKpiId, getDateRange());
@@ -239,7 +276,7 @@ export default function MyFormsPage() {
             console.error(error);
             showToast('Failed to load history.', 'error');
         }
-    }, [selectedKpiId, selectedSubKpiId, selectedSubMeasureId]);
+    }, [selectedKpiId, selectedSubKpiId]);
 
     useEffect(() => {
         loadHistory();
@@ -249,6 +286,9 @@ export default function MyFormsPage() {
         setToast({ msg, type });
         setTimeout(() => setToast(null), 3500);
     }
+
+    const mapping = { 'D': 'Daily', 'M': 'Monthly', 'Q': 'Quarterly', 'HY': 'Half Yearly', 'A': 'Annually' };
+    const filteredKpis = kpis.filter(k => k.measurement === mapping[perfPeriod] || k.measurement === perfPeriod);
 
     // ── Save: upsert the actual into sc_kpi_history (V2), then refresh ─────
         const handleSave = async () => {
@@ -261,7 +301,16 @@ export default function MyFormsPage() {
             
             let actuals = [];
             
-            if (perfPeriod === "M") {
+            if (perfPeriod === "D") {
+                dailyData.forEach((data, index) => {
+                    const today = new Date();
+                    actuals.push({
+                        periodStart: `${year}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`,
+                        periodEnd: `${year}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`,
+                        actualValue: data.actual === '' ? null : Number(data.actual)
+                    });
+                });
+            } else if (perfPeriod === "M") {
                 monthlyData.forEach((data, index) => {
                     actuals.push({
                         periodStart: `${year}-${pad(index + 1)}-01`,
@@ -303,9 +352,7 @@ export default function MyFormsPage() {
                 return;
             }
 
-            if (selectedSubMeasureId) {
-                await recordSubMeasureActualBatch({ subMeasureId: Number(selectedSubMeasureId), actuals });
-            } else if (selectedSubKpiId) {
+            if (selectedSubKpiId) {
                 await recordSubKpiActualBatch({ subKpiId: Number(selectedSubKpiId), actuals });
             } else {
                 await recordKpiActualBatch({ kpiId: Number(selectedKpiId), actuals });
@@ -324,31 +371,6 @@ export default function MyFormsPage() {
     };
 
     // ── Render ─────────────────────────────────────────────
-    const [perfPeriod, setPerfPeriod] = useState('M');
-    const [monthlyData, setMonthlyData] = useState(Array.from({length: 12}, () => ({ actual: '', target: '' })));
-    const [quarterlyData, setQuarterlyData] = useState(Array.from({length: 4}, () => ({ actual: '', target: '' })));
-    const [halfYearlyData, setHalfYearlyData] = useState(Array.from({length: 2}, () => ({ actual: '', target: '' })));
-    const [annualData, setAnnualData] = useState(Array.from({length: 1}, () => ({ actual: '', target: '' })));
-    
-    const handleDataChange = (period, index, field, value) => {
-        if (period === 'M') {
-            const newData = [...monthlyData];
-            newData[index] = { ...newData[index], [field]: value };
-            setMonthlyData(newData);
-        } else if (period === 'Q') {
-            const newData = [...quarterlyData];
-            newData[index] = { ...newData[index], [field]: value };
-            setQuarterlyData(newData);
-        } else if (period === 'HY') {
-            const newData = [...halfYearlyData];
-            newData[index] = { ...newData[index], [field]: value };
-            setHalfYearlyData(newData);
-        } else if (period === 'A') {
-            const newData = [...annualData];
-            newData[index] = { ...newData[index], [field]: value };
-            setAnnualData(newData);
-        }
-    };
 return (
 <>
     <main className="pt-2 pb-2">
@@ -396,6 +418,8 @@ return (
                                 </div>
                                 <div className="performance-period-selector">
                                     <div className="radio-segmented-group">
+                                        <input type="radio" name="perf_period" id="periodD" value="D" checked={perfPeriod === "D"} onChange={(e) => setPerfPeriod(e.target.value)} />
+                                        <label htmlFor="periodD">D</label>
                                         <input type="radio" name="perf_period" id="periodM" value="M" checked={perfPeriod === "M"} onChange={(e) => setPerfPeriod(e.target.value)} />
                                         <label htmlFor="periodM">M</label>
                                         <input type="radio" name="perf_period" id="periodQ" value="Q" checked={perfPeriod === "Q"} onChange={(e) => setPerfPeriod(e.target.value)} />
@@ -425,17 +449,14 @@ return (
                             </div>
                             <div className="g-col-12">
                                 <div className="form-group">
-                                    <label className="form-label">Kpi</label>
+                                    <label className="form-label">Measures</label>
                                     <select className="form-select select-dropdown" value={selectedKpiId} onChange={e => setSelectedKpiId(e.target.value)} disabled={!selectedPageId || loadingKpis}>
                                         <option value="" disabled hidden>
-                                            {loadingKpis ? 'Loading…' : (selectedPageId && kpis.length === 0 ? 'No record found' : 'Select Kpi')}
+                                            {loadingKpis ? 'Loading…' : (selectedPageId && filteredKpis.length === 0 ? 'No record found' : 'Select Measure')}
                                         </option>
-                                        {kpis.map(k => (
+                                        {filteredKpis.map(k => (
                                             <option key={k.id} value={k.id}>{k.name}</option>
                                         ))}
-
-                                        <option value="Kpi 4">Kpi 4</option>
-                                        <option value="Kpi 5">Kpi 5</option>
                                     </select>
                                 </div>
                             </div>
@@ -445,26 +466,15 @@ return (
 
                             <div className="g-col-12 g-col-lg-6">
                                 <div className="form-group">
-                                    <label className="form-label">Measures</label>
+                                    <label className="form-label">Sub Measures</label>
                                     <select className="form-select select-dropdown" value={selectedSubKpiId} onChange={e => setSelectedSubKpiId(e.target.value)} disabled={!selectedKpiId || subKpis.length === 0}>
-                                        <option value="" disabled hidden>Select Measures</option>
+                                        <option value="" disabled hidden>Select Sub Measures</option>
                                         {subKpis.map(s => (
                                             <option key={s.id} value={s.id}>
-                                                {s.subKpiValue?.subMeasureName || s.name || `Sub-KPI ${s.id}`}
+                                                {s.subKpiValue?.subMeasureName || s.name || `Sub Measure ${s.id}`}
                                             </option>
                                         ))}
 
-                                    </select>
-                                </div>
-                            </div>
-                                                        <div className="g-col-12 g-col-lg-6">
-                                <div className="form-group">
-                                    <label className="form-label">Sub Measures</label>
-                                    <select className="form-select select-dropdown" value={selectedSubMeasureId} onChange={e => setSelectedSubMeasureId(e.target.value)} disabled={!selectedSubKpiId || subMeasures.length === 0}>
-                                        <option value="" disabled hidden>Select Sub Measures</option>
-                                        {subMeasures.map(sm => (
-                                            <option key={sm.id} value={sm.id}>{sm.name}</option>
-                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -487,11 +497,50 @@ return (
                                 </div>
                             </div>
                             {/* Only show grid if lowest level is selected */}
-                            {((!selectedKpiId) || (subKpis.length > 0 && !selectedSubKpiId) || (subMeasures.length > 0 && !selectedSubMeasureId)) ? null : (
+                            {((!selectedKpiId) || (subKpis.length > 0 && !selectedSubKpiId)) ? null : (
                             <>
                             {/* Performance Data */}
                             <div className="g-col-12">
                                 {/* <div className="performance-section-title">PERFORMANCE DATA — ACTUAL & TARGET</div> */}
+
+                                {/* Daily Section */}
+                                <div id="perf-section-D" className="perf-period-section" style={{display: perfPeriod === "D" ? "block" : "none"}}>
+                                    <div className="performance-head mb-3">
+                                        <h4 className="title text-muted">Daily Performance Data</h4>
+                                        <div className="legend-container">
+                                            <div className="legend-item">
+                                                <div className="legend-box actual"></div>
+                                                <span>Actual</span>
+                                            </div>
+                                            <div className="legend-item">
+                                                <div className="legend-box target"></div>
+                                                <span>Target</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="performance-data-container">
+                                        <div className="perf-grid single-column">
+                                            <div className="perf-column">
+                                                <div className="perf-table-row perf-header">
+                                                    <div className="perf-cell">DAY</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-green)"}}>ACTUAL</div>
+                                                    <div className="perf-cell" style={{color: "var(--stratroom-red)"}}>TARGET</div>
+                                                </div>
+                                                {dailyData.map((data, index) => (
+                                                    <div className="perf-table-row" key={index}>
+                                                        <div className="perf-cell perf-month">Daily</div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('D', index, 'actual', e.target.value)} />
+                                                        </div>
+                                                        <div className="perf-cell perf-input-cell">
+                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
                                 {/* Monthly Section */}

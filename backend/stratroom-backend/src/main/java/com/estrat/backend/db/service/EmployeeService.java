@@ -369,7 +369,7 @@ public class EmployeeService {
             }
             employee = this.getEmployeeHierarchyList(employee);
         }
-        if (employee.getParentEmpId() != 0L) {
+        if (superUserStatus && employee.getParentEmpId() != 0L) {
             employeeDTO.setEmployeeId(employee.getParentEmpId());
             Employee parentEmployee = this.getEmployee(employeeDTO);
             employee = this.buildParentObject(parentEmployee, employee);
@@ -1314,7 +1314,7 @@ public class EmployeeService {
             departmentResponse = this.getDepartmentHierarchyList(departmentResponse, null, year);
         }
 
-        if (departmentResponse.getDeptParentId() != null && departmentResponse.getDeptParentId() != 0L) {
+        if (superUserStatus && departmentResponse.getDeptParentId() != null && departmentResponse.getDeptParentId() != 0L) {
             DepartmentChartMapping parentMapping =
                 this.departmentChartMappingRepository.getOne(departmentResponse.getDeptParentId(), 0);
             if (parentMapping != null) {
