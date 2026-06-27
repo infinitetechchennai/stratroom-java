@@ -122,6 +122,7 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             export PATH=$PATH:/usr/local/bin
+            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
             echo "Deploying new version ${{ steps.tag_version.outputs.new_tag }}..."
             
             # Ensure namespace exists
