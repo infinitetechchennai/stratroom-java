@@ -6,3 +6,5 @@ metadata:
 data:
   init-db.sql: |
     CREATE DATABASE stratroomlicense;
+    \c clean;
+    CREATE SCHEMA IF NOT EXISTS orgstructure;
