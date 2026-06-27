@@ -17,7 +17,7 @@ spec:
       - name: ghcr-secret
       containers:
       - name: frontend
-        image: ghcr.io/kalee/stratroom-java-frontend:latest
+        image: ghcr.io/infinitetechchennai/stratroom-java-frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
