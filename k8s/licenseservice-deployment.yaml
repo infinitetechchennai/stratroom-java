@@ -13,6 +13,8 @@ spec:
       labels:
         app: licenseservice
     spec:
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
       - name: licenseservice
         image: ghcr.io/kalee/stratroom-java-licenseservice:latest
