@@ -1,0 +1,14 @@
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
+WORKDIR /build
+
+COPY backend/pom.xml pom.xml
+COPY backend/licenseservice licenseservice
+COPY backend/stratroom-backend stratroom-backend
+
+RUN mvn package -pl licenseservice -am -DskipTests --no-transfer-progress
+
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=builder /build/licenseservice/target/licenseservice-0.0.1.jar app.jar
+EXPOSE 9080
+ENTRYPOINT ["java", "-jar", "app.jar"]
