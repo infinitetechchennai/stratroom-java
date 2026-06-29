@@ -1870,10 +1870,10 @@ public class EmployeeService {
         DepartmentDetails departmentDetails;
         boolean status = false;
         Long oldParent = null;
-        if (StringUtils.isBlank(createdBy)) {
+        if (StringUtils.isBlank(createdBy) || "null".equals(createdBy)) {
             createdBy = UserThreadLocal.get();
         }
-        if (StringUtils.isBlank(createdBy)) {
+        if (StringUtils.isBlank(createdBy) || "null".equals(createdBy)) {
             createdBy = "0";
         }
         OrganizationDetails organizationDetails = this.getOrgDetails(deptImportDTO.getOrgName());

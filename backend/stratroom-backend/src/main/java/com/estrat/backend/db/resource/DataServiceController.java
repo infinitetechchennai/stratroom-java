@@ -564,7 +564,9 @@ public class DataServiceController {
             }
         }
         this.log.info("[Org Import] done — imported={} skipped={}", imported, skipped);
-        this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        if (loggedInEmpId != null && !"null".equals(loggedInEmpId)) {
+            this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        }
         if (imported == 0 && skipped > 0) {
             throw new InputValidationException("Import failed: 0 of " + skipped + " departments could be imported. Check that the Organization name in the Excel matches the system ('" + (deptImportDTOList.isEmpty() ? "" : deptImportDTOList.get(0).getOrgName()) + "').");
         }
