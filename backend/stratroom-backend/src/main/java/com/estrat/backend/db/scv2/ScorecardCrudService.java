@@ -481,10 +481,12 @@ public class ScorecardCrudService {
             if (actual == null && target == null) { skipped++; continue; }
 
             // Period: support "Period" (values file), "periodStart", "Period Start", "period_start"
-            String periodStr   = firstPresent(row, "Period", "period", "periodStart", "Period Start", "period_start");
+            Object periodStrObj = firstPresent(row, "Period", "period", "periodStart", "Period Start", "period_start");
+            String periodStr   = periodStrObj != null ? periodStrObj.toString() : null;
             String periodStart = parseRowDate(periodStr, defaultPeriodStart);
             String frequency   = firstNonBlank(row, "Frequency", "frequency", "Measurement Frequency");
-            String periodEndRaw = firstPresent(row, "periodEnd", "Period End", "period_end");
+            Object periodEndObj = firstPresent(row, "periodEnd", "Period End", "period_end");
+            String periodEndRaw = periodEndObj != null ? periodEndObj.toString() : null;
             String periodEnd;
             if (periodEndRaw != null && !periodEndRaw.isBlank()) {
                 periodEnd = parseRowDate(periodEndRaw, defaultPeriodEnd);
