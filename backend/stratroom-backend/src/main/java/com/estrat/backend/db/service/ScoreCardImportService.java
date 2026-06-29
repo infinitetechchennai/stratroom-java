@@ -172,10 +172,15 @@ public class ScoreCardImportService {
                     String formatStr = cell(kr, "Format");
                     String polarity = (formatStr != null && formatStr.toLowerCase().contains("lower"))
                             ? "LOWER" : "HIGHER";
-                    v2Kpi.put("polarity", polarity);
+                    v2Kpi.put("direction", polarity); // ScCrudService expects 'direction' not 'polarity'
                     v2Kpi.put("weight", kr.get("KPI Weight"));
-                    v2Kpi.put("measurementFrequency", cell(kr, "Measurement Frequency", "MeasurementFrequency"));
-                    v2Kpi.put("targetValue", kr.get("Yearly Target (sum of quarterly Targets)"));
+                    v2Kpi.put("measurementFrequency", cell(kr, "Measurement Frequency", "MeasurementFrequency", "Period Type"));
+                    
+                    Object targetObj = kr.get("Yearly Target (sum of quarterly Targets)");
+                    if (targetObj == null) targetObj = kr.get("Target");
+                    if (targetObj == null) targetObj = kr.get("TARGET");
+                    v2Kpi.put("targetValue", targetObj);
+                    
                     v2Kpi.put("displayOrder", kpiOrder++);
                     scorecardCrudService.createKpi(v2Kpi);
                 }

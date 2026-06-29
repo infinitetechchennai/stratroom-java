@@ -40,6 +40,7 @@ public class ScoreCardDetailsDTO {
     }
 
     public ScoreCardDetailsDTO(ScoreCardDetails scoreCardDetails) {
+        if (scoreCardDetails == null) return;
         this.id = scoreCardDetails.getId();
         this.active = scoreCardDetails.getActive();
         this.owner = scoreCardDetails.getOwner();
