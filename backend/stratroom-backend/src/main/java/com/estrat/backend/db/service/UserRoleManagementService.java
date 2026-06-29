@@ -657,7 +657,8 @@ public class UserRoleManagementService {
                 }
             }
             userRoleManagement.setEmpId(employee.getEmpId());
-            userRoleManagement.setUpdatedBy(Long.valueOf(UserThreadLocal.get()).longValue());
+            String _updByStr = UserThreadLocal.get(); long _updByVal = (_updByStr != null && !"null".equals(_updByStr)) ? Long.parseLong(_updByStr) : 0L;
+            userRoleManagement.setUpdatedBy(_updByVal);
             userRoleManagement.setUpdatedDate(LocalDateTime.now());
             userRoleManagement.setDesignation(employee.getTitle());
             userRoleManagement.setLocation(employee.getLocation());

@@ -1293,10 +1293,11 @@ public class EmployeeService {
             return designationList;
         }
         Long superUser = this.userRoleManagementService.superUserId();
+        String _orgStr1297 = UserThreadLocal.get("USER_ORG_ID"); long _orgId1297 = (_orgStr1297 != null && !"null".equals(_orgStr1297)) ? Long.parseLong(_orgStr1297) : 1L;
         if (name != null && StringUtils.isNotEmpty((CharSequence)name)) {
-            return this.employeeProfilePoRepo.findAllFirstNameListNoStatusString(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), "%" + name + "%", superUser.longValue());
+            return this.employeeProfilePoRepo.findAllFirstNameListNoStatusString(_orgId1297, "%" + name + "%", superUser.longValue());
         }
-        return this.employeeProfilePoRepo.findAllFirstNameListNoStatusString(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), superUser.longValue());
+        return this.employeeProfilePoRepo.findAllFirstNameListNoStatusString(_orgId1297, superUser.longValue());
     }
 
     /*
