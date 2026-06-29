@@ -1236,6 +1236,7 @@ function ImportWizard({ user, onClose, onComplete }) {
           if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
         })
       } else if (isScorecard) {
+        // KPI and SubKPI are on the SAME row — validate only the KPI-level required fields
         parsed.forEach((r, idx) => {
           const excelRow = idx + 2
           const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode')

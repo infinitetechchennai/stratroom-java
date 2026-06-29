@@ -107,6 +107,7 @@ public class ScoreCardImportService {
         v2Scorecard.put("classificationType", "THREE_COLOR");
         long v2ScorecardId = scorecardCrudService.createScorecard(v2Scorecard);
 
+        // All rows are on a single sheet — group by Perspective then Objective then KPI
         Map<String, List<Map<String, Object>>> byPerspective = new LinkedHashMap<>();
         for (Map<String, Object> r : deptRows) {
             String pName = cell(r, "Perspective Name", "PerspectiveName", "Perspective");
@@ -121,6 +122,7 @@ public class ScoreCardImportService {
             Map<String, Object> v2Perspective = new HashMap<>();
             v2Perspective.put("scorecardId", v2ScorecardId);
             v2Perspective.put("name", pEntry.getKey());
+            v2Perspective.put("code", cell(pFirstRow, "Perspective ID", "PerspectiveID"));
             v2Perspective.put("description", cell(pFirstRow, "Perspective Description", "PerspectiveDescription"));
             v2Perspective.put("weight", pFirstRow.get("Perspective Weight"));
             v2Perspective.put("displayOrder", perspectiveOrder++);
@@ -139,12 +141,14 @@ public class ScoreCardImportService {
 
                 Map<String, Object> v2Objective = new HashMap<>();
                 v2Objective.put("perspectiveId", v2PerspectiveId);
+                v2Objective.put("code", cell(oFirstRow, "ObJective ID", "Objective ID", "ObjectiveID"));
                 v2Objective.put("name", oEntry.getKey());
                 v2Objective.put("description", cell(oFirstRow, "Objective Description", "ObjectiveDescription"));
                 v2Objective.put("weight", oFirstRow.get("Objective Weight"));
                 v2Objective.put("displayOrder", objectiveOrder++);
                 long v2ObjectiveId = scorecardCrudService.createObjective(v2Objective);
 
+                // Group rows by KPI name (each row is one KPI + optional SubKPI in same row)
                 Map<String, List<Map<String, Object>>> byKpi = new LinkedHashMap<>();
                 for (Map<String, Object> or : oRows) {
                     String kName = cell(or, "KPI  NAME", "KPI Name", "KPI NAME", "Kpi Name", "KPI");
@@ -156,64 +160,83 @@ public class ScoreCardImportService {
                     List<Map<String, Object>> kRows = kEntry.getValue();
                     Map<String, Object> kFirstRow = kRows.get(0);
 
+                    // Resolve KPI DataType from 'DataType' column (Percentage / Currency / Number)
+                    String dataTypeRaw = cell(kFirstRow, "DataType", "Data Type", "UoM", "UOM", "Unit");
+                    String kpiDataType = resolveDataType(dataTypeRaw);
+                    String kpiCurrencyCode = resolveCurrency(kFirstRow, dataTypeRaw, "Currency");
+
                     Map<String, Object> v2Kpi = new HashMap<>();
                     v2Kpi.put("objectiveId", v2ObjectiveId);
-                    v2Kpi.put("code", cell(kFirstRow, "KPI ID", "KPIID", "Kpi ID"));
+                    String kpiCode = cell(kFirstRow, "KPI ID", "KPIID", "Kpi ID");
+                    v2Kpi.put("code", kpiCode);
                     v2Kpi.put("name", kEntry.getKey());
                     v2Kpi.put("description", cell(kFirstRow, "KPI Description", "KPIDescription"));
-
-                    String uom = cell(kFirstRow, "UoM", "UOM", "Unit");
-                    String dataType = "NUMBER";
-                    String currencyCode = null;
-                    if (uom != null) {
-                        String lower = uom.toLowerCase();
-                        if (lower.contains("%") || lower.contains("percent")) {
-                            dataType = "PERCENTAGE";
-                        } else if (lower.contains("$") || lower.contains("currency")
-                                || lower.contains("usd") || lower.contains("rm")) {
-                            dataType = "CURRENCY";
-                            currencyCode = "USD";
-                        }
-                    }
-                    v2Kpi.put("dataType", dataType);
-                    v2Kpi.put("currencyCode", currencyCode);
-
-                    String formatStr = cell(kFirstRow, "Format");
-                    String polarity = (formatStr != null && formatStr.toLowerCase().contains("lower"))
-                            ? "LOWER" : "HIGHER";
-                    v2Kpi.put("direction", polarity);
+                    v2Kpi.put("dataType", kpiDataType);
+                    v2Kpi.put("currencyCode", kpiCurrencyCode);
+                    // KPIType column: Lead / Lag — maps to indicatorType
+                    v2Kpi.put("indicatorType", cell(kFirstRow, "KPIType", "KPI Type"));
+                    // Direction: HIGHER is default; only use LOWER if KPIType or Format says so
+                    v2Kpi.put("direction", "HIGHER");
                     v2Kpi.put("weight", kFirstRow.get("KPI Weight"));
                     v2Kpi.put("measurementFrequency", cell(kFirstRow, "Measurement Frequency", "MeasurementFrequency", "Period Type"));
-                    
-                    Object targetObj = kFirstRow.get("Yearly Target (sum of quarterly Targets)");
-                    if (targetObj == null) targetObj = kFirstRow.get("Target");
-                    if (targetObj == null) targetObj = kFirstRow.get("TARGET");
-                    v2Kpi.put("targetValue", targetObj);
-                    
+                    v2Kpi.put("targetValue", null); // no explicit target in this file
                     v2Kpi.put("displayOrder", kpiOrder++);
                     long v2KpiId = scorecardCrudService.createKpi(v2Kpi);
+                    log.info("Imported KPI '{}' (id={}) under objective '{}'", kEntry.getKey(), v2KpiId, oEntry.getKey());
 
+                    // SubKPI is on the SAME ROW as the parent KPI
+                    // Column names: "SubKPI  NAME" (double-space), "SubKPI ID", "SubKPI Weight",
+                    //               "SubMeasurement Frequency", "SubDataType", "Sub Currency", "SubKPIType"
                     int subKpiOrder = 1;
-                    for (Map<String, Object> skr : kRows) {
-                        String skName = cell(skr, "SubKPI Name", "Sub-KPI Name", "Sub KPI Name");
-                        if (skName != null) {
-                            Map<String, Object> v2SubKpi = new HashMap<>();
-                            v2SubKpi.put("kpiId", v2KpiId);
-                            v2SubKpi.put("code", cell(skr, "SubKPI ID", "Sub-KPI ID", "Sub KPI ID"));
-                            v2SubKpi.put("name", skName);
-                            v2SubKpi.put("targetValue", skr.get("Target") != null ? skr.get("Target") : skr.get("TARGET"));
-                            v2SubKpi.put("weight", skr.get("SubKPI Weight"));
-                            v2SubKpi.put("dataType", dataType);
-                            v2SubKpi.put("displayOrder", subKpiOrder++);
-                            scorecardCrudService.createSubKpi(v2SubKpi);
-                        }
+                    for (Map<String, Object> subRow : kRows) {
+                        String skName = cell(subRow, "SubKPI  NAME", "SubKPI NAME", "SubKPI Name", "Sub-KPI Name", "Sub KPI Name");
+                        if (skName == null || skName.isBlank()) continue;
+
+                        String subDataTypeRaw = cell(subRow, "SubDataType", "Sub DataType", "SubKPI DataType");
+                        String subDataType = resolveDataType(subDataTypeRaw);
+                        String subCurrency = resolveCurrency(subRow, subDataTypeRaw, "Sub Currency", "SubCurrency");
+
+                        Map<String, Object> v2SubKpi = new HashMap<>();
+                        v2SubKpi.put("kpiId", v2KpiId);
+                        v2SubKpi.put("code", cell(subRow, "SubKPI ID", "Sub-KPI ID", "Sub KPI ID"));
+                        v2SubKpi.put("name", skName);
+                        v2SubKpi.put("dataType", subDataType);
+                        v2SubKpi.put("weight", subRow.get("SubKPI Weight"));
+                        v2SubKpi.put("targetValue", null);
+                        v2SubKpi.put("indicatorType", cell(subRow, "SubKPIType", "SubKPI Type"));
+                        v2SubKpi.put("direction", "HIGHER");
+                        v2SubKpi.put("displayOrder", subKpiOrder++);
+                        scorecardCrudService.createSubKpi(v2SubKpi);
+                        log.info("  → SubKPI '{}' under KPI '{}'", skName, kEntry.getKey());
                     }
                 }
             }
         }
 
         saveLegacyMetadataOnly(scorecardName, deptIdLong, deptUniqueId, pageId, empId, firstRow);
-        log.info("Imported scorecard '{}' for dept {} (pageId={})", scorecardName, deptUniqueId, pageId);
+        log.info("Completed scorecard '{}' for dept {}", scorecardName, deptUniqueId);
+    }
+
+    /** Map DataType string from Excel (Percentage / Currency / Number / Text) to system enum. */
+    private static String resolveDataType(String raw) {
+        if (raw == null) return "NUMBER";
+        String l = raw.toLowerCase();
+        if (l.contains("percent") || l.contains("%")) return "PERCENTAGE";
+        if (l.contains("currency") || l.contains("$") || l.contains("usd") || l.contains("rm")) return "CURRENCY";
+        return "NUMBER";
+    }
+
+    /** Extract currency code from the row if dataType is CURRENCY. */
+    private static String resolveCurrency(Map<String, Object> row, String dataTypeRaw, String... currencyCols) {
+        if (dataTypeRaw == null) return null;
+        if (!dataTypeRaw.toLowerCase().contains("currency") && !dataTypeRaw.toLowerCase().contains("$")) return null;
+        for (String col : currencyCols) {
+            Object v = row.get(col);
+            if (v != null && !String.valueOf(v).isBlank() && !"null".equalsIgnoreCase(String.valueOf(v))) {
+                return String.valueOf(v).trim();
+            }
+        }
+        return "USD";
     }
 
     /** Optional row in score_card_details for legacy endpoints — no perspective tree (avoids objectives table). */
