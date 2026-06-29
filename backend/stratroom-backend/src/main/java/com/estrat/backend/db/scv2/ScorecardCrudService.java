@@ -542,7 +542,7 @@ public class ScorecardCrudService {
                         if (generatedId != null) {
                             subKpiId = generatedId.longValue();
                             subKpiCodeToId.put(subKpiCode.trim(), subKpiId);
-                            log.info("Auto-created SubKPI code='{}' id={} under kpi_id={}", subKpiCode, subKpiId, kpiId);
+                            System.out.println("[SubKPI Auto-Create] code='" + subKpiCode + "' id=" + subKpiId + " kpi_id=" + kpiId);
                         }
                     }
                 }
