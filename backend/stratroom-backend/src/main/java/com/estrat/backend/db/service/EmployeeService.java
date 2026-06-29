@@ -1286,7 +1286,9 @@ public class EmployeeService {
             }
             List<String> designationList = new ArrayList();
             Long superUser = this.userRoleManagementService.superUserId();
-            designationList = name != null && StringUtils.isNotEmpty((CharSequence)name) ? this.employeeProfilePoRepo.findAllFirstNameListString(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), "%" + name + "%", firstDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), secondDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), superUser.longValue()) : this.employeeProfilePoRepo.findAllFirstNameListString(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), firstDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), secondDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), superUser.longValue());
+        String _orgStr1289 = UserThreadLocal.get("USER_ORG_ID"); long _orgId1289 = (_orgStr1289 != null && !"null".equals(_orgStr1289)) ? Long.parseLong(_orgStr1289) : 1L;
+            designationList = name != null && StringUtils.isNotEmpty((CharSequence)name) ? this.employeeProfilePoRepo.findAllFirstNameListString(_orgId1289, "%" + name + "%", firstDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), secondDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), superUser.longValue()) : this.employeeProfilePoRepo.findAllFirstNameListString(_orgId1289, firstDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), secondDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), superUser.longValue());
+
             if (designationList.isEmpty()) {
                 return new ArrayList<String>();
             }
@@ -2184,14 +2186,18 @@ public class EmployeeService {
     }
 
     public Long superUserDeptId() {
-        EmployeeProfilePo employeeProfilePo = (EmployeeProfilePo)this.employeeProfilePoRepo.getOne(this.userRoleManagementService.superUserId());
-        if (employeeProfilePo != null && employeeProfilePo.getDeptId() != null) {
-            DepartmentDetails departmentDetails = this.departmentDetailsRepository.findByDeptUniqueId(
-                    employeeProfilePo.getDeptId().getDeptUniqueID(), employeeProfilePo.getOrgId().getId(), "Active");
-            if (departmentDetails != null) {
-                return departmentDetails.getId();
+        long sid = this.userRoleManagementService.superUserId();
+        if (sid <= 0) return 0L;
+        try {
+            EmployeeProfilePo employeeProfilePo = this.employeeProfilePoRepo.findById(sid).orElse(null);
+            if (employeeProfilePo != null && employeeProfilePo.getDeptId() != null) {
+                DepartmentDetails departmentDetails = this.departmentDetailsRepository.findByDeptUniqueId(
+                        employeeProfilePo.getDeptId().getDeptUniqueID(), employeeProfilePo.getOrgId().getId(), "Active");
+                if (departmentDetails != null) {
+                    return departmentDetails.getId();
+                }
             }
-        }
+        } catch (Exception ignored) {}
         return 0L;
     }
 
