@@ -499,9 +499,55 @@ public class ScorecardCrudService {
             String subKpiCode = firstNonBlank(row, "SubKPI ID", "Sub KPI ID", "SUBKPIID", "subKpiId");
             if (subKpiCode != null && !subKpiCode.isBlank()) {
                 Long subKpiId = subKpiCodeToId.get(subKpiCode.trim());
+
+                // Auto-create the SubKPI if it doesn't exist yet — the values file may define
+                // SubKPIs (Sub-K2, Sub-K3...) that weren't in the structure file.
                 if (subKpiId == null) {
-                    unmatched++; continue;
+                    String kpiCode = firstNonBlank(row, "KPI ID", "KPIID", "Kpi ID");
+                    Long kpiId = kpiCode != null ? kpiCodeToId.get(kpiCode.trim()) : null;
+                    if (kpiId == null) {
+                        // Try global lookup if not on this page
+                        if (kpiCode != null) {
+                            List<Map<String, Object>> kpiRows = jdbc.queryForList(
+                                "SELECT id FROM sc_kpis WHERE code = ? AND is_deleted = false LIMIT 1", kpiCode.trim());
+                            if (!kpiRows.isEmpty()) kpiId = ((Number) kpiRows.get(0).get("id")).longValue();
+                        }
+                    }
+                    if (kpiId != null) {
+                        String skName = firstNonBlank(row, "SubKPI Name", "SubKPI  NAME", "SubKPI NAME", "Sub KPI Name");
+                        String skFreq = firstNonBlank(row, "Frequency", "frequency");
+                        String skDtRaw = firstNonBlank(row, "Data Type", "DataType");
+                        String skDt = skDtRaw != null ? skDtRaw.toUpperCase().replace("PERCENTAGE", "PERCENTAGE")
+                                                                              .replace("NUMBER", "NUMBER")
+                                                                              .replace("TEXT", "TEXT") : "NUMBER";
+                        // Insert new SubKPI
+                        KeyHolder kh = new GeneratedKeyHolder();
+                        final long fKpiId = kpiId;
+                        final String fCode = subKpiCode.trim();
+                        final String fName = (skName != null && !skName.isBlank()) ? skName : subKpiCode.trim();
+                        final String fDt   = skDt;
+                        jdbc.update(con -> {
+                            PreparedStatement ps = con.prepareStatement(
+                                "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
+                                + "null_handling, achievement_cap, display_order) "
+                                + "VALUES (?,?,?,0,'HIGHER',0,?,'EXCLUDE',150,1)",
+                                Statement.RETURN_GENERATED_KEYS);
+                            ps.setLong(1, fKpiId);
+                            ps.setString(2, fCode);
+                            ps.setString(3, fName);
+                            ps.setString(4, fDt);
+                            return ps;
+                        }, kh);
+                        Number generatedId = kh.getKey();
+                        if (generatedId != null) {
+                            subKpiId = generatedId.longValue();
+                            subKpiCodeToId.put(subKpiCode.trim(), subKpiId);
+                            log.info("Auto-created SubKPI code='{}' id={} under kpi_id={}", subKpiCode, subKpiId, kpiId);
+                        }
+                    }
                 }
+
+                if (subKpiId == null) { unmatched++; continue; }
                 jdbc.update(
                     "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value, target_value) "
                     + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
@@ -586,12 +632,49 @@ public class ScorecardCrudService {
             if (periodStart == null) { skipped++; continue; }
             String periodEnd = calcPeriodEnd(periodStart, frequency);
 
-            // ---- SubKPI history ----
+            // ---- SubKPI history (auto-create if missing) ----
             if (subKpiCode != null && !subKpiCode.isBlank()) {
                 Long subKpiId = subKpiCodeToId.get(subKpiCode.trim());
+
                 if (subKpiId == null) {
-                    unmatched++;
-                } else {
+                    // SubKPI not in DB — auto-create it under the parent KPI
+                    Long kpiId = kpiCode != null ? kpiCodeToId.get(kpiCode.trim()) : null;
+                    if (kpiId == null && kpiCode != null) {
+                        List<Map<String, Object>> kpiRows = jdbc.queryForList(
+                            "SELECT id FROM sc_kpis WHERE code = ? AND is_deleted = false LIMIT 1", kpiCode.trim());
+                        if (!kpiRows.isEmpty()) kpiId = ((Number) kpiRows.get(0).get("id")).longValue();
+                    }
+                    if (kpiId != null) {
+                        String skName = firstNonBlank(row, "SubKPI Name", "SubKPI  NAME", "SubKPI NAME", "Sub KPI Name");
+                        String skDtRaw = firstNonBlank(row, "Data Type", "DataType");
+                        String skDt = skDtRaw != null ? skDtRaw.toUpperCase() : "NUMBER";
+                        final long fKpiId = kpiId;
+                        final String fCode = subKpiCode.trim();
+                        final String fName = (skName != null && !skName.isBlank()) ? skName : subKpiCode.trim();
+                        final String fDt = skDt;
+                        KeyHolder kh = new GeneratedKeyHolder();
+                        jdbc.update(con -> {
+                            PreparedStatement ps = con.prepareStatement(
+                                "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
+                                + "null_handling, achievement_cap, display_order) "
+                                + "VALUES (?,?,?,0,'HIGHER',0,?,'EXCLUDE',150,1)",
+                                Statement.RETURN_GENERATED_KEYS);
+                            ps.setLong(1, fKpiId);
+                            ps.setString(2, fCode);
+                            ps.setString(3, fName);
+                            ps.setString(4, fDt);
+                            return ps;
+                        }, kh);
+                        Number generatedId = kh.getKey();
+                        if (generatedId != null) {
+                            subKpiId = generatedId.longValue();
+                            subKpiCodeToId.put(subKpiCode.trim(), subKpiId);
+                            log.info("Auto-created SubKPI code='{}' id={} under kpi_id={}", subKpiCode, subKpiId, kpiId);
+                        }
+                    }
+                }
+
+                if (subKpiId != null) {
                     jdbc.update(
                         "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value, target_value) "
                         + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
@@ -601,6 +684,8 @@ public class ScorecardCrudService {
                         + "calculated_at = NOW()",
                         subKpiId, periodStart, periodEnd, actual, target);
                     subKpiUpdated++;
+                } else {
+                    unmatched++;
                 }
             }
 
