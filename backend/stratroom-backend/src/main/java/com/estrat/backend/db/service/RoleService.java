@@ -676,8 +676,9 @@ public class RoleService {
 
     public Map<String, Object> getCustomRoles() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        List mapList = this.privilegeMappingDAO.getDefaultRoles(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
-        mapList.addAll(this.privilegeMappingDAO.getCustomRoles(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID"))));
+        String _orgStrRoles = UserThreadLocal.get("USER_ORG_ID"); long _orgIdRoles = (_orgStrRoles != null && !"null".equals(_orgStrRoles)) ? Long.parseLong(_orgStrRoles) : 1L;
+        List mapList = this.privilegeMappingDAO.getDefaultRoles(_orgIdRoles);
+        mapList.addAll(this.privilegeMappingDAO.getCustomRoles(_orgIdRoles));
         map.put("defaultRoles", mapList);
         return map;
     }
