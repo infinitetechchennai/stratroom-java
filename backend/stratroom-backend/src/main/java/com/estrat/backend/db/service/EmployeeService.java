@@ -2120,8 +2120,13 @@ public class EmployeeService {
 
     public void updateChildTracker(Long childId, Long oldParent, Long newParent, String type) {
         List childTrackerresult;
-        String orgId = UserThreadLocal.get((String)"USER_ORG_ID");
-        String empId = UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID");
+        String orgIdStr = UserThreadLocal.get((String)"USER_ORG_ID");
+        String empIdStr = UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID");
+        long orgId = 0L;
+        long empId = 0L;
+        try { if (orgIdStr != null && !"null".equals(orgIdStr)) orgId = Long.parseLong(orgIdStr); } catch (Exception ignored) {}
+        try { if (empIdStr != null && !"null".equals(empIdStr)) empId = Long.parseLong(empIdStr); } catch (Exception ignored) {}
+
         if (oldParent != null && (childTrackerresult = this.childTrackerRepository.findByListParentwoEndDate(oldParent, childId)) != null && childTrackerresult.size() > 0) {
             this.childTrackerRepository.updateParentwoEndDate(oldParent, childId);
         }
@@ -2130,8 +2135,8 @@ public class EmployeeService {
             childTracker_new.setChildId(childId);
             childTracker_new.setType(type);
             childTracker_new.setCreatedTime(LocalDateTime.now());
-            childTracker_new.setCreatedBy(Long.valueOf(Long.parseLong(empId)));
-            childTracker_new.setOrgId(Long.valueOf(Long.parseLong(orgId)));
+            childTracker_new.setCreatedBy(empId);
+            childTracker_new.setOrgId(orgId);
             childTracker_new.setParentId(newParent);
             childTracker_new.setFromDate(new Date());
             this.childTrackerRepository.save(childTracker_new);
