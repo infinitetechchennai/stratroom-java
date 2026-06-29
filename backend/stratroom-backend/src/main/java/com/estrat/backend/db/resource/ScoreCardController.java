@@ -140,9 +140,29 @@ public class ScoreCardController {
     @Autowired
     private com.estrat.backend.db.service.ScoreCardImportService scoreCardImportService;
 
+    @Autowired
+    private com.estrat.backend.db.scv2.ScorecardCrudService scorecardCrudService;
+
     @PostMapping(value={"/scorecard/bulkImport"})
     public ResponseEntity<ScoreCardResponseDTO> bulkImportScorecards(@RequestBody List<Map<String, Object>> rows) {
         return this.scoreCardImportService.bulkImportScorecards(rows);
+    }
+
+    /**
+     * Import Target + Actual values from the values/actuals file format.
+     * Each row must have: KPI ID, SubKPI ID, Period, Target, Actual, Frequency.
+     * Returns a summary of how many rows were updated.
+     */
+    @PostMapping(value={"/scorecard/bulkImportValues"})
+    public ResponseEntity<Map<String, Object>> bulkImportValues(@RequestBody List<Map<String, Object>> rows) {
+        try {
+            Map<String, Object> result = scorecardCrudService.importValuesFile(rows);
+            return new ResponseEntity<>(result, org.springframework.http.HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, Object> err = new java.util.HashMap<>();
+            err.put("error", e.getMessage());
+            return new ResponseEntity<>(err, org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping(value={"/scorecard/{id}"})

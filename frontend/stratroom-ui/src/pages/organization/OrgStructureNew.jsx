@@ -1311,11 +1311,30 @@ function ImportWizard({ user, onClose, onComplete }) {
         }
         setResult({ success: true, count: employees.length, kind: 'user(s)', ownersLinked })
       } else if (isScorecard) {
-        const res = await axiosClient.post('/api/scorecard/bulkImport', rows, { timeout: 600000 })
-        if (res.data?.flag === false) {
-          throw new Error(res.data?.message || 'Scorecard import failed on the server')
+        // Detect file type: values file has Period + Target + Actual columns; structure file does not
+        const firstRow = rows[0] || {}
+        const isValuesFile = ('Period' in firstRow || 'period' in firstRow) &&
+                             ('Target' in firstRow || 'TARGET' in firstRow) &&
+                             ('Actual' in firstRow || 'ACTUAL' in firstRow)
+
+        if (isValuesFile) {
+          // Values/actuals import — updates KPI and SubKPI history data
+          const res = await axiosClient.post('/api/scorecard/bulkImportValues', rows, { timeout: 600000 })
+          if (res.data?.error) throw new Error(res.data.error)
+          const { kpiRowsUpdated = 0, subKpiRowsUpdated = 0, unmatched = 0 } = res.data || {}
+          setResult({
+            success: true,
+            count: subKpiRowsUpdated || kpiRowsUpdated,
+            kind: `SubKPI value(s) updated (${subKpiRowsUpdated} sub-KPI rows, ${kpiRowsUpdated} KPI rows). Unmatched: ${unmatched}`
+          })
+        } else {
+          // Structure import — creates scorecard hierarchy
+          const res = await axiosClient.post('/api/scorecard/bulkImport', rows, { timeout: 600000 })
+          if (res.data?.flag === false) {
+            throw new Error(res.data?.message || 'Scorecard import failed on the server')
+          }
+          setResult({ success: true, count: rows.length, kind: 'scorecard row(s)' })
         }
-        setResult({ success: true, count: rows.length, kind: 'scorecard row(s)' })
       } else {
         // Department file first: hierarchy is created; owners/members link when employees exist.
         const depts = sortDepartmentsForImport(

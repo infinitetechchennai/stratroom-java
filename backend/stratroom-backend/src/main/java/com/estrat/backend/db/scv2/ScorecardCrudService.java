@@ -59,6 +59,8 @@ public class ScorecardCrudService {
         // scoring direction HIGHER/LOWER/TARGET/RANGE used by AchievementCalculator).
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
+        // Add target_value to sub_kpi_history so values-file imports can store targets per period
+        try { jdbc.execute("ALTER TABLE sc_sub_kpi_history ADD COLUMN target_value NUMERIC"); } catch (Exception ignore) {}
     }
 
     // ---------------- SCORECARD ----------------
@@ -507,6 +509,110 @@ public class ScorecardCrudService {
                             + "Org-wide data files only update rows for the open scorecard.");
         }
         return result;
+    }
+
+    /**
+     * Imports Target + Actual values from the values/actuals Excel file format.
+     * Each row has: KPI ID, SubKPI ID, Period (date), Target, Actual, Frequency.
+     * Looks up SubKPIs by code and upserts into sc_sub_kpi_history + sc_kpi_history.
+     *
+     * Values file columns: Department ID, Scorecard, Perspective ID, Perspective,
+     *   Objective ID, Objective, KPI ID, KPI Name, ..., SubKPI ID, SubKPI Name,
+     *   SubKPI Weight, Frequency, Data Type, Period, Target, Actual
+     */
+    @Transactional
+    public Map<String, Object> importValuesFile(List<Map<String, Object>> rows) {
+        int kpiUpdated = 0, subKpiUpdated = 0, unmatched = 0, skipped = 0;
+
+        // Build code->id maps by scanning the whole database once (all KPIs + SubKPIs)
+        Map<String, Long> kpiCodeToId = new HashMap<>();
+        jdbc.queryForList("SELECT id, code FROM sc_kpis WHERE code IS NOT NULL AND is_deleted = false")
+            .forEach(r -> {
+                String c = r.get("code") != null ? r.get("code").toString().trim() : null;
+                if (c != null && !c.isEmpty()) kpiCodeToId.put(c, ((Number) r.get("id")).longValue());
+            });
+
+        Map<String, Long> subKpiCodeToId = new HashMap<>();
+        jdbc.queryForList("SELECT id, code FROM sc_sub_kpis WHERE code IS NOT NULL")
+            .forEach(r -> {
+                String c = r.get("code") != null ? r.get("code").toString().trim() : null;
+                if (c != null && !c.isEmpty()) subKpiCodeToId.put(c, ((Number) r.get("id")).longValue());
+            });
+
+        for (Map<String, Object> row : rows) {
+            String kpiCode    = firstNonBlank(row, "KPI ID", "KPIID", "Kpi ID");
+            String subKpiCode = firstNonBlank(row, "SubKPI ID", "Sub KPI ID", "SUBKPIID");
+            String periodStr  = firstNonBlank(row, "Period", "period", "Period Start", "PeriodStart");
+            String frequency  = firstNonBlank(row, "Frequency", "frequency", "Measurement Frequency");
+            BigDecimal target = parseNumber(firstPresent(row, "Target", "TARGET", "target"));
+            BigDecimal actual = parseNumber(firstPresent(row, "Actual", "ACTUAL", "actual"));
+
+            if (target == null && actual == null) { skipped++; continue; }
+            if (periodStr == null || periodStr.isBlank()) { skipped++; continue; }
+
+            String periodStart = parseRowDate(periodStr, null);
+            if (periodStart == null) { skipped++; continue; }
+            String periodEnd = calcPeriodEnd(periodStart, frequency);
+
+            // ---- SubKPI history ----
+            if (subKpiCode != null && !subKpiCode.isBlank()) {
+                Long subKpiId = subKpiCodeToId.get(subKpiCode.trim());
+                if (subKpiId == null) {
+                    unmatched++;
+                } else {
+                    jdbc.update(
+                        "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value, target_value) "
+                        + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
+                        + "ON CONFLICT (sub_kpi_id, period_start, period_end) DO UPDATE SET "
+                        + "actual_value = COALESCE(EXCLUDED.actual_value, sc_sub_kpi_history.actual_value), "
+                        + "target_value = COALESCE(EXCLUDED.target_value, sc_sub_kpi_history.target_value), "
+                        + "calculated_at = NOW()",
+                        subKpiId, periodStart, periodEnd, actual, target);
+                    subKpiUpdated++;
+                }
+            }
+
+            // ---- KPI history ----
+            if (kpiCode != null && !kpiCode.isBlank()) {
+                Long kpiId = kpiCodeToId.get(kpiCode.trim());
+                if (kpiId != null) {
+                    jdbc.update(
+                        "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value, target_value) "
+                        + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
+                        + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET "
+                        + "actual_value = COALESCE(EXCLUDED.actual_value, sc_kpi_history.actual_value), "
+                        + "target_value = COALESCE(EXCLUDED.target_value, sc_kpi_history.target_value), "
+                        + "calculated_at = NOW()",
+                        kpiId, periodStart, periodEnd, actual, target);
+                    kpiUpdated++;
+                }
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("kpiRowsUpdated", kpiUpdated);
+        result.put("subKpiRowsUpdated", subKpiUpdated);
+        result.put("unmatched", unmatched);
+        result.put("skipped", skipped);
+        result.put("totalRows", rows.size());
+        return result;
+    }
+
+    /** Calculate period_end from period_start + frequency. */
+    private static String calcPeriodEnd(String periodStart, String frequency) {
+        try {
+            LocalDate d = LocalDate.parse(periodStart);
+            if (frequency != null) {
+                String f = frequency.toLowerCase();
+                if (f.contains("annual") || f.contains("year")) return d.plusMonths(12).minusDays(1).toString();
+                if (f.contains("quarter"))                        return d.plusMonths(3).minusDays(1).toString();
+                if (f.contains("semi"))                           return d.plusMonths(6).minusDays(1).toString();
+            }
+            // Default: Monthly
+            return d.plusMonths(1).minusDays(1).toString();
+        } catch (Exception e) {
+            return periodStart;
+        }
     }
 
     // private Map<String, Long> loadCodeToIdMap(Long scorecardId) {

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Bulk scorecard import from Excel rows.
@@ -42,6 +43,9 @@ public class ScoreCardImportService {
 
     @Autowired
     private ScorecardCrudService scorecardCrudService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public ResponseEntity<ScoreCardResponseDTO> bulkImportScorecards(List<Map<String, Object>> rows) {
         ScoreCardResponseDTO response = new ScoreCardResponseDTO();
@@ -80,6 +84,29 @@ public class ScoreCardImportService {
         if (deptIdLong == null) {
             log.warn("Skipping scorecard {} — department not found for id {}", scorecardName, deptUniqueId);
             return;
+        }
+
+        // DUPLICATE CHECK: if a scorecard with the same name already exists for this department,
+        // delete it (cascade removes all perspectives / objectives / KPIs / SubKPIs) so that
+        // re-uploading the same Excel file replaces the old data instead of duplicating it.
+        try {
+            List<Map<String, Object>> existing = jdbcTemplate.queryForList(
+                    "SELECT id, page_id FROM sc_scorecards WHERE department_id = ? AND name = ?",
+                    deptIdLong, scorecardName);
+            for (Map<String, Object> old : existing) {
+                long oldId = ((Number) old.get("id")).longValue();
+                scorecardCrudService.deleteScorecard(oldId); // cascades to sc_perspectives/objectives/kpis/sub_kpis
+                // Also remove the orphaned page_details row so the nav menu stays clean
+                Object oldPageId = old.get("page_id");
+                if (oldPageId != null) {
+                    try {
+                        jdbcTemplate.update("DELETE FROM page_details WHERE id = ?", ((Number) oldPageId).longValue());
+                    } catch (Exception ignore) { /* page may already be gone */ }
+                }
+                log.info("Removed existing scorecard id={} (name='{}', dept={}) before re-import", oldId, scorecardName, deptUniqueId);
+            }
+        } catch (Exception e) {
+            log.warn("Could not check/remove existing scorecard for dept={} name='{}': {}", deptUniqueId, scorecardName, e.getMessage());
         }
 
         PagesDetails page = new PagesDetails();
