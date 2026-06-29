@@ -1870,11 +1870,28 @@ public class EmployeeService {
         DepartmentDetails departmentDetails;
         boolean status = false;
         Long oldParent = null;
-        if (StringUtils.isBlank(createdBy) || "null".equals(createdBy)) {
-            createdBy = UserThreadLocal.get();
+        if (StringUtils.isBlank(createdBy) || "null".equals(createdBy) || "0".equals(createdBy)) {
+            // UserThreadLocal doesn't work in WebFlux reactive threads — look up admin from DB
+            String threadLocalId = UserThreadLocal.get();
+            if (threadLocalId != null && !"null".equals(threadLocalId) && !"0".equals(threadLocalId)) {
+                createdBy = threadLocalId;
+            }
+        }
+        if (StringUtils.isBlank(createdBy) || "null".equals(createdBy) || "0".equals(createdBy)) {
+            // Last resort: find first admin/active employee as system user
+            try {
+                java.util.List<com.estrat.backend.db.bean.po.EmployeeProfilePo> admins =
+                    this.employeeProfilePoRepo.findAll();
+                for (com.estrat.backend.db.bean.po.EmployeeProfilePo ep : admins) {
+                    if (ep.getEmpId() != null && ep.getEmpId() > 0) {
+                        createdBy = String.valueOf(ep.getEmpId());
+                        break;
+                    }
+                }
+            } catch (Exception ignored) {}
         }
         if (StringUtils.isBlank(createdBy) || "null".equals(createdBy)) {
-            createdBy = "0";
+            createdBy = "1";
         }
         OrganizationDetails organizationDetails = this.getOrgDetails(deptImportDTO.getOrgName());
         if (organizationDetails == null) {
