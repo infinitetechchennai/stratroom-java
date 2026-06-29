@@ -145,15 +145,24 @@ public class ScoreCardImportService {
                 v2Objective.put("displayOrder", objectiveOrder++);
                 long v2ObjectiveId = scorecardCrudService.createObjective(v2Objective);
 
+                Map<String, List<Map<String, Object>>> byKpi = new LinkedHashMap<>();
+                for (Map<String, Object> or : oRows) {
+                    String kName = cell(or, "KPI  NAME", "KPI Name", "KPI NAME", "Kpi Name", "KPI");
+                    byKpi.computeIfAbsent(kName != null ? kName : "KPI", k -> new ArrayList<>()).add(or);
+                }
+
                 int kpiOrder = 1;
-                for (Map<String, Object> kr : oRows) {
+                for (Map.Entry<String, List<Map<String, Object>>> kEntry : byKpi.entrySet()) {
+                    List<Map<String, Object>> kRows = kEntry.getValue();
+                    Map<String, Object> kFirstRow = kRows.get(0);
+
                     Map<String, Object> v2Kpi = new HashMap<>();
                     v2Kpi.put("objectiveId", v2ObjectiveId);
-                    v2Kpi.put("code", cell(kr, "KPI ID", "KPIID", "Kpi ID"));
-                    v2Kpi.put("name", cell(kr, "KPI  NAME", "KPI Name", "KPI NAME", "Kpi Name", "KPI"));
-                    v2Kpi.put("description", cell(kr, "KPI Description", "KPIDescription"));
+                    v2Kpi.put("code", cell(kFirstRow, "KPI ID", "KPIID", "Kpi ID"));
+                    v2Kpi.put("name", kEntry.getKey());
+                    v2Kpi.put("description", cell(kFirstRow, "KPI Description", "KPIDescription"));
 
-                    String uom = cell(kr, "UoM", "UOM", "Unit");
+                    String uom = cell(kFirstRow, "UoM", "UOM", "Unit");
                     String dataType = "NUMBER";
                     String currencyCode = null;
                     if (uom != null) {
@@ -169,20 +178,36 @@ public class ScoreCardImportService {
                     v2Kpi.put("dataType", dataType);
                     v2Kpi.put("currencyCode", currencyCode);
 
-                    String formatStr = cell(kr, "Format");
+                    String formatStr = cell(kFirstRow, "Format");
                     String polarity = (formatStr != null && formatStr.toLowerCase().contains("lower"))
                             ? "LOWER" : "HIGHER";
-                    v2Kpi.put("direction", polarity); // ScCrudService expects 'direction' not 'polarity'
-                    v2Kpi.put("weight", kr.get("KPI Weight"));
-                    v2Kpi.put("measurementFrequency", cell(kr, "Measurement Frequency", "MeasurementFrequency", "Period Type"));
+                    v2Kpi.put("direction", polarity);
+                    v2Kpi.put("weight", kFirstRow.get("KPI Weight"));
+                    v2Kpi.put("measurementFrequency", cell(kFirstRow, "Measurement Frequency", "MeasurementFrequency", "Period Type"));
                     
-                    Object targetObj = kr.get("Yearly Target (sum of quarterly Targets)");
-                    if (targetObj == null) targetObj = kr.get("Target");
-                    if (targetObj == null) targetObj = kr.get("TARGET");
+                    Object targetObj = kFirstRow.get("Yearly Target (sum of quarterly Targets)");
+                    if (targetObj == null) targetObj = kFirstRow.get("Target");
+                    if (targetObj == null) targetObj = kFirstRow.get("TARGET");
                     v2Kpi.put("targetValue", targetObj);
                     
                     v2Kpi.put("displayOrder", kpiOrder++);
-                    scorecardCrudService.createKpi(v2Kpi);
+                    long v2KpiId = scorecardCrudService.createKpi(v2Kpi);
+
+                    int subKpiOrder = 1;
+                    for (Map<String, Object> skr : kRows) {
+                        String skName = cell(skr, "SubKPI Name", "Sub-KPI Name", "Sub KPI Name");
+                        if (skName != null) {
+                            Map<String, Object> v2SubKpi = new HashMap<>();
+                            v2SubKpi.put("kpiId", v2KpiId);
+                            v2SubKpi.put("code", cell(skr, "SubKPI ID", "Sub-KPI ID", "Sub KPI ID"));
+                            v2SubKpi.put("name", skName);
+                            v2SubKpi.put("targetValue", skr.get("Target") != null ? skr.get("Target") : skr.get("TARGET"));
+                            v2SubKpi.put("weight", skr.get("SubKPI Weight"));
+                            v2SubKpi.put("dataType", dataType);
+                            v2SubKpi.put("displayOrder", subKpiOrder++);
+                            scorecardCrudService.createSubKpi(v2SubKpi);
+                        }
+                    }
                 }
             }
         }
