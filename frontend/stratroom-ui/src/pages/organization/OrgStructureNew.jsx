@@ -1239,9 +1239,9 @@ function ImportWizard({ user, onClose, onComplete }) {
         parsed.forEach((r, idx) => {
           const excelRow = idx + 2
           const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode')
-          const scorecardName = importColVal(r, 'ScoreCardName', 'Scorecard Name', 'ScorecardName', 'Score Card Name')
-          const perspective = importColVal(r, 'Perspective Name', 'PerspectiveName')
-          const objective = importColVal(r, 'Objective Name', 'ObjectiveName')
+          const scorecardName = importColVal(r, 'ScoreCardName', 'Scorecard Name', 'ScorecardName', 'Score Card Name', 'Department')
+          const perspective = importColVal(r, 'Perspective Name', 'PerspectiveName', 'Perspective')
+          const objective = importColVal(r, 'Objective Name', 'ObjectiveName', 'Objective')
           const kpiName = importColVal(r, 'KPI  NAME', 'KPI Name', 'KPI NAME', 'KPI', 'Kpi Name')
           if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
           if (!scorecardName) errs.push({ sheet: sheetName, row: excelRow, cell: 'ScoreCardName', reason: 'Scorecard name is required' })

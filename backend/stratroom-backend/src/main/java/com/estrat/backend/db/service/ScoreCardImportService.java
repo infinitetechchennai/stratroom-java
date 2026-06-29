@@ -75,7 +75,7 @@ public class ScoreCardImportService {
 
     private void importDeptGroup(String deptUniqueId, List<Map<String, Object>> deptRows, Long empId) {
         Map<String, Object> firstRow = deptRows.get(0);
-        String scorecardName = cell(firstRow, "ScoreCardName", "Scorecard Name", "ScorecardName");
+        String scorecardName = cell(firstRow, "ScoreCardName", "Scorecard Name", "ScorecardName", "Score Card Name", "Department");
         Long deptIdLong = resolveDeptId(deptUniqueId);
         if (deptIdLong == null) {
             log.warn("Skipping scorecard {} — department not found for id {}", scorecardName, deptUniqueId);
@@ -109,7 +109,7 @@ public class ScoreCardImportService {
 
         Map<String, List<Map<String, Object>>> byPerspective = new LinkedHashMap<>();
         for (Map<String, Object> r : deptRows) {
-            String pName = cell(r, "Perspective Name", "PerspectiveName");
+            String pName = cell(r, "Perspective Name", "PerspectiveName", "Perspective");
             byPerspective.computeIfAbsent(pName != null ? pName : "Perspective", k -> new ArrayList<>()).add(r);
         }
 
@@ -128,7 +128,7 @@ public class ScoreCardImportService {
 
             Map<String, List<Map<String, Object>>> byObjective = new LinkedHashMap<>();
             for (Map<String, Object> pr : pRows) {
-                String oName = cell(pr, "Objective Name", "ObjectiveName");
+                String oName = cell(pr, "Objective Name", "ObjectiveName", "Objective");
                 byObjective.computeIfAbsent(oName != null ? oName : "Objective", k -> new ArrayList<>()).add(pr);
             }
 
