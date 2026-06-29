@@ -8,6 +8,13 @@ import {
   addKpiComment,
   getKpiAttachments,
 } from "../../api/kpiApi";
+import { KpiDescriptionModal } from "../../components/scorecard/modals/KpiDescriptionModal";
+import { FilesViewModal } from "../../components/scorecard/modals/FilesViewModal";
+import { FileUploadModal } from "../../components/scorecard/modals/FileUploadModal";
+import { DeleteModal } from "../../components/scorecard/modals/UtilityModals";
+import KpiSidebar from '../../components/scorecard/sidebar/KpiSidebar';
+import { downloadKpiReport } from "../../utils/kpiReport";
+import ReactApexChart from "react-apexcharts";
 
 // ── palette ──────────────────────────────────────────────────────────────────
 const DARK_BLUE = "#883b71";
@@ -129,6 +136,19 @@ function useKpiStoryCard(kpiId, dateRange) {
     ]);
     const val = (r, d) => (r.status === "fulfilled" && r.value != null ? r.value : d);
     const story = storyR.status === "fulfilled" && storyR.value ? storyR.value : {};
+    
+    // Retrieve mock files from local storage
+    let mockFiles = [];
+    try {
+        const kpiKey = `mock_files_kpi_${kpiId}`;
+        const stored = localStorage.getItem(kpiKey);
+        if (stored) {
+            mockFiles = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error("Failed to parse mock files from local storage", e);
+    }
+    
     setState({
       loading: false,
       error: storyR.status === "rejected" ? "Failed to load KPI details from server." : null,
@@ -137,7 +157,7 @@ function useKpiStoryCard(kpiId, dateRange) {
       initiatives: val(initR, []),
       risks: val(riskR, []),
       comments: val(commentR, []),
-      files: val(fileR, []),
+      files: (mockFiles.length > 0 ? mockFiles : val(fileR, [])).map((f, idx) => ({ ...f, id: f.id || `file_${Date.now()}_${idx}` })),
     });
   }, [kpiId, dateRange]);
 
@@ -145,7 +165,17 @@ function useKpiStoryCard(kpiId, dateRange) {
     load();
   }, [load]);
 
-  return { ...state, reload: load, reloadComments: loadComments };
+  const setFiles = useCallback((updater) => {
+    setState((s) => {
+      const newFiles = typeof updater === "function" ? updater(s.files) : updater;
+      if (kpiId) {
+        localStorage.setItem(`mock_files_kpi_${kpiId}`, JSON.stringify(newFiles));
+      }
+      return { ...s, files: newFiles };
+    });
+  }, [kpiId]);
+
+  return { ...state, reload: load, reloadComments: loadComments, setFiles };
 }
 
 // aggregate series rows → one point per period (summed across measures)
@@ -170,11 +200,43 @@ function aggregateByPeriod(series) {
 }
 
 // ── shared tiny components ────────────────────────────────────────────────────
-function ThreeDot() {
-  return <button style={S.dotBtn} aria-label="more options">⋮</button>;
+function CardHeader({ title, extra, dropdownOptions = [{ label: "View" }] }) {
+  return (
+    <div className="card-header">
+      <div className="c-header-left">
+        <h5 className="card-title"><strong>{title}</strong></h5>
+      </div>
+      <div className="card-actions">
+        {extra}
+        <div className="dropdown">
+          <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img width="16" height="16" src="/images/menu-dot-vertical-i.svg" onError={(e) => { e.target.style.display='none' }} />
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end border-0 shadow">
+            {dropdownOptions.map((opt, i) => (
+              <li key={i}>
+                <a 
+                  className="dropdown-item" 
+                  href="#" 
+                  data-bs-toggle={opt.dataToggle} 
+                  data-bs-target={opt.dataTarget} 
+                  onClick={(e) => { 
+                    if (!opt.dataToggle) e.preventDefault(); 
+                    if (opt.onClick) opt.onClick(e);
+                  }}
+                >
+                  {opt.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function Avatar({ initials, bg, size = 34 }) {
+function Avatar({ initials, bg, size = 28 }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: "50%",
@@ -187,51 +249,385 @@ function Avatar({ initials, bg, size = 34 }) {
   );
 }
 
-function Panel({ children, style }) {
-  return <div style={{ ...S.panel, ...style }}>{children}</div>;
-}
-
-function PanelHeader({ title, extra }) {
-  return (
-    <div style={S.panelHeader}>
-      <span style={S.panelTitle}>{title}</span>
-      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        {extra}
-        <ThreeDot />
-      </div>
-    </div>
-  );
-}
-
-function EmptyRow({ children = "No data available", pad = "16px 14px" }) {
-  return <div style={{ padding: pad, fontSize: 12, color: "#aaa", textAlign: "center" }}>{children}</div>;
+function EmptyRow({ children = "No data available" }) {
+  return <div style={{ padding: "20px 14px", fontSize: 12, color: "#aaa", textAlign: "center" }}>{children}</div>;
 }
 
 // ── styles ────────────────────────────────────────────────────────────────────
 const S = {
   page: { fontFamily: "system-ui,sans-serif", background: GREY_BG, minHeight: "100vh", paddingBottom: 40 },
-  panel: { background: WHITE, border: "1px solid #dde0e8", borderRadius: 4, overflow: "hidden" },
-  panelHeader: {
-    display: "flex", justifyContent: "space-between", alignItems: "center",
-    padding: "8px 14px", background: DARK_BLUE, color: WHITE
-  },
-  panelTitle: { fontSize: 14, fontWeight: 600, color: WHITE },
-  dotBtn: {
-    background: WHITE, border: "none", cursor: "pointer",
-    fontSize: 14, color: DARK_BLUE, padding: "2px 6px", borderRadius: 4, lineHeight: 1, fontWeight: "bold"
-  },
   th: (bg = TH_BG, color = TH_COLOR) => ({
-    padding: "8px 10px", fontSize: 11, fontWeight: 600, textTransform: "uppercase",
+    padding: "6px 8px", fontSize: 11, fontWeight: 600, textTransform: "uppercase",
     background: bg, color, border: "1px solid #ddd", textAlign: "center", whiteSpace: "nowrap",
   }),
-  td: { padding: "8px 10px", border: "1px solid #eee", fontSize: 12, textAlign: "center", color: "#333" },
-  tdNeg: { padding: "8px 10px", border: "1px solid #eee", fontSize: 12, textAlign: "center", color: "#e74c3c" },
+  td: { padding: "6px 8px", border: "1px solid #eee", fontSize: 12, textAlign: "center", color: "#333" },
+  tdNeg: { padding: "6px 8px", border: "1px solid #eee", fontSize: 12, textAlign: "center", color: "#e74c3c" },
   monthTh: (color) => ({
-    background: color, color: WHITE, fontWeight: 600, fontSize: 12,
-    textAlign: "center", padding: "6px 0", border: "1px solid rgba(255,255,255,.25)",
+    background: color, color: WHITE, fontWeight: 600, fontSize: 11,
+    textAlign: "center", padding: "5px 0", border: "1px solid rgba(255,255,255,.25)",
     whiteSpace: "nowrap", textTransform: "uppercase"
   }),
 };
+
+// ── VIEW DATA DRILL MODAL ─────────────────────────────────────────────────────────────
+function ViewDataDrillModal({ series }) {
+  const [drillType, setDrillType] = useState("Monthly");
+  const [expandedRows, setExpandedRows] = useState({});
+
+  useEffect(() => {
+    const modalEl = document.getElementById('viewdataDrillModal');
+    if (!modalEl) return;
+
+    const onShow = () => {
+      window.history.pushState({ modal: 'dataDrill' }, '', '#dataDrill');
+    };
+
+    const onHide = () => {
+      if (window.location.hash === '#dataDrill') {
+        window.history.back();
+      }
+    };
+
+    const handlePopState = () => {
+      if (modalEl.classList.contains('show')) {
+        const modal = window.bootstrap?.Modal?.getInstance(modalEl);
+        if (modal) modal.hide();
+      }
+    };
+
+    modalEl.addEventListener('show.bs.modal', onShow);
+    modalEl.addEventListener('hide.bs.modal', onHide);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      modalEl.removeEventListener('show.bs.modal', onShow);
+      modalEl.removeEventListener('hide.bs.modal', onHide);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  const toggleRow = (measure) => {
+    setExpandedRows(prev => ({ ...prev, [measure]: !prev[measure] }));
+  };
+
+  const periods = [];
+  const seenPeriods = new Set();
+  const byMeasure = new Map();
+  const byParent = new Map();
+  const rootMeasures = [];
+
+  const getGroupedPeriod = (orderDate, type) => {
+    if (!orderDate) return "—";
+    const d = parseDate(orderDate);
+    if (!d) return orderDate;
+    
+    const year = d.getFullYear();
+    const month = d.getMonth(); // 0-11
+    
+    if (type === "Quarterly") {
+      const q = Math.floor(month / 3) + 1;
+      return `Q${q} ${year}`;
+    } else if (type === "Half Yearly") {
+      const h = month < 6 ? 1 : 2;
+      return `H${h} ${year}`;
+    } else if (type === "Annually") {
+      return `${year}`;
+    }
+    const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    return `${monthNames[month]} ${year}`;
+  };
+
+  (series || []).forEach((row) => {
+    const orderDate = row.financialMonth ?? row.realDateFrom ?? row.period;
+    let period = getGroupedPeriod(orderDate, drillType);
+    if (period === "—" && row.period) period = row.period;
+    
+    if (!seenPeriods.has(period)) { 
+      seenPeriods.add(period); 
+      periods.push({ period, order: orderDate }); 
+    } else {
+      const existing = periods.find(p => p.period === period);
+      if (existing && parseDate(orderDate) && parseDate(existing.order) && parseDate(orderDate) < parseDate(existing.order)) {
+        existing.order = orderDate;
+      }
+    }
+    
+    const measure = row.measureName || row.nodeKey || "Measure";
+    if (!byMeasure.has(measure)) {
+      byMeasure.set(measure, { measure, data: {} });
+    }
+    const m = byMeasure.get(measure);
+    
+    if (!m.data[period]) {
+      m.data[period] = { actual: 0, target: 0 };
+    }
+    m.data[period].actual += toNum(row.actual) || 0;
+    m.data[period].target += toNum(row.target) || 0;
+    
+    if (row.parentId) {
+       m.isChild = true;
+       m.parentId = row.parentId;
+    } else if (row.isChild) {
+       m.isChild = true;
+       m.parentId = row.parentId || "Unknown Parent";
+    }
+  });
+
+  for (const [measure, m] of byMeasure.entries()) {
+    if (m.isChild && m.parentId) {
+       if (!byParent.has(m.parentId)) {
+          byParent.set(m.parentId, []);
+       }
+       const siblings = byParent.get(m.parentId);
+       if (!siblings.includes(measure)) {
+          siblings.push(measure);
+       }
+    } else {
+       rootMeasures.push(measure);
+    }
+  }
+
+  periods.sort((a, b) => (parseDate(a.order)?.getTime() ?? 0) - (parseDate(b.order)?.getTime() ?? 0));
+  const measures = Array.from(byMeasure.entries());
+  const colorFor = (i) => MONTH_PALETTE[i % MONTH_PALETTE.length];
+
+  const handleDownloadExcel = (e) => {
+    if (e) e.preventDefault();
+    if (measures.length === 0) return;
+
+    let html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+    html += '<head><meta charset="UTF-8"></head><body>';
+    html += '<table border="1">';
+    
+    // Header 1
+    html += '<tr>';
+    html += '<th style="background-color: #f5f5f5; color: #888; font-weight: bold; text-align: left;">NAME / PERIOD</th>';
+    periods.forEach((p, i) => {
+      const color = colorFor(i); 
+      html += `<th colspan="3" style="background-color: ${color}; color: #ffffff; font-weight: bold; text-align: center;">${p.period}</th>`;
+    });
+    html += '</tr>';
+
+    // Header 2
+    html += '<tr>';
+    html += '<th style="background-color: #f5f5f5;"></th>';
+    periods.forEach((p, i) => {
+      const color = colorFor(i); 
+      html += `<th style="background-color: ${color}; color: #ffffff; font-weight: bold; text-align: center;">ACTUAL</th>`;
+      html += `<th style="background-color: ${color}; color: #ffffff; font-weight: bold; text-align: center;">TARGET</th>`;
+      html += `<th style="background-color: ${color}; color: #ffffff; font-weight: bold; text-align: center;">GAP</th>`;
+    });
+    html += '</tr>';
+
+    // Data rows
+    measures.forEach(([measure, data]) => {
+      html += '<tr>';
+      html += `<td style="text-align: left;">${measure}</td>`;
+      periods.forEach(p => {
+        const cell = data.data[p.period] || {};
+        const a = cell.actual, t = cell.target;
+        const gap = a != null && t != null ? a - t : null;
+        html += `<td>${a == null ? "-" : fmtNum(a)}</td>`;
+        html += `<td>${t == null ? "-" : fmtNum(t)}</td>`;
+        html += `<td style="${gap != null && gap < 0 ? 'color: #dc3545;' : ''}">${gap == null ? "-" : fmtNum(gap)}</td>`;
+      });
+      html += '</tr>';
+    });
+
+    html += '</table></body></html>';
+
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.setAttribute("download", `Data_Drill_${drillType.replace(" ", "")}.xls`);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
+  const renderRow = (measure, mData, depth = 0) => {
+    const children = byParent.get(measure) || [];
+    const hasChildren = children.length > 0;
+    const isExpanded = !!expandedRows[measure];
+    const showToggle = hasChildren || depth === 0;
+
+    const rowUI = (
+      <tr key={measure}>
+        <td style={{ ...S.td, whiteSpace: "nowrap", textAlign: "left", paddingLeft: depth > 0 ? (depth * 20 + 8) + "px" : "8px" }}>
+          {showToggle ? (
+            <span 
+              onClick={() => toggleRow(measure)} 
+              style={{ cursor: "pointer", marginRight: "8px", display: "inline-flex", alignItems: "center", justifyContent: "center", width: "16px", height: "16px", borderRadius: "50%", background: "#dfc7d4", color: "#883b71", fontSize: "14px", fontWeight: "bold", lineHeight: "16px", verticalAlign: "middle" }}
+            >
+              {isExpanded ? "-" : "+"}
+            </span>
+          ) : (
+             <span style={{ marginRight: depth === 0 ? "24px" : "8px", display: "inline-block" }}></span>
+          )}
+          {measure}
+        </td>
+        {periods.flatMap((p) => {
+          const cell = mData.data[p.period] || {};
+          const a = cell.actual, t = cell.target;
+          const gap = a != null && t != null ? a - t : null;
+          return [
+            <td key={`${p.period}-a`} style={S.td}>{a == null ? "-" : fmtNum(a)}</td>,
+            <td key={`${p.period}-t`} style={S.td}>{t == null ? "-" : fmtNum(t)}</td>,
+            <td key={`${p.period}-g`} style={gap != null && gap < 0 ? S.tdNeg : S.td}>{gap == null ? "-" : fmtNum(gap)}</td>,
+          ];
+        })}
+      </tr>
+    );
+
+    if (isExpanded) {
+      if (hasChildren) {
+        return [rowUI, ...children.flatMap(childMeasure => renderRow(childMeasure, byMeasure.get(childMeasure), depth + 1))];
+      } else {
+        return [
+          rowUI,
+          <tr key={`${measure}-empty`}>
+            <td colSpan={1 + periods.length * 3} style={{ ...S.td, textAlign: "center", color: "#888", fontStyle: "italic", padding: "12px" }}>
+              No sub-items available
+            </td>
+          </tr>
+        ];
+      }
+    }
+    return rowUI;
+  };
+
+  return (
+    <div className="modal custom-modal fade" id="viewdataDrillModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-hidden="true">
+      <div className="modal-dialog modal-dialog-scrollable modal-fullscreen">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h4 className="modal-title">Data Drill</h4>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div className="modal-body">
+            <div className="card border-0">
+              <div className="card-body px-0 py-2">
+                <div className="d-flex align-items-center mb-3 px-3">
+                  <div className="form-group mb-0" style={{ width: 200 }}>
+                    <select 
+                      id="dataDrillType" 
+                      className="form-select form-select-sm select-dropdown-file-upload"
+                      value={drillType}
+                      onChange={(e) => setDrillType(e.target.value)}
+                    >
+                      <option value="Monthly">Monthly</option>
+                      <option value="Quarterly">Quarterly</option>
+                      <option value="Half Yearly">Half Yearly</option>
+                      <option value="Annually">Annually</option>
+                    </select>
+                  </div>
+                  <div className="ms-auto">
+                    <button className="btn btn-sm btn-primary rounded-pill" onClick={handleDownloadExcel}>
+                      <i className="fas fa-download me-1"></i> Download Excel
+                    </button>
+                  </div>
+                </div>
+                <div className="w-100" style={{ overflowX: "auto" }}>
+                  <table className="table table-bordered w-100 mb-0" style={{ fontSize: 12 }}>
+                    <thead>
+                      <tr>
+                        <th style={{ ...S.th("#f5f5f5", "#888"), whiteSpace: "nowrap", paddingLeft: 10, textAlign: "left" }}>
+                          <span style={{ color: "#28a745", marginRight: 2, fontSize: 10 }}>↑</span>
+                          <span style={{ color: "#dc3545", marginRight: 6, fontSize: 10 }}>↓</span>
+                          NAME/PERIOD
+                        </th>
+                        {periods.map((p, i) => (
+                          <th key={p.period} colSpan={3} style={S.monthTh(colorFor(i))}>{p.period}</th>
+                        ))}
+                      </tr>
+                      <tr>
+                        <th style={S.th()}></th>
+                        {periods.flatMap((p, i) =>
+                          ["ACTUAL", "TARGET", "GAP"].map((c) => (
+                            <th key={`${p.period}-${c}`} style={{ ...S.th(colorFor(i), WHITE), opacity: 0.9 }}>{c}</th>
+                          ))
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rootMeasures.length === 0 ? (
+                        <tr>
+                          <td colSpan={1 + periods.length * 3} className="text-center text-muted py-4">No drill-down data</td>
+                        </tr>
+                      ) : rootMeasures.map(measure => renderRow(measure, byMeasure.get(measure)))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── VIEW DATA TABLE MODAL ───────────────────────────────────────────────────
+function ViewDataTableModal({ rows, currency }) {
+  const [page, setPage] = useState(1);
+  const perPage = 7;
+  const pageCount = Math.max(1, Math.ceil((rows || []).length / perPage));
+  const safePage = Math.min(page, pageCount);
+  const slice = (rows || []).slice((safePage - 1) * perPage, safePage * perPage);
+
+  return (
+    <div className="modal custom-modal fade" id="kpiDataTableModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-hidden="true">
+      <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h4 className="modal-title">Data Table</h4>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div className="modal-body p-3">
+            <div className="card custom-card table-card h-100 border-0 shadow-none mb-0">
+              <div className="card-body employee_div_body_box activities-box" style={{ padding: 0 }}>
+                <table className="table table-bordered w-100 mb-0">
+                  <thead className="text-center">
+                    <tr>
+                      {["PERIOD", "ACTUAL", "TARGET", "GAP", "YTD"].map((h) => (
+                        <th key={h} style={S.th()}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {slice.length === 0 && (
+                      <tr><td colSpan={5} style={{ ...S.td, color: "#aaa", padding: "16px" }}>No data for this period</td></tr>
+                    )}
+                    {slice.map((r, i) => (
+                      <tr key={i}>
+                        <td style={S.td}>{r.period}</td>
+                        <td style={S.td}>{fmtMoney(r.actual, currency)}</td>
+                        <td style={S.td}>{fmtMoney(r.target, currency)}</td>
+                        <td style={r.gap < 0 ? S.tdNeg : S.td}>{fmtMoney(r.gap, currency)}</td>
+                        <td style={S.td}>{fmtMoney(r.ytd, currency)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {pageCount > 1 && (
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 6, padding: "8px 14px", marginTop: "1rem" }}>
+                  <PgBtn label="‹" active={false} onClick={() => setPage((p) => Math.max(1, p - 1))} />
+                  {Array.from({ length: pageCount }, (_, idx) => idx + 1).map((p) => (
+                    <PgBtn key={p} label={p} active={safePage === p} onClick={() => setPage(p)} />
+                  ))}
+                  <PgBtn label="›" active={false} onClick={() => setPage((p) => Math.min(pageCount, p + 1))} />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ── MY INITIATIVE ─────────────────────────────────────────────────────────────
 function InitiativePanel({ initiatives }) {
@@ -245,26 +641,46 @@ function InitiativePanel({ initiatives }) {
     };
   });
   return (
-    <Panel>
-      <PanelHeader title="My Initiative" />
-      {items.length === 0 && <EmptyRow>No initiatives linked</EmptyRow>}
-      {items.map((item, i) => {
-        const color = progressColor(item.pct);
-        return (
-          <div key={i}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px 4px" }}>
-              <span style={{ fontSize: 13, color: "#333", maxWidth: 110, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.title}</span>
-              <div style={{ flex: 1, height: 7, background: "#eee", borderRadius: 4, overflow: "hidden" }}>
-                <div style={{ height: "100%", width: `${item.pct}%`, background: color, borderRadius: 4 }} />
-              </div>
-              <span style={{ fontSize: 13, fontWeight: 500, color, minWidth: 38, textAlign: "right" }}>{item.pct}%</span>
-              <ThreeDot />
-            </div>
-            {item.date && <div style={{ fontSize: 10, color: "#aaa", padding: "0 14px 10px" }}>{item.date}</div>}
+    <div className="card custom-card table-card h-100">
+      <CardHeader title="My Initiative" dropdownOptions={[{ label: "View", dataToggle: "modal", dataTarget: "#view-initative-modal" }]} />
+      <div className="card-body overflow-auto">
+        <div className="card-body-box">
+          {items.length === 0 && <EmptyRow>No initiatives linked</EmptyRow>}
+          <div className="list-group initiatives-bar">
+            {items.map((item, i) => {
+              const bgClass = item.pct < 40 ? "bg-danger" : item.pct < 70 ? "bg-warning" : "bg-success";
+              const wrapClass = item.pct < 40 ? "red" : item.pct < 70 ? "yellow" : "green";
+              return (
+                <div className="list-group-item" key={i}>
+                  <div className="bar-chart">
+                    <h4 className="title m-0">{item.title}</h4>
+                    <div className={`progress-wrap ${wrapClass}`}>
+                      <div className="progress flex-grow-1">
+                        <div className={`progress-bar ${bgClass} progress-bar-striped rounded-pill`} role="progressbar"
+                          style={{ width: `${item.pct}%` }} aria-valuenow={item.pct} aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <span className="badge">{item.pct}%</span>
+                    </div>
+                    {item.date && <div className="text-muted"><strong>{item.date}</strong></div>}
+                  </div>
+                  <div className="list-actions">
+                    <div className="dropdown">
+                      <a href="#" className="btn btn-sm btn-outline-icon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img width="14" height="14" src="/images/menu-dot-vertical-i.svg" onError={(e) => { e.target.style.display='none' }} />
+                      </a>
+                      <ul className="dropdown-menu dropdown-menu-end border-0 shadow">
+                        <li><a href="#edit-initative-list-modal" className="dropdown-item" data-bs-toggle="modal">Edit</a></li>
+                        <li><a href="#delete-modal" className="dropdown-item" data-bs-toggle="modal">Delete</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
-    </Panel>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -280,31 +696,41 @@ function RisksPanel({ risks }) {
     };
   });
   return (
-    <Panel>
-      <PanelHeader title="Risks" />
-      {items.length === 0 && <EmptyRow>No risks linked</EmptyRow>}
-      {items.map((r, i) => (
-        <div key={i} style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "12px 14px",
-          borderBottom: i < items.length - 1 ? "0.5px solid #eee" : "none",
-        }}>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 500, color: "#222" }}>{r.name}</div>
-            {r.status && <div style={{ fontSize: 11, color: "#999", marginTop: 2 }}>{r.status}</div>}
-            {r.date && <div style={{ fontSize: 11, color: "#aaa" }}>{r.date}</div>}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{
-              width: 28, height: 28, borderRadius: "50%", background: "#e8e8f0",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 12, fontWeight: 500, color: "#555",
-            }}>{r.score !== "" ? r.score : "-"}</div>
-            <ThreeDot />
+    <div className="card custom-card table-card h-100">
+      <CardHeader title="Risks" dropdownOptions={[{ label: "View", dataToggle: "modal", dataTarget: "#risks-view_popup" }]} />
+      <div className="card-body overflow-auto">
+        <div className="card-body-box">
+          {items.length === 0 && <EmptyRow>No risks linked</EmptyRow>}
+          <div className="list-group initiatives-bar">
+            {items.map((r, i) => (
+              <div className="list-group-item" key={i}>
+                <div className="bar-chart">
+                  <div className="d-flex gap-2">
+                    <h4 className="title mb-0">{r.name}</h4> 
+                    <span className="badge label-bg-dark rounded-pill ms-auto">{r.score !== "" ? r.score : "-"}</span>
+                  </div>
+                  <div className="numbers">
+                    {r.status && <div className="text-muted left">{r.status}</div>}
+                    {r.date && <div className="text-muted right">{r.date}</div>}
+                  </div>
+                </div>
+                <div className="list-actions">
+                  <div className="dropdown">
+                    <a href="#" className="btn btn-sm btn-outline-icon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <img width="14" height="14" src="/images/menu-dot-vertical-i.svg" onError={(e) => { e.target.style.display='none' }} />
+                    </a>
+                    <ul className="dropdown-menu dropdown-menu-end border-0 shadow">
+                      <li><a href="#edit_risk" className="dropdown-item" data-bs-toggle="modal">Edit</a></li>
+                      <li><a href="#delete-modal" className="dropdown-item" data-bs-toggle="modal">Delete</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-    </Panel>
+      </div>
+    </div>
   );
 }
 
@@ -313,16 +739,26 @@ function CommentItem({ c }) {
   const v = c.commentsValue || {};
   const author = v.createdByName || (c.createdBy ? `Employee #${c.createdBy}` : "Unknown");
   return (
-    <div style={{ display: "flex", gap: 10 }}>
-      <Avatar initials={initialsFrom(author)} bg={DARK_BLUE} size={34} />
-      <div style={{ flex: 1 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: 13, fontWeight: 500, color: "#222" }}>{author}</span>
-          <span style={{ fontSize: 11, color: "#aaa" }}>{fmtTime(c.createdTime)}</span>
-        </div>
-        <p style={{ fontSize: 12, color: "#333", margin: "4px 0 6px", lineHeight: 1.55 }}>{v.desc}</p>
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 12, color: "#aaa" }}>Like · {c.likeCount || 0} · Reply</span>
+    <div className="comment">
+      <div className="comment-content">
+        <div className="comment-card">
+          <Avatar initials={initialsFrom(author)} bg={DARK_BLUE} size={28} />
+          <div className="comment-cr">
+            <div className="comment-highlight">
+              <div className="comment-head">
+                <h6 className="user-name">{author}</h6>
+                <span className="comment-time">{fmtTime(c.createdTime)}</span>
+              </div>
+              <div className="comment-text">{v.desc}</div>
+            </div>
+            <div className="comment-actions">
+              <span className="like-btn">Like</span> ·
+              <span className="like-count">{c.likeCount || 0}</span> ·
+              <span className="reply-btn">Reply</span> ·
+              <span className="edit-btn">Edit</span> ·
+              <span className="delete-btn">Delete</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -348,37 +784,33 @@ function CommentsPanel({ comments, onAdd }) {
   }
 
   return (
-    <Panel style={{ display: "flex", flexDirection: "column" }}>
-      <PanelHeader title="Comments" />
-      <div ref={listRef} style={{ flex: 1, overflowY: "auto", padding: "12px 14px", maxHeight: 300 }}>
+    <div className="card custom-card table-card h-100" style={{ display: "flex", flexDirection: "column" }}>
+      <CardHeader title="Comments" dropdownOptions={[{ label: "View", dataToggle: "modal", dataTarget: "#comments_view_popup" }]} />
+      <div ref={listRef} className="card-body overflow-auto comment-history comments-list" style={{ flex: 1, maxHeight: 262 }}>
         {(!comments || comments.length === 0) && <EmptyRow>No comments yet</EmptyRow>}
         {(comments || []).map((c, i) => (
           <div key={c.id ?? i}>
-            {i > 0 && <hr style={{ border: "none", borderTop: "0.5px solid #eee", margin: "10px 0" }} />}
             <CommentItem c={c} />
           </div>
         ))}
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderTop: "0.5px solid #eee" }}>
-        <input
-          style={{
-            flex: 1, border: "0.5px solid #ddd", borderRadius: 20,
-            padding: "7px 14px", fontSize: 13, outline: "none", color: "#333",
-          }}
-          placeholder="Type a comment..."
-          value={text}
-          disabled={busy}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && submit()}
-        />
-        <button onClick={submit} disabled={busy} style={{
-          width: 34, height: 34, borderRadius: "50%",
-          background: DARK_BLUE, border: "none", cursor: busy ? "default" : "pointer",
-          color: "#fff", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-          opacity: busy ? 0.6 : 1,
-        }}>→</button>
+      <div className="card-footer comment_send">
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control comment-input"
+            placeholder="Type a comment..."
+            value={text}
+            disabled={busy}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && submit()}
+          />
+          <button className="btn label-bg-primary post-comment" type="button" onClick={submit} disabled={busy}>
+            <i className="fas fa-arrow-right"></i>
+          </button>
+        </div>
       </div>
-    </Panel>
+    </div>
   );
 }
 
@@ -390,15 +822,40 @@ function DataTable({ rows, currency }) {
   const safePage = Math.min(page, pageCount);
   const slice = rows.slice((safePage - 1) * perPage, safePage * perPage);
 
+  const handleDownloadCSV = (e) => {
+    if (e) e.preventDefault();
+    const headers = ["PERIOD", "ACTUAL", "TARGET", "GAP", "YTD"];
+    const csvRows = [
+      headers.join(","),
+      ...rows.map(r => [
+        `"${r.period}"`,
+        `"${fmtMoney(r.actual, currency)}"`,
+        `"${fmtMoney(r.target, currency)}"`,
+        `"${fmtMoney(r.gap, currency)}"`,
+        `"${fmtMoney(r.ytd, currency)}"`
+      ].join(","))
+    ];
+    const csvString = csvRows.join("\n");
+    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.setAttribute("download", "Data_Table.csv");
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
-    <div style={{ borderRight: "0.5px solid #eee" }}>
-      <div style={S.panelHeader}>
-        <span style={S.panelTitle}>Data Table</span>
-        <ThreeDot />
-      </div>
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
+    <div className="card custom-card table-card h-100">
+      <CardHeader title="Data Table" dropdownOptions={[
+        { label: 'View', dataToggle: 'modal', dataTarget: '#kpiDataTableModal' }, 
+        { label: 'Download CSV', onClick: handleDownloadCSV }
+      ]} />
+      <div className="card-body employee_div_body_box activities-box" style={{ padding: 0 }}>
+        <table className="table table-bordered w-100 mb-0">
+          <thead className="text-center">
             <tr>
               {["PERIOD", "ACTUAL", "TARGET", "GAP", "YTD"].map((h) => (
                 <th key={h} style={S.th()}>{h}</th>
@@ -410,7 +867,7 @@ function DataTable({ rows, currency }) {
               <tr><td colSpan={5} style={{ ...S.td, color: "#aaa", padding: "16px" }}>No data for this period</td></tr>
             )}
             {slice.map((r, i) => (
-              <tr key={i} style={{ background: i % 2 === 0 ? "#fff" : "#fdfbff" }}>
+              <tr key={i}>
                 <td style={S.td}>{r.period}</td>
                 <td style={S.td}>{fmtMoney(r.actual, currency)}</td>
                 <td style={S.td}>{fmtMoney(r.target, currency)}</td>
@@ -422,7 +879,7 @@ function DataTable({ rows, currency }) {
         </table>
       </div>
       {pageCount > 1 && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 6, padding: "10px 14px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 14px" }}>
           <PgBtn label="‹" active={false} onClick={() => setPage((p) => Math.max(1, p - 1))} />
           {Array.from({ length: pageCount }, (_, idx) => idx + 1).map((p) => (
             <PgBtn key={p} label={p} active={safePage === p} onClick={() => setPage(p)} />
@@ -437,302 +894,425 @@ function DataTable({ rows, currency }) {
 function PgBtn({ label, active, onClick }) {
   return (
     <button onClick={onClick} style={{
-      width: 28, height: 28, borderRadius: "50%", border: "0.5px solid #ddd", cursor: "pointer",
+      width: 24, height: 24, borderRadius: "50%", border: "0.5px solid #ddd", cursor: "pointer",
       background: active ? DARK_BLUE : "none", color: active ? "#fff" : "#999",
-      fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center",
     }}>{label}</button>
   );
 }
 
 // ── ACTUAL V/S TARGET CHART ─────────────────────────────────────────────────
-function ActualVsTarget({ rows, currency }) {
-  const canvasRef = useRef(null);
-  const [tooltip, setTooltip] = useState(null);
+function ActualVsTarget({ rows, currency, hideHeader = false }) {
+  const [chartType, setChartType] = useState('line');
+  const [showChartDropdown, setShowChartDropdown] = useState(false);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const width = entry.contentRect.width || 480;
-        drawChart(width, 200);
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.custom-chart-dropdown')) {
+        setShowChartDropdown(false);
       }
-    });
-    resizeObserver.observe(canvas.parentElement || canvas);
+    };
+    if (showChartDropdown) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showChartDropdown]);
 
-    function drawChart(displayWidth, displayHeight) {
-      const ctx = canvas.getContext("2d");
-      const dpi = window.devicePixelRatio || 1;
-      canvas.width = displayWidth * dpi;
-      canvas.height = displayHeight * dpi;
-      ctx.setTransform(dpi, 0, 0, dpi, 0, 0);
+  const categories = rows.map(r => String(r.period).replace(/\s*\d{4}$/, ""));
+  const actuals = rows.map(r => r.actual == null ? 0 : r.actual);
+  const targets = rows.map(r => r.target == null ? 0 : r.target);
 
-      const W = displayWidth, H = displayHeight;
-      const pad = { l: 48, r: 16, t: 16, b: 36 };
-      const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
-      ctx.clearRect(0, 0, W, H);
+  const series = chartType === 'bubble' 
+    ? [
+        { name: 'Actual', data: actuals.map((a, i) => ({ x: i + 1, y: a, z: Math.max(10, Math.abs(a) * 0.5) || 15 })) },
+        { name: 'Target', data: targets.map((t, i) => ({ x: i + 1, y: t, z: Math.max(10, Math.abs(t) * 0.5) || 15 })) }
+      ]
+    : [
+        { name: 'Actual', data: actuals },
+        { name: 'Target', data: targets }
+      ];
 
-      const actuals = rows.map((r) => r.actual);
-      const targets = rows.map((r) => r.target);
-      const all = actuals.concat(targets).filter((n) => Number.isFinite(n));
-      const yMax = all.length ? Math.max(...all) * 1.1 || 1 : 1;
-
-      // Y axis labels + gridlines
-      const ySteps = 5;
-      ctx.textAlign = "right";
-      for (let i = 0; i <= ySteps; i++) {
-        const y = pad.t + (cH / ySteps) * i;
-        ctx.strokeStyle = "#f0f0f0";
-        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
-        ctx.fillStyle = "#aaa"; ctx.font = "10px sans-serif";
-        const labelValue = yMax - (yMax / ySteps) * i;
-        let labelText;
-        if (yMax >= 1000000) {
-          labelText = (labelValue / 1000000).toFixed(1) + "M";
-        } else if (yMax >= 1000) {
-          labelText = (labelValue / 1000).toFixed(1) + "K";
-        } else if (yMax < 10) {
-          labelText = Number.isInteger(labelValue) ? labelValue.toString() : labelValue.toFixed(2);
-        } else {
-          labelText = labelValue.toFixed(0);
-        }
-        ctx.fillText(labelText, pad.l - 6, y + 3);
+  const options = {
+    chart: { 
+      type: chartType, 
+      fontFamily: 'inherit',
+      toolbar: { 
+        show: true,
+        tools: { zoom: true, zoomin: true, zoomout: true, pan: true, reset: true, download: true }
+      },
+      zoom: { enabled: true, type: 'x' }
+    },
+    colors: ['#3498db', '#e67e22'],
+    stroke: { 
+      curve: 'smooth', 
+      width: chartType === 'bar' ? 0 : 3 
+    },
+    fill: {
+      type: chartType === 'area' ? 'gradient' : 'solid',
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.05,
+        stops: [0, 90, 100]
       }
-
-      if (rows.length === 0) {
-        ctx.fillStyle = "#bbb"; ctx.font = "12px sans-serif"; ctx.textAlign = "center";
-        ctx.fillText("No data for this period", pad.l + cW / 2, pad.t + cH / 2);
-        return;
+    },
+    dataLabels: { 
+      enabled: chartType === 'bar' || chartType === 'line',
+      formatter: (val) => val >= 1000 ? (val/1000).toFixed(1) + 'k' : Number(val).toFixed(0),
+      style: { fontSize: '10px' },
+      background: { enabled: true, foreColor: '#333', borderRadius: 2, padding: 4 }
+    },
+    xaxis: { 
+      type: chartType === 'bubble' ? 'numeric' : 'category',
+      categories: chartType === 'bubble' ? undefined : categories,
+      title: { text: 'Period', style: { color: '#666', fontWeight: 600, fontSize: '11px' } },
+      labels: {
+        formatter: chartType === 'bubble' 
+          ? (val) => Number.isInteger(val) && categories[val - 1] ? categories[val - 1] : ''
+          : undefined
+      },
+      tickAmount: chartType === 'bubble' ? categories.length : undefined,
+      min: chartType === 'bubble' ? 0.5 : undefined,
+      max: chartType === 'bubble' ? categories.length + 0.5 : undefined
+    },
+    yaxis: {
+      title: { text: currency ? `Value (${currency})` : 'Value', style: { color: '#666', fontWeight: 600, fontSize: '11px' } },
+      labels: {
+        formatter: (val) => val >= 1000000 ? (val/1000000).toFixed(1) + 'M' : val >= 1000 ? (val/1000).toFixed(1) + 'K' : Number.isInteger(val) ? val.toString() : val.toFixed(2)
       }
-
-      const xStep = rows.length > 1 ? cW / (rows.length - 1) : 0;
-      const xAt = (i) => pad.l + (rows.length > 1 ? i * xStep : cW / 2);
-      const yAt = (v) => pad.t + cH * (1 - (Number.isFinite(v) ? v : 0) / yMax);
-
-      // X labels (period)
-      ctx.fillStyle = "#aaa"; ctx.font = "9px sans-serif"; ctx.textAlign = "center";
-      rows.forEach((r, i) => {
-        const label = String(r.period).replace(/\s*\d{4}$/, "");
-        ctx.fillText(label, xAt(i), H - 22);
-      });
-      ctx.fillStyle = "#666"; ctx.font = "bold 11px sans-serif";
-      ctx.fillText("Period", pad.l + cW / 2, H - 4);
-
-      ctx.save();
-      ctx.translate(14, pad.t + cH / 2);
-      ctx.rotate(-Math.PI / 2);
-      ctx.fillStyle = "#666"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center";
-      ctx.fillText(currency ? `Value (${currency})` : "Value", 0, 0);
-      ctx.restore();
-
-      const drawSeries = (vals, color) => {
-        ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2;
-        ctx.beginPath();
-        vals.forEach((v, i) => { const x = xAt(i), y = yAt(v); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
-        ctx.stroke();
-        vals.forEach((v, i) => { ctx.beginPath(); ctx.arc(xAt(i), yAt(v), 3, 0, Math.PI * 2); ctx.fill(); });
-      };
-      drawSeries(targets, "#e67e22");
-      drawSeries(actuals, "#3498db");
-    }
-
-    return () => resizeObserver.disconnect();
-  }, [rows, currency]);
-
-  const handleMouseMove = (e) => {
-    if (!rows || rows.length === 0) {
-      setTooltip(null);
-      return;
-    }
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-
-    const pad = { l: 48, r: 16 };
-    const W = rect.width;
-    const cW = W - pad.l - pad.r;
-
-    let index = 0;
-    if (rows.length > 1) {
-      const xStep = cW / (rows.length - 1);
-      index = Math.round((offsetX - pad.l) / xStep);
-      index = Math.max(0, Math.min(rows.length - 1, index));
-    }
-
-    const xAt = pad.l + (rows.length > 1 ? index * (cW / (rows.length - 1)) : cW / 2);
-    
-    if (Math.abs(offsetX - xAt) < 30) {
-      setTooltip({
-        x: offsetX,
-        y: offsetY,
-        data: rows[index],
-        alignLeft: offsetX > W / 2
-      });
-    } else {
-      setTooltip(null);
+    },
+    markers: { 
+      size: chartType === 'line' || chartType === 'area' ? 4 : 0,
+      strokeWidth: 0,
+      hover: { size: 6 }
+    },
+    legend: { position: 'bottom', markers: { radius: 12 } },
+    tooltip: {
+      shared: chartType !== 'bubble',
+      intersect: chartType === 'bubble',
+      custom: function({series, seriesIndex, dataPointIndex, w}) {
+        const data = w.config.series[seriesIndex].data[dataPointIndex];
+        const period = categories[dataPointIndex];
+        const val = typeof data === 'object' ? data.y : data;
+        return `<div class="p-2" style="font-size: 12px; font-family: 'Inter', sans-serif;">
+          <div style="font-weight: 600; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid #eee;">
+            ${period}
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background-color:${w.config.colors[seriesIndex]};"></span>
+            <span>${w.config.series[seriesIndex].name}: <strong>${fmtMoney(val, currency)}</strong></span>
+          </div>
+        </div>`;
+      }
     }
   };
 
-  const handleMouseLeave = () => {
-    setTooltip(null);
+  const icons = {
+    bubble: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{pointerEvents: 'none'}}><circle cx="12" cy="12" r="10"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="16" cy="12" r="4"></circle></svg>,
+    bar: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{pointerEvents: 'none'}}><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>,
+    line: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{pointerEvents: 'none'}}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>,
+    area: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{pointerEvents: 'none'}}><path d="M22 20H2v-6l4-4 4 4 4-8 8 8v6z"></path></svg>
   };
 
   return (
-    <div style={{ position: "relative" }}>
-      <div style={S.panelHeader}>
-        <span style={S.panelTitle}>Actual v/s Target</span>
-        <div style={{display: 'flex', gap: '8px'}}>
-          <button style={S.dotBtn}>📈</button>
-          <ThreeDot />
+    <div className={hideHeader ? "h-100 position-relative" : "card custom-card table-card h-100"}>
+      {!hideHeader && <CardHeader 
+        title="Actual v/s Target" 
+        dropdownOptions={[{ label: 'View', dataToggle: 'modal', dataTarget: '#viewActualVsTargetModal' }]}
+        extra={
+        <div className="dropdown me-2 custom-chart-dropdown" style={{ position: 'relative' }}>
+          <button className="btn btn-sm btn-icon" type="button" onClick={() => setShowChartDropdown(!showChartDropdown)} title="Change Chart Type">
+            {icons[chartType]}
+          </button>
+          {showChartDropdown && (
+            <ul className="dropdown-menu dropdown-menu-end border-0 shadow d-flex flex-row p-1 show" style={{ minWidth: 'auto', gap: 4, position: 'absolute', top: '100%', right: 0 }}>
+              {['bubble', 'bar', 'line', 'area'].map(type => (
+                <li key={type}>
+                  <button type="button" className={`dropdown-item rounded ${chartType === type ? 'bg-light text-primary' : ''}`} 
+                    onClick={() => { setChartType(type); setShowChartDropdown(false); }} 
+                    style={{ padding: "6px", cursor: "pointer", display: 'flex', border: 'none', background: 'transparent' }} title={type}>
+                    {icons[type]}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      </div>
-      <div style={{ padding: "10px 16px 4px", position: "relative" }}>
-        <canvas 
-          ref={canvasRef} 
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          style={{ width: "100%", height: "200px", display: "block", cursor: tooltip ? "crosshair" : "default" }} 
-        />
-        {tooltip && (
-          <div style={{
-            position: 'absolute',
-            left: tooltip.alignLeft ? 'auto' : tooltip.x + 16 + 10,
-            right: tooltip.alignLeft ? (canvasRef.current?.getBoundingClientRect().width - tooltip.x) - 16 + 10 : 'auto',
-            top: tooltip.y + 10,
-            background: 'rgba(0, 0, 0, 0.8)',
-            color: '#fff',
-            padding: '8px 12px',
-            borderRadius: '4px',
-            fontSize: '12px',
-            pointerEvents: 'none',
-            whiteSpace: 'nowrap',
-            zIndex: 10,
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-          }}>
-            <div style={{ fontWeight: 'bold', marginBottom: '4px', borderBottom: '1px solid #555', paddingBottom: '4px' }}>
-              {tooltip.data.period}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#3498db', display: 'inline-block' }} />
-              Actual: {fmtMoney(tooltip.data.actual, currency)}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#e67e22', display: 'inline-block' }} />
-              Target: {fmtMoney(tooltip.data.target, currency)}
-            </div>
+      } />}
+      <div className="card-body" style={{ padding: "10px 16px 4px", position: "relative", height: hideHeader ? "calc(100% - 20px)" : "250px" }}>
+        {rows.length === 0 ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#bbb', fontSize: 12 }}>
+            No data for this period
           </div>
+        ) : (
+          <ReactApexChart options={options} series={series} type={chartType} height="100%" />
         )}
       </div>
-      <div style={{ display: "flex", gap: 16, justifyContent: "center", padding: "6px 0 10px" }}>
-        {[["#3498db", "Actual"], ["#e67e22", "Target"]].map(([color, label]) => (
-          <span key={label} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{ width: 10, height: 10, borderRadius: "50%", background: color, display: "inline-block" }} />
-            <span style={{ fontSize: 11, color: "#888" }}>{label}</span>
-          </span>
-        ))}
+    </div>
+  );
+}
+
+// ── VIEW ACTUAL V/S TARGET MODAL ──────────────────────────────────────────────
+function ViewActualVsTargetModal({ rows, currency }) {
+  return (
+    <div className="modal custom-modal fade" id="viewActualVsTargetModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-hidden="true">
+      <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h4 className="modal-title">Actual v/s Target</h4>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div className="modal-body p-3">
+            <ActualVsTarget rows={rows} currency={currency} hideHeader={true} />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
 // ── DATA DRILL ────────────────────────────────────────────────────────────────
+const VIBRANT_MONTH_PALETTE = [
+  "#9973B4", "#F16999", "#B1A3CD", "#2EBFB4", "#F4925D", "#E56B55", "#59B581", "#E19097", "#bda3c4", "#a3b2c4"
+];
+
 // Pivots the raw series by measure (rows) × period (columns).
 function DataDrillPanel({ series }) {
+  const [expandedRows, setExpandedRows] = useState({});
+
+  const toggleRow = (measure) => {
+    setExpandedRows(prev => ({ ...prev, [measure]: !prev[measure] }));
+  };
+
   const periods = [];
   const seenPeriods = new Set();
   const byMeasure = new Map();
+  const byParent = new Map();
+
   (series || []).forEach((row) => {
     const period = row.period || row.financialMonth || "—";
     if (!seenPeriods.has(period)) { seenPeriods.add(period); periods.push({ period, order: row.financialMonth ?? row.realDateFrom ?? period }); }
     const measure = row.measureName || row.nodeKey || "Measure";
-    const m = byMeasure.get(measure) || {};
-    m[period] = { actual: toNum(row.actual), target: toNum(row.target) };
+    const m = byMeasure.get(measure) || { data: {}, isChild: false, parentId: null };
+    m.data[period] = { actual: toNum(row.actual), target: toNum(row.target) };
+    
+    if (row.parentId) {
+       m.isChild = true;
+       m.parentId = row.parentId;
+    } else if (row.isChild) {
+       m.isChild = true;
+       m.parentId = row.parentId || "Unknown Parent";
+    }
+
     byMeasure.set(measure, m);
   });
+  
+  byMeasure.forEach((m, measure) => {
+    if (m.isChild && m.parentId) {
+      if (!byParent.has(m.parentId)) byParent.set(m.parentId, []);
+      const children = byParent.get(m.parentId);
+      if (!children.includes(measure)) children.push(measure);
+    }
+  });
+
   periods.sort((a, b) => (parseDate(a.order)?.getTime() ?? 0) - (parseDate(b.order)?.getTime() ?? 0));
   const measures = Array.from(byMeasure.entries());
-  const colorFor = (i) => MONTH_PALETTE[i % MONTH_PALETTE.length];
+  const rootMeasures = measures.filter(([_, m]) => !m.isChild);
+  const colorFor = (i) => VIBRANT_MONTH_PALETTE[i % VIBRANT_MONTH_PALETTE.length];
+
+  const handleDownloadExcel = (e) => {
+    if (e) e.preventDefault();
+    if (measures.length === 0) return;
+
+    let html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+    html += '<head><meta charset="UTF-8"></head><body>';
+    html += '<table border="1">';
+    
+    html += '<tr>';
+    html += '<th style="background-color: #f5f5f5; color: #888; font-weight: bold; text-align: left;">NAME / PERIOD</th>';
+    periods.forEach((p, i) => {
+      const color = colorFor(i); 
+      html += `<th colspan="3" style="background-color: ${color}; color: #ffffff; font-weight: bold; text-align: center;">${p.period}</th>`;
+    });
+    html += '</tr>';
+
+    html += '<tr>';
+    html += '<th style="background-color: #f5f5f5;"></th>';
+    periods.forEach((p, i) => {
+      const color = colorFor(i); 
+      html += `<th style="background-color: ${color}; color: #ffffff; font-weight: bold; text-align: center;">ACTUAL</th>`;
+      html += `<th style="background-color: ${color}; color: #ffffff; font-weight: bold; text-align: center;">TARGET</th>`;
+      html += `<th style="background-color: ${color}; color: #ffffff; font-weight: bold; text-align: center;">GAP</th>`;
+    });
+    html += '</tr>';
+
+    measures.forEach(([measure, data]) => {
+      html += '<tr>';
+      html += `<td style="text-align: left;">${measure}</td>`;
+      periods.forEach(p => {
+        const cell = data.data[p.period] || {};
+        const a = cell.actual, t = cell.target;
+        const gap = a != null && t != null ? a - t : null;
+        html += `<td>${a == null ? "-" : fmtNum(a)}</td>`;
+        html += `<td>${t == null ? "-" : fmtNum(t)}</td>`;
+        html += `<td style="${gap != null && gap < 0 ? 'color: #dc3545;' : ''}">${gap == null ? "-" : fmtNum(gap)}</td>`;
+      });
+      html += '</tr>';
+    });
+
+    html += '</table></body></html>';
+
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.setAttribute("download", "Data_Drill.xls");
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
+  const renderRow = (measure, mData, depth = 0) => {
+    const children = byParent.get(measure) || [];
+    const hasChildren = children.length > 0;
+    const isExpanded = !!expandedRows[measure];
+    const showToggle = hasChildren || depth === 0;
+
+    const rowUI = (
+      <tr key={measure}>
+        <td style={{ ...S.td, whiteSpace: "nowrap", textAlign: "left", paddingLeft: depth > 0 ? (depth * 20 + 8) + "px" : "8px" }}>
+          {showToggle ? (
+            <span 
+              onClick={() => toggleRow(measure)} 
+              style={{ cursor: "pointer", marginRight: "8px", display: "inline-flex", alignItems: "center", justifyContent: "center", width: "16px", height: "16px", borderRadius: "50%", background: "#dfc7d4", color: "#883b71", fontSize: "14px", fontWeight: "bold", lineHeight: "16px", verticalAlign: "middle" }}
+            >
+              {isExpanded ? "-" : "+"}
+            </span>
+          ) : (
+             <span style={{ marginRight: depth === 0 ? "24px" : "8px", display: "inline-block" }}></span>
+          )}
+          {measure}
+        </td>
+        {periods.flatMap((p) => {
+          const cell = mData.data[p.period] || {};
+          const a = cell.actual, t = cell.target;
+          const gap = a != null && t != null ? a - t : null;
+          return [
+            <td key={`${p.period}-a`} style={S.td}>{a == null ? "-" : fmtNum(a)}</td>,
+            <td key={`${p.period}-t`} style={S.td}>{t == null ? "-" : fmtNum(t)}</td>,
+            <td key={`${p.period}-g`} style={gap != null && gap < 0 ? S.tdNeg : S.td}>{gap == null ? "-" : fmtNum(gap)}</td>,
+          ];
+        })}
+      </tr>
+    );
+
+    if (isExpanded) {
+      if (hasChildren) {
+        return [rowUI, ...children.flatMap(childMeasure => renderRow(childMeasure, byMeasure.get(childMeasure), depth + 1))];
+      } else {
+        return [
+          rowUI,
+          <tr key={`${measure}-empty`}>
+            <td colSpan={1 + periods.length * 3} style={{ ...S.td, textAlign: "center", color: "#888", fontStyle: "italic", padding: "12px" }}>
+              No sub-items available
+            </td>
+          </tr>
+        ];
+      }
+    }
+    return rowUI;
+  };
 
   return (
-    <Panel>
-      <PanelHeader title="Data Drill" />
+    <div className="card custom-card table-card h-100">
+      <div className="card-header" style={{ background: "#ffffff", borderBottom: "1px solid #ddd", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 15px" }}>
+        <h5 className="card-title" style={{ color: "#333", margin: 0, fontSize: "15px", fontWeight: 700 }}>Data Drill</h5>
+        <div className="dropdown">
+          <button className="btn btn-sm btn-icon" style={{ background: "#eee", border: "1px solid #ccc", padding: "2px 6px" }} type="button" data-bs-toggle="dropdown" aria-expanded="false">
+             <img width="16" height="16" src="/images/menu-dot-vertical-i.svg" onError={(e) => { e.target.style.display='none' }} style={{ filter: "brightness(0)" }} />
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end border-0 shadow">
+            <li><a className="dropdown-item" href="#!" onClick={e => e.preventDefault()} data-bs-toggle="modal" data-bs-target="#viewdataDrillModal">View</a></li>
+            <li><a className="dropdown-item" href="#" onClick={handleDownloadExcel}>Download Excel</a></li>
+          </ul>
+        </div>
+      </div>
       {measures.length === 0 ? (
-        <EmptyRow>No drill-down data for this period</EmptyRow>
+        <div className="card-body"><EmptyRow>No drill-down data for this period</EmptyRow></div>
       ) : (
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ borderCollapse: "collapse", fontSize: 12 }}>
-            <thead>
-              <tr>
-                <th style={{ ...S.th("#f5f5f5", "#888"), whiteSpace: "nowrap", paddingLeft: 10 }}>NAME / PERIOD</th>
-                {periods.map((p, i) => (
-                  <th key={p.period} colSpan={3} style={S.monthTh(colorFor(i))}>{p.period}</th>
-                ))}
-              </tr>
-              <tr>
-                <th style={S.th()}></th>
-                {periods.flatMap((p) =>
-                  ["ACTUAL", "TARGET", "GAP"].map((c) => (
-                    <th key={`${p.period}-${c}`} style={S.th()}>{c}</th>
-                  ))
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {measures.map(([measure, data], mi) => (
-                <tr key={mi}>
-                  <td style={{ ...S.td, whiteSpace: "nowrap", textAlign: "left" }}>{measure}</td>
-                  {periods.flatMap((p) => {
-                    const cell = data[p.period] || {};
-                    const a = cell.actual, t = cell.target;
-                    const gap = a != null && t != null ? a - t : null;
-                    return [
-                      <td key={`${p.period}-a`} style={S.td}>{a == null ? "-" : fmtNum(a)}</td>,
-                      <td key={`${p.period}-t`} style={S.td}>{t == null ? "-" : fmtNum(t)}</td>,
-                      <td key={`${p.period}-g`} style={gap != null && gap < 0 ? S.tdNeg : S.td}>{gap == null ? "-" : fmtNum(gap)}</td>,
-                    ];
-                  })}
+        <div className="card-body employee_div_body_box activities-box" style={{ padding: 0 }}>
+          <div style={{ overflowX: "auto" }}>
+            <table className="table table-bordered w-100 mb-0" style={{ fontSize: 12 }}>
+              <thead>
+                <tr>
+                  <th style={{ ...S.th("#f5f5f5", "#888"), whiteSpace: "nowrap", paddingLeft: 10, textAlign: "left" }}>
+                    <span style={{ color: "#28a745", marginRight: 2, fontSize: 10 }}>↑</span>
+                    <span style={{ color: "#dc3545", marginRight: 6, fontSize: 10 }}>↓</span>
+                    NAME/PERIOD
+                  </th>
+                  {periods.map((p, i) => (
+                    <th key={p.period} colSpan={3} style={S.monthTh(colorFor(i))}>{p.period}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                <tr>
+                  <th style={S.th()}></th>
+                  {periods.flatMap((p, i) =>
+                    ["ACTUAL", "TARGET", "GAP"].map((c) => (
+                      <th key={`${p.period}-${c}`} style={{ ...S.th(colorFor(i), WHITE), opacity: 0.9 }}>{c}</th>
+                    ))
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {rootMeasures.flatMap(([measure, mData]) => renderRow(measure, mData, 0))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
-    </Panel>
+    </div>
   );
 }
 
 // ── FILES ─────────────────────────────────────────────────────────────────────
-function FilesPanel({ files }) {
+function FilesPanel({ files, onEditFile }) {
   const items = (files || []).map((f) => ({
+    ...f, // keep original f props for editing
     name: f.name || "Attachment",
     file: [f.file || f.uniqueFileReference, f.size].filter(Boolean).join(" "),
     date: fmtDate(f.createdTime),
   }));
   return (
-    <div style={{ maxWidth: 420 }}>
-      <Panel>
-        <PanelHeader title="Files" />
-        {items.length === 0 && <EmptyRow>No files attached</EmptyRow>}
-        {items.map((f, i) => (
-          <div key={i} style={{
-            padding: "10px 14px",
-            borderBottom: i < items.length - 1 ? "0.5px solid #eee" : "none",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 500, color: "#222" }}>{f.name}</div>
-              {f.file && <div style={{ fontSize: 11, color: "#aaa", marginTop: 2 }}>{f.file}</div>}
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {f.date && <span style={{ fontSize: 11, color: "#aaa" }}>{f.date}</span>}
-              <ThreeDot />
-            </div>
+    <div className="card custom-card table-card h-100">
+      <CardHeader title="Files" dropdownOptions={[{ label: "View", dataToggle: "modal", dataTarget: "#files-view_popup" }]} />
+      <div className="card-body overflow-auto">
+        <div className="card-body-box">
+          {items.length === 0 && <EmptyRow>No files attached</EmptyRow>}
+          <div className="list-group initiatives-bar">
+            {items.map((f, i) => (
+              <div className="list-group-item" key={i}>
+                <div className="bar-chart">
+                  <div className="d-flex gap-2"><h4 className="title mb-0">{f.name}</h4></div>
+                  <div className="numbers">
+                    {f.file && <div className="text-muted left">{f.file}</div>}
+                    {f.date && <div className="text-muted right">{f.date}</div>}
+                  </div>
+                </div>
+                <div className="list-actions">
+                  <div className="dropdown">
+                    <a href="#" className="btn btn-sm btn-outline-icon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <img width="14" height="14" src="/images/menu-dot-vertical-i.svg" onError={(e) => { e.target.style.display='none' }} />
+                    </a>
+                    <ul className="dropdown-menu dropdown-menu-end border-0 shadow">
+                      <li><a href="#fileupload-modal" className="dropdown-item" data-bs-toggle="modal" onClick={() => onEditFile(f)}>Edit</a></li>
+                      <li><a href="#delete-modal" className="dropdown-item" data-bs-toggle="modal" onClick={() => window._deleteTarget = { type: 'file', id: f.id }}>Delete</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </Panel>
+        </div>
+      </div>
     </div>
   );
 }
@@ -761,7 +1341,24 @@ function SidebarIcons() {
 export default function KpiStoryCardPage() {
   const { kpiId } = useParams();
   const navigate = useNavigate();
-  const [showDescModal, setShowDescModal] = useState(false);
+  const [isViewOnly, setIsViewOnly] = useState(false);
+  const [editingFile, setEditingFile] = useState(null);
+  
+  useEffect(() => {
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+    
+    // Cleanup Bootstrap modal artifacts on unmount
+    return () => {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      const backdrops = document.querySelectorAll('.modal-backdrop');
+      backdrops.forEach(b => b.remove());
+    };
+  }, []);
+
   // Period is controlled by the global header picker (stored in localStorage);
   // the global picker reloads on Apply, so reading it on mount is sufficient.
   const [dateRange] = useState(() => {
@@ -769,7 +1366,19 @@ export default function KpiStoryCardPage() {
     return localStorage.getItem("customperiod") || `01/01/${y}-12/31/${y}`;
   });
 
-  const { loading, error, kpi, series, initiatives, risks, comments, files, reloadComments } = useKpiStoryCard(kpiId, dateRange);
+  const [viewFilters, setViewFilters] = useState({
+    datatable: true,
+    actualvtarget: true,
+    datadrill: true,
+    myinitiative: true,
+    risks: true,
+    comments: true,
+    files: true,
+  });
+
+  const toggleFilter = (key) => setViewFilters((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  const { loading, error, kpi, series, initiatives, risks, comments, files, reload, reloadComments, setFiles } = useKpiStoryCard(kpiId, dateRange);
 
   const kpiName = kpi?.kpiName || "KPI";
   const kpiVal = kpi?.kpiValue || {};
@@ -780,109 +1389,301 @@ export default function KpiStoryCardPage() {
     await reloadComments();
   }
 
+  useEffect(() => {
+    const handleDeleteConfirm = (e) => {
+      const btn = e.target.closest('#delete-modal .btn-danger');
+      if (!btn) return;
+      const target = window._deleteTarget || {};
+      if (target.type === 'file' && target.id) {
+        e.preventDefault();
+        e.stopPropagation();
+        setFiles(prev => prev.filter(f => f.id !== target.id));
+        window._deleteTarget = null;
+        const modalEl = document.getElementById('delete-modal');
+        if (modalEl && window.bootstrap?.Modal) {
+          window.bootstrap.Modal.getInstance(modalEl)?.hide();
+        }
+      }
+    };
+    document.addEventListener('click', handleDeleteConfirm);
+    return () => document.removeEventListener('click', handleDeleteConfirm);
+  }, [setFiles]);
+
   return (
     <div style={S.page}>
       <SidebarIcons />
+      <KpiSidebar loggedInEmpId={loggedInEmpId()} />
+      
+      <style>{`
+        .card-accordion .accordion-header .accordion-button::after {
+          background: url('/images/carat-i.svg') no-repeat center center !important;
+          background-size: 10px !important;
+        }
+      `}</style>
 
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "20px 20px 0" }}>
+      <main className="pt-3 pb-3">
+        <div className="container-lg">
+          <div className="row g-2">
 
-        {/* Page Header */}
-        <div style={{ marginBottom: 16 }}>
-          <Panel style={{ background: DARK_BLUE, color: WHITE, border: "none" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px" }}>
-              <button onClick={() => navigate(-1)} style={{
-                width: 28, height: 28, borderRadius: 4, border: "none",
-                background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-              }} title="Back to Scorecard">
-                <span style={{ fontSize: 18, color: DARK_BLUE, fontWeight: "bold", lineHeight: 1 }}>←</span>
-              </button>
-              <div style={{ background: WHITE, borderRadius: 4, padding: "4px 8px", color: DARK_BLUE, fontWeight: "bold", fontSize: 12 }}>DO</div>
-              <span style={{ flex: 1, fontSize: 15, fontWeight: 600, color: WHITE }}>
-                {loading ? "Loading KPI…" : kpiName}
-              </span>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <button style={{ background: WHITE, border: "none", borderRadius: 4, width: 28, height: 28, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>✏️</button>
-                <button onClick={() => setShowDescModal(true)} title="View Details" style={{ background: WHITE, border: "none", borderRadius: 4, width: 28, height: 28, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>👁</button>
-                <button style={{ background: WHITE, border: "none", borderRadius: 4, width: 28, height: 28, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>⋮</button>
-              </div>
-            </div>
-          </Panel>
-        </div>
+            {/* ── KPI HEADER (Accordion) ── */}
+            <div className="col-12">
+              <div className="accordion card-accordion" id="accordionExample">
+                <div className="card custom-card kpi_page_details accordion-item">
+                  <div className="card-header accordion-header flex-wrap">
+                    <div className="c-header-left kpi_details-title-box flex-nowrap">
+                      <div className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                      </div>
+                      <div className="user-card">
+                        <div className="user-image user-image-sm user-active">
+                          <img src="/images/user/user7.jpg" alt="User" width="24" height="24"
+                            onError={(e) => { e.target.style.display = 'none' }} />
+                        </div>
+                      </div>
+                      <h5 className="card-title me-auto">
+                        <strong>{loading ? "Loading KPI…" : kpiName}</strong>
+                      </h5>
+                    </div>
+                    <div className="card-actions justify-content-end">
+                      <span className="btn btn-sm btn-icon" onClick={() => setIsViewOnly(false)} data-bs-toggle="modal" data-bs-target="#kpi-des-modal">
+                        <i className="fas fa-pencil-alt" title="Edit" />
+                      </span>
+                      <span className="btn btn-sm btn-icon" data-bs-toggle="modal" data-bs-target="#fileupload-modal" onClick={() => setEditingFile(null)}>
+                        <i className="fas fa-paperclip" title="File Upload" />
+                      </span>
+                      
+                      {/* View Options Dropdown (Eye icon) */}
+                      <div className="dropdown d-inline-block">
+                        <span className="btn btn-sm btn-icon" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" style={{ cursor: 'pointer' }}>
+                          <i className="fas fa-eye" title="View" />
+                        </span>
+                        <div className="dropdown-menu dropdown-menu-end shadow p-3" style={{ minWidth: 200, border: 'none', borderRadius: 8 }}>
+                          <div className="d-flex justify-content-between align-items-center mb-2">
+                            <h6 className="mb-0 fw-bold">View</h6>
+                            <button type="button" className="btn-close" style={{ fontSize: 10 }} onClick={() => document.body.click()}></button>
+                          </div>
+                          <div className="d-flex flex-column gap-2">
+                            {[
+                              { id: 'datatable', label: 'Data Table' },
+                              { id: 'actualvtarget', label: 'Actual vs Target' },
+                              { id: 'datadrill', label: 'Data Drill' },
+                              { id: 'myinitiative', label: 'My Initiative' },
+                              { id: 'risks', label: 'Risks' },
+                              { id: 'comments', label: 'Comments' },
+                              { id: 'files', label: 'Files' },
+                            ].map(filter => (
+                              <div className="form-check m-0 d-flex align-items-center gap-2" key={filter.id}>
+                                <input className="form-check-input mt-0" type="checkbox" id={`filter-${filter.id}`} checked={viewFilters[filter.id]} onChange={() => toggleFilter(filter.id)} style={{ cursor: 'pointer' }} />
+                                <label className="form-check-label mb-0" htmlFor={`filter-${filter.id}`} style={{ fontSize: 13, color: '#333', cursor: 'pointer' }}>{filter.label}</label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
 
-        {error && (
-          <div style={{ background: "#fdecea", color: "#b03a2e", border: "0.5px solid #f5c6c0", borderRadius: 8, padding: "10px 14px", marginBottom: 14, fontSize: 13 }}>
-            {error}
-          </div>
-        )}
-
-        {/* ROW 1 — Data table + Actual v/s Target chart */}
-        <Panel style={{ marginBottom: 14 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-            <DataTable rows={periodRows} currency={currency} />
-            <ActualVsTarget rows={periodRows} currency={currency} />
-          </div>
-        </Panel>
-
-        {/* ROW 2 — My Initiative · Risks · Comments */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 14 }}>
-          <InitiativePanel initiatives={initiatives} />
-          <RisksPanel risks={risks} />
-          <CommentsPanel comments={comments} onAdd={handleAddComment} />
-        </div>
-
-        {/* ROW 3 — Data Drill */}
-        <div style={{ marginBottom: 14 }}>
-          <DataDrillPanel series={series} />
-        </div>
-
-        {/* ROW 4 — Files */}
-        <div style={{ marginBottom: 30 }}>
-          <FilesPanel files={files} />
-        </div>
-      </div>
-
-      {/* View/Description Modal — real KPI attributes */}
-      {showDescModal && (
-        <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1050 }}>
-          <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content">
-              <div className="modal-header d-flex justify-content-between align-items-center" style={{ background: DARK_BLUE, color: "#fff", padding: "12px 20px" }}>
-                <h6 className="modal-title mb-0" style={{ fontSize: 14, fontWeight: 600 }}>KPI Details</h6>
-                <button type="button" className="btn-close btn-close-white border-0 bg-transparent" onClick={() => setShowDescModal(false)} style={{ color: "#fff", fontSize: 18, cursor: "pointer" }}>×</button>
-              </div>
-              <div className="modal-body" style={{ padding: "20px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
-                  <DetailTable rows={[["Department", kpiVal.department], ["KPI ID", kpi?.kpiId], ["Threshold", kpiVal.thresholdType || kpiVal.threshold]]} />
-                  <DetailTable rows={[["Frequency", kpiVal.kpi_measurement], ["Status", kpiVal.statusLight], ["Trend", kpiVal.trend]]} />
-                  <DetailTable rows={[["Actual", kpiVal.actual], ["Target", kpiVal.target], ["Risk", kpiVal.riskStatusLight]]} />
+                      <div className="dropdown">
+                        <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i className="fas fa-ellipsis-v" />
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end border-0 shadow">
+                          <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); downloadKpiReport(kpiId); }}>Download</a></li>
+                          <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); window.scorecardActions?.openDeleteModal('kpi', kpiId); }}>Delete</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="collapseOne" className="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div className="accordion-body">
+                      <div className="grid gap-2">
+                        <div className="g-col-12 g-col-md-4">
+                          <div className="table-responsive h-100">
+                            <table className="table table-sm table-lefth table-bordered text-center mb-0 align-middle h-100">
+                              <tbody>
+                                <tr>
+                                  <th width="40%">Department</th>
+                                  <td>{kpiVal?.department || '-'}</td>
+                                </tr>
+                                <tr>
+                                  <th>KPI ID</th>
+                                  <td>{kpi?.kpiCode || kpi?.kpiId || '-'}</td>
+                                </tr>
+                                <tr>
+                                  <th>Threshold</th>
+                                  <td>
+                                    <div className="d-flex flex-wrap justify-content-center gap-2">
+                                      <span><span style={{color: "red"}}>●</span> &lt;=</span>
+                                      <span><span style={{color: "orange"}}>●</span> =</span>
+                                      <span><span style={{color: "green"}}>●</span> &gt;=</span>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div className="g-col-12 g-col-md-4">
+                          <div className="table-responsive h-100">
+                            <table className="table table-sm table-lefth table-bordered text-center mb-0 align-middle h-100">
+                              <tbody>
+                                <tr>
+                                  <th width="40%">Frequency</th>
+                                  <td>{kpiVal?.kpi_measurement || '-'}</td>
+                                </tr>
+                                <tr>
+                                  <th>Status</th>
+                                  <td>
+                                    {kpiVal?.statusLight === 'red' ? '🔴' : kpiVal?.statusLight === 'yellow' ? '🟡' : '🟢'}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th>Trend</th>
+                                  <td>{kpiVal?.trend === 'down' ? '↘️' : '↗️'}</td>
+                                </tr>
+                                <tr>
+                                  <th>Risk</th>
+                                  <td>
+                                    {kpiVal?.riskStatusLight === 'green' ? '🟢' : kpiVal?.riskStatusLight === 'yellow' ? '🟡' : '🔴'}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div className="g-col-12 g-col-md-4">
+                          <div className="table-responsive h-100">
+                            <table className="table table-sm table-lefth table-bordered text-center mb-0 align-middle h-100">
+                              <tbody>
+                                <tr>
+                                  <th width="40%">Actual</th>
+                                  <td>{fmtMoney(kpiVal?.actual, currency)}</td>
+                                </tr>
+                                <tr>
+                                  <th>Target</th>
+                                  <td>{fmtMoney(kpiVal?.target, currency)}</td>
+                                </tr>
+                                <tr>
+                                  <th>Budget</th>
+                                  <td>{fmtMoney(kpiVal?.budget, currency)}</td>
+                                </tr>
+                                <tr>
+                                  <th>Forecast</th>
+                                  <td>{fmtMoney(kpiVal?.forecast, currency)}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="modal-footer" style={{ padding: "12px 20px", borderTop: "1px solid #eee", display: "flex", justifyContent: "flex-end" }}>
-                <button className="btn btn-secondary btn-sm" onClick={() => setShowDescModal(false)} style={{ padding: "6px 14px", fontSize: 12, borderRadius: 6, border: "1px solid #ccc", background: "#fff", cursor: "pointer" }}>Close</button>
-              </div>
             </div>
+
+            {error && (
+              <div className="col-12">
+                <div style={{ background: "#fdecea", color: "#b03a2e", border: "0.5px solid #f5c6c0", borderRadius: 4, padding: "10px 14px", fontSize: 13 }}>
+                  {error}
+                </div>
+              </div>
+            )}
+
+            {/* ── DATA TABLE ── */}
+            {viewFilters.datatable && (
+              <div className="col-12 col-md-5 datatable">
+                <DataTable rows={periodRows} currency={currency} />
+              </div>
+            )}
+
+            {/* ── ACTUAL V/S TARGET ── */}
+            {viewFilters.actualvtarget && (
+              <div className="col-12 col-md-7 actualvtarget">
+                <ActualVsTarget rows={periodRows} currency={currency} />
+              </div>
+            )}
+
+            {/* ── DATA DRILL ── */}
+            {viewFilters.datadrill && (
+              <div className="col-lg-12 datadrill">
+                <DataDrillPanel series={series} />
+              </div>
+            )}
+
+            {/* ── MY INITIATIVE ── */}
+            {viewFilters.myinitiative && (
+              <div className="col-lg-4 col-md-6 myinitiative">
+                <InitiativePanel initiatives={initiatives} />
+              </div>
+            )}
+
+            {/* ── RISKS ── */}
+            {viewFilters.risks && (
+              <div className="col-lg-4 col-md-6 risks">
+                <RisksPanel risks={risks} />
+              </div>
+            )}
+
+            {/* ── COMMENTS ── */}
+            {viewFilters.comments && (
+              <div className="col-lg-4 col-md-6 comments-show">
+                <CommentsPanel comments={comments} onAdd={handleAddComment} />
+              </div>
+            )}
+
+            {/* ── FILES ── */}
+            {viewFilters.files && (
+              <div className="col-lg-4 col-md-6 files">
+                <FilesPanel files={files} onEditFile={setEditingFile} />
+              </div>
+            )}
+
           </div>
         </div>
-      )}
+      </main>
+
+      {/* MODALS */}
+      <DeleteModal />
+      <KpiDescriptionModal isViewOnly={isViewOnly} kpi={kpi} onSaveSuccess={reload} />
+      <FilesViewModal files={files} />
+      <FileUploadModal 
+        file={editingFile} 
+        onCancel={() => setEditingFile(null)}
+        onSave={(updatedFile) => {
+          setFiles(prev => {
+            if (updatedFile.id) {
+              return prev.map(f => {
+                if (f.id === updatedFile.id) {
+                  return {
+                    ...f,
+                    name: updatedFile.name,
+                    file: updatedFile.newFile ? updatedFile.newFile.name : f.file,
+                    size: updatedFile.newFile ? `${(updatedFile.newFile.size / 1024).toFixed(2)} KB` : f.size,
+                    uniqueFileReference: updatedFile.newFile ? updatedFile.newFile.name : f.uniqueFileReference
+                  };
+                }
+                return f;
+              });
+            } else {
+              return [{
+                id: Date.now(),
+                name: updatedFile.name || (updatedFile.newFile ? updatedFile.newFile.name : "New File"),
+                file: updatedFile.newFile ? updatedFile.newFile.name : "",
+                size: updatedFile.newFile ? `${(updatedFile.newFile.size / 1024).toFixed(2)} KB` : "",
+                uniqueFileReference: updatedFile.newFile ? updatedFile.newFile.name : "",
+                createdTime: new Date().toISOString()
+              }, ...prev];
+            }
+          });
+          setEditingFile(null);
+        }}
+      />
+      <ViewDataDrillModal series={series} />
+      <ViewDataTableModal rows={periodRows} currency={currency} />
+      <ViewActualVsTargetModal rows={periodRows} currency={currency} />
 
       <footer style={{ textAlign: "center", fontSize: 12, color: "#aaa", padding: "16px 0" }}>
         Copyright © 2026 <strong style={{ fontWeight: 600, color: "#555" }}>StratRoom</strong>
       </footer>
     </div>
-  );
-}
-
-function DetailTable({ rows }) {
-  return (
-    <table className="table table-bordered table-sm mb-0" style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-      <tbody>
-        {rows.map(([label, value], i) => (
-          <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
-            <th style={{ textAlign: "left", padding: "8px", background: "#f9f9f9", fontWeight: 500 }}>{label}</th>
-            <td style={{ padding: "8px" }}>{value == null || value === "" ? "-" : String(value)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
   );
 }

@@ -90,7 +90,24 @@ async function refreshAccessToken() {
 }
 
 function redirectToLogin() {
+  const PRESERVE_KEYS = ['kpichartviewdata', 'empkpichartviewdata', 'saved_email', 'saved_remember', 'systemip']
+  const preserved = {}
+  
+  PRESERVE_KEYS.forEach((k) => {
+    const v = localStorage.getItem(k)
+    if (v != null) preserved[k] = v
+  })
+  
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i)
+    if (k && (k.startsWith('mock_') || k.startsWith('kpi_storycard_'))) {
+      preserved[k] = localStorage.getItem(k)
+    }
+  }
+
   localStorage.clear()
+  Object.entries(preserved).forEach(([k, v]) => localStorage.setItem(k, v))
+
   window.location.href = '/login'
 }
 

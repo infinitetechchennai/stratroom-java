@@ -77,22 +77,23 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
             if (vals.description) setDescription(vals.description);
             setStatus(vals.status || '');
             if (vals.performance) setPerformance(vals.performance);
-
-            const checkedFields = vals.scorecardFields || [];
-            setFields({
-                Actual: checkedFields.includes('Actual'),
-                Target: checkedFields.includes('Target'),
-                Budget: checkedFields.includes('Budget') || checkedFields.includes('Strech'),
-                Forecast: checkedFields.includes('Forecast') || checkedFields.includes('Stable'),
-                Baseline: checkedFields.includes('Baseline'),
-                Index: checkedFields.includes('Index') || checkedFields.includes('Score'),
-                Trend: checkedFields.includes('Trend'),
-                Risk: checkedFields.includes('Risk'),
-                Decline: checkedFields.includes('Decline') || checkedFields.includes('Shrink'),
-                Type: checkedFields.includes('Type'),
-            });
         }
-    }, [rawCard]);
+
+        // Initialize checkboxes from the Global Scorecard Settings context
+        const s = settings || {};
+        setFields({
+            Actual: s.scorecardactual !== 'false',
+            Target: s.scorecardtarget !== 'false',
+            Budget: s.scorecardstrech === 'true', // Strech
+            Forecast: s.scorecardstable === 'true', // Stable
+            Baseline: s.scorecardbaseline === 'true',
+            Index: s.scorecardindex !== 'false',
+            Trend: s.scorecardtrend !== 'false',
+            Risk: s.scorecardrisk !== 'false',
+            Decline: s.scorecardshrink === 'true', // Shrink
+            Type: s.type === 'true',
+        });
+    }, [rawCard, settings]);
 
     const handleCheckbox = (key) => {
         setFields(prev => ({ ...prev, [key]: !prev[key] }));

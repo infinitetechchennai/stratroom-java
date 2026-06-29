@@ -358,6 +358,30 @@ export default function MyFormsPage() {
                 await recordKpiActualBatch({ kpiId: Number(selectedKpiId), actuals });
             }
             
+            // Mock File Upload saving
+            if (file) {
+                const kpiKey = selectedSubKpiId ? `mock_files_subkpi_${selectedSubKpiId}` : `mock_files_kpi_${selectedKpiId}`;
+                const existingFilesStr = localStorage.getItem(kpiKey);
+                let existingFiles = existingFilesStr ? JSON.parse(existingFilesStr) : [];
+                
+                let formattedSize = "0 Bytes";
+                if (file.size > 0) {
+                    const k = 1024;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(file.size) / Math.log(k));
+                    formattedSize = parseFloat((file.size / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                }
+
+                existingFiles.push({
+                    name: file.name,
+                    file: file.name, // The actual filename string
+                    size: `(${formattedSize})`,
+                    createdTime: new Date().toISOString()
+                });
+                
+                localStorage.setItem(kpiKey, JSON.stringify(existingFiles));
+            }
+            
             showToast('Saved successfully! Redirecting...', 'success');
             setTimeout(() => {
                 window.location.href = '/scorecard?pageId=' + selectedPageId;

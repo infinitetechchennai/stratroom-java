@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { StatusIcon } from '../ui/StatusIcon';
 import { TrendIcon } from '../ui/TrendIcon';
 import { ActionMenu } from '../ui/ActionMenu';
@@ -63,7 +64,7 @@ export const ObjectiveRow = ({ item, parentId, index }) => {
                 </td>
                 <td width="80">{item.id}</td>
                 <td>
-                    {item.name}
+                    <Link className="text-decoration-none" to={`/kpi-story-card/${item.pk || item.id}`}>{item.name}</Link>
                 </td>
                 <td width="50" className="text-center">{item.period}</td>
                 <td width="50" className="text-center">{item.score}</td>

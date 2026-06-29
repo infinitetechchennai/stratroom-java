@@ -598,6 +598,52 @@ public class ScorecardCalculationService {
             point.put("measureName", str(k.get("name")));
             series.add(point);
         }
+
+        // --- DYNAMIC DATA DRILL: Fetch Sub-KPIs (Children) for the hierarchical UI ---
+        List<Map<String, Object>> subKpis = jdbc.queryForList(
+                "SELECT id, name, target_value FROM sc_sub_kpis WHERE kpi_id = ? AND is_deleted = false", kpiId);
+
+        for (Map<String, Object> sk : subKpis) {
+            Long subKpiId = num(sk.get("id"));
+            String subKpiName = str(sk.get("name"));
+            BigDecimal subTarget = dec(sk.get("target_value"));
+            
+            List<Map<String, Object>> subHist = new ArrayList<>();
+            try {
+                subHist = jdbc.queryForList(
+                        "SELECT period_start, period_end, actual_value "
+                                + "FROM sc_sub_kpi_history WHERE sub_kpi_id = ? ORDER BY period_end", subKpiId);
+            } catch (Exception e) {
+                // Gracefully ignore missing table errors
+                System.err.println("Warning: sc_sub_kpi_history query failed: " + e.getMessage());
+            }
+            
+            BigDecimal subRunningActual = BigDecimal.ZERO;
+            for (Map<String, Object> sh : subHist) {
+                LocalDate periodEnd = toLocalDate(sh.get("period_end"));
+                if (periodEnd != null && (periodEnd.isBefore(start) || periodEnd.isAfter(end))) {
+                    continue;
+                }
+                BigDecimal actual = dec(sh.get("actual_value"));
+                BigDecimal gap = (actual != null && subTarget != null) ? actual.subtract(subTarget) : null;
+                if (actual != null) {
+                    subRunningActual = subRunningActual.add(actual);
+                }
+                
+                Map<String, Object> point = new LinkedHashMap<>();
+                point.put("period", periodEnd != null ? periodEnd.format(label) : str(sh.get("period_end")));
+                point.put("actual", actual);
+                point.put("target", subTarget);
+                point.put("gap", gap);
+                point.put("ytd", subRunningActual);
+                point.put("currency", currency);
+                point.put("measureName", subKpiName);
+                point.put("isChild", true);
+                point.put("parentId", str(k.get("name")));
+                series.add(point);
+            }
+        }
+
         result.put("series", series);
         return result;
     }

@@ -1,10 +1,12 @@
 import React, { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { downloadKpiReport } from '../../../utils/kpiReport';
 import { useScorecardContext } from '../../../context/ScorecardContext';
 
 export const ActionMenu = ({ level, item }) => {
     const dropdownRef = useRef(null);
     const { setStoryCardItem } = useScorecardContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Re-init lucide icons inside action cells after render

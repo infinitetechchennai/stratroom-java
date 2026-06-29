@@ -876,6 +876,12 @@ const ScorecardPage = ({ pageId: pageIdProp }) => {
     const pageId = pageIdProp || searchParams.get('pageId') || '1';
     const [scorecardData, setScorecardData] = useState(null);
 
+    // Persist the pageId so the KPI sidebar (on the KPI story card page) can
+    // load the same scorecard hierarchy without needing a separate API.
+    useEffect(() => {
+      if (pageId) localStorage.setItem('scorecardPageId', pageId);
+    }, [pageId]);
+
     const USE_SAMPLE_FALLBACK = false;
     const { scorecardData: liveDTO, loading: liveLoading, error: liveError, reload } = useScorecard(pageId);
 
