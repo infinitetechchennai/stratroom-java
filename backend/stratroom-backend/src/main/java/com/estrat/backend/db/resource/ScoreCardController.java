@@ -159,6 +159,10 @@ public class ScoreCardController {
             Map<String, Object> result = scorecardCrudService.importValuesFile(rows);
             return new ResponseEntity<>(result, org.springframework.http.HttpStatus.OK);
         } catch (Exception e) {
+            // Log the full stack trace — otherwise the import 500s silently and only the
+            // message reaches the client, making failures very hard to diagnose.
+            org.slf4j.LoggerFactory.getLogger(ScoreCardController.class)
+                .error("bulkImportValues failed", e);
             Map<String, Object> err = new java.util.HashMap<>();
             err.put("error", e.getMessage());
             return new ResponseEntity<>(err, org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);

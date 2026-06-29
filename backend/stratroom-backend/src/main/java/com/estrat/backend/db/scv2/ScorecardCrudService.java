@@ -3,7 +3,6 @@ package com.estrat.backend.db.scv2;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -539,11 +538,14 @@ public class ScorecardCrudService {
                         final String fName = (skName != null && !skName.isBlank()) ? skName : subKpiCode.trim();
                         final String fDt   = skDt;
                         jdbc.update(con -> {
+                            // Ask only for the "id" column. With Statement.RETURN_GENERATED_KEYS,
+                            // PostgreSQL returns every column of the new row, which makes
+                            // KeyHolder.getKey() throw ("multiple keys") and 500s the whole import.
                             PreparedStatement ps = con.prepareStatement(
                                 "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
                                 + "null_handling, achievement_cap, display_order) "
                                 + "VALUES (?,?,?,0,'HIGHER',0,?,'EXCLUDE',150,1)",
-                                Statement.RETURN_GENERATED_KEYS);
+                                new String[]{"id"});
                             ps.setLong(1, fKpiId);
                             ps.setString(2, fCode);
                             ps.setString(3, fName);
@@ -669,11 +671,14 @@ public class ScorecardCrudService {
                         final String fDt = skDt;
                         KeyHolder kh = new GeneratedKeyHolder();
                         jdbc.update(con -> {
+                            // Ask only for the "id" column. With Statement.RETURN_GENERATED_KEYS,
+                            // PostgreSQL returns every column of the new row, which makes
+                            // KeyHolder.getKey() throw ("multiple keys") and 500s the whole import.
                             PreparedStatement ps = con.prepareStatement(
                                 "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
                                 + "null_handling, achievement_cap, display_order) "
                                 + "VALUES (?,?,?,0,'HIGHER',0,?,'EXCLUDE',150,1)",
-                                Statement.RETURN_GENERATED_KEYS);
+                                new String[]{"id"});
                             ps.setLong(1, fKpiId);
                             ps.setString(2, fCode);
                             ps.setString(3, fName);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Minus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { StatusIcon } from '../ui/StatusIcon';
 import { TrendIcon } from '../ui/TrendIcon';
 import { ActionMenu } from '../ui/ActionMenu';
@@ -80,7 +81,7 @@ export const SubKpiRow = ({ item, parentId, index, level = 2, isVisible = true }
                 </td>
                 <td width="80">{item.id}</td>
                 <td>
-                    <a className="text-decoration-none" href={item.url || '#'}>{item.name}</a>
+                    <Link className="text-decoration-none" to={`/kpi-story-card/${item.pk ?? item.id}`}>{item.name}</Link>
                 </td>
                 <td width="50" className="text-center">{item.period}</td>
                 <td width="50" className="text-center">{item.score}</td>

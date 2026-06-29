@@ -104,13 +104,19 @@ public class ScorecardCalculationService {
                         + "FROM sc_kpi_history WHERE kpi_id IN (%s) ORDER BY kpi_id, period_end", kpiIds),
                 "kpi_id");
 
+        // all SubKPI history, ordered, grouped — so imported SubKPI actuals are surfaced
+        Map<Long, List<Map<String, Object>>> histBySubKpi = groupBy(
+                queryIn("SELECT sub_kpi_id, period_start, period_end, actual_value, target_value "
+                        + "FROM sc_sub_kpi_history WHERE sub_kpi_id IN (%s) ORDER BY sub_kpi_id, period_end", subKpiIds),
+                "sub_kpi_id");
+
         // ---- assemble + compute ----
         List<Map<String, Object>> perspectiveDtos = new ArrayList<>();
         List<BigDecimal> perspectiveScores = new ArrayList<>();
         List<BigDecimal> perspectiveWeights = new ArrayList<>();
 
         for (Map<String, Object> p : perspectives) {
-            Map<String, Object> pDto = buildPerspective(p, objByPersp, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi, start, end, scClass);
+            Map<String, Object> pDto = buildPerspective(p, objByPersp, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi, histBySubKpi, start, end, scClass);
             perspectiveDtos.add(pDto);
             BigDecimal score = (BigDecimal) pDto.get("score");
             if (score != null) {
@@ -155,6 +161,7 @@ public class ScorecardCalculationService {
             Map<Long, List<Map<String, Object>>> subByKpi,
             Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
+            Map<Long, List<Map<String, Object>>> histBySubKpi,
             LocalDate start, LocalDate end, String scClass) {
         Long perspectiveId = num(p.get("id"));
         String name = str(p.get("name"));
@@ -166,7 +173,7 @@ public class ScorecardCalculationService {
         List<BigDecimal> objWeights = new ArrayList<>();
 
         for (Map<String, Object> o : objByPersp.getOrDefault(perspectiveId, List.of())) {
-            Map<String, Object> oDto = buildObjective(o, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi, start, end, classType);
+            Map<String, Object> oDto = buildObjective(o, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi, histBySubKpi, start, end, classType);
             objectiveDtos.add(oDto);
             BigDecimal score = (BigDecimal) oDto.get("score");
             if (score != null) {
@@ -204,6 +211,7 @@ public class ScorecardCalculationService {
             Map<Long, List<Map<String, Object>>> subByKpi,
             Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
+            Map<Long, List<Map<String, Object>>> histBySubKpi,
             LocalDate start, LocalDate end, String parentClass) {
         Long objectiveId = num(o.get("id"));
         String name = str(o.get("name"));
@@ -218,7 +226,7 @@ public class ScorecardCalculationService {
         List<BigDecimal> kpiWeights = new ArrayList<>();
 
         for (Map<String, Object> k : kpiByObj.getOrDefault(objectiveId, List.of())) {
-            Map<String, Object> kDto = buildKpi(k, subByKpi, subMeasureBySubKpi, histByKpi, start, end, classType);
+            Map<String, Object> kDto = buildKpi(k, subByKpi, subMeasureBySubKpi, histByKpi, histBySubKpi, start, end, classType);
             kpiDtos.add(kDto);
             BigDecimal score = (BigDecimal) kDto.get("score");
             if (score != null) {
@@ -266,6 +274,7 @@ public class ScorecardCalculationService {
             Map<Long, List<Map<String, Object>>> subByKpi,
             Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
+            Map<Long, List<Map<String, Object>>> histBySubKpi,
             LocalDate start, LocalDate end, String parentClass) {
         Long kpiId = num(k.get("id"));
         String name = str(k.get("name"));
@@ -293,7 +302,19 @@ public class ScorecardCalculationService {
                 Long subId = num(sk.get("id"));
                 BigDecimal subTarget = dec(sk.get("target_value"));
                 BigDecimal subCap = dec(sk.get("achievement_cap"));
-                BigDecimal subAch = achievementCalculator.calculate(null, subTarget, str(sk.get("polarity")), null, null, subCap);
+
+                // Pull the latest imported actual (and per-period target, if any) for this SubKPI
+                List<Map<String, Object>> subHist = histBySubKpi.getOrDefault(subId, List.of());
+                Map<String, Object> subCurrent = latestActualInRange(subHist, start, end);
+                if (subCurrent == null) subCurrent = latestInRange(subHist, start, end);
+                BigDecimal subActual = null;
+                if (subCurrent != null) {
+                    subActual = dec(subCurrent.get("actual_value"));
+                    BigDecimal subHistTarget = dec(subCurrent.get("target_value"));
+                    if (subHistTarget != null) subTarget = subHistTarget;
+                }
+
+                BigDecimal subAch = achievementCalculator.calculate(subActual, subTarget, str(sk.get("polarity")), null, null, subCap);
                 if (subAch != null) {
                     subScores.add(subAch);
                     subWeights.add(dec(sk.get("weight")));
@@ -302,7 +323,7 @@ public class ScorecardCalculationService {
                 Map<String, Object> subVal = new LinkedHashMap<>();
                 subVal.put("subMeasureName", str(sk.get("name")));
                 subVal.put("name", str(sk.get("name")));
-                subVal.put("actual", "");
+                subVal.put("actual", formatValue(subActual, str(sk.get("data_type")), null));
                 subVal.put("target", formatValue(subTarget, str(sk.get("data_type")), null));
                 subVal.put("thresholdResult", formatPct(subAch));
                 subVal.put("statusLight", subRag.getStatus());
@@ -521,6 +542,11 @@ public class ScorecardCalculationService {
                         + "LEFT JOIN sc_perspectives p ON o.perspective_id = p.id "
                         + "WHERE k.id = ? AND k.is_deleted = false", kpiId);
         if (kpiRows.isEmpty()) {
+            // The id might be a SubKPI (the scorecard links SubKPI rows here too) — serve its history.
+            Map<String, Object> subResult = subKpiStoryCard(kpiId, dateRange);
+            if (subResult != null) {
+                return subResult;
+            }
             result.put("kpi", null);
             result.put("series", new ArrayList<>());
             return result;
@@ -553,7 +579,7 @@ public class ScorecardCalculationService {
         LocalDate start = parseStart(dateRange);
         LocalDate end = parseEnd(dateRange);
         List<Map<String, Object>> hist = jdbc.queryForList(
-                "SELECT period_start, period_end, actual_value "
+                "SELECT period_start, period_end, actual_value, target_value, baseline_value "
                         + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end", kpiId);
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
         List<Map<String, Object>> series = new ArrayList<>();
@@ -588,9 +614,94 @@ public class ScorecardCalculationService {
     }
 
     /**
+     * Story-card detail for a single SubKPI, mirroring {@link #kpiStoryCard} so the same
+     * /storycard endpoint and Data Table work when a SubKPI row is clicked. Reads the
+     * SubKPI's own monthly history from sc_sub_kpi_history. Returns null when the id is
+     * not a SubKPI (so the caller can fall through to its KPI-not-found response).
+     */
+    @Transactional(readOnly = true)
+    public Map<String, Object> subKpiStoryCard(Long subKpiId, String dateRange) {
+        List<Map<String, Object>> subRows = jdbc.queryForList(
+                "SELECT sk.id, sk.name, sk.code, sk.polarity, sk.target_value, sk.weight, "
+                        + "sk.data_type, sk.achievement_cap, "
+                        + "k.name AS kpi_name, k.currency_code, k.measurement_frequency, k.classification_type, "
+                        + "o.name AS objective_name, p.name AS perspective_name "
+                        + "FROM sc_sub_kpis sk "
+                        + "LEFT JOIN sc_kpis k ON sk.kpi_id = k.id "
+                        + "LEFT JOIN sc_objectives o ON k.objective_id = o.id "
+                        + "LEFT JOIN sc_perspectives p ON o.perspective_id = p.id "
+                        + "WHERE sk.id = ?", subKpiId);
+        if (subRows.isEmpty()) {
+            return null;
+        }
+        Map<String, Object> sk = subRows.get(0);
+        String dataType = str(sk.get("data_type"));
+        String currency = str(sk.get("currency_code"));
+        BigDecimal subTarget = dec(sk.get("target_value"));
+
+        Map<String, Object> value = new LinkedHashMap<>();
+        value.put("name", str(sk.get("name")));
+        value.put("target", formatValue(subTarget, dataType, currency));
+        value.put("kpi_measurement", str(sk.get("measurement_frequency")));
+        value.put("dataType", dataType);
+        value.put("currency", currency);
+        value.put("threshold", str(sk.get("classification_type")));
+        value.put("polarity", str(sk.get("polarity")));
+        value.put("weight", str(sk.get("weight")));
+        value.put("description", "");
+        value.put("alignedPerspective", str(sk.get("perspective_name")));
+        value.put("alignmentObjectives", str(sk.get("objective_name")));
+
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("id", num(sk.get("id")));
+        dto.put("kpiId", str(sk.get("code")));
+        dto.put("kpiName", str(sk.get("name")));
+        dto.put("kpiValue", value);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("kpi", dto);
+
+        LocalDate start = parseStart(dateRange);
+        LocalDate end = parseEnd(dateRange);
+        List<Map<String, Object>> hist = jdbc.queryForList(
+                "SELECT period_start, period_end, actual_value, target_value "
+                        + "FROM sc_sub_kpi_history WHERE sub_kpi_id = ? ORDER BY period_end", subKpiId);
+        DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
+        List<Map<String, Object>> series = new ArrayList<>();
+        BigDecimal runningActual = BigDecimal.ZERO;
+        for (Map<String, Object> h : hist) {
+            LocalDate periodEnd = toLocalDate(h.get("period_end"));
+            if (periodEnd != null && (periodEnd.isBefore(start) || periodEnd.isAfter(end))) {
+                continue;
+            }
+            BigDecimal actual = dec(h.get("actual_value"));
+            BigDecimal target = dec(h.get("target_value"));
+            if (target == null) {
+                target = subTarget;
+            }
+            BigDecimal gap = (actual != null && target != null) ? actual.subtract(target) : null;
+            if (actual != null) {
+                runningActual = runningActual.add(actual);
+            }
+            Map<String, Object> point = new LinkedHashMap<>();
+            point.put("period", periodEnd != null ? periodEnd.format(label) : str(h.get("period_end")));
+            point.put("actual", actual);
+            point.put("target", target);
+            point.put("gap", gap);
+            point.put("ytd", runningActual);
+            point.put("baseline", null);
+            point.put("currency", currency);
+            point.put("measureName", str(sk.get("name")));
+            series.add(point);
+        }
+        result.put("series", series);
+        return result;
+    }
+
+    /**
      * Retrieves all active elements in the scorecard hierarchy (Scorecard, Perspectives,
      * Objectives, KPIs, Sub-KPIs) formatted for the formula calculators.
-     * 
+     *
      * Applies hierarchical filtering:
      * - SCORECARD: returns its Perspectives
      * - PERSPECTIVE: returns its Objectives
