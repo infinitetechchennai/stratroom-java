@@ -285,7 +285,7 @@ public class AuditDetailsService {
         auditDetails.setCreatedTime(this.getCurrentTimeUTC());
         auditDetails.setAccessDate(new Date(System.currentTimeMillis()));
         String _orgIdStr287 = UserThreadLocal.get("USER_ORG_ID");
-        long _orgId287 = (_orgIdStr287 != null && !"null".equals(_orgIdStr287)) ? Long.parseLong(_orgIdStr287) : 0L;
+        long _orgId287 = (_orgIdStr287 != null && !"null".equals(_orgIdStr287)) ? Long.parseLong(_orgIdStr287) : this.resolveOrgId(createdOrUpdatedBy, typeId);
         auditDetails.setOrgId(_orgId287);
         auditDetails.setSystemIp(this.getIpAddress());
         this.auditDetailsRepository.save(auditDetails);
@@ -302,11 +302,26 @@ public class AuditDetailsService {
         auditDetails.setAction(action);
         auditDetails.setAccessDate(new Date(System.currentTimeMillis()));
         String _orgIdStr302 = UserThreadLocal.get("USER_ORG_ID");
-        long _orgId302 = (_orgIdStr302 != null && !"null".equals(_orgIdStr302)) ? Long.parseLong(_orgIdStr302) : 0L;
+        long _orgId302 = (_orgIdStr302 != null && !"null".equals(_orgIdStr302)) ? Long.parseLong(_orgIdStr302) : this.resolveOrgId(createdOrUpdatedBy, typeId);
         auditDetails.setOrgId(_orgId302);
         auditDetails.setSystemIp(this.getIpAddress());
         auditDetails.setCreatedTime(this.getCurrentTimeUTC());
         this.auditDetailsRepository.save(auditDetails);
+    }
+
+    /** Resolves orgId from DB when UserThreadLocal USER_ORG_ID is unavailable (WebFlux reactive context). */
+    private long resolveOrgId(long actorId, long typeId) {
+        // Try actor first, then typeId (which is often empId)
+        for (long candidateId : new long[]{actorId, typeId}) {
+            if (candidateId <= 0) continue;
+            try {
+                EmployeeProfilePo po = this.profilePoRepo.findById(candidateId).orElse(null);
+                if (po != null && po.getOrgId() != null) {
+                    return po.getOrgId().getId();
+                }
+            } catch (Exception ignored) {}
+        }
+        return 0L;
     }
 
     public String getIpAddress() {
