@@ -317,7 +317,9 @@ public class DataServiceController {
         }
         this.log.info("[User Import] done — created=" + created + " updated=" + updated + " skipped=" + skipped + " failed=" + failed);
         this.log.debug("logged in employeeID " + loggedInEmpId);
-        this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        if (loggedInEmpId != null && !"null".equals(loggedInEmpId) && !loggedInEmpId.isBlank()) {
+            this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        }
         if (created == 0 && updated == 0 && failed > 0) {
             throw new InputValidationException("Import failed: " + failed + " user row(s) could not be imported. If you re-import the same file, clear duplicate users first or contact support.");
         }

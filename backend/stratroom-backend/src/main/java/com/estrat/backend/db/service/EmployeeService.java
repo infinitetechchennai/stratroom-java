@@ -307,7 +307,8 @@ public class EmployeeService {
             }
         }
         this.userRoleManagementService.saveUserRoleManagement(employee, "Delete");
-        this.orgTrackerService.deleteOrgTrack(employee, Long.valueOf(UserThreadLocal.get()));
+        String _utl310 = UserThreadLocal.get(); long _utlVal310 = (_utl310 != null && !"null".equals(_utl310)) ? Long.parseLong(_utl310) : 0L;
+        this.orgTrackerService.deleteOrgTrack(employee, _utlVal310);
         this.auditService.deleteAudit("User", employee.getOrgDetails().getOrgId(), employee.getEmpId(), "Organisation Deleted");
         this.auditService.deleteAudit("User", employee.getOrgDetails().getOrgId(), employee.getEmpId(), "User Inactive");
         this.employeeDAO.removeEmployeeCredentials((long)Integer.valueOf(employeeID).intValue());
@@ -344,7 +345,8 @@ public class EmployeeService {
         this.cacheUtil.removeEmployeeCache((Object)currentParentEmp.getParentEmpId());
         currentParentEmp.setParentEmpId(employee.getParentEmpId());
         this.employeeDAO.updateParentEmpID(currentParentEmp.getEmpId(), employee.getParentEmpId());
-        this.orgTrackerService.updateOrgTrack(currentParentEmp, Long.valueOf(UserThreadLocal.get()));
+        String _utl347 = UserThreadLocal.get(); long _utlVal347 = (_utl347 != null && !"null".equals(_utl347)) ? Long.parseLong(_utl347) : 0L;
+        this.orgTrackerService.updateOrgTrack(currentParentEmp, _utlVal347);
         this.updateChildTracker(Long.valueOf(employee.getEmpId()), oldparent, Long.valueOf(employee.getParentEmpId()), "Employee");
         this.auditService.updateSuperAudit("User", employee.getSuperCreatedBy(), currentParentEmp.getOrgDetails().getOrgId(), employee.getEmpId(), "User Modified");
         this.cacheUtil.removeEmployeeCache((Object)employee.getEmpId());
