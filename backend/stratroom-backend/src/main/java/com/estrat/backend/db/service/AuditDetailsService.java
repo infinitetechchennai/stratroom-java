@@ -284,7 +284,9 @@ public class AuditDetailsService {
         auditDetails.setAction(action);
         auditDetails.setCreatedTime(this.getCurrentTimeUTC());
         auditDetails.setAccessDate(new Date(System.currentTimeMillis()));
-        auditDetails.setOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
+        String _orgIdStr287 = UserThreadLocal.get("USER_ORG_ID");
+        long _orgId287 = (_orgIdStr287 != null && !"null".equals(_orgIdStr287)) ? Long.parseLong(_orgIdStr287) : 0L;
+        auditDetails.setOrgId(_orgId287);
         auditDetails.setSystemIp(this.getIpAddress());
         this.auditDetailsRepository.save(auditDetails);
     }
@@ -299,7 +301,9 @@ public class AuditDetailsService {
         auditDetails.setUserId(createdOrUpdatedBy);
         auditDetails.setAction(action);
         auditDetails.setAccessDate(new Date(System.currentTimeMillis()));
-        auditDetails.setOrgId(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
+        String _orgIdStr302 = UserThreadLocal.get("USER_ORG_ID");
+        long _orgId302 = (_orgIdStr302 != null && !"null".equals(_orgIdStr302)) ? Long.parseLong(_orgIdStr302) : 0L;
+        auditDetails.setOrgId(_orgId302);
         auditDetails.setSystemIp(this.getIpAddress());
         auditDetails.setCreatedTime(this.getCurrentTimeUTC());
         this.auditDetailsRepository.save(auditDetails);
