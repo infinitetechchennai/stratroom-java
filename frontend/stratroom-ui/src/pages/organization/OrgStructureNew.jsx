@@ -1340,11 +1340,11 @@ function ImportWizard({ user, onClose, onComplete }) {
           // Values/actuals import — updates KPI and SubKPI history data
           const res = await axiosClient.post('/api/scorecard/bulkImportValues', rows, { timeout: 600000 })
           if (res.data?.error) throw new Error(res.data.error)
-          const { kpiRowsUpdated = 0, subKpiRowsUpdated = 0, unmatched = 0 } = res.data || {}
+          const { kpiRowsUpdated = 0, subKpiRowsUpdated = 0, unmatched = 0, skipped = 0, totalRows = 0 } = res.data || {}
           setResult({
             success: true,
-            count: subKpiRowsUpdated || kpiRowsUpdated,
-            kind: `SubKPI value(s) updated (${subKpiRowsUpdated} sub-KPI rows, ${kpiRowsUpdated} KPI rows). Unmatched: ${unmatched}`
+            count: subKpiRowsUpdated + kpiRowsUpdated,
+            kind: `SubKPI value(s) updated (${subKpiRowsUpdated} sub-KPI rows, ${kpiRowsUpdated} KPI rows). Skipped: ${skipped}, Unmatched: ${unmatched}, Total: ${totalRows}`
           })
         } else {
           // Structure import — creates scorecard hierarchy

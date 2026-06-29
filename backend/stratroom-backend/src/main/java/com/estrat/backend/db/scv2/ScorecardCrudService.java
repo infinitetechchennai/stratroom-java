@@ -872,12 +872,30 @@ public class ScorecardCrudService {
     }
 
     private static LocalDate parseOne(String s, LocalDate fallback) {
+        if (s == null || s.isBlank()) return fallback;
+
+        // Excel serial date number (e.g., 45923 → date). XLSX.js sends these as numbers.
+        try {
+            double serial = Double.parseDouble(s.trim());
+            if (serial > 1000 && serial < 100000) { // sanity check: valid Excel serial range
+                // Excel epoch is 1899-12-30 (with a leap year bug)
+                return LocalDate.of(1899, 12, 30).plusDays((long) serial);
+            }
+        } catch (NumberFormatException ignore) { /* not a number */ }
+
+        // Truncate ISO timestamp to date part: "2026-01-01T00:00:00.000Z" → "2026-01-01"
+        String clean = s.contains("T") ? s.substring(0, s.indexOf('T')) : s.trim();
+
         for (DateTimeFormatter f : new DateTimeFormatter[]{
-                DateTimeFormatter.ofPattern("MM/dd/yyyy"),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-                DateTimeFormatter.ofPattern("MMM d, yyyy", java.util.Locale.ENGLISH)}) {
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("yyyy/MM/dd"),
+                DateTimeFormatter.ofPattern("MMM d, yyyy", java.util.Locale.ENGLISH),
+                DateTimeFormatter.ofPattern("d MMM yyyy", java.util.Locale.ENGLISH)}) {
             try {
-                return LocalDate.parse(s, f);
+                return LocalDate.parse(clean, f);
             } catch (Exception ignore) {
                 // try next
             }
