@@ -595,8 +595,9 @@ public class UserRoleManagementService {
                 userRoleManagement.setRoleId(Long.valueOf(((RoleDetailsPo)roleDetailsPo.get()).getRoleId()));
             }
             userRoleManagement.setEmpId(employee.getEmpId());
-            userRoleManagement.setCreatedBy(Long.valueOf(UserThreadLocal.get()).longValue());
-            userRoleManagement.setUpdatedBy(Long.valueOf(UserThreadLocal.get()).longValue());
+            String _createdByStr = UserThreadLocal.get(); long _createdByVal = (_createdByStr != null && !"null".equals(_createdByStr)) ? Long.parseLong(_createdByStr) : 0L;
+            userRoleManagement.setCreatedBy(_createdByVal);
+            userRoleManagement.setUpdatedBy(_createdByVal);
             userRoleManagement.setCreatedDate(LocalDateTime.now());
             userRoleManagement.setUpdatedDate(LocalDateTime.now());
             userRoleManagement.setDesignation(employee.getTitle());
