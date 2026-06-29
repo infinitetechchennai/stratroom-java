@@ -1713,9 +1713,10 @@ public class EmployeeService {
                 this.saveUserDeptMapping(Long.valueOf(employeeProfilePo.getEmpId()), response.getDeptId());
             }
         }
-        this.auditService.saveSuperAudit("Organisation", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "Department Created");
+        String _auditId1716 = UserThreadLocal.get(); long _auditLong1716 = (_auditId1716 != null && !"null".equals(_auditId1716)) ? Long.parseLong(_auditId1716) : 0L;
+        this.auditService.saveSuperAudit("Organisation", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), _auditLong1716, "Department Created");
         this.updateChildTracker(departmentChartDTO.getDeptId(), null, departmentChartDTO.getDeptParentId(), "Department");
-        this.deptTrackerService.saveDeptTrack(response, Long.valueOf(UserThreadLocal.get()));
+        this.deptTrackerService.saveDeptTrack(response, _auditLong1716);
         return response;
     }
 
@@ -1831,8 +1832,9 @@ public class EmployeeService {
                 this.saveUserDeptMapping(Long.valueOf(employeeProfilePo.getEmpId()), response.getDeptId());
             }
         }
-        this.auditService.updateSuperAudit("Organisation", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "Department Modified");
-        this.deptTrackerService.updateDeptTrack(response, Long.valueOf(UserThreadLocal.get()));
+        String _auditId1834 = UserThreadLocal.get(); long _auditLong1834 = (_auditId1834 != null && !"null".equals(_auditId1834)) ? Long.parseLong(_auditId1834) : 0L;
+        this.auditService.updateSuperAudit("Organisation", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), _auditLong1834, "Department Modified");
+        this.deptTrackerService.updateDeptTrack(response, _auditLong1834);
         return response;
     }
 
