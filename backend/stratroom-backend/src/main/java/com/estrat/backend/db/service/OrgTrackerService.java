@@ -201,7 +201,9 @@ public class OrgTrackerService {
                 throw new RuntimeException(e);
             }
         }
-        List<EmployeeProfilePo> employeeProfilePos = this.employeeDAO.findAll(firstName, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
+        String _orgStr = UserThreadLocal.get("USER_ORG_ID");
+        long orgId = (_orgStr != null && !"null".equals(_orgStr)) ? Long.parseLong(_orgStr) : 1L;
+        List<EmployeeProfilePo> employeeProfilePos = this.employeeDAO.findAll(firstName, orgId);
         for (EmployeeProfilePo profilePo : employeeProfilePos) {
             List<OrgTracker> tracker = null;
             tracker = dateRange != null ? this.orgTrackerRepository.findByListANDPresent(profilePo.getEmpId(), this.getDateTime(firstDate, "start"), this.getDateTime(secondDate, "end")) : this.orgTrackerRepository.findBy(profilePo.getEmpId());
@@ -239,8 +241,10 @@ public class OrgTrackerService {
     public List<OrgTrackerDTO> findAll(String dateRange) {
         ArrayList<OrgTrackerDTO> trackerDTOList = new ArrayList<OrgTrackerDTO>();
         List<String> designationList = this.employeeService.getDesignationListString("", dateRange);
+        String _orgStr = UserThreadLocal.get("USER_ORG_ID");
+        long orgId = (_orgStr != null && !"null".equals(_orgStr)) ? Long.parseLong(_orgStr) : 1L;
         for (String designation : designationList) {
-            List<EmployeeProfilePo> employeeProfilePos = this.employeeDAO.findAll(designation, Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), "Active");
+            List<EmployeeProfilePo> employeeProfilePos = this.employeeDAO.findAll(designation, orgId, "Active");
             for (EmployeeProfilePo profilePo : employeeProfilePos) {
                 List<OrgTracker> tracker = this.orgTrackerRepository.findBy(profilePo.getEmpId());
                 if (tracker.isEmpty()) continue;
