@@ -1883,7 +1883,7 @@ public class EmployeeService {
                 java.util.List<com.estrat.backend.db.bean.po.EmployeeProfilePo> admins =
                     this.employeeProfilePoRepo.findAll();
                 for (com.estrat.backend.db.bean.po.EmployeeProfilePo ep : admins) {
-                    if (ep.getEmpId() != null && ep.getEmpId() > 0) {
+                    if (ep.getEmpId() > 0) {
                         createdBy = String.valueOf(ep.getEmpId());
                         break;
                     }
