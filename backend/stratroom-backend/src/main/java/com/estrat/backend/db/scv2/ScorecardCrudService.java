@@ -63,6 +63,14 @@ public class ScorecardCrudService {
         try { jdbc.execute("ALTER TABLE sc_sub_kpi_history ADD COLUMN target_value NUMERIC"); } catch (Exception ignore) {}
     }
 
+    /** Ensures sc_sub_kpi_history has target_value column + unique index for ON CONFLICT upserts. */
+    private void ensureSubKpiHistorySchema() {
+        try { jdbc.execute("ALTER TABLE sc_sub_kpi_history ADD COLUMN IF NOT EXISTS target_value NUMERIC"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpi_history ADD COLUMN IF NOT EXISTS target_value NUMERIC"); } catch (Exception ignore) {}
+        try { jdbc.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_sc_subkpihist ON sc_sub_kpi_history (sub_kpi_id, period_start, period_end)"); } catch (Exception ignore) {}
+        try { jdbc.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_sc_kpihist ON sc_kpi_history (kpi_id, period_start, period_end)"); } catch (Exception ignore) {}
+    }
+
     // ---------------- SCORECARD ----------------
 
     @Transactional
@@ -448,6 +456,10 @@ public class ScorecardCrudService {
     public Map<String, Object> importActuals(Long pageId, String dateRange, List<Map<String, Object>> rows) {
         Map<String, Object> result = new HashMap<>();
         int kpiUpdated = 0, subKpiUpdated = 0, skipped = 0, unmatched = 0;
+
+        // Ensure schema is ready — idempotent, safe to run every time
+        ensureSubKpiHistorySchema();
+
         if (rows == null || rows.isEmpty()) {
             result.put("updated", 0); result.put("skipped", 0); result.put("unmatched", 0);
             return result;
@@ -601,6 +613,9 @@ public class ScorecardCrudService {
     @Transactional
     public Map<String, Object> importValuesFile(List<Map<String, Object>> rows) {
         int kpiUpdated = 0, subKpiUpdated = 0, unmatched = 0, skipped = 0;
+
+        // Ensure schema is ready — idempotent, safe to run every time
+        ensureSubKpiHistorySchema();
 
         // Build code->id maps by scanning the whole database once (all KPIs + SubKPIs)
         Map<String, Long> kpiCodeToId = new HashMap<>();
