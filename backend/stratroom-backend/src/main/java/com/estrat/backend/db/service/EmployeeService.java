@@ -1958,11 +1958,11 @@ public class EmployeeService {
         }
         this.updateDeptMap(departmentChartDTO, memberEmail);
         if (status) {
-            this.auditService.saveSuperAudit("User", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "Department Created");
-            this.deptTrackerService.saveOrUpdateDeptTrack(departmentChartDTO, Long.valueOf(UserThreadLocal.get()));
+            this.auditService.saveSuperAudit("User", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(createdBy).longValue(), "Department Created");
+            this.deptTrackerService.saveOrUpdateDeptTrack(departmentChartDTO, Long.valueOf(createdBy));
         } else {
-            this.auditService.updateSuperAudit("User", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "Department Updated");
-            this.deptTrackerService.saveOrUpdateDeptTrack(departmentChartDTO, Long.valueOf(UserThreadLocal.get()));
+            this.auditService.updateSuperAudit("User", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(createdBy).longValue(), "Department Updated");
+            this.deptTrackerService.saveOrUpdateDeptTrack(departmentChartDTO, Long.valueOf(createdBy));
         }
         this.updateChildTracker(departmentChartDTO.getDeptId(), oldParent, departmentChartDTO.getDeptParentId(), "Department");
         return true;
