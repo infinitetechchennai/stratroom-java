@@ -185,15 +185,16 @@ public class RoleService {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setEmployeeId(empId.longValue());
         Employee employee = this.employeeService.getEmployee(employeeDTO);
+        long orgId = (employee != null && employee.getOrgDetails() != null) ? employee.getOrgDetails().getOrgId() : 1L;
         List<RoleDetailsPo> roleDetails = null;
         if (type.equalsIgnoreCase("DEFAULT")) {
-            List check = this.roleRepository.getRoleList(employee.getOrgDetails().getOrgId(), 0);
-            if (check.isEmpty()) {
-                this.saveUserRole(Long.valueOf(employee.getOrgDetails().getOrgId()), Long.valueOf(employee.getEmpId()));
+            List check = this.roleRepository.getRoleList(orgId, 0);
+            if (check.isEmpty() && employee != null && employee.getEmpId() != 0) {
+                this.saveUserRole(orgId, Long.valueOf(employee.getEmpId()));
             }
-            roleDetails = this.roleRepository.getRoleList(employee.getOrgDetails().getOrgId(), 0);
+            roleDetails = this.roleRepository.getRoleList(orgId, 0);
         } else {
-            roleDetails = this.roleRepository.getRoleList(employee.getOrgDetails().getOrgId(), 1);
+            roleDetails = this.roleRepository.getRoleList(orgId, 1);
         }
         if (CollectionUtils.isNotEmpty((Collection)roleDetails)) {
             return roleDetails.stream().map(role -> {

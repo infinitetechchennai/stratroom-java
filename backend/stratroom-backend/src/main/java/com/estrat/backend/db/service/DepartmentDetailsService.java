@@ -259,6 +259,9 @@ public class DepartmentDetailsService {
         List<DeptDetails> result = new ArrayList();
         boolean checkstatus = false;
         EmployeeProfilePo employeeProfilePo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
+        if (employeeProfilePo == null) {
+            return new ArrayList<>();
+        }
         UserDTO userRoleManagement = this.userRoleManagementService.findById(Long.valueOf(employeeProfilePo.getEmpId()));
         if (datePeriod != null && !datePeriod.isEmpty()) {
             DepartmentChartMapping department;
