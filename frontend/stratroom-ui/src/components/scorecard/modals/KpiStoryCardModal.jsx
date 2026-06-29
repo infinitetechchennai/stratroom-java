@@ -1,49 +1,68 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useScorecardContext } from '../../../context/ScorecardContext';
+import { getReporteeList } from '../../../services/scorecardApi';
 
-const Row = ({ label, value, isText, pillBg, pillColor, noBorder }) => {
+const Pills = ({ value }) => {
+    if (!value || value === 'N/A') return null;
+    let items = [];
+    if (Array.isArray(value)) {
+        items = value;
+    } else if (typeof value === 'string') {
+        items = value.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+    } else {
+        items = [String(value)];
+    }
+
+    if (items.length === 0) return null;
+
     return (
-        <div style={{ 
-            display: 'flex', 
-            padding: '16px 20px', 
-            borderBottom: noBorder ? 'none' : '1px solid #f4f4f5',
-            alignItems: 'center'
-        }}>
-            <div style={{ width: '30%', fontWeight: '600', fontSize: '13px', color: '#3f3f46' }}>
-                {label}
-            </div>
-            <div style={{ width: '70%', fontSize: '13px', color: '#52525b' }}>
-                {isText ? (
-                    value
-                ) : value ? (
-                    <span style={{ 
-                        background: pillBg, 
-                        color: pillColor, 
-                        padding: '4px 14px', 
-                        borderRadius: '20px',
-                        fontSize: '12px',
-                        fontWeight: '500'
-                    }}>
-                        {value}
-                    </span>
-                ) : null}
-            </div>
+        <div className="d-flex flex-wrap gap-2">
+            {items.map((item, idx) => (
+                <span key={idx} className="badge rounded-pill label-bg-dark">
+                    {item}
+                </span>
+            ))}
         </div>
     );
 };
 
 export const KpiStoryCardModal = () => {
-    const { storyCardItem } = useScorecardContext();
+    const { storyCardItem, setStoryCardItem } = useScorecardContext();
+    const [owners, setOwners] = useState([]);
+    const [supportNeeded, setSupportNeeded] = useState('');
+    const [remarks, setRemarks] = useState('');
+
     const item = storyCardItem || {};
 
+    useEffect(() => {
+        if (item.id || item.kpiId) {
+            const id = item.id || item.kpiId;
+            setSupportNeeded(localStorage.getItem(`kpi_storycard_support_${id}`) || item.supportNeeded || item.support_needed || '');
+            setRemarks(localStorage.getItem(`kpi_storycard_remarks_${id}`) || item.remarks || '');
+        }
+    }, [item.id, item.kpiId]);
+
+    useEffect(() => {
+        let active = true;
+        getReporteeList()
+            .then((list) => { if (active && Array.isArray(list)) setOwners(list); })
+            .catch(() => {});
+        return () => { active = false; };
+    }, []);
+
+    let owner = item.ownerName || item.ownerId || item.owner || 'N/A';
+    if (owner !== 'N/A' && owners.length > 0) {
+        const o = owners.find(emp => String(emp.empId ?? emp.id ?? emp.employeeId) === String(owner));
+        if (o) {
+            owner = [o.firstName, o.lastName].filter(Boolean).join(' ') || o.name || o.fullName || o.employeeName || owner;
+        }
+    }
+
     const name = item.name || 'N/A';
-    const owner = item.ownerName || item.ownerId || item.owner || 'N/A';
-    const initials = owner !== 'N/A' ? owner.substring(0, 2).toUpperCase() : 'NA';
-    
     const actual = item.actual || 'N/A';
     const target = item.target || 'N/A';
-    const measure = item.measurement || item.kpi_measurement || 'N/A';
-    const frequency = item.period || item.frequency || 'N/A';
+    const measure = item.measurement || item.kpi_measurement || item.measurementMethod || 'N/A';
+    const frequency = item.period || item.frequency || item.reportingFrequency || 'N/A';
     const alignment = item.alignment || 'N/A';
 
     const handleSave = () => {
@@ -53,7 +72,7 @@ export const KpiStoryCardModal = () => {
             const html = `
               <div id="${id}" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="d-flex">
-                  <div class="toast-body">Support Needed saved successfully.</div>
+                  <div class="toast-body">Saved successfully.</div>
                   <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
               </div>`;
@@ -66,6 +85,15 @@ export const KpiStoryCardModal = () => {
             }
         }
 
+        if (item.id || item.kpiId) {
+            const id = item.id || item.kpiId;
+            localStorage.setItem(`kpi_storycard_support_${id}`, supportNeeded);
+            localStorage.setItem(`kpi_storycard_remarks_${id}`, remarks);
+            if (setStoryCardItem) {
+                setStoryCardItem(prev => ({ ...prev, supportNeeded, remarks }));
+            }
+        }
+
         const modalEl = document.getElementById('kpi-story-card-modal');
         if (modalEl && window.bootstrap?.Modal) {
             const inst = window.bootstrap.Modal.getOrCreateInstance(modalEl);
@@ -74,77 +102,119 @@ export const KpiStoryCardModal = () => {
     };
 
     return (
-        <div className="modal fade" id="kpi-story-card-modal" tabIndex="-1" role="dialog" aria-hidden="true" style={{ zIndex: 1060 }}>
-            <div className="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
-                <div className="modal-content shadow" style={{ borderRadius: '10px', border: 'none' }}>
-                    
-                    {/* Header */}
-                    <div className="modal-header" style={{ padding: '16px 24px', borderBottom: '1px solid #f4f4f5' }}>
-                        <h5 className="modal-title" style={{ fontSize: '15px', fontWeight: '600', color: '#18181b' }}>KPI Story Card</h5>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" style={{ fontSize: '12px' }}></button>
+        <div className="modal custom-modal fade" id="kpi-story-card-modal" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true" style={{ zIndex: 1060 }}>
+            <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h4 className="modal-title">KPI Story Card</h4>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    
-                    {/* Body */}
-                    <div className="modal-body" style={{ padding: '24px', background: '#fff' }}>
-                        <div style={{ border: '1px solid #e4e4e7', borderRadius: '8px', overflow: 'hidden' }}>
-                            
-                            {/* Circle Avatar Row */}
-                            <div style={{ padding: '20px', borderBottom: '1px solid #f4f4f5' }}>
-                                <div style={{ 
-                                    width: 52, height: 52, borderRadius: '50%', 
-                                    border: '1px solid #d4d4d8', display: 'flex', 
-                                    alignItems: 'center', justifyContent: 'center', 
-                                    fontSize: 15, color: '#52525b', background: '#fff'
-                                }}>
-                                    {initials}
+
+                    <div className="modal-body">
+                        <div className="card custom-card table-card">
+                            <div className="card-body">
+                                <div className="row-table">
+                                    <div className="row">
+                                        <div className="col-12 col-form-text">
+                                            <div className="avatar m-auto">
+                                                <img src="/assets/images/user/user7.jpg" width="72" height="72"
+                                                    className="rounded-circle" alt="User avatar" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">KPI Name</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <p><span style={{ fontWeight: 600 }}>{name}</span></p>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Alignment Objectives</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={alignment} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Owner</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={owner} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Target Audience</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={item.targetAudience} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Current Actual</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={actual} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Target</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={target} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Measurement Method</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={measure} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Strategic Initiatives</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={item.initiatives} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Timelines</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={item.timelines} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Reporting Frequency</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={frequency} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Success Criteria</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={item.successCriteria} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-md-3 col-form-label">Risks</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <Pills value={item.risks} />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label htmlFor="supportNeeded" className="col-md-3 col-form-label">Support Needed</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <textarea className="form-control" id="supportNeeded" rows="3" value={supportNeeded} onChange={(e) => setSupportNeeded(e.target.value)}></textarea>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label htmlFor="remarks" className="col-md-3 col-form-label">Remarks</label>
+                                        <div className="col-md-9 col-form-text">
+                                            <textarea className="form-control" id="remarks" rows="3" value={remarks} onChange={(e) => setRemarks(e.target.value)}></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            {/* Rows */}
-                            <Row label="KPI Name" value={name} isText />
-                            <Row label="Alignment Objectives" value={alignment} pillBg="#f1f5f9" pillColor="#475569" />
-                            <Row label="Owner" value={owner} pillBg="#dcfce7" pillColor="#15803d" />
-                            <Row label="Target Audience" value="N/A" pillBg="#ffe4e6" pillColor="#be123c" />
-                            <Row label="Current Actual" value={actual} pillBg="#fef08a" pillColor="#a16207" />
-                            <Row label="Target" value={target} pillBg="#dbeafe" pillColor="#1d4ed8" />
-                            <Row label="Measurement Method" value={measure} pillBg="#ffedd5" pillColor="#c2410c" />
-                            <Row label="Strategic Initiatives" />
-                            <Row label="Timelines" value="N/A" pillBg="#f1f5f9" pillColor="#475569" />
-                            <Row label="Reporting Frequency" value={frequency} pillBg="#dcfce7" pillColor="#15803d" />
-                            <Row label="Success Criteria" value="N/A" pillBg="#ffedd5" pillColor="#c2410c" />
-                            <Row label="Risks" />
-                            
-                            {/* Support Needed Row */}
-                            <div style={{ display: 'flex', padding: '16px 20px', alignItems: 'flex-start' }}>
-                                <div style={{ width: '30%', fontWeight: '600', fontSize: '13px', color: '#3f3f46', marginTop: '8px' }}>
-                                    Support Needed
-                                </div>
-                                <div style={{ width: '70%' }}>
-                                    <textarea 
-                                        className="form-control" 
-                                        rows="3" 
-                                        style={{ 
-                                            resize: 'vertical', 
-                                            borderRadius: '6px', 
-                                            border: '1px solid #e4e4e7', 
-                                            fontSize: '13px',
-                                            padding: '10px 12px',
-                                            outline: 'none',
-                                            boxShadow: 'none'
-                                        }}
-                                    ></textarea>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
-
-                    {/* Footer */}
-                    <div className="modal-footer" style={{ padding: '16px 24px', borderTop: 'none' }}>
-                        <button type="button" className="btn btn-light btn-sm px-3 py-2" data-bs-dismiss="modal" style={{ background: '#f1f5f9', border: 'none', color: '#475569', fontWeight: 500, borderRadius: '6px' }}>Cancel</button>
-                        <button type="button" onClick={handleSave} className="btn btn-primary btn-sm px-4 py-2"  style={{ background: '#1e293b', color: '#fff', fontWeight: 500, borderRadius: '6px' }}>Save</button>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button type="button" className="btn btn-primary" onClick={handleSave}>Save</button>
                     </div>
-
                 </div>
             </div>
         </div>

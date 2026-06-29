@@ -35,6 +35,7 @@ function mapKpi(kpi) {
     baseline: v.baseline,
     period: v.kpi_measurement,
     score: v.thresholdResult,
+    owner: v.ownerName || kpi.ownerName || v.owner || kpi.owner || v.ownerId,
     flag: flag(v.statusLight),
     trend: flag(v.trend),
     risk: flag(v.riskStatusLight),
@@ -51,7 +52,11 @@ function mapObjective(obj) {
     score: v.thresholdResult,
     flag: flag(v.statusLight),
     pk: obj.id,
-    children: (obj.kpiList || []).map(mapKpi)
+    children: (obj.kpiList || []).map(kpi => {
+      const mapped = mapKpi(kpi);
+      mapped.alignment = v.name;
+      return mapped;
+    })
   };
 }
 

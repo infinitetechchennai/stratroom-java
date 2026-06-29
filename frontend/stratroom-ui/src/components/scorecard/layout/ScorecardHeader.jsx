@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { generateScorecardPDF } from '../../../utils/pdfGenerator';
 import { exportScorecardToExcel, parseScorecardExcel } from '../../../utils/scorecardExcel';
 import { importScorecardActuals } from '../../../services/scorecardV2Api';
+import { useScorecardSettings } from '../../../hooks/useScorecardSettings';
 
 function currentDateRange() {
     const y = new Date().getFullYear();
@@ -26,6 +27,7 @@ function currentUserName() {
 
 // scorecardData: { tab:[...], scorecardName, overallScore } from cardDetailsToTabs
 export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel }) => {
+    const { settings } = useScorecardSettings();
     const fileRef = useRef(null);
     const [importing, setImporting] = useState(false);
 
@@ -79,6 +81,7 @@ export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel
             userName: currentUserName(),
             overallScore: scorecardData.overallScore || '',
             tab: scorecardData.tab,
+            settings: settings
         }];
         generateScorecardPDF(pdfData);
     };

@@ -301,7 +301,10 @@ export const PerspectiveViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vpOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <OwnerSelect id="vpOwner" className="form-select select-dropdown-view-prespective" />
+                                            <select name="vpOwner" id="vpOwner" data-placeholder="Select Owner"
+                                                className="form-select select-dropdown-view-prespective" defaultValue="" disabled>
+                                                <option value="" disabled hidden>Select Owner</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
@@ -375,19 +378,19 @@ export const PerspectiveViewModal = () => {
                             <div className="audit-listing">
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdBy">Created By</span> :</div>
-                                    <div className="text">-</div>
+                                    <div className="text" id="vpCreatedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedBy">Modified By</span> :</div>
-                                    <div className="text">-</div>
+                                    <div className="text" id="vpModifiedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdOn">Created Date</span> :</div>
-                                    <div className="text">-</div>
+                                    <div className="text" id="vpCreatedDate">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedOn">Modified Date</span> :</div>
-                                    <div className="text">-</div>
+                                    <div className="text" id="vpModifiedDate">-</div>
                                 </div>
                             </div>
                         </div>

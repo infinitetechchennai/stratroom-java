@@ -552,7 +552,12 @@ public class RiskDetailsService {
     public List<RiskDTO> findImpactedRiskDetails(long kpiId) {
         System.out.println("enter in kpi id");
         String kpiIdStr = String.valueOf(kpiId);
-        var dbList = this.riskDetailsRepository.findAllByEmpId(Long.valueOf(UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID")), 0);
+        String loggedInEmpId = UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID");
+        if (StringUtils.isBlank((CharSequence)loggedInEmpId)) {
+            this.log.warn("findImpactedRiskDetails called without LOGGED_IN_EMPLOYEE_ID");
+            return Collections.emptyList();
+        }
+        var dbList = this.riskDetailsRepository.findAllByEmpId(Long.valueOf(loggedInEmpId), 0);
         ObjectMapper mapper = new ObjectMapper();
         return dbList.stream().filter(riskDetails -> this.isKpiImpacted(this.parseRiskValue(riskDetails.getRiskValue(), mapper), kpiIdStr)).map(dbValue -> {
             RiskDTO riskDTO = new RiskDTO(dbValue, false);

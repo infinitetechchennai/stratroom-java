@@ -493,7 +493,12 @@ public class InitiativesService {
     public List<InitiativesDTO> findImpactedInitiatives(long kpiId) {
         System.out.println("enter in initive id");
         String kpiIdStr = String.valueOf(kpiId);
-        List<Initiatives> dbList =this.initiativesRepository.findAllByEmpId(Long.valueOf(UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID")), 0);
+        String loggedInEmpId = UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID");
+        if (StringUtils.isBlank((CharSequence)loggedInEmpId)) {
+            this.log.warn("findImpactedInitiatives called without LOGGED_IN_EMPLOYEE_ID");
+            return Collections.emptyList();
+        }
+        List<Initiatives> dbList = this.initiativesRepository.findAllByEmpId(Long.valueOf(loggedInEmpId), 0);
         ObjectMapper mapper = new ObjectMapper();
         return dbList.stream().filter(initiative -> this.isKpiImpacted(this.parseRiskValue(initiative.getInitiativeValue(), mapper), kpiIdStr)).map(dbValue -> {
             InitiativesDTO initiativesDTO = new InitiativesDTO(dbValue, false);

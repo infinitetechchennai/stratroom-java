@@ -21,6 +21,12 @@ export const getScorecardDetails = async (params = {}) => {
   return response.data
 }
 
+export const getScoreCardDetailListByEmpId = async (empId) => {
+  const response = await axiosClient.get(`/api/scoreCardDetailListByEmpId/${empId}`)
+  return response.data
+}
+
+
 export const saveScorecardDetails = async (payload) => {
   const response = await axiosClient.post('/api/scorecardDetails', payload)
   return response.data

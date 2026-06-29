@@ -98,6 +98,13 @@ export function AuthProvider({ children }) {
       const v = localStorage.getItem(k)
       if (v != null) preserved[k] = v
     })
+    
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i)
+      if (k && (k.startsWith('mock_') || k.startsWith('kpi_storycard_'))) {
+        preserved[k] = localStorage.getItem(k)
+      }
+    }
     localStorage.clear()
     Object.entries(preserved).forEach(([k, v]) => localStorage.setItem(k, v))
 

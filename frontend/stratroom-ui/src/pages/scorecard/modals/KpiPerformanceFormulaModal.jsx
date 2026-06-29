@@ -34,15 +34,12 @@ const KpiPerformanceFormulaModal = () => {
                 name="performancefieldName"
                 className="form-control browser-default"
               >
-                <option value="A" data-i18n="Actual">
-                  Actual
-                </option>
-                <option value="T" data-i18n="Target">
-                  Target
-                </option>
-                <option value="B" data-i18n="Budget">
-                  Budget
-                </option>
+                <option value="Target" data-i18n="Target">Target</option>
+                <option value="Actual" data-i18n="Actual">Actual</option>
+                <option value="Strech" data-i18n="Strech">Strech</option>
+                <option value="Stable" data-i18n="Stable">Stable</option>
+                <option value="Shrink" data-i18n="Shrink">Shrink</option>
+                <option value="Gap" data-i18n="Gap">Gap</option>
               </select>
             </div>
             <div className="card">

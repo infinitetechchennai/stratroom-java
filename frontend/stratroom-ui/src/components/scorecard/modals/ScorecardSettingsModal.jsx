@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useScorecardContext } from '../../../context/ScorecardContext';
 import { getReporteeList, updateScorecardV2 } from '../../../services/scorecardApi';
 import { getAllDepartmentList } from '../../../api/scorecardApi';
+import { getOrgId, saveCustomPerformance } from '../../../api/controlPanelApi';
+import { useScorecardSettings } from '../../../hooks/useScorecardSettings';
 
 export const ScorecardSettingsModal = ({ scorecardData }) => {
     const { reload } = useScorecardContext();
+    const { settings, refreshSettings } = useScorecardSettings();
     const rawCard = scorecardData?.rawCard || {};
     const [saving, setSaving] = useState(false);
 
@@ -74,22 +77,23 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
             if (vals.description) setDescription(vals.description);
             setStatus(vals.status || '');
             if (vals.performance) setPerformance(vals.performance);
-
-            const checkedFields = vals.scorecardFields || [];
-            setFields({
-                Actual: checkedFields.includes('Actual'),
-                Target: checkedFields.includes('Target'),
-                Budget: checkedFields.includes('Budget') || checkedFields.includes('Strech'),
-                Forecast: checkedFields.includes('Forecast') || checkedFields.includes('Stable'),
-                Baseline: checkedFields.includes('Baseline'),
-                Index: checkedFields.includes('Index') || checkedFields.includes('Score'),
-                Trend: checkedFields.includes('Trend'),
-                Risk: checkedFields.includes('Risk'),
-                Decline: checkedFields.includes('Decline') || checkedFields.includes('Shrink'),
-                Type: checkedFields.includes('Type'),
-            });
         }
-    }, [rawCard]);
+
+        // Initialize checkboxes from the Global Scorecard Settings context
+        const s = settings || {};
+        setFields({
+            Actual: s.scorecardactual !== 'false',
+            Target: s.scorecardtarget !== 'false',
+            Budget: s.scorecardstrech === 'true', // Strech
+            Forecast: s.scorecardstable === 'true', // Stable
+            Baseline: s.scorecardbaseline === 'true',
+            Index: s.scorecardindex !== 'false',
+            Trend: s.scorecardtrend !== 'false',
+            Risk: s.scorecardrisk !== 'false',
+            Decline: s.scorecardshrink === 'true', // Shrink
+            Type: s.type === 'true',
+        });
+    }, [rawCard, settings]);
 
     const handleCheckbox = (key) => {
         setFields(prev => ({ ...prev, [key]: !prev[key] }));
@@ -122,6 +126,30 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
                 formula: performance || null,
                 aggregationMethod: performance ? 'FORMULA' : 'WEIGHTED',
             });
+            
+            const orgId = getOrgId();
+            if (orgId) {
+                const dto = {
+                    orgId,
+                    generalSettingValue: {
+                        ...(settings || {}),
+                        audittrailtype: 'customPerformance',
+                        scorecardactual: fields.Actual ? "true" : "false",
+                        scorecardtarget: fields.Target ? "true" : "false",
+                        scorecardstrech: fields.Budget ? "true" : "false",
+                        scorecardstable: fields.Forecast ? "true" : "false",
+                        scorecardbaseline: fields.Baseline ? "true" : "false",
+                        scorecardindex: fields.Index ? "true" : "false",
+                        scorecardtrend: fields.Trend ? "true" : "false",
+                        scorecardrisk: fields.Risk ? "true" : "false",
+                        scorecardshrink: fields.Decline ? "true" : "false",
+                        type: fields.Type ? "true" : "false",
+                    }
+                };
+                await saveCustomPerformance(dto);
+                if (refreshSettings) await refreshSettings();
+            }
+            
             const modalEl = document.getElementById('add-settings-modal');
             if (modalEl && window.bootstrap) {
                 const modalInstance = window.bootstrap.Modal.getInstance(modalEl);

@@ -310,7 +310,10 @@ export const ObjectiveViewModal = () => {
                                         <div className="form-group">
                                             <label htmlFor="vodOwner" className="form-label"
                                                 data-translate="page.scorecard.scorecardItems.owner">Owner</label>
-                                            <OwnerSelect id="vodOwner" className="form-select select-dropdown-view-objective" />
+                                            <select name="vodOwner" id="vodOwner" data-placeholder="Select Owner"
+                                                className="form-select select-dropdown-view-objective" defaultValue="" disabled>
+                                                <option value="" disabled hidden>Select Owner</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
@@ -388,19 +391,19 @@ export const ObjectiveViewModal = () => {
                             <div className="audit-listing">
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdBy">Created By</span> :</div>
-                                    <div className="text">-</div>
+                                    <div className="text" id="vodCreatedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedBy">Modified By</span> :</div>
-                                    <div className="text">-</div>
+                                    <div className="text" id="vodModifiedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdOn">Created Date</span> :</div>
-                                    <div className="text">-</div>
+                                    <div className="text" id="vodCreatedDate">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedOn">Modified Date</span> :</div>
-                                    <div className="text">-</div>
+                                    <div className="text" id="vodModifiedDate">-</div>
                                 </div>
                             </div>
                         </div>

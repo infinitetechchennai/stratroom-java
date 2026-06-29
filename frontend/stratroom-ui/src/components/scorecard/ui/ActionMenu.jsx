@@ -1,10 +1,12 @@
 import React, { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { downloadKpiReport } from '../../../utils/kpiReport';
 import { useScorecardContext } from '../../../context/ScorecardContext';
 
 export const ActionMenu = ({ level, item }) => {
     const dropdownRef = useRef(null);
     const { setStoryCardItem } = useScorecardContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Re-init lucide icons inside action cells after render
@@ -16,7 +18,7 @@ export const ActionMenu = ({ level, item }) => {
     // Level 0 = Perspective row (objective-view-modal, dropdown with Add/Edit/View/Delete)
     const renderLevel0 = () => (
         <div className="table-actions justify-content-end">
-            <a href="#objective-view-modal" data-bs-toggle="modal" type="button"
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scorecardActions?.openViewObjective(item?.pk); }} type="button"
                className="btn btn-sm btn-icon">
                 <span className="icon"><i data-lucide="badge-info" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
@@ -27,7 +29,7 @@ export const ActionMenu = ({ level, item }) => {
                 <ul className="dropdown-menu border-0 shadow">
                     <li><button className="dropdown-item" onClick={() => window.scorecardActions?.openAddKpi(item?.pk)} data-translate="actions.add">Add</button></li>
                     <li><button className="dropdown-item" onClick={() => window.scorecardActions?.openEditObjective(item?.pk)} data-translate="actions.edit">Edit</button></li>
-                    <li><a className="dropdown-item" href="#objective-view-modal" data-bs-toggle="modal" data-translate="actions.view">View</a></li>
+                    <li><button className="dropdown-item" onClick={() => window.scorecardActions?.openViewObjective(item?.pk)} data-translate="actions.view">View</button></li>
                     <li><button className="dropdown-item" onClick={() => window.scorecardActions?.openDeleteModal('objective', item?.pk)} data-translate="actions.delete">Delete</button></li>
                 </ul>
             </div>
@@ -74,7 +76,7 @@ export const ActionMenu = ({ level, item }) => {
                    className="btn btn-sm btn-icon" onClick={() => setStoryCardItem(item)}>
                 <span className="icon"><i data-lucide="link" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
-            <a href="#subkpi-view-modal" data-bs-toggle="modal" type="button"
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scorecardActions?.openViewSubKpi(item?.pk); }} type="button"
                    className="btn btn-sm btn-icon">
                 <span className="icon"><i data-lucide="badge-info" style={{ width: '16px', height: '16px' }}></i></span>
             </a>
@@ -84,7 +86,7 @@ export const ActionMenu = ({ level, item }) => {
                 </button>
                 <ul className="dropdown-menu border-0 shadow">
                     <li><button className="dropdown-item" onClick={() => window.scorecardActions?.openEditSubKpi(item?.pk)} data-translate="actions.edit">Edit</button></li>
-                    <li><a className="dropdown-item" href="#subkpi-view-modal" data-bs-toggle="modal" data-translate="actions.view">View</a></li>
+                    <li><button className="dropdown-item" onClick={() => window.scorecardActions?.openViewSubKpi(item?.pk)} data-translate="actions.view">View</button></li>
                     <li><button className="dropdown-item" onClick={() => window.scorecardActions?.openDeleteModal('subkpi', item?.pk)} data-translate="actions.delete">Delete</button></li>
                 </ul>
             </div>

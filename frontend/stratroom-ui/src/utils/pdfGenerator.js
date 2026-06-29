@@ -90,16 +90,19 @@ export async function generateScorecardPDF(scorecardData) {
         if (logoUrl) pdf.addImage(logoUrl, "PNG", marginRight - imgWidth, imgY, imgWidth, imgHeight, { align: "right" });
 
         pdf.setTextColor(171, 80, 103);
-        pdf.setFontSize(32);
+        pdf.setFontSize(28); // Reduced from 32 to fit long names better
         pdf.setFont("helvetica", "bold");
 
-        pdf.text(titleText.toUpperCase(), pageWidth / 2, 57, { align: "center" });
-        pdf.text("Report".toUpperCase(), pageWidth / 2, 70, { align: "center" });
+        let splitTitle = pdf.splitTextToSize(titleText.toUpperCase(), pageWidth - 40);
+        pdf.text(splitTitle, pageWidth / 2, 57, { align: "center" });
+        
+        let reportY = 57 + (splitTitle.length * 12);
+        pdf.text("Report".toUpperCase(), pageWidth / 2, reportY, { align: "center" });
 
         pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(14);
         pdf.setFont("helvetica", "bold");
-        pdf.text(periodText, pageWidth / 2, 85, { align: "center" });
+        pdf.text(periodText, pageWidth / 2, reportY + 15, { align: "center" });
 
         pdf.setFillColor(...bgColor);
         pdf.rect(0, pageHeight - cfhs, pageWidth, cfhs, 'F');
@@ -172,32 +175,60 @@ export async function generateScorecardPDF(scorecardData) {
         pdf.text(`Page ${pageNumber} of ${totalPages}`, marginRight, pageHeight - 4,{ align: "right" });
     }
 
-    function processTableData(items, level = 0) {
-        let tableRows = [];
-        items.forEach(item => {
-            tableRows.push([
-                item.flag?.[0]?.status || "",
-                "\u00A0\u00A0".repeat(level) + item.id,
-                "\u00A0\u00A0".repeat(level) + item.name,
-                item.period || "",
-                item.score || "",
-                item.trend?.[0]?.status || "",
-                item.baseline || "",
-                item.actual || "",
-                item.target || "",
-                item.risk?.[0]?.status || ""
-            ]);
-
-            if (item.children?.length) {
-                tableRows = tableRows.concat(processTableData(item.children, level + 1));
-            }
-        });
-        return tableRows;
-    }
-
     if (scorecardData && scorecardData[0]) {
         addCoverPage(scorecardData[0]);
         let reportStartPage = pdf.internal.getNumberOfPages(); 
+
+        const s = scorecardData[0].settings || {};
+        const showActual = s.scorecardactual !== 'false';
+        const showTarget = s.scorecardtarget !== 'false';
+        const showBaseline = s.scorecardbaseline === 'true'; // default false
+        const showTrend = s.scorecardtrend !== 'false';
+        const showRisk = s.scorecardrisk !== 'false';
+        const showStrech = s.scorecardstrech === 'true'; // default false
+        const showStable = s.scorecardstable === 'true'; // default false
+        const showIndex = s.scorecardindex !== 'false'; // default true
+        const showShrink = s.scorecardshrink === 'true'; // default false
+
+        const headers = ["Flag", "ID", "Name", "Period", "Score"];
+        if (showTrend) headers.push("Trend");
+        if (showBaseline) headers.push("Baseline");
+        if (showActual) headers.push("Actual");
+        if (showTarget) headers.push("Target");
+        if (showStrech) headers.push("Budget");
+        if (showStable) headers.push("Forecast");
+        if (showIndex) headers.push("Index");
+        if (showShrink) headers.push("Decline");
+        if (showRisk) headers.push("Risk");
+
+        function processTableData(items, level = 0) {
+            let tableRows = [];
+            items.forEach(item => {
+                let row = [
+                    item.flag?.[0]?.status || "",
+                    "\u00A0\u00A0".repeat(level) + item.id,
+                    "\u00A0\u00A0".repeat(level) + item.name,
+                    item.period || "",
+                    item.score || ""
+                ];
+                if (showTrend) row.push(item.trend?.[0]?.status || "");
+                if (showBaseline) row.push(item.baseline || "");
+                if (showActual) row.push(item.actual || "");
+                if (showTarget) row.push(item.target || "");
+                if (showStrech) row.push(item.strech || "");
+                if (showStable) row.push(item.stable || "");
+                if (showIndex) row.push(item.index || "");
+                if (showShrink) row.push(item.shrink || "");
+                if (showRisk) row.push(item.risk?.[0]?.status || "");
+
+                tableRows.push(row);
+    
+                if (item.children?.length) {
+                    tableRows = tableRows.concat(processTableData(item.children, level + 1));
+                }
+            });
+            return tableRows;
+        }
 
         scorecardData.forEach(section => {
             let y = header(section);
@@ -205,7 +236,9 @@ export async function generateScorecardPDF(scorecardData) {
                 section.tab.forEach(tab => {
                     if (!tab.tabledata) return;
 
-                    if (y + (tab.tabledata.length * 6 + 16) > pageHeight - 40) {
+                    // If we are too close to the bottom of the page, force a page break
+                    // so the title doesn't get separated from the table.
+                    if (y > pageHeight - 80) {
                         pdf.addPage();
                         y = header(section);
                     }
@@ -215,18 +248,19 @@ export async function generateScorecardPDF(scorecardData) {
 
                     autoTable(pdf, {
                         startY: y,
-                        head: [["Flag", "ID", "Name", "Period", "Score", "Trend", "Baseline", "Actual", "Target", "Risk"]],
+                        head: [headers],
                         body: processTableData(tab.tabledata),
                         theme: 'grid',
-                        styles: { fontSize: 10, cellPadding: 2, lineColor: [201, 201, 201] },
+                        styles: { fontSize: 9, cellPadding: 2, lineColor: [201, 201, 201] },
                         headStyles: { fillColor: BRAND, textColor: [255, 255, 255] },
-                        margin: { top: 8, left: 10, right: 10 },
-                        pageBreak: 'avoid',
+                        margin: { top: 8, left: 10, right: 10, bottom: 40 },
+                        pageBreak: 'auto',
                         didDrawCell: function (data) {
                             let imgSize = 4;
                             if (data.section === "body") {
-                                if (data.column.index === 0) {
-                                    let flagStatus = data.row.raw[0]?.toLowerCase();
+                                const headerName = headers[data.column.index];
+                                if (headerName === "Flag") {
+                                    let flagStatus = data.row.raw[data.column.index]?.toLowerCase();
                                     if (flagImages[flagStatus]) {
                                         pdf.setFillColor(255, 255, 255);
                                         pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, "F");
@@ -235,8 +269,8 @@ export async function generateScorecardPDF(scorecardData) {
                                         pdf.addImage(flagImages[flagStatus], "PNG", data.cell.x + (data.cell.width - imgSize) / 2, data.cell.y + (data.cell.height - imgSize) / 2, imgSize, imgSize);
                                     }
                                 }
-                                if (data.column.index === 5) {
-                                    let trendStatus = data.row.raw[5]?.toLowerCase();
+                                if (headerName === "Trend") {
+                                    let trendStatus = data.row.raw[data.column.index]?.toLowerCase();
                                     if (trendImages[trendStatus]) {
                                         pdf.setFillColor(255, 255, 255);
                                         pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, "F");
@@ -245,8 +279,8 @@ export async function generateScorecardPDF(scorecardData) {
                                         pdf.addImage(trendImages[trendStatus], "PNG", data.cell.x + (data.cell.width - imgSize) / 2, data.cell.y + (data.cell.height - imgSize) / 2, imgSize, imgSize);
                                     }
                                 }
-                                if (data.column.index === 9) {
-                                    let riskStatus = data.row.raw[9]?.toLowerCase();
+                                if (headerName === "Risk") {
+                                    let riskStatus = data.row.raw[data.column.index]?.toLowerCase();
                                     if (riskImages[riskStatus]) {
                                         pdf.setFillColor(255, 255, 255);
                                         pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, "F");
@@ -309,16 +343,20 @@ export async function generateScorecardKpiPDF(scorecardKpiData) {
         if (logoUrl) pdf.addImage(logoUrl, "PNG", marginRight - imgWidth, imgY, imgWidth, imgHeight, { align: "right" });
 
         pdf.setTextColor(171, 80, 103);
-        pdf.setFontSize(32);
+        pdf.setFontSize(28);
         pdf.setFont("helvetica", "bold");
-        pdf.text(titleText.toUpperCase(), pageWidth / 2, 57, { align: "center" });
+        
+        let splitTitle = pdf.splitTextToSize(titleText.toUpperCase(), pageWidth - 40);
+        pdf.text(splitTitle, pageWidth / 2, 57, { align: "center" });
 
         pdf.setTextColor(100, 100, 100);
         pdf.setFontSize(18);
+        
+        let subtitleY = 57 + (splitTitle.length * 12);
         let splitSubtitle = pdf.splitTextToSize(sbtitleText.toUpperCase(), pageWidth - 40);
-        pdf.text(splitSubtitle, pageWidth / 2, 70, { align: "center" });
+        pdf.text(splitSubtitle, pageWidth / 2, subtitleY, { align: "center" });
 
-        let periodY = 70 + (splitSubtitle.length * 8) + 15;
+        let periodY = subtitleY + (splitSubtitle.length * 8) + 15;
 
         pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(14);
