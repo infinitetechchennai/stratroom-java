@@ -208,6 +208,13 @@ public class ScoreCardImportService {
                     v2Kpi.put("measurementFrequency", cell(kFirstRow, "Measurement Frequency", "MeasurementFrequency", "Period Type"));
                     v2Kpi.put("targetValue", null); // no explicit target in this file
                     v2Kpi.put("displayOrder", kpiOrder++);
+                    // KPI Performance column holds the performance formula text
+                    v2Kpi.put("formula", cell(kFirstRow, "KPI Performance", "KPIPerformance", "KPI performance"));
+                    // YTD column: only populate if the cell actually contains a value
+                    String ytdVal = cell(kFirstRow, "YTD", "ytd");
+                    if (ytdVal != null && !ytdVal.isBlank()) {
+                        v2Kpi.put("ytdFormula", ytdVal);
+                    }
                     long v2KpiId = scorecardCrudService.createKpi(v2Kpi);
                     log.info("Imported KPI '{}' (id={}) under objective '{}'", kEntry.getKey(), v2KpiId, oEntry.getKey());
 

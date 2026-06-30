@@ -1,4 +1,11 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { parseScorecardExcel } from '../../../utils/scorecardExcel';
+import { importScorecardActuals } from '../../../services/scorecardV2Api';
+
+function currentDateRange() {
+    const y = new Date().getFullYear();
+    return localStorage.getItem('customperiod') || `01/01/${y}-12/31/${y}`;
+}
 
 export const DeleteModal = () => {
     return (
@@ -27,55 +34,138 @@ export const DeleteModal = () => {
 };
 
 export const ImportModal = () => {
+    const [importing, setImporting] = useState(false);
+    const [importMessage, setImportMessage] = useState(null);
+    const fileRef = useRef(null);
+    const [category, setCategory] = useState("Scorecard Import");
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFile = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            setImportMessage(null);
+        }
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) {
+            setImportMessage({ type: 'warning', text: 'Please select a file first.' });
+            return;
+        }
+        
+        if (category !== "Scorecard Import") {
+            setImportMessage({ type: 'warning', text: 'Only Scorecard Import is currently supported in this UI.' });
+            return;
+        }
+
+        const pageId = localStorage.getItem('scorecardPageId') || '1';
+        setImporting(true);
+        setImportMessage({ type: 'info', text: 'Processing...' });
+        
+        // Yield to browser to paint before heavy synchronous parsing
+        await new Promise(r => setTimeout(r, 20));
+        
+        try {
+            const rows = await parseScorecardExcel(selectedFile);
+            if (!rows.length) {
+                setImportMessage({ type: 'warning', text: 'No KPI rows with Actual/Target values were found in the file.' });
+                return;
+            }
+            const res = await importScorecardActuals(pageId, currentDateRange(), rows);
+            let msg = `Import complete — ${res.updated ?? 0} updated, ${res.skipped ?? 0} skipped.`;
+            if (res.unmatched > 0) {
+                msg += `\n${res.unmatched} row(s) did not match any KPI on this scorecard.`;
+            }
+            if (res.message) {
+                msg += `\n\n${res.message}`;
+            }
+            setImportMessage({ type: 'success', text: msg });
+            
+            // Auto reload after a short delay
+            setTimeout(() => window.location.reload(), 2000);
+        } catch (err) {
+            setImportMessage({ type: 'danger', text: 'Import failed: ' + (err?.message || err) });
+        } finally {
+            setImporting(false);
+            setSelectedFile(null);
+            if (fileRef.current) {
+                fileRef.current.value = '';
+            }
+        }
+    };
+
     return (
         <div className="modal custom-modal fade" id="import-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel_1" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down modal-lg modal-lg-600">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h4 className="modal-title">File Upload</h4>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => { setImportMessage(null); setSelectedFile(null); }}></button>
                     </div>
                     <div className="modal-body">
-                        <div className="card-header-progress">
-                            <ul className="form-progressbar w-100">
-                                <li>Upload</li>
-                                <li>Validation</li>
-                                <li>Import</li>
-                            </ul>
-                        </div>
-
                         <div id="file-upload" className="card custom-card">
                             <div className="card-body grid gap-3">
+                                {importMessage && (
+                                    <div className={`alert alert-${importMessage.type} w-100`} role="alert" style={{ whiteSpace: 'pre-line' }}>
+                                        {importMessage.text}
+                                    </div>
+                                )}
+                                
                                 <div className="g-col-12">
                                     <div className="form-group">
                                         <label htmlFor="importCategory" className="form-label">Import Category</label>
-                                        <select className="form-select select-dropdown-file-upload w-100" name="importCategory" id="importCategory" data-placeholder="Select Import Category" defaultValue="">
+                                        <select 
+                                            className="form-select select-dropdown-file-upload w-100" 
+                                            name="importCategory" 
+                                            id="importCategory" 
+                                            value={category}
+                                            onChange={(e) => setCategory(e.target.value)}
+                                        >
                                             <option value="" disabled hidden>Select Import Category</option>
-                                            <option value="Organisation Import">Organisation</option>
                                             <option value="ETLUpload">Data Upload</option>
-                                            <option value="XLSUpload">Excel File Upload</option>
                                             <option value="Scorecard Import">Scorecard</option>
-                                            <option value="InitiativeDataLoad">Initiatives Data Load</option>
-                                            <option value="InitiativeBudgetLoad">Initiatives Budget Load</option>
-                                            <option value="Initiative Import">Initiatives & Projects</option>
-                                            <option value="Risk Import">Risk</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div className="g-col-12">
                                     <div className="form-group">
-                                        <label htmlFor="" className="form-label">Upload File</label>
-                                        <label htmlFor="login" className="upload-label upload-box">
-                                            <div className="upload">Choose a file or drag it here.</div>
-                                            <input type="file" id="login" />
+                                        <label className="form-label">Upload File</label>
+                                        <label 
+                                            htmlFor="file-upload-input" 
+                                            className="upload-label upload-box" 
+                                            style={{ cursor: importing ? 'not-allowed' : 'pointer', opacity: importing ? 0.7 : 1 }}
+                                        >
+                                            <div className="upload">
+                                                {importing ? (
+                                                    <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Uploading...</>
+                                                ) : selectedFile ? (
+                                                    <span className="text-primary fw-bold"><i className="fa fa-file-excel-o me-2"></i>{selectedFile.name}</span>
+                                                ) : (
+                                                    "Choose a file or drag it here."
+                                                )}
+                                            </div>
+                                            <input 
+                                                type="file" 
+                                                id="file-upload-input" 
+                                                ref={fileRef}
+                                                accept=".xlsx,.xls" 
+                                                onChange={handleFile}
+                                                disabled={importing}
+                                                style={{ display: 'none' }}
+                                            />
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div className="card-footer">
                                 <div className="d-flex justify-content-between form-line">
-                                    <button className="btn btn-primary initative_save_btn ms-auto" id="next-btn-1">
-                                        Next
+                                    <button 
+                                        className="btn btn-primary initative_save_btn ms-auto" 
+                                        disabled={importing || !selectedFile}
+                                        onClick={handleUpload}
+                                    >
+                                        {importing ? 'Processing...' : 'Upload'}
                                     </button>
                                 </div>
                             </div>

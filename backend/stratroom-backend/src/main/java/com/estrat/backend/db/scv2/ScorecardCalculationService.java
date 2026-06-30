@@ -84,7 +84,7 @@ public class ScorecardCalculationService {
 
         Map<Long, List<Map<String, Object>>> kpiByObj = groupBy(
                 queryIn("SELECT id, name, code, polarity, target_value, min_target, max_target, weight, data_type, "
-                        + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id, formula, thresholds "
+                        + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id, formula, actual_formula, ytd_formula, thresholds "
                         + "FROM sc_kpis WHERE is_deleted = false AND objective_id IN (%s) ORDER BY display_order, id",
                         objectiveIds),
                 "objective_id");
@@ -92,7 +92,7 @@ public class ScorecardCalculationService {
                 .collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> subByKpi = groupBy(
-                queryIn("SELECT id, name, code, target_value, polarity, weight, data_type, achievement_cap, kpi_id "
+                queryIn("SELECT id, name, code, target_value, polarity, weight, data_type, achievement_cap, kpi_id, formula, actual_formula, ytd_formula "
                         + "FROM sc_sub_kpis WHERE is_deleted = false AND kpi_id IN (%s) ORDER BY display_order, id",
                         kpiIds),
                 "kpi_id");
@@ -339,8 +339,31 @@ public class ScorecardCalculationService {
                         subTarget = subHistTarget;
                 }
 
+                String skActualFormula = str(sk.get("actual_formula"));
+                if (skActualFormula != null && !skActualFormula.isBlank()) {
+                    // Although sub-measures might not have actuals loaded, if the formula evaluates static math, it works.
+                    BigDecimal formulaResult = evaluateFormula(skActualFormula, new ArrayList<>());
+                    if (formulaResult != null)
+                        subActual = formulaResult;
+                }
+
                 BigDecimal subAch = achievementCalculator.calculate(subActual, subTarget, str(sk.get("polarity")), null,
                         null, subCap);
+                        
+                String skFormula = str(sk.get("formula"));
+                if (skFormula != null && !skFormula.isBlank() && subTarget != null) {
+                    BigDecimal safeActual = subActual != null ? subActual : BigDecimal.ZERO;
+                    BigDecimal safeWeight = dec(sk.get("weight")) != null ? dec(sk.get("weight")) : BigDecimal.ZERO;
+                    List<Map<String, Object>> perfVars = new ArrayList<>();
+                    perfVars.add(makeVar("Contribution", BigDecimal.ZERO));
+                    perfVars.add(makeVar("Actual", safeActual));
+                    perfVars.add(makeVar("Target", subTarget));
+                    perfVars.add(makeVar("Weight", safeWeight));
+                    BigDecimal formulaResult = evaluateFormula(skFormula, perfVars);
+                    if (formulaResult != null)
+                        subAch = formulaResult;
+                }
+                
                 if (subAch != null) {
                     subScores.add(subAch);
                     subWeights.add(dec(sk.get("weight")));
@@ -357,6 +380,9 @@ public class ScorecardCalculationService {
                 subDto.put("id", subId);
                 subDto.put("subKpiId", str(sk.get("code")) != null ? str(sk.get("code")) : String.valueOf(subId));
                 subDto.put("subKpiValue", subVal);
+                subDto.put("actual", subActual);
+                subDto.put("target", subTarget);
+                subDto.put("score", subActual);
 
                 List<Map<String, Object>> sms = subMeasureBySubKpi.getOrDefault(subId, List.of());
                 List<Map<String, Object>> smDtos = new ArrayList<>();
@@ -371,7 +397,28 @@ public class ScorecardCalculationService {
 
                 subKpiDtos.add(subDto);
             }
-            achievement = aggregatorService.aggregate(subScores, subWeights, "WEIGHTED", null);
+            
+            String actualFormula = str(k.get("actual_formula"));
+            if (actualFormula != null && !actualFormula.isBlank()) {
+                actual = evaluateFormula(actualFormula, subKpiDtos);
+                achievement = achievementCalculator.calculate(actual, target, polarity, minTarget, maxTarget, cap);
+                
+                String kpiFormula = str(k.get("formula"));
+                if (kpiFormula != null && !kpiFormula.isBlank() && target != null) {
+                    BigDecimal safeActual = actual != null ? actual : BigDecimal.ZERO;
+                    BigDecimal safeWeight = dec(k.get("weight")) != null ? dec(k.get("weight")) : BigDecimal.ZERO;
+                    List<Map<String, Object>> perfVars = new ArrayList<>();
+                    perfVars.add(makeVar("Contribution", BigDecimal.ZERO));
+                    perfVars.add(makeVar("Actual", safeActual));
+                    perfVars.add(makeVar("Target", target));
+                    perfVars.add(makeVar("Weight", safeWeight));
+                    BigDecimal formulaResult = evaluateFormula(kpiFormula, perfVars);
+                    if (formulaResult != null)
+                        achievement = formulaResult;
+                }
+            } else {
+                achievement = aggregatorService.aggregate(subScores, subWeights, "WEIGHTED", null);
+            }
         } else {
             List<Map<String, Object>> hist = histByKpi.getOrDefault(kpiId, List.of());
             // Prefer the latest in-range period that actually has a reported value, so a
@@ -398,14 +445,13 @@ public class ScorecardCalculationService {
             // If user set a custom performance formula, evaluate it with
             // Actual/Target/Weight/Contribution
             String kpiFormula = str(k.get("formula"));
-            if (kpiFormula != null && !kpiFormula.isBlank()) {
+            if (kpiFormula != null && !kpiFormula.isBlank() && target != null) {
                 BigDecimal safeActual = actual != null ? actual : BigDecimal.ZERO;
-                BigDecimal safeTarget = target != null ? target : BigDecimal.ZERO;
                 BigDecimal safeWeight = dec(k.get("weight")) != null ? dec(k.get("weight")) : BigDecimal.ZERO;
                 List<Map<String, Object>> perfVars = new ArrayList<>();
                 perfVars.add(makeVar("Contribution", BigDecimal.ZERO));
                 perfVars.add(makeVar("Actual", safeActual));
-                perfVars.add(makeVar("Target", safeTarget));
+                perfVars.add(makeVar("Target", target));
                 perfVars.add(makeVar("Weight", safeWeight));
                 BigDecimal formulaResult = evaluateFormula(kpiFormula, perfVars);
                 if (formulaResult != null)
@@ -596,7 +642,7 @@ public class ScorecardCalculationService {
         List<Map<String, Object>> kpiRows = jdbc.queryForList(
                 "SELECT k.id, k.name, k.code, k.polarity, k.target_value, k.min_target, k.max_target, k.weight, "
                         + "k.data_type, k.currency_code, k.measurement_frequency, k.null_handling, k.achievement_cap, "
-                        + "k.classification_type, k.objective_id, k.description, "
+                        + "k.classification_type, k.objective_id, k.description, k.formula, k.actual_formula, k.ytd_formula, "
                         + "o.name AS objective_name, p.name AS perspective_name "
                         + "FROM sc_kpis k "
                         + "LEFT JOIN sc_objectives o ON k.objective_id = o.id "
@@ -648,6 +694,8 @@ public class ScorecardCalculationService {
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
         List<Map<String, Object>> series = new ArrayList<>();
         BigDecimal runningActual = BigDecimal.ZERO;
+        List<BigDecimal> pastActuals = new ArrayList<>();
+        String ytdFormula = str(k.get("ytd_formula"));
         for (Map<String, Object> h : hist) {
             LocalDate periodEnd = toLocalDate(h.get("period_end"));
             if (periodEnd != null && (periodEnd.isBefore(start) || periodEnd.isAfter(end))) {
@@ -660,14 +708,31 @@ public class ScorecardCalculationService {
             }
             BigDecimal gap = (actual != null && target != null) ? actual.subtract(target) : null;
             if (actual != null) {
+                pastActuals.add(actual);
                 runningActual = runningActual.add(actual);
             }
+            
+            BigDecimal ytdValue = runningActual;
+            if (ytdFormula != null && !ytdFormula.isBlank() && !pastActuals.isEmpty()) {
+                String listStr = pastActuals.stream().map(BigDecimal::toPlainString).collect(Collectors.joining(","));
+                String evalYtd = ytdFormula.replace("[Actual]", listStr).replace("Actual", listStr)
+                        .replace("[A]", listStr).replace("[Target]", "0").replace("[Weight]", "0")
+                        .replace("[Contribution]", "0").replace("|", ",");
+                evalYtd = evalYtd.replace("[", "(").replace("]", ")");
+                try {
+                    com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
+                    ytdValue = new BigDecimal(util.applyExpression(evalYtd));
+                } catch (Exception e) {
+                    System.err.println("YTD Evaluation failed: " + evalYtd);
+                }
+            }
+
             Map<String, Object> point = new LinkedHashMap<>();
             point.put("period", periodEnd != null ? periodEnd.format(label) : str(h.get("period_end")));
             point.put("actual", actual);
             point.put("target", target);
             point.put("gap", gap);
-            point.put("ytd", runningActual);
+            point.put("ytd", ytdValue);
             point.put("baseline", dec(h.get("baseline_value")));
             point.put("currency", currency);
             point.put("measureName", str(k.get("name")));
@@ -738,7 +803,7 @@ public class ScorecardCalculationService {
         List<Map<String, Object>> subRows = jdbc.queryForList(
                 "SELECT sk.id, sk.name, sk.code, sk.polarity, sk.target_value, sk.weight, "
                         + "sk.data_type, sk.achievement_cap, "
-                        + "k.name AS kpi_name, k.currency_code, k.measurement_frequency, k.classification_type, "
+                        + "k.name AS kpi_name, k.currency_code, k.measurement_frequency, k.classification_type, k.ytd_formula, "
                         + "o.name AS objective_name, p.name AS perspective_name "
                         + "FROM sc_sub_kpis sk "
                         + "LEFT JOIN sc_kpis k ON sk.kpi_id = k.id "
@@ -790,6 +855,8 @@ public class ScorecardCalculationService {
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
         List<Map<String, Object>> series = new ArrayList<>();
         BigDecimal runningActual = BigDecimal.ZERO;
+        List<BigDecimal> pastActuals = new ArrayList<>();
+        String ytdFormula = str(sk.get("ytd_formula"));
         for (Map<String, Object> h : hist) {
             LocalDate periodEnd = toLocalDate(h.get("period_end"));
             if (periodEnd != null && (periodEnd.isBefore(start) || periodEnd.isAfter(end))) {
@@ -802,14 +869,31 @@ public class ScorecardCalculationService {
             }
             BigDecimal gap = (actual != null && target != null) ? actual.subtract(target) : null;
             if (actual != null) {
+                pastActuals.add(actual);
                 runningActual = runningActual.add(actual);
             }
+            
+            BigDecimal ytdValue = runningActual;
+            if (ytdFormula != null && !ytdFormula.isBlank() && !pastActuals.isEmpty()) {
+                String listStr = pastActuals.stream().map(BigDecimal::toPlainString).collect(Collectors.joining(","));
+                String evalYtd = ytdFormula.replace("[Actual]", listStr).replace("Actual", listStr)
+                        .replace("[A]", listStr).replace("[Target]", "0").replace("[Weight]", "0")
+                        .replace("[Contribution]", "0").replace("|", ",");
+                evalYtd = evalYtd.replace("[", "(").replace("]", ")");
+                try {
+                    com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
+                    ytdValue = new BigDecimal(util.applyExpression(evalYtd));
+                } catch (Exception e) {
+                    System.err.println("YTD Evaluation failed: " + evalYtd);
+                }
+            }
+            
             Map<String, Object> point = new LinkedHashMap<>();
             point.put("period", periodEnd != null ? periodEnd.format(label) : str(h.get("period_end")));
             point.put("actual", actual);
             point.put("target", target);
             point.put("gap", gap);
-            point.put("ytd", runningActual);
+            point.put("ytd", ytdValue);
             point.put("baseline", null);
             point.put("currency", currency);
             point.put("measureName", str(sk.get("name")));
@@ -1153,6 +1237,10 @@ public class ScorecardCalculationService {
             if (score == null)
                 score = BigDecimal.ZERO;
             String sc = score.toPlainString();
+            
+            BigDecimal actualVal = child.get("actual") != null ? dec(child.get("actual")) : null;
+            BigDecimal targetVal = child.get("target") != null ? dec(child.get("target")) : null;
+            
             String code = getCodeFromChild(child);
             String name = getNameFromChild(child);
             // Use the code only when it is a real (alphanumeric) code. Code-less elements
@@ -1161,16 +1249,23 @@ public class ScorecardCalculationService {
             // and which, as a short digit string, could corrupt score numbers during
             // substitution (e.g. id "58" inside score "158"); skip those — the name
             // matches.
-            if (code != null && !code.isBlank() && !code.matches("\\d+"))
+            if (code != null && !code.isBlank() && !code.matches("\\d+")) {
                 tokenScores.add(new String[] { code, sc });
-            if (name != null && !name.isBlank())
+                if (actualVal != null) tokenScores.add(new String[] { code + "_A", actualVal.toPlainString() });
+                if (targetVal != null) tokenScores.add(new String[] { code + "_T", targetVal.toPlainString() });
+            }
+            if (name != null && !name.isBlank()) {
                 tokenScores.add(new String[] { name, sc });
+                if (actualVal != null) tokenScores.add(new String[] { name + "_A", actualVal.toPlainString() });
+                if (targetVal != null) tokenScores.add(new String[] { name + "_T", targetVal.toPlainString() });
+            }
         }
         tokenScores.sort((a, b) -> Integer.compare(b[0].length(), a[0].length()));
         for (String[] ts : tokenScores) {
             evalStr = evalStr.replace(ts[0], ts[1]);
         }
 
+        evalStr = evalStr.replace("|", ",");
         // Replace list brackets with parentheses for EvalEx functions e.g. avg[10, 20]
         // -> avg(10, 20)
         evalStr = evalStr.replace("[", "(").replace("]", ")");
@@ -1214,6 +1309,8 @@ public class ScorecardCalculationService {
             return str(((Map<?, ?>) child.get("kpiValue")).get("name"));
         } else if (child.containsKey("scoreCardValue")) {
             return str(((Map<?, ?>) child.get("scoreCardValue")).get("name"));
+        } else if (child.containsKey("subKpiValue")) {
+            return str(((Map<?, ?>) child.get("subKpiValue")).get("name"));
         } else {
             return str(child.get("name"));
         }

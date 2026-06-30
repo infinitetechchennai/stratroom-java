@@ -327,6 +327,21 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     dataType: val('eskpiType') || undefined,
                 });
             },
+            // ── SubKPI View (Save from view modal) ────────────────────────────
+            'subkpi-view-modal': () => {
+                editSubKpi({
+                    id: window._viewSubKpiId,
+                    name: val('vskpiName') || undefined,
+                    indicatorType: val('vskpiPolarity') || undefined,
+                    measurementFrequency: val('vskpiMeasurementFrequency') || undefined,
+                    weight: val('vskpiWeight') || undefined,
+                    dataType: val('vskpiType') || undefined,
+                    formula: val('vskpiPerformance') || undefined,
+                    actualFormula: val('ekpiActual') || undefined,
+                    ytdFormula: val('eskpiYearToDate') || undefined,
+                    updatedByName: currentUserName() || undefined,
+                });
+            },
         };
 
         // Click delegation: find the modal ancestor and call the matching handler
@@ -602,6 +617,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 }
             },
             openViewSubKpi: async (id) => {
+                window._viewSubKpiId = id;
                 const set = (elId, v) => { const el = document.getElementById(elId); if (el) { if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') el.value = v ?? ''; else el.textContent = v ?? ''; } };
                 const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
                 const fmtDate = (v) => {
@@ -609,11 +625,11 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     const d = new Date(v);
                     return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
                 };
-                
+
                 // Clear fields
-                ['vskpiName', 'vskpiDescription', 'vskpiPolarity', 'vskpiMeasurementFrequency', 'vskpiOwner', 'vskpiPerformance', 'vskpiType', 'vskpiWeight', 'vskpiStatus'].forEach(elId => set(elId, ''));
+                ['vskpiName', 'vskpiDescription', 'vskpiPolarity', 'vskpiMeasurementFrequency', 'vskpiOwner', 'vskpiPerformance', 'vskpiType', 'vskpiWeight', 'vskpiStatus', 'ekpiActual', 'eskpiYearToDate'].forEach(elId => set(elId, ''));
                 ['vskpiCreatedBy', 'vskpiModifiedBy', 'vskpiCreatedDate', 'vskpiModifiedDate'].forEach(elId => setText(elId, '-'));
-                
+
                 try {
                     const sk = await getSubKpiById(id);
                     if (sk && sk.id) {
@@ -623,10 +639,12 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vskpiMeasurementFrequency', sk.measurement_frequency || '');
                         set('vskpiOwner', sk.owner || '');
                         set('vskpiPerformance', sk.formula || '');
+                        set('ekpiActual', sk.actual_formula || '');
+                        set('eskpiYearToDate', sk.ytd_formula || '');
                         set('vskpiType', sk.data_type || '');
                         set('vskpiWeight', sk.weight);
                         set('vskpiStatus', sk.status || '');
-                        
+
                         setText('vskpiCreatedBy', sk.created_by);
                         setText('vskpiModifiedBy', sk.updated_by);
                         setText('vskpiCreatedDate', fmtDate(sk.created_at));

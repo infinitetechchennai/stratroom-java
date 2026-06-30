@@ -109,6 +109,18 @@ public class FormulaUtil {
                 return result == null ? BigDecimal.ZERO : result;
             }
         });
+        e.addFunction(new AbstractFunction("latest", -1) {
+            @Override
+            public BigDecimal eval(java.util.List<BigDecimal> parameters) {
+                BigDecimal result = null;
+                for (BigDecimal p : parameters) {
+                    if (p != null) {
+                        result = p;
+                    }
+                }
+                return result == null ? BigDecimal.ZERO : result;
+            }
+        });
     }
 
     private static BigDecimal sum(java.util.List<BigDecimal> parameters) {

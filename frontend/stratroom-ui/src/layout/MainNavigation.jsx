@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { usePermissions } from '../context/PermissionsContext'
 import { useI18n } from '../context/I18nContext'
 import UserMenu from './UserMenu'
@@ -21,6 +21,7 @@ const NAV_MODULES = [
 
 export default function MainNavigation() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { pages, isModuleVisible } = usePermissions()
   const { t } = useI18n()
   const [openModule, setOpenModule] = useState(null)
@@ -36,7 +37,18 @@ export default function MainNavigation() {
 
   return (
     <nav className="navbar navbar-expand-md navbar-light">
-      <div className="container-lg gap-2 gap-md-3">
+      <div className="container-lg gap-2 gap-md-3" style={{ display: 'flex', alignItems: 'center' }}>
+        {location.pathname !== '/landing' && location.pathname !== '/home' && (
+          <button
+            type="button"
+            className="btn btn-link text-dark p-0 me-2"
+            onClick={() => navigate(-1)}
+            title="Go Back"
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#f3f4f6' }}
+          >
+            <i className="fa fa-arrow-left"></i>
+          </button>
+        )}
         <a
           className="navbar-brand nav_float"
           href="/landing"

@@ -58,6 +58,9 @@ public class ScorecardCrudService {
         // scoring direction HIGHER/LOWER/TARGET/RANGE used by AchievementCalculator).
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN actual_formula TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN ytd_formula TEXT"); } catch (Exception ignore) {}
         // Add target_value to sub_kpi_history so values-file imports can store targets per period
         try { jdbc.execute("ALTER TABLE sc_sub_kpi_history ADD COLUMN target_value NUMERIC"); } catch (Exception ignore) {}
     }
@@ -211,9 +214,9 @@ public class ScorecardCrudService {
         return insert(
                 "INSERT INTO sc_kpis (objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, null_handling, "
-                        + "achievement_cap, classification_type, display_order, formula, created_by, updated_by, "
-                        + "contribution, sub_weight, data_source, owner, thresholds, indicator_type) "
-                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "achievement_cap, classification_type, display_order, formula, actual_formula, ytd_formula, "
+                        + "created_by, updated_by, contribution, sub_weight, data_source, owner, thresholds, indicator_type) "
+                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "objectiveId", 0L), str(b, "code", null), str(b, "name", "KPI"), str(b, "description", null),
                 // polarity = scoring direction (HIGHER/LOWER/TARGET/RANGE); Lead/Lag goes to indicator_type
                 str(b, "direction", "HIGHER"), dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"),
@@ -221,6 +224,7 @@ public class ScorecardCrudService {
                 dec(b, "weight", BigDecimal.ZERO), str(b, "measurementFrequency", null),
                 str(b, "nullHandling", "EXCLUDE"), dec(b, "achievementCap", new BigDecimal("150")),
                 str(b, "classificationType", "THREE_COLOR"), intg(b, "displayOrder", 0), str(b, "formula", null),
+                str(b, "actualFormula", null), str(b, "ytdFormula", null),
                 str(b, "createdByName", null), str(b, "createdByName", null),
                 decOrNull(b, "contribution"), decOrNull(b, "subWeight"), str(b, "dataSource", null),
                 str(b, "owner", null), str(b, "thresholds", null), str(b, "indicatorType", null));
@@ -281,7 +285,7 @@ public class ScorecardCrudService {
     public Map<String, Object> getSubKpi(long id) {
         List<Map<String, Object>> rows = jdbc.queryForList(
                 "SELECT id, kpi_id, code, name, target_value, polarity, weight, data_type, "
-                        + "achievement_cap, display_order, indicator_type FROM sc_sub_kpis WHERE id = ?", id);
+                        + "achievement_cap, display_order, indicator_type, formula, actual_formula, ytd_formula FROM sc_sub_kpis WHERE id = ?", id);
         return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
     }
 
@@ -289,12 +293,12 @@ public class ScorecardCrudService {
     public long createSubKpi(Map<String, Object> b) {
         return insert(
                 "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
-                        + "achievement_cap, display_order, indicator_type) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                        + "achievement_cap, display_order, indicator_type, formula, actual_formula, ytd_formula) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "kpiId", 0L), str(b, "code", null), str(b, "name", "Sub-KPI"),
                 dec(b, "targetValue", BigDecimal.ZERO), str(b, "direction", "HIGHER"),
                 dec(b, "weight", BigDecimal.ONE), str(b, "dataType", "NUMBER"),
                 dec(b, "achievementCap", new BigDecimal("150")), intg(b, "displayOrder", 0),
-                str(b, "indicatorType", null));
+                str(b, "indicatorType", null), str(b, "formula", null), str(b, "actualFormula", null), str(b, "ytdFormula", null));
     }
 
     @Transactional
@@ -303,12 +307,12 @@ public class ScorecardCrudService {
         // caller doesn't supply keeps its current DB value instead of being reset to a default.
         List<Map<String, Object>> exRows = jdbc.queryForList(
                 "SELECT name, target_value, polarity, weight, data_type, achievement_cap, "
-                        + "display_order, indicator_type FROM sc_sub_kpis WHERE id = ?", id);
+                        + "display_order, indicator_type, formula, actual_formula, ytd_formula FROM sc_sub_kpis WHERE id = ?", id);
         Map<String, Object> ex = exRows.isEmpty() ? java.util.Collections.emptyMap() : exRows.get(0);
         Integer exDisplay = ex.get("display_order") == null ? 0 : ((Number) ex.get("display_order")).intValue();
         return jdbc.update(
                 "UPDATE sc_sub_kpis SET name=?, target_value=?, polarity=?, weight=?, data_type=?, "
-                        + "achievement_cap=?, display_order=?, indicator_type=? WHERE id=?",
+                        + "achievement_cap=?, display_order=?, indicator_type=?, formula=?, actual_formula=?, ytd_formula=? WHERE id=?",
                 str(b, "name", (String) ex.get("name")),
                 dec(b, "targetValue", (BigDecimal) ex.get("target_value")),
                 str(b, "direction", (String) ex.get("polarity")),
@@ -316,7 +320,10 @@ public class ScorecardCrudService {
                 str(b, "dataType", (String) ex.get("data_type")),
                 dec(b, "achievementCap", (BigDecimal) ex.get("achievement_cap")),
                 intg(b, "displayOrder", exDisplay),
-                str(b, "indicatorType", (String) ex.get("indicator_type")), id) > 0;
+                str(b, "indicatorType", (String) ex.get("indicator_type")),
+                str(b, "formula", (String) ex.get("formula")),
+                str(b, "actualFormula", (String) ex.get("actual_formula")),
+                str(b, "ytdFormula", (String) ex.get("ytd_formula")), id) > 0;
     }
 
     @Transactional

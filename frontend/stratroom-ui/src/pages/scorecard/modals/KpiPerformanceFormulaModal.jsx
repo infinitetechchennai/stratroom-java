@@ -2,17 +2,23 @@ import React from 'react';
 
 const KpiPerformanceFormulaModal = () => {
   return (
-    <div
-      className="modal fade kpi_performanceformula_popup"
-      id="kpi_formula_popup"
-      tabIndex="-1"
-      role="dialog"
-      aria-labelledby="myLargeModalLabel"
-      aria-hidden="true"
-      modal-backdrop="false"
-      data-backdrop="false"
-    >
-      <div className="modal-dialog modal-dialog-centered modal-lg">
+    <>
+      <style>{`
+        .kpi_performanceformula_popup .list-group-item {
+          cursor: default;
+        }
+      `}</style>
+      <div
+        className="modal fade kpi_performanceformula_popup"
+        id="kpi_formula_popup"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="myLargeModalLabel"
+        aria-hidden="true"
+        modal-backdrop="false"
+        data-backdrop="false"
+      >
+        <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content modal-content-setscrollheight">
           <div className="modal-header">
             <h6 className="modal-title" id="myLargeModalLabel">
@@ -34,12 +40,10 @@ const KpiPerformanceFormulaModal = () => {
                 name="performancefieldName"
                 className="form-control browser-default"
               >
-                <option value="Target" data-i18n="Target">Target</option>
                 <option value="Actual" data-i18n="Actual">Actual</option>
-                <option value="Strech" data-i18n="Strech">Strech</option>
-                <option value="Stable" data-i18n="Stable">Stable</option>
-                <option value="Shrink" data-i18n="Shrink">Shrink</option>
-                <option value="Gap" data-i18n="Gap">Gap</option>
+                <option value="Target" data-i18n="Target">Target</option>
+                <option value="Weight" data-i18n="Weight">Weight</option>
+                <option value="Contribution" data-i18n="Contribution">Contribution</option>
               </select>
             </div>
             <div className="card">
@@ -210,7 +214,7 @@ const KpiPerformanceFormulaModal = () => {
                       &lt;=
                     </button>
                   </div>
-                  <div className="row">
+                  <div className="row" style={{ display: 'flex', flexWrap: 'nowrap' }}>
                     <div className="col-md-4">
                       <div className="panel panel-primary" id="result_panel">
                         <div className="panel-heading">
@@ -351,7 +355,8 @@ const KpiPerformanceFormulaModal = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

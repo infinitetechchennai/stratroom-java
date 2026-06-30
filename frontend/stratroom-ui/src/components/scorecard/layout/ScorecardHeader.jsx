@@ -29,45 +29,12 @@ function currentUserName() {
 export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel }) => {
     const { settings } = useScorecardSettings();
     const fileRef = useRef(null);
-    const [importing, setImporting] = useState(false);
+    const [importMessage, setImportMessage] = useState(null);
 
     useEffect(() => {
         if (window.lucide) window.lucide.createIcons();
         if (window.feather) window.feather.replace();
     }, []);
-
-    const handleImportClick = (e) => {
-        e.preventDefault();
-        fileRef.current?.click();
-    };
-
-    const handleFile = async (e) => {
-        const file = e.target.files?.[0];
-        e.target.value = '';
-        if (!file) return;
-        setImporting(true);
-        try {
-            const rows = await parseScorecardExcel(file);
-            if (!rows.length) {
-                alert('No KPI rows with Actual/Target values were found in the file.');
-                return;
-            }
-            const res = await importScorecardActuals(pageId, currentDateRange(), rows);
-            let msg = `Import complete — ${res.updated ?? 0} updated, ${res.skipped ?? 0} skipped.`;
-            if (res.unmatched > 0) {
-                msg += `\n${res.unmatched} row(s) did not match any KPI on this scorecard.`;
-            }
-            if (res.message) {
-                msg += `\n\n${res.message}`;
-            }
-            alert(msg);
-            if (onReload) onReload();
-        } catch (err) {
-            alert('Import failed: ' + (err?.message || err));
-        } finally {
-            setImporting(false);
-        }
-    };
 
     const handleGeneratePdf = (e) => {
         e.preventDefault();
@@ -97,64 +64,65 @@ export const ScorecardHeader = ({ scorecardData, pageId, onReload, onExportExcel
     };
 
     return (
-        <div className="page-header grid gap-2 pb-1">
-            <div className="g-col-8 d-flex align-items-center">
-                <h4 className="title">
-                    <span className="icon">
-                        <i data-lucide="bar-chart-2" style={{ width: '16px', height: '16px' }}></i>
-                    </span>
-                    <span className="scorecard-title">{scorecardData?.scorecardName || 'Scorecard'}</span>{' '}
-                    <span className="badge text-bg-success">{scorecardData?.overallScore || '100%'}</span>
-                </h4>
-            </div>
-            <div className="load-page page-actions g-col-4">
-                <div className="page-icons">
-                    <ul>
-                        <li>
-                            <a className="active" href="#prespective-add-modal" data-bs-toggle="modal">
-                                <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                    data-bs-title="Add Perspective" data-translate="page.scorecard.addPerspective">
-                                    <i data-feather="plus" style={{ width: '14px', height: '14px' }}></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onClick={handleImportClick}>
-                                <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                    data-bs-title={importing ? 'Importing…' : 'Import Excel'}>
-                                    <i style={{ width: '14px', height: '14px' }} data-feather="upload"></i>
-                                </span>
-                            </a>
-                            <input
-                                ref={fileRef}
-                                type="file"
-                                accept=".xlsx,.xls"
-                                style={{ display: 'none' }}
-                                onChange={handleFile}
-                            />
-                        </li>
-                        <li>
-                            <a href="#" onClick={handleGeneratePdf} data-bs-toggle="tooltip"
-                                data-bs-placement="bottom" data-bs-title="Generate Report">
-                                <i style={{ width: '14px', height: '14px' }} data-feather="printer"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onClick={handleExport} data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Export">
-                                <i style={{ width: '14px', height: '14px' }} data-feather="download"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#add-settings-modal" data-bs-toggle="modal">
-                                <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                    data-bs-title="Settings" data-translate="page.scorecard.settings">
-                                    <i style={{ width: '14px', height: '14px' }} data-feather="settings"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
+        <>
+            {importMessage && (
+                <div className={`alert alert-${importMessage.type} alert-dismissible fade show`} role="alert" style={{ margin: '10px 0', borderLeft: '4px solid', borderRadius: '4px' }}>
+                    <div style={{ whiteSpace: 'pre-wrap', paddingRight: '20px' }}>{importMessage.text}</div>
+                    <button type="button" className="btn-close" onClick={() => setImportMessage(null)} aria-label="Close"></button>
+                </div>
+            )}
+            <div className="page-header grid gap-2 pb-1">
+                <div className="g-col-8 d-flex align-items-center">
+                    <h4 className="title">
+                        <span className="icon">
+                            <i data-lucide="bar-chart-2" style={{ width: '16px', height: '16px' }}></i>
+                        </span>
+                        <span className="scorecard-title">{scorecardData?.scorecardName || 'Scorecard'}</span>{' '}
+                        <span className="badge text-bg-success">{scorecardData?.overallScore || '100%'}</span>
+                    </h4>
+                </div>
+                <div className="load-page page-actions g-col-4">
+                    <div className="page-icons">
+                        <ul>
+                            <li>
+                                <a className="active" href="#prespective-add-modal" data-bs-toggle="modal">
+                                    <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                        data-bs-title="Add Perspective" data-translate="page.scorecard.addPerspective">
+                                        <i data-feather="plus" style={{ width: '14px', height: '14px' }}></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#import-modal" data-bs-toggle="modal">
+                                    <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                        data-bs-title="Import Excel">
+                                        <i style={{ width: '14px', height: '14px' }} data-feather="upload"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={handleGeneratePdf} data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom" data-bs-title="Generate Report">
+                                    <i style={{ width: '14px', height: '14px' }} data-feather="printer"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={handleExport} data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Export">
+                                    <i style={{ width: '14px', height: '14px' }} data-feather="download"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#add-settings-modal" data-bs-toggle="modal">
+                                    <span className="icon" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                        data-bs-title="Settings" data-translate="page.scorecard.settings">
+                                        <i style={{ width: '14px', height: '14px' }} data-feather="settings"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
