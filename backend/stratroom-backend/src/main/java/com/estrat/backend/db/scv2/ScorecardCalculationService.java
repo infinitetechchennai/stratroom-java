@@ -642,7 +642,7 @@ public class ScorecardCalculationService {
         LocalDate start = parseStart(dateRange);
         LocalDate end = parseEnd(dateRange);
         List<Map<String, Object>> hist = jdbc.queryForList(
-                "SELECT period_start, period_end, actual_value, target_value, baseline_value "
+                "SELECT period_start, period_end, actual_value "
                         + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end",
                 kpiId);
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
@@ -778,10 +778,15 @@ public class ScorecardCalculationService {
 
         LocalDate start = parseStart(dateRange);
         LocalDate end = parseEnd(dateRange);
-        List<Map<String, Object>> hist = jdbc.queryForList(
-                "SELECT period_start, period_end, actual_value, target_value "
-                        + "FROM sc_sub_kpi_history WHERE sub_kpi_id = ? ORDER BY period_end",
-                subKpiId);
+        List<Map<String, Object>> hist = new ArrayList<>();
+        try {
+            hist = jdbc.queryForList(
+                    "SELECT period_start, period_end, actual_value, target_value "
+                            + "FROM sc_sub_kpi_history WHERE sub_kpi_id = ? ORDER BY period_end",
+                    subKpiId);
+        } catch (Exception e) {
+            System.err.println("Warning: sc_sub_kpi_history query failed: " + e.getMessage());
+        }
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
         List<Map<String, Object>> series = new ArrayList<>();
         BigDecimal runningActual = BigDecimal.ZERO;

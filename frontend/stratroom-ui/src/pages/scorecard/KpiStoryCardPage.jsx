@@ -1430,7 +1430,16 @@ export default function KpiStoryCardPage() {
               <div className="accordion card-accordion" id="accordionExample">
                 <div className="card custom-card kpi_page_details accordion-item">
                   <div className="card-header accordion-header flex-wrap">
-                    <div className="c-header-left kpi_details-title-box flex-nowrap">
+                    <div className="c-header-left kpi_details-title-box flex-nowrap align-items-center">
+                      <button 
+                        className="btn btn-sm btn-icon me-2" 
+                        onClick={() => navigate(-1)} 
+                        title="Go Back" 
+                        type="button"
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8f9fa', border: '1px solid #ddd', borderRadius: '4px', width: '32px', height: '32px' }}
+                      >
+                        <i className="fas fa-arrow-left" style={{ color: '#883b71' }}></i>
+                      </button>
                       <div className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                       </div>
@@ -1588,19 +1597,23 @@ export default function KpiStoryCardPage() {
               </div>
             )}
 
-            {/* ── DATA TABLE ── */}
-            {viewFilters.datatable && (
-              <div className="col-12 col-md-5 datatable">
-                <DataTable rows={periodRows} currency={currency} />
-              </div>
-            )}
+            <div className="col-12">
+              <div className="d-flex flex-column flex-md-row gap-2 align-items-stretch">
+                {/* ── DATA TABLE ── */}
+                {viewFilters.datatable && (
+                  <div className="datatable" style={{ flex: viewFilters.actualvtarget ? 5 : 1, minWidth: 0 }}>
+                    <DataTable rows={periodRows} currency={currency} />
+                  </div>
+                )}
 
-            {/* ── ACTUAL V/S TARGET ── */}
-            {viewFilters.actualvtarget && (
-              <div className="col-12 col-md-7 actualvtarget">
-                <ActualVsTarget rows={periodRows} currency={currency} />
+                {/* ── ACTUAL V/S TARGET ── */}
+                {viewFilters.actualvtarget && (
+                  <div className="actualvtarget" style={{ flex: viewFilters.datatable ? 7 : 1, minWidth: 0 }}>
+                    <ActualVsTarget rows={periodRows} currency={currency} />
+                  </div>
+                )}
               </div>
-            )}
+            </div>
 
             {/* ── DATA DRILL ── */}
             {viewFilters.datadrill && (
@@ -1609,33 +1622,38 @@ export default function KpiStoryCardPage() {
               </div>
             )}
 
-            {/* ── MY INITIATIVE ── */}
-            {viewFilters.myinitiative && (
-              <div className="col-lg-4 col-md-6 myinitiative">
-                <InitiativePanel initiatives={initiatives} />
-              </div>
-            )}
+            {/* ── BOTTOM PANELS (FLEX GRID) ── */}
+            <div className="col-12">
+              <div className="d-flex flex-wrap gap-2 align-items-stretch">
+                {/* ── MY INITIATIVE ── */}
+                {viewFilters.myinitiative && (
+                  <div className="myinitiative" style={{ flex: '1 1 calc(33.333% - 1rem)', minWidth: 300 }}>
+                    <InitiativePanel initiatives={initiatives} />
+                  </div>
+                )}
 
-            {/* ── RISKS ── */}
-            {viewFilters.risks && (
-              <div className="col-lg-4 col-md-6 risks">
-                <RisksPanel risks={risks} />
-              </div>
-            )}
+                {/* ── RISKS ── */}
+                {viewFilters.risks && (
+                  <div className="risks" style={{ flex: '1 1 calc(33.333% - 1rem)', minWidth: 300 }}>
+                    <RisksPanel risks={risks} />
+                  </div>
+                )}
 
-            {/* ── COMMENTS ── */}
-            {viewFilters.comments && (
-              <div className="col-lg-4 col-md-6 comments-show">
-                <CommentsPanel comments={comments} onAdd={handleAddComment} />
-              </div>
-            )}
+                {/* ── COMMENTS ── */}
+                {viewFilters.comments && (
+                  <div className="comments-show" style={{ flex: '1 1 calc(33.333% - 1rem)', minWidth: 300 }}>
+                    <CommentsPanel comments={comments} onAdd={handleAddComment} />
+                  </div>
+                )}
 
-            {/* ── FILES ── */}
-            {viewFilters.files && (
-              <div className="col-lg-4 col-md-6 files">
-                <FilesPanel files={files} onEditFile={setEditingFile} />
+                {/* ── FILES ── */}
+                {viewFilters.files && (
+                  <div className="files" style={{ flex: '1 1 calc(33.333% - 1rem)', minWidth: 300 }}>
+                    <FilesPanel files={files} onEditFile={setEditingFile} />
+                  </div>
+                )}
               </div>
-            )}
+            </div>
 
           </div>
         </div>

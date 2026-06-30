@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { getDisplayName, getInitials } from '../organization/landingPageUtils';
 import {
-    getPageListByType,
+    getPageList,
     getEmpId,
 } from '../../services/scorecardApi';
+import { isMeasurePage } from '../../utils/navPageGroups';
 import { getScorecardV2, getKpiHistory, getSubKpiHistory, getSubMeasureHistory, recordKpiActualBatch, recordSubKpiActualBatch, recordSubMeasureActualBatch } from '../../services/scorecardV2Api';
 
 // ─────────────────────────────────────────────────────────────
@@ -130,12 +131,12 @@ export default function MyFormsPage() {
     useEffect(() => {
         const empId = getEmpId();
         if (!empId) return;
-        // Scorecards under the 'Measure' menu are the Standard_View pages; the
-        // backend maps the "SCORECARD" key to those (pageType=Standard_View).
-        getPageListByType(empId, 'SCORECARD')
+        // Fetch all pages and filter by 'Measure' type to match the Navigation Menu
+        getPageList(empId)
             .then(data => {
                 const list = Array.isArray(data) ? data : (data?.pageList || data?.data || []);
-                setPages(list);
+                const measurePages = list.filter(isMeasurePage);
+                setPages(measurePages);
             })
             .catch(() => setPages([]));
     }, []);
@@ -437,13 +438,14 @@ export default function MyFormsPage() {
                                         <div className="form-group">
                                             <label className="form-label">Scorecard</label>
                                             <select className="form-select select-dropdown" value={selectedPageId} onChange={e => setSelectedPageId(e.target.value)}>
-                                                <option value="" disabled hidden>Select Scorecard</option>
+                                                <option value="" disabled hidden>
+                                                    {pages.length === 0 ? 'No Scorecards found' : 'Select Scorecard'}
+                                                </option>
                                                 {pages.map(p => (
                                                     <option key={p.id || p.pageId} value={p.id || p.pageId}>
                                                         {p.name || p.pageName || `Page ${p.id || p.pageId}`}
                                                     </option>
                                                 ))}
-
                                             </select>
                                         </div>
                                     </div>
