@@ -108,7 +108,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
         addPerspective, editPerspective, removePerspective,
         addObjective, editObjective, removeObjective,
         addKpi, editKpi, removeKpi,
-        addSubKpi, editSubKpi, removeSubKpi,
+        addSubKpi, editSubKpi, editSubKpiView, removeSubKpi,
         saving,
     } = useScorecardContext();
 
@@ -325,11 +325,17 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     measurementFrequency: val('eskpiMeasurementFrequency') || undefined,
                     weight: val('eskpiWeight') || undefined,
                     dataType: val('eskpiType') || undefined,
+                    formula: val('eskpiPerformance') || undefined,
+                    actualFormula: val('eskpiActual') || undefined,
+                    ytdFormula: val('eskpiYtd') || undefined,
+                    classificationType: classFromThreshold(val('eskpiThreshold')),
+                    thresholds: collectBands('eskpi'),
+                    updatedByName: currentUserName() || undefined,
                 });
             },
             // ── SubKPI View (Save from view modal) ────────────────────────────
             'subkpi-view-modal': () => {
-                editSubKpi({
+                editSubKpiView({
                     id: window._viewSubKpiId,
                     name: val('vskpiName') || undefined,
                     indicatorType: val('vskpiPolarity') || undefined,
@@ -337,8 +343,8 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     weight: val('vskpiWeight') || undefined,
                     dataType: val('vskpiType') || undefined,
                     formula: val('vskpiPerformance') || undefined,
-                    actualFormula: val('ekpiActual') || undefined,
-                    ytdFormula: val('eskpiYearToDate') || undefined,
+                    actualFormula: val('vskpiActual') || undefined,
+                    ytdFormula: val('vskpiYtd') || undefined,
                     updatedByName: currentUserName() || undefined,
                 });
             },
@@ -359,7 +365,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
 
         document.addEventListener('click', handleSaveClick);
         return () => document.removeEventListener('click', handleSaveClick);
-    }, [addPerspective, editPerspective, addObjective, editObjective, addKpi, editKpi, addSubKpi, editSubKpi]);
+    }, [addPerspective, editPerspective, addObjective, editObjective, addKpi, editKpi, addSubKpi, editSubKpi, editSubKpiView]);
 
     // ── Delete modal confirmation button ─────────────────────────────────────
     // The legacy code stores { type, id } in window._deleteTarget before opening the modal.
@@ -458,18 +464,35 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             openEditSubKpi: async (id) => {
                 window._editSubKpiId = id;
                 const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
+                const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
+                const fmtDate = (v) => {
+                    if (!v) return '-';
+                    const d = new Date(v);
+                    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+                };
                 ['eskpiName', 'eskpiDescription', 'eskpiWeight', 'eskpiContribution',
-                 'eskpiPerformance', 'eskpiYearToDate'].forEach(elId => set(elId, ''));
+                 'eskpiPerformance', 'eskpiActual', 'eskpiYtd'].forEach(elId => set(elId, ''));
+                ['eskpiCreatedBy', 'eskpiModifiedBy', 'eskpiCreatedDate', 'eskpiModifiedDate'].forEach(elId => setText(elId, '-'));
                 try {
                     const sk = await getSubKpiById(id);
                     if (sk && sk.id) {
                         set('eskpiName', sk.name);
+                        set('eskpiDescription', sk.description);
                         set('eskpiWeight', sk.weight);
-                        // Polarity dropdown holds the Lead/Lag indicator type.
+                        set('eskpiPerformance', sk.formula || '');
+                        set('eskpiActual', sk.actual_formula || '');
+                        set('eskpiYtd', sk.ytd_formula || '');
                         const polEl = document.getElementById('eskpiPolarity');
-                        if (polEl && sk.indicator_type) polEl.value = sk.indicator_type;
+                        if (polEl) polEl.value = sk.indicator_type || '';
                         const typeEl = document.getElementById('eskpiType');
-                        if (typeEl && sk.data_type) typeEl.value = sk.data_type;
+                        if (typeEl) typeEl.value = sk.data_type || '';
+                        if (sk.classification_type || sk.thresholds) {
+                            setThreshold('eskpi', sk.classification_type, sk.thresholds);
+                        }
+                        setText('eskpiCreatedBy', sk.created_by);
+                        setText('eskpiModifiedBy', sk.updated_by);
+                        setText('eskpiCreatedDate', fmtDate(sk.created_at));
+                        setText('eskpiModifiedDate', fmtDate(sk.updated_at));
                     }
                 } catch (e) {
                     console.error('Failed to load sub-KPI data', e);
@@ -627,7 +650,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 };
 
                 // Clear fields
-                ['vskpiName', 'vskpiDescription', 'vskpiPolarity', 'vskpiMeasurementFrequency', 'vskpiOwner', 'vskpiPerformance', 'vskpiType', 'vskpiWeight', 'vskpiStatus', 'ekpiActual', 'eskpiYearToDate'].forEach(elId => set(elId, ''));
+                ['vskpiName', 'vskpiDescription', 'vskpiPolarity', 'vskpiMeasurementFrequency', 'vskpiOwner', 'vskpiPerformance', 'vskpiType', 'vskpiWeight', 'vskpiStatus', 'vskpiActual', 'vskpiYtd'].forEach(elId => set(elId, ''));
                 ['vskpiCreatedBy', 'vskpiModifiedBy', 'vskpiCreatedDate', 'vskpiModifiedDate'].forEach(elId => setText(elId, '-'));
 
                 try {
@@ -639,8 +662,8 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vskpiMeasurementFrequency', sk.measurement_frequency || '');
                         set('vskpiOwner', sk.owner || '');
                         set('vskpiPerformance', sk.formula || '');
-                        set('ekpiActual', sk.actual_formula || '');
-                        set('eskpiYearToDate', sk.ytd_formula || '');
+                        set('vskpiActual', sk.actual_formula || '');
+                        set('vskpiYtd', sk.ytd_formula || '');
                         set('vskpiType', sk.data_type || '');
                         set('vskpiWeight', sk.weight);
                         set('vskpiStatus', sk.status || '');

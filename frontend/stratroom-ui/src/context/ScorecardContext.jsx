@@ -186,6 +186,11 @@ export function ScorecardProvider({ children, reload, pageId }) {
     [act]
   );
 
+  const editSubKpiView = useCallback(
+    (data) => act(() => updateSubKpi(data), 'Sub-KPI updated successfully.', 'subkpi-view-modal'),
+    [act]
+  );
+
   const removeSubKpi = useCallback(
     (id) => act(() => deleteSubKpi(id), 'Sub-KPI deleted.', 'delete-modal'),
     [act]
@@ -239,6 +244,7 @@ export function ScorecardProvider({ children, reload, pageId }) {
     // SubKPI
     addSubKpi,
     editSubKpi,
+    editSubKpiView,
     removeSubKpi,
     saveSubKpiEntry,
     // Download

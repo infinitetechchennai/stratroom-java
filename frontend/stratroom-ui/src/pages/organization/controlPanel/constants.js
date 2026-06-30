@@ -30,11 +30,8 @@ export const TAB_PERMISSIONS = {
   license: { submodule: 'Licence', editKey: null },
   notification: { submodule: 'Notifications', editKey: 'privilegeUpdate' },
   security: { submodule: 'Security', editKey: 'privilegeUpdate' },
-  scheduler: { submodule: 'Scheduler', editKey: null },
-  device: { submodule: 'Device', editKey: null },
   backup: { submodule: 'Backup & Restore', editKey: 'privilegeUpdate' },
   scorecard: { submodule: 'Scorecard', editKey: 'privilegeUpdate' },
-  okr: null,
   risk: { submodule: 'Risk', editKey: 'privilegeUpdate' },
   workflow: null,
 }
@@ -45,11 +42,8 @@ export const TABS = [
   { key: 'license', label: 'License', icon: 'KeyRound' },
   { key: 'notification', label: 'Notification', icon: 'Bell' },
   { key: 'security', label: 'Security', icon: 'ShieldCheck' },
-  { key: 'scheduler', label: 'Scheduler', icon: 'CalendarClock' },
-  { key: 'device', label: 'Device', icon: 'MonitorSmartphone' },
   { key: 'backup', label: 'Backup & Restore', icon: 'DatabaseBackup' },
   { key: 'scorecard', label: 'Scorecard', icon: 'BarChart3' },
-  { key: 'okr', label: 'OKR', icon: 'Target' },
   { key: 'risk', label: 'Risk', icon: 'AlertTriangle' },
   { key: 'workflow', label: 'Workflow Setting', icon: 'Workflow' },
 ]

@@ -1,22 +1,22 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Navigate } from 'react-router-dom'
 import {
-  Settings, Palette, KeyRound, Bell, ShieldCheck, CalendarClock,
-  MonitorSmartphone, DatabaseBackup, BarChart3, Target, AlertTriangle, Workflow,
+  Settings, Palette, KeyRound, Bell, ShieldCheck,
+  DatabaseBackup, BarChart3, AlertTriangle, Workflow,
 } from 'lucide-react'
 import { TABS } from './controlPanel/constants'
 import { useControlPanelPermissions } from './controlPanel/useControlPanelPermissions'
 import { GeneralSettingsTab } from './controlPanel/GeneralSettingsTab'
-import { LicenseSettingsTab, DeviceSettingsTab, OkrInfoTab } from './controlPanel/LicenseDeviceTabs'
+import { LicenseSettingsTab } from './controlPanel/LicenseDeviceTabs'
 import { ThemeSettingsTab, SecuritySettingsTab } from './controlPanel/ThemeSecurityTabs'
-import { NotificationSettingsTab, SchedulerSettingsTab, BackupSettingsTab } from './controlPanel/NotificationSchedulerBackupTabs'
+import { NotificationSettingsTab, BackupSettingsTab } from './controlPanel/NotificationSchedulerBackupTabs'
 import { ScorecardSettingsTab, RiskSettingsTab } from './controlPanel/ScorecardRiskTabs'
 import { WorkflowSettingsTab } from './controlPanel/WorkflowSettingsTab'
 import './controlPanel/controlPanel.css'
 
 const ICONS = {
-  Settings, Palette, KeyRound, Bell, ShieldCheck, CalendarClock,
-  MonitorSmartphone, DatabaseBackup, BarChart3, Target, AlertTriangle, Workflow,
+  Settings, Palette, KeyRound, Bell, ShieldCheck,
+  DatabaseBackup, BarChart3, AlertTriangle, Workflow,
 }
 
 // const TABS = [
@@ -105,11 +105,8 @@ export default function Controlpanel() {
       case 'license': return <LicenseSettingsTab />
       case 'notification': return <NotificationSettingsTab canEdit={canEdit} />
       case 'security': return <SecuritySettingsTab canEdit={canEdit} />
-      case 'scheduler': return <SchedulerSettingsTab canEdit={canEdit} />
-      case 'device': return <DeviceSettingsTab />
       case 'backup': return <BackupSettingsTab canEdit={canEdit} />
       case 'scorecard': return <ScorecardSettingsTab canEdit={canEdit} />
-      case 'okr': return <OkrInfoTab />
       case 'risk': return <RiskSettingsTab canEdit={canEdit} />
       case 'workflow': return <WorkflowSettingsTab canEdit={canEdit} />
       default: return null

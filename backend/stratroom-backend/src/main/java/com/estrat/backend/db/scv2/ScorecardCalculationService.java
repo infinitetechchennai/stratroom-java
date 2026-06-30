@@ -382,7 +382,9 @@ public class ScorecardCalculationService {
                 subDto.put("subKpiValue", subVal);
                 subDto.put("actual", subActual);
                 subDto.put("target", subTarget);
-                subDto.put("score", subActual);
+                // Use the sub-KPI achievement score (%) so that formulas like
+                // avg[SubKPI1, SubKPI2] aggregate performance scores, not raw actuals.
+                subDto.put("score", subAch);
 
                 List<Map<String, Object>> sms = subMeasureBySubKpi.getOrDefault(subId, List.of());
                 List<Map<String, Object>> smDtos = new ArrayList<>();
@@ -400,21 +402,15 @@ public class ScorecardCalculationService {
             
             String actualFormula = str(k.get("actual_formula"));
             if (actualFormula != null && !actualFormula.isBlank()) {
-                actual = evaluateFormula(actualFormula, subKpiDtos);
-                achievement = achievementCalculator.calculate(actual, target, polarity, minTarget, maxTarget, cap);
-                
-                String kpiFormula = str(k.get("formula"));
-                if (kpiFormula != null && !kpiFormula.isBlank() && target != null) {
-                    BigDecimal safeActual = actual != null ? actual : BigDecimal.ZERO;
-                    BigDecimal safeWeight = dec(k.get("weight")) != null ? dec(k.get("weight")) : BigDecimal.ZERO;
-                    List<Map<String, Object>> perfVars = new ArrayList<>();
-                    perfVars.add(makeVar("Contribution", BigDecimal.ZERO));
-                    perfVars.add(makeVar("Actual", safeActual));
-                    perfVars.add(makeVar("Target", target));
-                    perfVars.add(makeVar("Weight", safeWeight));
-                    BigDecimal formulaResult = evaluateFormula(kpiFormula, perfVars);
-                    if (formulaResult != null)
-                        achievement = formulaResult;
+                // The formula references sub-KPIs by name and substitutes their achievement
+                // scores (%). The result is the parent KPI's score directly — no further
+                // actual→score conversion needed.
+                BigDecimal formulaResult = evaluateFormula(actualFormula, subKpiDtos);
+                if (formulaResult != null) {
+                    achievement = formulaResult;
+                    actual = formulaResult;
+                } else {
+                    achievement = aggregatorService.aggregate(subScores, subWeights, "WEIGHTED", null);
                 }
             } else {
                 achievement = aggregatorService.aggregate(subScores, subWeights, "WEIGHTED", null);

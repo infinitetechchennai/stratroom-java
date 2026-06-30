@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { usePermissions } from '../context/PermissionsContext'
 import { useI18n } from '../context/I18nContext'
@@ -25,18 +25,29 @@ export default function MainNavigation() {
   const { pages, isModuleVisible } = usePermissions()
   const { t } = useI18n()
   const [openModule, setOpenModule] = useState(null)
+  const navRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setOpenModule(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handlePageClick = (page) => {
     if (isScorecardPageType(page.pageType)) {
       navigate(`/scorecard?pageId=${page.id}`)
     } else {
-      navigate(`/dashboard/${page.createdBy}?pageId=${page.id}`)
+      navigate(`/dashboard?pageId=${page.id}`)
     }
     setOpenModule(null)
   }
 
   return (
-    <nav className="navbar navbar-expand-md navbar-light">
+    <nav className="navbar navbar-expand-md navbar-light" ref={navRef}>
       <div className="container-lg gap-2 gap-md-3" style={{ display: 'flex', alignItems: 'center' }}>
         {location.pathname !== '/landing' && location.pathname !== '/home' && (
           <button

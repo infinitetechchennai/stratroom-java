@@ -3,6 +3,27 @@ import { getCustomPerformanceDetails } from '../api/controlPanelApi';
 
 const ScorecardSettingsContext = createContext();
 
+function parseJsonBlob(resp) {
+  if (!resp) return {}
+  if (typeof resp === 'string') {
+    try { return JSON.parse(resp) } catch { return {} }
+  }
+  if (resp.customValue) {
+    try { return JSON.parse(resp.customValue) } catch { return {} }
+  }
+  return resp
+}
+
+// Normalize values so booleans and strings are handled uniformly:
+// { scorecardactual: false } and { scorecardactual: "false" } both become { scorecardactual: "false" }
+function normalizeSettings(raw) {
+  const out = {}
+  for (const [k, v] of Object.entries(raw || {})) {
+    out[k] = (v === null || v === undefined) ? '' : String(v)
+  }
+  return out
+}
+
 export const ScorecardSettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -11,19 +32,11 @@ export const ScorecardSettingsProvider = ({ children }) => {
   const fetchSettings = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getCustomPerformanceDetails();
-      
-      // The backend returns a map that contains 'customValue' as a JSON string,
-      // or directly the parsed custom performance object depending on the controller return.
-      // In ControlPanelGeneralController.java:
-      // findCustomPerformanceByOrgId() returns a Map<String, Object> 
-      // containing the parsed customValue. Let's assume it's directly accessible.
-      
-      setSettings(data || {});
+      const resp = await getCustomPerformanceDetails();
+      setSettings(normalizeSettings(parseJsonBlob(resp)));
     } catch (err) {
       console.error('Failed to fetch scorecard settings:', err);
       setError(err);
-      // Fallback to empty settings so the app doesn't crash
       setSettings({});
     } finally {
       setLoading(false);

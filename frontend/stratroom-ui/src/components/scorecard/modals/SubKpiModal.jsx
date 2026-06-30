@@ -207,9 +207,9 @@ export const SubKpiEditModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="ekpiActual" className="form-label">Actual</label>
+                                            <label htmlFor="eskpiActual" className="form-label">Actual</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="ekpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
+                                                <input type="text" className="form-control" id="eskpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpiActual-calculator-modal" onClick={() => { window._kpiCalcCallerModalId = 'subkpi-edit-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPI'); }}>KPI Calculator</button>
                                             </div>
                                         </div>
@@ -225,9 +225,9 @@ export const SubKpiEditModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="eskpiYearToDate" className="form-label">Year To Date (YTD)</label>
+                                            <label htmlFor="eskpiYtd" className="form-label">Year To Date (YTD)</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="eskpiYearToDate" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" readOnly />
+                                                <input type="text" className="form-control" id="eskpiYtd" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" readOnly />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#ytd-calculator-modal" onClick={() => { window._kpiCalcCallerModalId = 'subkpi-edit-modal'; }}>YTD Calculator</button>
                                             </div>
                                         </div>
@@ -294,19 +294,19 @@ export const SubKpiEditModal = () => {
                             <div className="audit-listing">
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdBy">Created By</span> :</div>
-                                    <div className="text">Arun</div>
+                                    <div className="text" id="eskpiCreatedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedBy">Modified By</span> :</div>
-                                    <div className="text">Karthik</div>
+                                    <div className="text" id="eskpiModifiedBy">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.createdOn">Created Date</span> :</div>
-                                    <div className="text">Oct 02, 2019</div>
+                                    <div className="text" id="eskpiCreatedDate">-</div>
                                 </div>
                                 <div className="audit-box">
                                     <div className="title"><span data-translate="page.scorecard.audit.lastModifiedOn">Modified Date</span> :</div>
-                                    <div className="text">Oct 02, 2019</div>
+                                    <div className="text" id="eskpiModifiedDate">-</div>
                                 </div>
                             </div>
                         </div>
@@ -384,9 +384,9 @@ export const SubKpiViewModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="ekpiActual" className="form-label">Actual</label>
+                                            <label htmlFor="vskpiActual" className="form-label">Actual</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="ekpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
+                                                <input type="text" className="form-control" id="vskpiActual" placeholder="Performance" aria-label="" aria-describedby="button-addon2" readOnly />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#kpiActual-calculator-modal" onClick={() => { window._kpiCalcCallerModalId = 'subkpi-view-modal'; if (window.handleFormulaEvent) window.handleFormulaEvent('KPI'); }}>KPI Calculator</button>
                                             </div>
                                         </div>
@@ -402,9 +402,9 @@ export const SubKpiViewModal = () => {
                                     </div>
                                     <div className="g-col-12 g-col-md-6">
                                         <div className="form-group">
-                                            <label htmlFor="eskpiYearToDate" className="form-label">Year To Date (YTD)</label>
+                                            <label htmlFor="vskpiYtd" className="form-label">Year To Date (YTD)</label>
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id="eskpiYearToDate" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" readOnly />
+                                                <input type="text" className="form-control" id="vskpiYtd" placeholder="Year To Date (YTD)" aria-label="" aria-describedby="button-addon2" readOnly />
                                                 <button className="btn btn-label-secondary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#ytd-calculator-modal" onClick={() => { window._kpiCalcCallerModalId = 'subkpi-view-modal'; }}>YTD Calculator</button>
                                             </div>
                                         </div>

@@ -75,12 +75,18 @@ public class ControlPanelGeneralService {
         if (orgID != null && orgID != "") {
             Optional result = this.controlPanelCustomRepository.findById(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
             if (result.isPresent()) {
+                String customValue = ((ControlPanelCustomPerformance)result.get()).getCustomValue();
+                if (customValue == null || customValue.isBlank()) {
+                    return Collections.emptyMap();
+                }
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    return (Map)mapper.readValue(((ControlPanelCustomPerformance)result.get()).getCustomValue(), HashMap.class);
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> parsed = mapper.readValue(customValue, HashMap.class);
+                    return parsed;
                 }
                 catch (Exception e) {
-                    throw new RuntimeException(e);
+                    return Collections.emptyMap();
                 }
             }
             return Collections.emptyMap();
