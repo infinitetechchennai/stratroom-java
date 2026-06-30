@@ -1,23 +1,26 @@
-﻿# Node
+# =============================================
+# StratRoom — .gitignore
+# =============================================
+
+# ===== Node / Frontend =====
 node_modules/
 dist/
 dist-ssr/
 build/
-.env
-.env.*
-!.env.example
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Java/Maven
+# ===== Java / Maven =====
 target/
 *.class
 *.jar
 *.war
 *.ear
 *.nar
+
+# ===== IDE & Editor =====
 .project
 .classpath
 .settings/
@@ -28,46 +31,56 @@ target/
 *.suo
 *.sw?
 
-# Spring Boot local overrides (never commit real secrets)
+# ===== Spring Boot local overrides (never commit real secrets) =====
 application-local.properties
 application-local.yml
 
-# OS
+# ===== Environment / Secrets =====
+.env
+.env.*
+!.env.example
+
+# ===== OS generated =====
 .DS_Store
 Thumbs.db
 
-# Logs & runtime output
+# ===== Logs & runtime output =====
 logs/
 *.log
 *.gz
 
-# Archives / binaries
+# ===== Binary / Archive files =====
 *.zip
-
-# Office docs
-*.docx
-*.doc
 *.xlsx
 *.xls
+*.docx
+*.doc
+*.pdf
 
-# Local-only / reference material (not part of the migration project)
-stratroom-java-master/
-backend/my-new-update-06/
-frontend/Untitled/
-testing-data/
+# ===== One-off dev scratch scripts =====
+# These belong on the developer's machine only, never in the repo
+*.py
+*.bat
+*.cjs
+fix_modals.js
+test_sc.js
+
+# ===== Local reference / notes =====
+db table config.txt
 orgpsql
 orgstructurev2.sql
 Risk Full Logic.html
 backend/Risk Full Logic (1).html
 
-# Legacy root scratch files (scorecard/calendar experiments)
+# ===== Legacy scratch directories =====
+stratroom-java-master/
+backend/my-new-update-06/
+frontend/Untitled/
+testing-data/
 extracted_cal.css
 org-structure_calendar_dw_*
 
-# Local import spreadsheets and one-off scripts (use import-templates/ instead)
+# ===== Local import files =====
 import files/
 import-files/
 import-templates/
-
-# DB config notes (local reference only)
-db table config.txt
