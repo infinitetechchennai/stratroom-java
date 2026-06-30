@@ -1236,20 +1236,39 @@ function ImportWizard({ user, onClose, onComplete }) {
           if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
         })
       } else if (isScorecard) {
-        // KPI and SubKPI are on the SAME row — validate only the KPI-level required fields
-        parsed.forEach((r, idx) => {
-          const excelRow = idx + 2
-          const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode')
-          const scorecardName = importColVal(r, 'ScoreCardName', 'Scorecard Name', 'ScorecardName', 'Score Card Name', 'Department')
-          const perspective = importColVal(r, 'Perspective Name', 'PerspectiveName', 'Perspective')
-          const objective = importColVal(r, 'Objective Name', 'ObjectiveName', 'Objective')
-          const kpiName = importColVal(r, 'KPI  NAME', 'KPI Name', 'KPI NAME', 'KPI', 'Kpi Name')
-          if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
-          if (!scorecardName) errs.push({ sheet: sheetName, row: excelRow, cell: 'ScoreCardName', reason: 'Scorecard name is required' })
-          if (!perspective) errs.push({ sheet: sheetName, row: excelRow, cell: 'Perspective Name', reason: 'Perspective name is required' })
-          if (!objective) errs.push({ sheet: sheetName, row: excelRow, cell: 'Objective Name', reason: 'Objective name is required' })
-          if (!kpiName) errs.push({ sheet: sheetName, row: excelRow, cell: 'KPI Name', reason: 'KPI name is required' })
-        })
+        // Detect file type early: values file has Period + Target + Actual columns
+        const firstRow = parsed[0] || {}
+        const isValuesFile = ('Period' in firstRow || 'period' in firstRow) &&
+                             ('Target' in firstRow || 'TARGET' in firstRow) &&
+                             ('Actual' in firstRow || 'ACTUAL' in firstRow)
+
+        if (isValuesFile) {
+          // Values/actuals file — light validation: just check KPI ID (or SubKPI ID) and Period exist
+          parsed.forEach((r, idx) => {
+            const excelRow = idx + 2
+            const kpiId    = importColVal(r, 'KPI ID', 'KPIID', 'Kpi ID')
+            const subKpiId = importColVal(r, 'SubKPI ID', 'Sub KPI ID')
+            const period   = importColVal(r, 'Period', 'period', 'Period Start')
+            if (!kpiId && !subKpiId) errs.push({ sheet: sheetName, row: excelRow, cell: 'KPI ID', reason: 'KPI ID or SubKPI ID is required' })
+            if (!period) errs.push({ sheet: sheetName, row: excelRow, cell: 'Period', reason: 'Period date is required' })
+          })
+        } else {
+          // Structure file — strict validation: scorecard hierarchy columns required
+          // KPI and SubKPI are on the SAME row — validate only the KPI-level required fields
+          parsed.forEach((r, idx) => {
+            const excelRow = idx + 2
+            const deptId = importColVal(r, 'Department ID', 'DepartmentID', 'Dept ID', 'DeptID', 'deptId', 'Dept Code', 'DeptCode')
+            const scorecardName = importColVal(r, 'ScoreCardName', 'Scorecard Name', 'ScorecardName', 'Score Card Name', 'Department')
+            const perspective = importColVal(r, 'Perspective Name', 'PerspectiveName', 'Perspective')
+            const objective = importColVal(r, 'Objective Name', 'ObjectiveName', 'Objective')
+            const kpiName = importColVal(r, 'KPI  NAME', 'KPI Name', 'KPI NAME', 'KPI', 'Kpi Name')
+            if (!deptId) errs.push({ sheet: sheetName, row: excelRow, cell: 'Department ID', reason: 'Department ID is required' })
+            if (!scorecardName) errs.push({ sheet: sheetName, row: excelRow, cell: 'ScoreCardName', reason: 'Scorecard name is required' })
+            if (!perspective) errs.push({ sheet: sheetName, row: excelRow, cell: 'Perspective Name', reason: 'Perspective name is required' })
+            if (!objective) errs.push({ sheet: sheetName, row: excelRow, cell: 'Objective Name', reason: 'Objective name is required' })
+            if (!kpiName) errs.push({ sheet: sheetName, row: excelRow, cell: 'KPI Name', reason: 'KPI name is required' })
+          })
+        }
       } else { // Organisation (department hierarchy)
         parsed.forEach((r, idx) => {
           const excelRow = idx + 2
@@ -1321,11 +1340,11 @@ function ImportWizard({ user, onClose, onComplete }) {
           // Values/actuals import — updates KPI and SubKPI history data
           const res = await axiosClient.post('/api/scorecard/bulkImportValues', rows, { timeout: 600000 })
           if (res.data?.error) throw new Error(res.data.error)
-          const { kpiRowsUpdated = 0, subKpiRowsUpdated = 0, unmatched = 0 } = res.data || {}
+          const { kpiRowsUpdated = 0, subKpiRowsUpdated = 0, unmatched = 0, skipped = 0, totalRows = 0 } = res.data || {}
           setResult({
             success: true,
-            count: subKpiRowsUpdated || kpiRowsUpdated,
-            kind: `SubKPI value(s) updated (${subKpiRowsUpdated} sub-KPI rows, ${kpiRowsUpdated} KPI rows). Unmatched: ${unmatched}`
+            count: subKpiRowsUpdated + kpiRowsUpdated,
+            kind: `SubKPI value(s) updated (${subKpiRowsUpdated} sub-KPI rows, ${kpiRowsUpdated} KPI rows). Skipped: ${skipped}, Unmatched: ${unmatched}, Total: ${totalRows}`
           })
         } else {
           // Structure import — creates scorecard hierarchy

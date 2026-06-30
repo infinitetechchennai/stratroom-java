@@ -17,15 +17,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Reads the sc_ scorecard hierarchy and computes scores bottom-up, producing the
+ * Reads the sc_ scorecard hierarchy and computes scores bottom-up, producing
+ * the
  * nested payload the React scorecard UI expects:
  *
- *   { flag, message, scoreCardName, thresholdResult, statusLight,
- *     cardDetailsDTO: { id, scorecardName, scoreCardDTOS: [ perspective... ] } }
+ * { flag, message, scoreCardName, thresholdResult, statusLight,
+ * cardDetailsDTO: { id, scorecardName, scoreCardDTOS: [ perspective... ] } }
  *
- * Performance: the entire tree (perspectives, objectives, KPIs, sub-KPIs) and all
+ * Performance: the entire tree (perspectives, objectives, KPIs, sub-KPIs) and
+ * all
  * KPI history are loaded in a fixed handful of bulk queries, then assembled in
- * memory — no per-node (N+1) queries — so even a 500+ KPI scorecard responds fast.
+ * memory — no per-node (N+1) queries — so even a 500+ KPI scorecard responds
+ * fast.
  */
 @Service
 public class ScorecardCalculationService {
@@ -37,9 +40,9 @@ public class ScorecardCalculationService {
 
     @Autowired
     public ScorecardCalculationService(JdbcTemplate jdbc,
-                                       AchievementCalculator achievementCalculator,
-                                       AggregatorService aggregatorService,
-                                       RAGStatusService ragStatusService) {
+            AchievementCalculator achievementCalculator,
+            AggregatorService aggregatorService,
+            RAGStatusService ragStatusService) {
         this.jdbc = jdbc;
         this.achievementCalculator = achievementCalculator;
         this.aggregatorService = aggregatorService;
@@ -73,36 +76,54 @@ public class ScorecardCalculationService {
         Map<Long, List<Map<String, Object>>> objByPersp = groupBy(
                 queryIn("SELECT id, name, code, weight, aggregation_method, classification_type, knockout_enabled, "
                         + "knockout_threshold, pass_rate_threshold, formula, perspective_id FROM sc_objectives "
-                        + "WHERE is_active = true AND perspective_id IN (%s) ORDER BY display_order, id", perspectiveIds),
+                        + "WHERE is_active = true AND perspective_id IN (%s) ORDER BY display_order, id",
+                        perspectiveIds),
                 "perspective_id");
-        List<Long> objectiveIds = objByPersp.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
+        List<Long> objectiveIds = objByPersp.values().stream().flatMap(List::stream).map(m -> num(m.get("id")))
+                .collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> kpiByObj = groupBy(
                 queryIn("SELECT id, name, code, polarity, target_value, min_target, max_target, weight, data_type, "
                         + "currency_code, measurement_frequency, null_handling, achievement_cap, classification_type, objective_id, formula, thresholds "
-                        + "FROM sc_kpis WHERE is_deleted = false AND objective_id IN (%s) ORDER BY display_order, id", objectiveIds),
+                        + "FROM sc_kpis WHERE is_deleted = false AND objective_id IN (%s) ORDER BY display_order, id",
+                        objectiveIds),
                 "objective_id");
-        List<Long> kpiIds = kpiByObj.values().stream().flatMap(List::stream).map(m -> num(m.get("id"))).collect(Collectors.toList());
+        List<Long> kpiIds = kpiByObj.values().stream().flatMap(List::stream).map(m -> num(m.get("id")))
+                .collect(Collectors.toList());
 
         Map<Long, List<Map<String, Object>>> subByKpi = groupBy(
                 queryIn("SELECT id, name, code, target_value, polarity, weight, data_type, achievement_cap, kpi_id "
-                        + "FROM sc_sub_kpis WHERE is_deleted = false AND kpi_id IN (%s) ORDER BY display_order, id", kpiIds),
+                        + "FROM sc_sub_kpis WHERE is_deleted = false AND kpi_id IN (%s) ORDER BY display_order, id",
+                        kpiIds),
                 "kpi_id");
 
-
-        List<Long> subKpiIds = subByKpi.values().stream().flatMap(java.util.List::stream).map(m -> num(m.get("id"))).collect(java.util.stream.Collectors.toList());
-        // 4th-level sub-measures (sc_sub_measures) do NOT exist in this schema. The load runs
-        // inside a single transaction, so issuing a query against a missing table aborts the
-        // entire transaction (SQLSTATE 25P02) and every later query fails. A try/catch is not
-        // enough — the DB transaction is already poisoned. So we skip the query entirely and
+        List<Long> subKpiIds = subByKpi.values().stream().flatMap(java.util.List::stream).map(m -> num(m.get("id")))
+                .collect(java.util.stream.Collectors.toList());
+        // 4th-level sub-measures (sc_sub_measures) do NOT exist in this schema. The
+        // load runs
+        // inside a single transaction, so issuing a query against a missing table
+        // aborts the
+        // entire transaction (SQLSTATE 25P02) and every later query fails. A try/catch
+        // is not
+        // enough — the DB transaction is already poisoned. So we skip the query
+        // entirely and
         // treat sub-measures as empty. Re-enable once an sc_sub_measures table exists.
         Map<Long, List<Map<String, Object>>> subMeasureBySubKpi = new java.util.HashMap<>();
 
-        // all KPI history for these KPIs, ordered, grouped — current & previous picked in memory
+        // all KPI history for these KPIs, ordered, grouped — current & previous picked
+        // in memory
         Map<Long, List<Map<String, Object>>> histByKpi = groupBy(
                 queryIn("SELECT kpi_id, period_start, period_end, actual_value "
                         + "FROM sc_kpi_history WHERE kpi_id IN (%s) ORDER BY kpi_id, period_end", kpiIds),
                 "kpi_id");
+
+        // all SubKPI history, ordered, grouped — so imported SubKPI actuals are
+        // surfaced
+        Map<Long, List<Map<String, Object>>> histBySubKpi = groupBy(
+                queryIn("SELECT sub_kpi_id, period_start, period_end, actual_value, target_value "
+                        + "FROM sc_sub_kpi_history WHERE sub_kpi_id IN (%s) ORDER BY sub_kpi_id, period_end",
+                        subKpiIds),
+                "sub_kpi_id");
 
         // ---- assemble + compute ----
         List<Map<String, Object>> perspectiveDtos = new ArrayList<>();
@@ -110,7 +131,8 @@ public class ScorecardCalculationService {
         List<BigDecimal> perspectiveWeights = new ArrayList<>();
 
         for (Map<String, Object> p : perspectives) {
-            Map<String, Object> pDto = buildPerspective(p, objByPersp, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi, start, end, scClass);
+            Map<String, Object> pDto = buildPerspective(p, objByPersp, kpiByObj, subByKpi, subMeasureBySubKpi,
+                    histByKpi, histBySubKpi, start, end, scClass);
             perspectiveDtos.add(pDto);
             BigDecimal score = (BigDecimal) pDto.get("score");
             if (score != null) {
@@ -123,7 +145,8 @@ public class ScorecardCalculationService {
         String formula = str(scRows.get(0).get("formula"));
         if (formula != null && !formula.isBlank()) {
             BigDecimal formulaResult = evaluateFormula(formula, perspectiveDtos);
-            if (formulaResult != null) overall = formulaResult;
+            if (formulaResult != null)
+                overall = formulaResult;
         }
 
         RAGStatusService.RAGResult overallRag = ragStatusService.determineStatus(overall, scClass);
@@ -155,6 +178,7 @@ public class ScorecardCalculationService {
             Map<Long, List<Map<String, Object>>> subByKpi,
             Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
+            Map<Long, List<Map<String, Object>>> histBySubKpi,
             LocalDate start, LocalDate end, String scClass) {
         Long perspectiveId = num(p.get("id"));
         String name = str(p.get("name"));
@@ -166,7 +190,8 @@ public class ScorecardCalculationService {
         List<BigDecimal> objWeights = new ArrayList<>();
 
         for (Map<String, Object> o : objByPersp.getOrDefault(perspectiveId, List.of())) {
-            Map<String, Object> oDto = buildObjective(o, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi, start, end, classType);
+            Map<String, Object> oDto = buildObjective(o, kpiByObj, subByKpi, subMeasureBySubKpi, histByKpi,
+                    histBySubKpi, start, end, classType);
             objectiveDtos.add(oDto);
             BigDecimal score = (BigDecimal) oDto.get("score");
             if (score != null) {
@@ -180,7 +205,8 @@ public class ScorecardCalculationService {
         String formula = str(p.get("formula"));
         if ("FORMULA".equalsIgnoreCase(aggMethod) && formula != null && !formula.isBlank()) {
             BigDecimal formulaResult = evaluateFormula(formula, objectiveDtos);
-            if (formulaResult != null) score = formulaResult;
+            if (formulaResult != null)
+                score = formulaResult;
         }
         RAGStatusService.RAGResult rag = ragStatusService.determineStatus(score, classType);
 
@@ -204,6 +230,7 @@ public class ScorecardCalculationService {
             Map<Long, List<Map<String, Object>>> subByKpi,
             Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
+            Map<Long, List<Map<String, Object>>> histBySubKpi,
             LocalDate start, LocalDate end, String parentClass) {
         Long objectiveId = num(o.get("id"));
         String name = str(o.get("name"));
@@ -218,7 +245,8 @@ public class ScorecardCalculationService {
         List<BigDecimal> kpiWeights = new ArrayList<>();
 
         for (Map<String, Object> k : kpiByObj.getOrDefault(objectiveId, List.of())) {
-            Map<String, Object> kDto = buildKpi(k, subByKpi, subMeasureBySubKpi, histByKpi, start, end, classType);
+            Map<String, Object> kDto = buildKpi(k, subByKpi, subMeasureBySubKpi, histByKpi, histBySubKpi, start, end,
+                    classType);
             kpiDtos.add(kDto);
             BigDecimal score = (BigDecimal) kDto.get("score");
             if (score != null) {
@@ -230,7 +258,8 @@ public class ScorecardCalculationService {
         BigDecimal score;
         String statusOverride = null;
         if (knockout && knockoutThreshold != null) {
-            Optional<BigDecimal> failing = kpiScores.stream().filter(s -> s.compareTo(knockoutThreshold) < 0).findFirst();
+            Optional<BigDecimal> failing = kpiScores.stream().filter(s -> s.compareTo(knockoutThreshold) < 0)
+                    .findFirst();
             if (failing.isPresent()) {
                 score = BigDecimal.ZERO;
                 statusOverride = "red";
@@ -243,7 +272,8 @@ public class ScorecardCalculationService {
         String formula = str(o.get("formula"));
         if ("FORMULA".equalsIgnoreCase(aggMethod) && formula != null && !formula.isBlank()) {
             BigDecimal formulaResult = evaluateFormula(formula, kpiDtos);
-            if (formulaResult != null) score = formulaResult;
+            if (formulaResult != null)
+                score = formulaResult;
         }
         RAGStatusService.RAGResult rag = ragStatusService.determineStatus(score, classType);
         String status = statusOverride != null ? statusOverride : rag.getStatus();
@@ -266,6 +296,7 @@ public class ScorecardCalculationService {
             Map<Long, List<Map<String, Object>>> subByKpi,
             Map<Long, List<Map<String, Object>>> subMeasureBySubKpi,
             Map<Long, List<Map<String, Object>>> histByKpi,
+            Map<Long, List<Map<String, Object>>> histBySubKpi,
             LocalDate start, LocalDate end, String parentClass) {
         Long kpiId = num(k.get("id"));
         String name = str(k.get("name"));
@@ -293,7 +324,23 @@ public class ScorecardCalculationService {
                 Long subId = num(sk.get("id"));
                 BigDecimal subTarget = dec(sk.get("target_value"));
                 BigDecimal subCap = dec(sk.get("achievement_cap"));
-                BigDecimal subAch = achievementCalculator.calculate(null, subTarget, str(sk.get("polarity")), null, null, subCap);
+
+                // Pull the latest imported actual (and per-period target, if any) for this
+                // SubKPI
+                List<Map<String, Object>> subHist = histBySubKpi.getOrDefault(subId, List.of());
+                Map<String, Object> subCurrent = latestActualInRange(subHist, start, end, frequency);
+                if (subCurrent == null)
+                    subCurrent = latestInRange(subHist, start, end, frequency);
+                BigDecimal subActual = null;
+                if (subCurrent != null) {
+                    subActual = dec(subCurrent.get("actual_value"));
+                    BigDecimal subHistTarget = dec(subCurrent.get("target_value"));
+                    if (subHistTarget != null)
+                        subTarget = subHistTarget;
+                }
+
+                BigDecimal subAch = achievementCalculator.calculate(subActual, subTarget, str(sk.get("polarity")), null,
+                        null, subCap);
                 if (subAch != null) {
                     subScores.add(subAch);
                     subWeights.add(dec(sk.get("weight")));
@@ -302,7 +349,7 @@ public class ScorecardCalculationService {
                 Map<String, Object> subVal = new LinkedHashMap<>();
                 subVal.put("subMeasureName", str(sk.get("name")));
                 subVal.put("name", str(sk.get("name")));
-                subVal.put("actual", "");
+                subVal.put("actual", formatValue(subActual, str(sk.get("data_type")), null));
                 subVal.put("target", formatValue(subTarget, str(sk.get("data_type")), null));
                 subVal.put("thresholdResult", formatPct(subAch));
                 subVal.put("statusLight", subRag.getStatus());
@@ -348,7 +395,8 @@ public class ScorecardCalculationService {
             }
             achievement = achievementCalculator.calculate(actual, target, polarity, minTarget, maxTarget, cap);
 
-            // If user set a custom performance formula, evaluate it with Actual/Target/Weight/Contribution
+            // If user set a custom performance formula, evaluate it with
+            // Actual/Target/Weight/Contribution
             String kpiFormula = str(k.get("formula"));
             if (kpiFormula != null && !kpiFormula.isBlank()) {
                 BigDecimal safeActual = actual != null ? actual : BigDecimal.ZERO;
@@ -360,19 +408,22 @@ public class ScorecardCalculationService {
                 perfVars.add(makeVar("Target", safeTarget));
                 perfVars.add(makeVar("Weight", safeWeight));
                 BigDecimal formulaResult = evaluateFormula(kpiFormula, perfVars);
-                if (formulaResult != null) achievement = formulaResult;
+                if (formulaResult != null)
+                    achievement = formulaResult;
             }
         }
 
         // Trend: compare the two most recent reported (non-null) periods within the
         // selected range, so the up/down arrow reflects the real movement. Falls back
-        // to the latest reported period before the range when only one value is in range.
+        // to the latest reported period before the range when only one value is in
+        // range.
         BigDecimal previous = null;
         List<Map<String, Object>> reported = new ArrayList<>();
         for (Map<String, Object> row : histByKpi.getOrDefault(kpiId, List.of())) {
             LocalDate ps = toLocalDate(row.get("period_start"));
             LocalDate pe = toLocalDate(row.get("period_end"));
-            if (ps != null && pe != null && !ps.isBefore(start) && !pe.isAfter(end) && dec(row.get("actual_value")) != null) {
+            if (ps != null && pe != null && !ps.isBefore(start) && !pe.isAfter(end)
+                    && dec(row.get("actual_value")) != null) {
                 reported.add(row);
             }
         }
@@ -411,14 +462,17 @@ public class ScorecardCalculationService {
         return dto;
     }
 
-    // ----- in-memory history selection (history list is ordered by period_end asc) -----
+    // ----- in-memory history selection (history list is ordered by period_end asc)
+    // -----
 
-    private Map<String, Object> latestInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end, String frequency) {
+    private Map<String, Object> latestInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end,
+            String frequency) {
         Map<String, Object> chosen = null;
         for (Map<String, Object> row : hist) {
             LocalDate ps = toLocalDate(row.get("period_start"));
             LocalDate pe = toLocalDate(row.get("period_end"));
-            if (ps != null && pe != null && !ps.isAfter(end) && !pe.isBefore(start) && matchesFrequency(ps, pe, frequency)) {
+            if (ps != null && pe != null && !ps.isAfter(end) && !pe.isBefore(start)
+                    && matchesFrequency(ps, pe, frequency)) {
                 chosen = row;
             }
         }
@@ -426,30 +480,43 @@ public class ScorecardCalculationService {
     }
 
     // Latest in-range period that has a non-null reported actual value.
-    private Map<String, Object> latestActualInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end, String frequency) {
+    private Map<String, Object> latestActualInRange(List<Map<String, Object>> hist, LocalDate start, LocalDate end,
+            String frequency) {
         Map<String, Object> chosen = null;
         for (Map<String, Object> row : hist) {
             LocalDate ps = toLocalDate(row.get("period_start"));
             LocalDate pe = toLocalDate(row.get("period_end"));
-            if (ps != null && pe != null && !ps.isAfter(end) && !pe.isBefore(start) && matchesFrequency(ps, pe, frequency) && dec(row.get("actual_value")) != null) {
+            if (ps != null && pe != null && !ps.isAfter(end) && !pe.isBefore(start)
+                    && matchesFrequency(ps, pe, frequency) && dec(row.get("actual_value")) != null) {
                 chosen = row; // list is ascending by period_end, so last match wins (latest with a value)
             }
         }
         return chosen;
     }
 
-    /** Returns true when the history row's period duration matches the KPI measurement frequency. */
+    /**
+     * Returns true when the history row's period duration matches the KPI
+     * measurement frequency.
+     */
     private boolean matchesFrequency(LocalDate ps, LocalDate pe, String frequency) {
-        if (frequency == null || frequency.isBlank()) return true;
+        if (frequency == null || frequency.isBlank())
+            return true;
         long days = java.time.temporal.ChronoUnit.DAYS.between(ps, pe) + 1;
         switch (frequency.toLowerCase().replace("-", " ").trim()) {
-            case "daily":       return days <= 1;
-            case "weekly":      return days >= 6  && days <= 8;
-            case "monthly":     return days >= 28 && days <= 31;
-            case "quarterly":   return days >= 89 && days <= 92;
-            case "half yearly": return days >= 181 && days <= 184;
-            case "annual":      return days >= 365 && days <= 366;
-            default:            return true;
+            case "daily":
+                return days <= 1;
+            case "weekly":
+                return days >= 6 && days <= 8;
+            case "monthly":
+                return days >= 28 && days <= 31;
+            case "quarterly":
+                return days >= 89 && days <= 92;
+            case "half yearly":
+                return days >= 181 && days <= 184;
+            case "annual":
+                return days >= 365 && days <= 366;
+            default:
+                return true;
         }
     }
 
@@ -534,8 +601,15 @@ public class ScorecardCalculationService {
                         + "FROM sc_kpis k "
                         + "LEFT JOIN sc_objectives o ON k.objective_id = o.id "
                         + "LEFT JOIN sc_perspectives p ON o.perspective_id = p.id "
-                        + "WHERE k.id = ? AND k.is_deleted = false", kpiId);
+                        + "WHERE k.id = ? AND k.is_deleted = false",
+                kpiId);
         if (kpiRows.isEmpty()) {
+            // The id might be a SubKPI (the scorecard links SubKPI rows here too) — serve
+            // its history.
+            Map<String, Object> subResult = subKpiStoryCard(kpiId, dateRange);
+            if (subResult != null) {
+                return subResult;
+            }
             result.put("kpi", null);
             result.put("series", new ArrayList<>());
             return result;
@@ -568,8 +642,9 @@ public class ScorecardCalculationService {
         LocalDate start = parseStart(dateRange);
         LocalDate end = parseEnd(dateRange);
         List<Map<String, Object>> hist = jdbc.queryForList(
-                "SELECT period_start, period_end, actual_value "
-                        + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end", kpiId);
+                "SELECT period_start, period_end, actual_value, target_value, baseline_value "
+                        + "FROM sc_kpi_history WHERE kpi_id = ? ORDER BY period_end",
+                kpiId);
         DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
         List<Map<String, Object>> series = new ArrayList<>();
         BigDecimal runningActual = BigDecimal.ZERO;
@@ -607,17 +682,18 @@ public class ScorecardCalculationService {
             Long subKpiId = num(sk.get("id"));
             String subKpiName = str(sk.get("name"));
             BigDecimal subTarget = dec(sk.get("target_value"));
-            
+
             List<Map<String, Object>> subHist = new ArrayList<>();
             try {
                 subHist = jdbc.queryForList(
                         "SELECT period_start, period_end, actual_value "
-                                + "FROM sc_sub_kpi_history WHERE sub_kpi_id = ? ORDER BY period_end", subKpiId);
+                                + "FROM sc_sub_kpi_history WHERE sub_kpi_id = ? ORDER BY period_end",
+                        subKpiId);
             } catch (Exception e) {
                 // Gracefully ignore missing table errors
                 System.err.println("Warning: sc_sub_kpi_history query failed: " + e.getMessage());
             }
-            
+
             BigDecimal subRunningActual = BigDecimal.ZERO;
             for (Map<String, Object> sh : subHist) {
                 LocalDate periodEnd = toLocalDate(sh.get("period_end"));
@@ -629,7 +705,7 @@ public class ScorecardCalculationService {
                 if (actual != null) {
                     subRunningActual = subRunningActual.add(actual);
                 }
-                
+
                 Map<String, Object> point = new LinkedHashMap<>();
                 point.put("period", periodEnd != null ? periodEnd.format(label) : str(sh.get("period_end")));
                 point.put("actual", actual);
@@ -649,9 +725,100 @@ public class ScorecardCalculationService {
     }
 
     /**
-     * Retrieves all active elements in the scorecard hierarchy (Scorecard, Perspectives,
+     * Story-card detail for a single SubKPI, mirroring {@link #kpiStoryCard} so the
+     * same
+     * /storycard endpoint and Data Table work when a SubKPI row is clicked. Reads
+     * the
+     * SubKPI's own monthly history from sc_sub_kpi_history. Returns null when the
+     * id is
+     * not a SubKPI (so the caller can fall through to its KPI-not-found response).
+     */
+    @Transactional(readOnly = true)
+    public Map<String, Object> subKpiStoryCard(Long subKpiId, String dateRange) {
+        List<Map<String, Object>> subRows = jdbc.queryForList(
+                "SELECT sk.id, sk.name, sk.code, sk.polarity, sk.target_value, sk.weight, "
+                        + "sk.data_type, sk.achievement_cap, "
+                        + "k.name AS kpi_name, k.currency_code, k.measurement_frequency, k.classification_type, "
+                        + "o.name AS objective_name, p.name AS perspective_name "
+                        + "FROM sc_sub_kpis sk "
+                        + "LEFT JOIN sc_kpis k ON sk.kpi_id = k.id "
+                        + "LEFT JOIN sc_objectives o ON k.objective_id = o.id "
+                        + "LEFT JOIN sc_perspectives p ON o.perspective_id = p.id "
+                        + "WHERE sk.id = ?",
+                subKpiId);
+        if (subRows.isEmpty()) {
+            return null;
+        }
+        Map<String, Object> sk = subRows.get(0);
+        String dataType = str(sk.get("data_type"));
+        String currency = str(sk.get("currency_code"));
+        BigDecimal subTarget = dec(sk.get("target_value"));
+
+        Map<String, Object> value = new LinkedHashMap<>();
+        value.put("name", str(sk.get("name")));
+        value.put("target", formatValue(subTarget, dataType, currency));
+        value.put("kpi_measurement", str(sk.get("measurement_frequency")));
+        value.put("dataType", dataType);
+        value.put("currency", currency);
+        value.put("threshold", str(sk.get("classification_type")));
+        value.put("polarity", str(sk.get("polarity")));
+        value.put("weight", str(sk.get("weight")));
+        value.put("description", "");
+        value.put("alignedPerspective", str(sk.get("perspective_name")));
+        value.put("alignmentObjectives", str(sk.get("objective_name")));
+
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("id", num(sk.get("id")));
+        dto.put("kpiId", str(sk.get("code")));
+        dto.put("kpiName", str(sk.get("name")));
+        dto.put("kpiValue", value);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("kpi", dto);
+
+        LocalDate start = parseStart(dateRange);
+        LocalDate end = parseEnd(dateRange);
+        List<Map<String, Object>> hist = jdbc.queryForList(
+                "SELECT period_start, period_end, actual_value, target_value "
+                        + "FROM sc_sub_kpi_history WHERE sub_kpi_id = ? ORDER BY period_end",
+                subKpiId);
+        DateTimeFormatter label = DateTimeFormatter.ofPattern("MMM yyyy");
+        List<Map<String, Object>> series = new ArrayList<>();
+        BigDecimal runningActual = BigDecimal.ZERO;
+        for (Map<String, Object> h : hist) {
+            LocalDate periodEnd = toLocalDate(h.get("period_end"));
+            if (periodEnd != null && (periodEnd.isBefore(start) || periodEnd.isAfter(end))) {
+                continue;
+            }
+            BigDecimal actual = dec(h.get("actual_value"));
+            BigDecimal target = dec(h.get("target_value"));
+            if (target == null) {
+                target = subTarget;
+            }
+            BigDecimal gap = (actual != null && target != null) ? actual.subtract(target) : null;
+            if (actual != null) {
+                runningActual = runningActual.add(actual);
+            }
+            Map<String, Object> point = new LinkedHashMap<>();
+            point.put("period", periodEnd != null ? periodEnd.format(label) : str(h.get("period_end")));
+            point.put("actual", actual);
+            point.put("target", target);
+            point.put("gap", gap);
+            point.put("ytd", runningActual);
+            point.put("baseline", null);
+            point.put("currency", currency);
+            point.put("measureName", str(sk.get("name")));
+            series.add(point);
+        }
+        result.put("series", series);
+        return result;
+    }
+
+    /**
+     * Retrieves all active elements in the scorecard hierarchy (Scorecard,
+     * Perspectives,
      * Objectives, KPIs, Sub-KPIs) formatted for the formula calculators.
-     * 
+     *
      * Applies hierarchical filtering:
      * - SCORECARD: returns its Perspectives
      * - PERSPECTIVE: returns its Objectives
@@ -660,9 +827,12 @@ public class ScorecardCalculationService {
      * - SUBKPI: returns nothing
      */
     @Transactional(readOnly = true)
-    // Builds one measure-list row. measureKey carries the element's UNIQUE code (falling
-    // back to the display name when a code is absent) so formulas can address elements that
-    // share the same display name — e.g. several KPIs all called "Planning Cycle Duration".
+    // Builds one measure-list row. measureKey carries the element's UNIQUE code
+    // (falling
+    // back to the display name when a code is absent) so formulas can address
+    // elements that
+    // share the same display name — e.g. several KPIs all called "Planning Cycle
+    // Duration".
     private Map<String, Object> nk(Object name, Object code, String measureType, String elementType) {
         Map<String, Object> m = new java.util.HashMap<>();
         String n = str(name);
@@ -674,9 +844,11 @@ public class ScorecardCalculationService {
         return m;
     }
 
-    public List<Map<String, Object>> retrieveNodeKeyList(Long pageId, String dateRange, String nodeType, String nodeId) {
+    public List<Map<String, Object>> retrieveNodeKeyList(Long pageId, String dateRange, String nodeType,
+            String nodeId) {
         List<Map<String, Object>> result = new ArrayList<>();
-        // No date-range filter for the definition itself, as the UI needs to see all variables
+        // No date-range filter for the definition itself, as the UI needs to see all
+        // variables
         // that are active for this scorecard.
 
         List<Map<String, Object>> scRows = jdbc.queryForList(
@@ -690,14 +862,16 @@ public class ScorecardCalculationService {
 
         if ("SCORECARD".equalsIgnoreCase(nodeType)) {
             List<Map<String, Object>> perspectives = jdbc.queryForList(
-                    "SELECT id, name, code FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
+                    "SELECT id, name, code FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true",
+                    scorecardId);
             for (Map<String, Object> p : perspectives) {
                 result.add(nk(p.get("name"), p.get("code"), "0", "PERSPECTIVE"));
             }
         } else if ("PERSPECTIVE".equalsIgnoreCase(nodeType)) {
             if (nodeId != null && !nodeId.trim().isEmpty()) {
                 List<Map<String, Object>> objectives = jdbc.queryForList(
-                        "SELECT id, name, code FROM sc_objectives WHERE perspective_id = ? AND is_active = true", Long.parseLong(nodeId));
+                        "SELECT id, name, code FROM sc_objectives WHERE perspective_id = ? AND is_active = true",
+                        Long.parseLong(nodeId));
                 for (Map<String, Object> o : objectives) {
                     result.add(nk(o.get("name"), o.get("code"), "0", "OBJECTIVE"));
                 }
@@ -706,7 +880,8 @@ public class ScorecardCalculationService {
                         "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
                 if (!perspectives.isEmpty()) {
                     List<Map<String, Object>> objectives = queryIn(
-                            "SELECT id, name, code FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true", ids(perspectives));
+                            "SELECT id, name, code FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true",
+                            ids(perspectives));
                     for (Map<String, Object> o : objectives) {
                         result.add(nk(o.get("name"), o.get("code"), "0", "OBJECTIVE"));
                     }
@@ -714,16 +889,19 @@ public class ScorecardCalculationService {
             }
         } else if ("OBJECTIVE".equalsIgnoreCase(nodeType)) {
             if (nodeId != null && !nodeId.trim().isEmpty()) {
-                // Objective calculator: that objective's KPIs (measure) + those KPIs' sub-KPIs (sub measure).
+                // Objective calculator: that objective's KPIs (measure) + those KPIs' sub-KPIs
+                // (sub measure).
                 List<Map<String, Object>> kpis = jdbc.queryForList(
-                        "SELECT id, name, code FROM sc_kpis WHERE objective_id = ? AND is_deleted = false", Long.parseLong(nodeId));
+                        "SELECT id, name, code FROM sc_kpis WHERE objective_id = ? AND is_deleted = false",
+                        Long.parseLong(nodeId));
                 for (Map<String, Object> k : kpis) {
                     result.add(nk(k.get("name"), k.get("code"), "0", "KPI"));
                 }
                 List<Long> objKpiIds = ids(kpis);
                 if (!objKpiIds.isEmpty()) {
                     List<Map<String, Object>> subKpis = queryIn(
-                            "SELECT id, name, code FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = false", objKpiIds);
+                            "SELECT id, name, code FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = false",
+                            objKpiIds);
                     for (Map<String, Object> sk : subKpis) {
                         result.add(nk(sk.get("name"), sk.get("code"), "1", "SUBKPI"));
                     }
@@ -733,10 +911,12 @@ public class ScorecardCalculationService {
                         "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
                 if (!perspectives.isEmpty()) {
                     List<Map<String, Object>> objectives = queryIn(
-                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true", ids(perspectives));
+                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true",
+                            ids(perspectives));
                     if (!objectives.isEmpty()) {
                         List<Map<String, Object>> kpis = queryIn(
-                                "SELECT id, name, code FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = false", ids(objectives));
+                                "SELECT id, name, code FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = false",
+                                ids(objectives));
                         for (Map<String, Object> k : kpis) {
                             result.add(nk(k.get("name"), k.get("code"), "0", "KPI"));
                         }
@@ -746,23 +926,28 @@ public class ScorecardCalculationService {
         } else if ("KPI".equalsIgnoreCase(nodeType)) {
             if (nodeId != null && !nodeId.trim().isEmpty()) {
                 List<Map<String, Object>> subKpis = jdbc.queryForList(
-                        "SELECT id, name, code FROM sc_sub_kpis WHERE kpi_id = ? AND is_deleted = false", Long.parseLong(nodeId));
+                        "SELECT id, name, code FROM sc_sub_kpis WHERE kpi_id = ? AND is_deleted = false",
+                        Long.parseLong(nodeId));
                 for (Map<String, Object> sk : subKpis) {
                     result.add(nk(sk.get("name"), sk.get("code"), "1", "SUBKPI"));
                 }
             } else {
-                // For KPI, normally handled by full fallback, but if called explicitly, return all SubKPIs in scorecard
+                // For KPI, normally handled by full fallback, but if called explicitly, return
+                // all SubKPIs in scorecard
                 List<Map<String, Object>> perspectives = jdbc.queryForList(
                         "SELECT id FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
                 if (!perspectives.isEmpty()) {
                     List<Map<String, Object>> objectives = queryIn(
-                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true", ids(perspectives));
+                            "SELECT id FROM sc_objectives WHERE perspective_id IN (%s) AND is_active = true",
+                            ids(perspectives));
                     if (!objectives.isEmpty()) {
                         List<Map<String, Object>> kpis = queryIn(
-                                "SELECT id FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = false", ids(objectives));
+                                "SELECT id FROM sc_kpis WHERE objective_id IN (%s) AND is_deleted = false",
+                                ids(objectives));
                         if (!kpis.isEmpty()) {
                             List<Map<String, Object>> subKpis = queryIn(
-                                    "SELECT id, name, code FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = false", ids(kpis));
+                                    "SELECT id, name, code FROM sc_sub_kpis WHERE kpi_id IN (%s) AND is_deleted = false",
+                                    ids(kpis));
                             for (Map<String, Object> sk : subKpis) {
                                 result.add(nk(sk.get("name"), sk.get("code"), "1", "SUBKPI"));
                             }
@@ -775,7 +960,8 @@ public class ScorecardCalculationService {
         } else {
             // Fallback: return everything (e.g. for legacy testing)
             List<Map<String, Object>> perspectives = jdbc.queryForList(
-                    "SELECT id, name, code FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true", scorecardId);
+                    "SELECT id, name, code FROM sc_perspectives WHERE scorecard_id = ? AND is_active = true",
+                    scorecardId);
             List<Long> pIds = ids(perspectives);
 
             List<Map<String, Object>> objectives = queryIn(
@@ -845,7 +1031,10 @@ public class ScorecardCalculationService {
         return null;
     }
 
-    /** Parse a JSON-ish array of numbers ("[50,80,100]") into ascending band cutoffs. */
+    /**
+     * Parse a JSON-ish array of numbers ("[50,80,100]") into ascending band
+     * cutoffs.
+     */
     private static List<BigDecimal> parseBands(String json) {
         List<BigDecimal> bands = new ArrayList<>();
         if (json == null || json.isBlank()) {
@@ -926,10 +1115,10 @@ public class ScorecardCalculationService {
     }
 
     private LocalDate parseDate(String s, LocalDate fallback) {
-        for (DateTimeFormatter fmt : new DateTimeFormatter[]{
+        for (DateTimeFormatter fmt : new DateTimeFormatter[] {
                 DateTimeFormatter.ofPattern("MM/dd/yyyy"),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-                DateTimeFormatter.ofPattern("MMM d, yyyy")}) {
+                DateTimeFormatter.ofPattern("MMM d, yyyy") }) {
             try {
                 return LocalDate.parse(s, fmt);
             } catch (Exception ignored) {
@@ -940,35 +1129,45 @@ public class ScorecardCalculationService {
     }
 
     private BigDecimal evaluateFormula(String formula, List<Map<String, Object>> childDtos) {
-        if (formula == null || formula.trim().isEmpty()) return null;
+        if (formula == null || formula.trim().isEmpty())
+            return null;
         String evalStr = formula;
 
         // Replace each child's TOKEN with its score. We match on the unique code first
-        // (so KPIs sharing the same display name are still addressable), then fall back to
+        // (so KPIs sharing the same display name are still addressable), then fall back
+        // to
         // the display name (legacy formulas built before codes were used). Tokens are
-        // replaced longest-first so a shorter code/name can't clobber a longer one, and the
-        // brackets are converted to parentheses afterwards (we no longer strip "[token]",
+        // replaced longest-first so a shorter code/name can't clobber a longer one, and
+        // the
+        // brackets are converted to parentheses afterwards (we no longer strip
+        // "[token]",
         // which previously broke single-argument calls like avg[KPI]).
         java.util.List<String[]> tokenScores = new ArrayList<>(); // [token, score]
         for (Map<String, Object> child : childDtos) {
             BigDecimal score = (BigDecimal) child.get("score");
-            if (score == null) score = BigDecimal.ZERO;
+            if (score == null)
+                score = BigDecimal.ZERO;
             String sc = score.toPlainString();
             String code = getCodeFromChild(child);
             String name = getNameFromChild(child);
             // Use the code only when it is a real (alphanumeric) code. Code-less elements
-            // (perspectives/objectives) fall back to a numeric id which the UI never inserts
+            // (perspectives/objectives) fall back to a numeric id which the UI never
+            // inserts
             // and which, as a short digit string, could corrupt score numbers during
-            // substitution (e.g. id "58" inside score "158"); skip those — the name matches.
-            if (code != null && !code.isBlank() && !code.matches("\\d+")) tokenScores.add(new String[]{code, sc});
-            if (name != null && !name.isBlank()) tokenScores.add(new String[]{name, sc});
+            // substitution (e.g. id "58" inside score "158"); skip those — the name
+            // matches.
+            if (code != null && !code.isBlank() && !code.matches("\\d+"))
+                tokenScores.add(new String[] { code, sc });
+            if (name != null && !name.isBlank())
+                tokenScores.add(new String[] { name, sc });
         }
         tokenScores.sort((a, b) -> Integer.compare(b[0].length(), a[0].length()));
         for (String[] ts : tokenScores) {
             evalStr = evalStr.replace(ts[0], ts[1]);
         }
 
-        // Replace list brackets with parentheses for EvalEx functions e.g. avg[10, 20] -> avg(10, 20)
+        // Replace list brackets with parentheses for EvalEx functions e.g. avg[10, 20]
+        // -> avg(10, 20)
         evalStr = evalStr.replace("[", "(").replace("]", ")");
 
         try {
@@ -980,13 +1179,19 @@ public class ScorecardCalculationService {
         }
     }
 
-    // Unique identifier for a child DTO (perspective/objective/KPI/sub-KPI). The build*
-    // methods store the element's code (falling back to its numeric id) under these keys.
+    // Unique identifier for a child DTO (perspective/objective/KPI/sub-KPI). The
+    // build*
+    // methods store the element's code (falling back to its numeric id) under these
+    // keys.
     private String getCodeFromChild(Map<String, Object> child) {
-        if (child.containsKey("kpiId")) return str(child.get("kpiId"));
-        if (child.containsKey("objectiveId")) return str(child.get("objectiveId"));
-        if (child.containsKey("subKpiId")) return str(child.get("subKpiId"));
-        if (child.containsKey("code")) return str(child.get("code"));
+        if (child.containsKey("kpiId"))
+            return str(child.get("kpiId"));
+        if (child.containsKey("objectiveId"))
+            return str(child.get("objectiveId"));
+        if (child.containsKey("subKpiId"))
+            return str(child.get("subKpiId"));
+        if (child.containsKey("code"))
+            return str(child.get("code"));
         return null;
     }
 
@@ -999,11 +1204,11 @@ public class ScorecardCalculationService {
 
     private String getNameFromChild(Map<String, Object> child) {
         if (child.containsKey("objectivesValue")) {
-            return str(((Map<?,?>)child.get("objectivesValue")).get("name"));
+            return str(((Map<?, ?>) child.get("objectivesValue")).get("name"));
         } else if (child.containsKey("kpiValue")) {
-            return str(((Map<?,?>)child.get("kpiValue")).get("name"));
+            return str(((Map<?, ?>) child.get("kpiValue")).get("name"));
         } else if (child.containsKey("scoreCardValue")) {
-            return str(((Map<?,?>)child.get("scoreCardValue")).get("name"));
+            return str(((Map<?, ?>) child.get("scoreCardValue")).get("name"));
         } else {
             return str(child.get("name"));
         }

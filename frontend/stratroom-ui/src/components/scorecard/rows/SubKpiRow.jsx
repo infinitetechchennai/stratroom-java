@@ -10,7 +10,7 @@ export const SubKpiRow = ({ item, parentId, index, level = 2, isVisible = true }
     const [isExpanded, setIsExpanded] = useState(false);
     const rowId = `${parentId}-child-${index + 1}`;
     const { settings } = useScorecardSettings();
-    
+
     const s = settings || {};
     const showActual = s.scorecardactual !== 'false';
     const showTarget = s.scorecardtarget !== 'false';
@@ -63,8 +63,8 @@ export const SubKpiRow = ({ item, parentId, index, level = 2, isVisible = true }
                 <td width="30">
                     <div className="d-flex justify-content-end gap-2">
                         {hasChildren && (
-                            <span 
-                                className="icon toggle-icon" 
+                            <span
+                                className="icon toggle-icon"
                                 ref={toggleRef}
                                 data-target={`${rowId}-child`}
                                 onClick={(e) => {
@@ -81,7 +81,7 @@ export const SubKpiRow = ({ item, parentId, index, level = 2, isVisible = true }
                 </td>
                 <td width="80">{item.id}</td>
                 <td>
-                    <Link className="text-decoration-none" to={`/kpi-story-card/${item.kpiPk ?? item.id}`}>{item.name}</Link>
+                    <Link className="text-decoration-none" to={`/kpi-story-card/${item.pk ?? item.id}`}>{item.name}</Link>
                 </td>
                 <td width="50" className="text-center">{item.period}</td>
                 <td width="50" className="text-center">{item.score}</td>

@@ -1,0 +1,30 @@
+# =============================================================================
+# TEMPLATE for local dev config. COMMITTED to git (safe — no real secrets).
+#
+#   Setup:  copy this file to  application-local.properties  and fill in values.
+#           cp application-local.properties.example application-local.properties
+#
+# application-local.properties is gitignored and auto-loads under the default
+# 'local' profile, so `mvn spring-boot:run` works with no env vars.
+# =============================================================================
+
+# ----- Local database -----
+spring.datasource.url=jdbc:postgresql://localhost:5432/clean?currentSchema=orgstructure
+spring.datasource.username=postgres
+spring.datasource.password=CHANGE_ME_LOCAL_DB_PASSWORD
+
+spring.r2dbc.url=r2dbc:postgresql://localhost:5432/clean?schema=orgstructure
+spring.r2dbc.username=postgres
+spring.r2dbc.password=CHANGE_ME_LOCAL_DB_PASSWORD
+
+# ----- Dev-only secrets -----
+jwt.secret=local-dev-secret-change-in-prod
+auth.jasypt.password=local-dev-jasypt-password
+admin.password=admin123
+
+# =============================================================================
+# SERVER / PROD (do NOT use this file): set the 'prod' profile + env vars instead.
+#   SPRING_PROFILES_ACTIVE=prod
+#   DB_HOST=localhost   DB_PORT=5432   DB_NAME=clean   DB_USERNAME=postgres
+#   DB_PASSWORD=<real>  JWT_SECRET=<real>  JASYPT_PASSWORD=<real>  ADMIN_PASSWORD=<real>
+# =============================================================================

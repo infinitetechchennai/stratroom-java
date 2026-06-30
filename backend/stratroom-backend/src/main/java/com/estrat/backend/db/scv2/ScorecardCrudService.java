@@ -3,7 +3,6 @@ package com.estrat.backend.db.scv2;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -61,6 +60,14 @@ public class ScorecardCrudService {
         try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
         // Add target_value to sub_kpi_history so values-file imports can store targets per period
         try { jdbc.execute("ALTER TABLE sc_sub_kpi_history ADD COLUMN target_value NUMERIC"); } catch (Exception ignore) {}
+    }
+
+    /** Ensures sc_sub_kpi_history has target_value column + unique index for ON CONFLICT upserts. */
+    private void ensureSubKpiHistorySchema() {
+        try { jdbc.execute("ALTER TABLE sc_sub_kpi_history ADD COLUMN IF NOT EXISTS target_value NUMERIC"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_kpi_history ADD COLUMN IF NOT EXISTS target_value NUMERIC"); } catch (Exception ignore) {}
+        try { jdbc.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_sc_subkpihist ON sc_sub_kpi_history (sub_kpi_id, period_start, period_end)"); } catch (Exception ignore) {}
+        try { jdbc.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_sc_kpihist ON sc_kpi_history (kpi_id, period_start, period_end)"); } catch (Exception ignore) {}
     }
 
     // ---------------- SCORECARD ----------------
@@ -448,6 +455,10 @@ public class ScorecardCrudService {
     public Map<String, Object> importActuals(Long pageId, String dateRange, List<Map<String, Object>> rows) {
         Map<String, Object> result = new HashMap<>();
         int kpiUpdated = 0, subKpiUpdated = 0, skipped = 0, unmatched = 0;
+
+        // Ensure schema is ready — idempotent, safe to run every time
+        ensureSubKpiHistorySchema();
+
         if (rows == null || rows.isEmpty()) {
             result.put("updated", 0); result.put("skipped", 0); result.put("unmatched", 0);
             return result;
@@ -499,9 +510,58 @@ public class ScorecardCrudService {
             String subKpiCode = firstNonBlank(row, "SubKPI ID", "Sub KPI ID", "SUBKPIID", "subKpiId");
             if (subKpiCode != null && !subKpiCode.isBlank()) {
                 Long subKpiId = subKpiCodeToId.get(subKpiCode.trim());
+
+                // Auto-create the SubKPI if it doesn't exist yet — the values file may define
+                // SubKPIs (Sub-K2, Sub-K3...) that weren't in the structure file.
                 if (subKpiId == null) {
-                    unmatched++; continue;
+                    String kpiCode = firstNonBlank(row, "KPI ID", "KPIID", "Kpi ID");
+                    Long kpiId = kpiCode != null ? kpiCodeToId.get(kpiCode.trim()) : null;
+                    if (kpiId == null) {
+                        // Try global lookup if not on this page
+                        if (kpiCode != null) {
+                            List<Map<String, Object>> kpiRows = jdbc.queryForList(
+                                "SELECT id FROM sc_kpis WHERE code = ? AND is_deleted = false LIMIT 1", kpiCode.trim());
+                            if (!kpiRows.isEmpty()) kpiId = ((Number) kpiRows.get(0).get("id")).longValue();
+                        }
+                    }
+                    if (kpiId != null) {
+                        String skName = firstNonBlank(row, "SubKPI Name", "SubKPI  NAME", "SubKPI NAME", "Sub KPI Name");
+                        String skFreq = firstNonBlank(row, "Frequency", "frequency");
+                        String skDtRaw = firstNonBlank(row, "Data Type", "DataType");
+                        String skDt = skDtRaw != null ? skDtRaw.toUpperCase().replace("PERCENTAGE", "PERCENTAGE")
+                                                                              .replace("NUMBER", "NUMBER")
+                                                                              .replace("TEXT", "TEXT") : "NUMBER";
+                        // Insert new SubKPI
+                        KeyHolder kh = new GeneratedKeyHolder();
+                        final long fKpiId = kpiId;
+                        final String fCode = subKpiCode.trim();
+                        final String fName = (skName != null && !skName.isBlank()) ? skName : subKpiCode.trim();
+                        final String fDt   = skDt;
+                        jdbc.update(con -> {
+                            // Ask only for the "id" column. With Statement.RETURN_GENERATED_KEYS,
+                            // PostgreSQL returns every column of the new row, which makes
+                            // KeyHolder.getKey() throw ("multiple keys") and 500s the whole import.
+                            PreparedStatement ps = con.prepareStatement(
+                                "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
+                                + "null_handling, achievement_cap, display_order) "
+                                + "VALUES (?,?,?,0,'HIGHER',0,?,'EXCLUDE',150,1)",
+                                new String[]{"id"});
+                            ps.setLong(1, fKpiId);
+                            ps.setString(2, fCode);
+                            ps.setString(3, fName);
+                            ps.setString(4, fDt);
+                            return ps;
+                        }, kh);
+                        Number generatedId = kh.getKey();
+                        if (generatedId != null) {
+                            subKpiId = generatedId.longValue();
+                            subKpiCodeToId.put(subKpiCode.trim(), subKpiId);
+                            System.out.println("[SubKPI Auto-Create] code='" + subKpiCode + "' id=" + subKpiId + " kpi_id=" + kpiId);
+                        }
+                    }
                 }
+
+                if (subKpiId == null) { unmatched++; continue; }
                 jdbc.update(
                     "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value, target_value) "
                     + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
@@ -556,6 +616,9 @@ public class ScorecardCrudService {
     public Map<String, Object> importValuesFile(List<Map<String, Object>> rows) {
         int kpiUpdated = 0, subKpiUpdated = 0, unmatched = 0, skipped = 0;
 
+        // Ensure schema is ready — idempotent, safe to run every time
+        ensureSubKpiHistorySchema();
+
         // Build code->id maps by scanning the whole database once (all KPIs + SubKPIs)
         Map<String, Long> kpiCodeToId = new HashMap<>();
         jdbc.queryForList("SELECT id, code FROM sc_kpis WHERE code IS NOT NULL AND is_deleted = false")
@@ -586,12 +649,52 @@ public class ScorecardCrudService {
             if (periodStart == null) { skipped++; continue; }
             String periodEnd = calcPeriodEnd(periodStart, frequency);
 
-            // ---- SubKPI history ----
+            // ---- SubKPI history (auto-create if missing) ----
             if (subKpiCode != null && !subKpiCode.isBlank()) {
                 Long subKpiId = subKpiCodeToId.get(subKpiCode.trim());
+
                 if (subKpiId == null) {
-                    unmatched++;
-                } else {
+                    // SubKPI not in DB — auto-create it under the parent KPI
+                    Long kpiId = kpiCode != null ? kpiCodeToId.get(kpiCode.trim()) : null;
+                    if (kpiId == null && kpiCode != null) {
+                        List<Map<String, Object>> kpiRows = jdbc.queryForList(
+                            "SELECT id FROM sc_kpis WHERE code = ? AND is_deleted = false LIMIT 1", kpiCode.trim());
+                        if (!kpiRows.isEmpty()) kpiId = ((Number) kpiRows.get(0).get("id")).longValue();
+                    }
+                    if (kpiId != null) {
+                        String skName = firstNonBlank(row, "SubKPI Name", "SubKPI  NAME", "SubKPI NAME", "Sub KPI Name");
+                        String skDtRaw = firstNonBlank(row, "Data Type", "DataType");
+                        String skDt = skDtRaw != null ? skDtRaw.toUpperCase() : "NUMBER";
+                        final long fKpiId = kpiId;
+                        final String fCode = subKpiCode.trim();
+                        final String fName = (skName != null && !skName.isBlank()) ? skName : subKpiCode.trim();
+                        final String fDt = skDt;
+                        KeyHolder kh = new GeneratedKeyHolder();
+                        jdbc.update(con -> {
+                            // Ask only for the "id" column. With Statement.RETURN_GENERATED_KEYS,
+                            // PostgreSQL returns every column of the new row, which makes
+                            // KeyHolder.getKey() throw ("multiple keys") and 500s the whole import.
+                            PreparedStatement ps = con.prepareStatement(
+                                "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
+                                + "null_handling, achievement_cap, display_order) "
+                                + "VALUES (?,?,?,0,'HIGHER',0,?,'EXCLUDE',150,1)",
+                                new String[]{"id"});
+                            ps.setLong(1, fKpiId);
+                            ps.setString(2, fCode);
+                            ps.setString(3, fName);
+                            ps.setString(4, fDt);
+                            return ps;
+                        }, kh);
+                        Number generatedId = kh.getKey();
+                        if (generatedId != null) {
+                            subKpiId = generatedId.longValue();
+                            subKpiCodeToId.put(subKpiCode.trim(), subKpiId);
+                            System.out.println("[SubKPI Auto-Create] code='" + subKpiCode + "' id=" + subKpiId + " kpi_id=" + kpiId);
+                        }
+                    }
+                }
+
+                if (subKpiId != null) {
                     jdbc.update(
                         "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value, target_value) "
                         + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
@@ -601,6 +704,8 @@ public class ScorecardCrudService {
                         + "calculated_at = NOW()",
                         subKpiId, periodStart, periodEnd, actual, target);
                     subKpiUpdated++;
+                } else {
+                    unmatched++;
                 }
             }
 
@@ -787,12 +892,30 @@ public class ScorecardCrudService {
     }
 
     private static LocalDate parseOne(String s, LocalDate fallback) {
+        if (s == null || s.isBlank()) return fallback;
+
+        // Excel serial date number (e.g., 45923 → date). XLSX.js sends these as numbers.
+        try {
+            double serial = Double.parseDouble(s.trim());
+            if (serial > 1000 && serial < 100000) { // sanity check: valid Excel serial range
+                // Excel epoch is 1899-12-30 (with a leap year bug)
+                return LocalDate.of(1899, 12, 30).plusDays((long) serial);
+            }
+        } catch (NumberFormatException ignore) { /* not a number */ }
+
+        // Truncate ISO timestamp to date part: "2026-01-01T00:00:00.000Z" → "2026-01-01"
+        String clean = s.contains("T") ? s.substring(0, s.indexOf('T')) : s.trim();
+
         for (DateTimeFormatter f : new DateTimeFormatter[]{
-                DateTimeFormatter.ofPattern("MM/dd/yyyy"),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-                DateTimeFormatter.ofPattern("MMM d, yyyy", java.util.Locale.ENGLISH)}) {
+                DateTimeFormatter.ofPattern("MM/dd/yyyy"),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("yyyy/MM/dd"),
+                DateTimeFormatter.ofPattern("MMM d, yyyy", java.util.Locale.ENGLISH),
+                DateTimeFormatter.ofPattern("d MMM yyyy", java.util.Locale.ENGLISH)}) {
             try {
-                return LocalDate.parse(s, f);
+                return LocalDate.parse(clean, f);
             } catch (Exception ignore) {
                 // try next
             }

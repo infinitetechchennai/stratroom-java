@@ -148,7 +148,7 @@ export default function LandingPage() {
             )}
 
             <div className="row">
-              <div className="col-12 col-lg-9">
+              <div className="col-12">
                 <div className="card card-priorities custom-card bg-transparent shadow-none">
                   <div className="card-header bg-transparent border-0 px-0">
                     <h5 className="card-title text-white">My Priorities</h5>
@@ -306,7 +306,7 @@ function InitiativesSection({ loading, initiatives }) {
       {loading ? (
         <LoadingRow />
       ) : (
-        <div className="row g-3">
+        <div className="d-flex gap-3 flex-wrap">
           {initiatives.map((item) => (
             <InitiativeCard key={item.id} item={item} />
           ))}
@@ -324,7 +324,7 @@ function InitiativeCard({ item }) {
   const badgeText = val.categoryType || 'N/A'
 
   return (
-    <div className="col-md-3">
+    <div style={{ width: '250px' }}>
       <div className="card shadow-sm h-100">
         <div className="card-body p-2 d-flex flex-column">
           <div className="d-flex justify-content-between mb-2">
@@ -364,7 +364,7 @@ function RisksSection({ loading, risks }) {
       {loading ? (
         <LoadingRow />
       ) : (
-        <div className="row g-3">
+        <div className="d-flex gap-3 flex-wrap">
           {risks.map((risk) => (
             <RiskCard key={risk.id} risk={risk} />
           ))}
@@ -382,7 +382,7 @@ function RiskCard({ risk }) {
   const dotClass = getRiskDotClass(val.riskStatus)
 
   return (
-    <div className="col-md-3">
+    <div style={{ width: '250px' }}>
       <div className="card shadow-sm h-100">
         <div className="card-body p-2 d-flex flex-column">
           <div className="d-flex justify-content-between mb-2">
@@ -412,7 +412,7 @@ function KpisSection({ loading, kpis }) {
       {loading ? (
         <LoadingRow />
       ) : (
-        <div className="row g-3">
+        <div className="d-flex gap-3 flex-wrap">
           {kpis.map((kpi) => (
             <KpiCard key={kpi.id} kpi={kpi} />
           ))}
@@ -427,7 +427,7 @@ function KpiCard({ kpi }) {
   const trendIcon = getTrendIconClass(kpi.trend)
 
   return (
-    <div className="col-md-3">
+    <div style={{ width: '250px' }}>
       <div className="card shadow-sm h-100">
         <div className="card-body p-2 d-flex flex-column">
           <div className="d-flex justify-content-between mb-2">
