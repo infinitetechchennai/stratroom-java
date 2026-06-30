@@ -17,10 +17,29 @@
 
     <dependencies>
 
-        <!-- ===== Core Web ===== -->
+        <!-- ===== Core Web (Project Reactor / WebFlux) ===== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+        </dependency>
+
+        <!-- Servlet API bridge for legacy HttpServletRequest controller signatures -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
+        <!-- spring-webmvc types only (interceptors in legacy packages); runtime is WebFlux/Netty -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
         </dependency>
 
         <!-- ===== Security (from authservice) ===== -->
@@ -41,6 +60,16 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Reactive DB driver (Phase 3+ entity migration; JDBC/JPA kept during bridge) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>r2dbc-postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -203,7 +232,13 @@
             <version>2.2.21</version>
         </dependency>
 
-        <!-- ===== AOP (from stratroom-web) ===== -->
+        <!-- ===== AOP (reactive controller bridge) ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- ===== AspectJ weaver (legacy log4j bridge classes) ===== -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
@@ -216,10 +251,10 @@
             <version>1.5</version>
         </dependency>
 
-        <!-- ===== OpenAPI / Swagger ===== -->
+        <!-- ===== OpenAPI / Swagger (WebFlux) ===== -->
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
             <version>2.6.0</version>
         </dependency>
 

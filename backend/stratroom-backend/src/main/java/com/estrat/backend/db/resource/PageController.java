@@ -52,6 +52,7 @@ import com.estrat.backend.db.service.EmployeeService;
 import com.estrat.backend.db.service.OrgTrackerService;
 import com.estrat.backend.db.service.PageService;
 import com.estrat.backend.db.service.ScoreCardDetailsService;
+import com.estrat.backend.reactive.UserThreadLocalHelper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,6 +75,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @RestController
 public class PageController {
@@ -93,6 +97,23 @@ public class PageController {
     protected EmployeeService employeeService;
     @Autowired
     protected com.estrat.backend.db.repository.DepartmentChartMappingRepository departmentChartMappingRepository;
+
+    /**
+     * Runs blocking work on a worker thread with the request's identity headers restored into
+     * {@link UserThreadLocal}. The ReactiveContextWebFilter only populates the thread-local on the
+     * request thread, so blocking controllers that read {@code UserThreadLocal.get()} must re-bind
+     * it on their execution thread (otherwise the value is null -> NumberFormatException).
+     */
+    private <T> Mono<T> withRequestContext(ServerWebExchange exchange, java.util.concurrent.Callable<T> work) {
+        return Mono.fromCallable(() -> {
+            UserThreadLocalHelper.populateFromExchange(exchange);
+            try {
+                return work.call();
+            } finally {
+                UserThreadLocalHelper.clear();
+            }
+        }).subscribeOn(Schedulers.boundedElastic());
+    }
 
     @PostMapping(value={"/pages"})
     public ResponseEntity<ScoreCardResponseDTO> savePageDetails(@RequestBody PageDTO pageDTO) throws RequestException {
@@ -192,14 +213,13 @@ public class PageController {
             List<Long> departmentlist = new ArrayList<>();
             com.estrat.backend.db.bean.Employee empCheck = new com.estrat.backend.db.bean.Employee();
             empCheck.setEmpId(empId);
-            
+
             boolean isAdmin = this.employeeService.checkRole(empCheck);
             List<Long> personalDeptList = new ArrayList<>(this.departmentDetailsService.getDeptList(empId));
             EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
             if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
                 personalDeptList.add(empProfilepo.getDeptId().getId());
             }
-
             if (isAdmin) {
                 System.out.println("User IS an admin! Fetching all departments.");
                 departmentlist = this.departmentChartMappingRepository.getAllDepartmentByOrgId(orgId, 0);
@@ -207,7 +227,7 @@ public class PageController {
                 System.out.println("User is NOT an admin. Fetching assigned departments only.");
                 departmentlist = new ArrayList<>(personalDeptList);
             }
-            
+
             System.out.println("Final department list size: " + (departmentlist != null ? departmentlist.size() : 0));
             if (CollectionUtils.isNotEmpty((Collection)(pageDTOS = this.pageService.findAllByDept(departmentlist)))) {
                 if (isAdmin) {
@@ -215,10 +235,10 @@ public class PageController {
                         .filter(Objects::nonNull)
                         .map(n -> ((Number)n).longValue())
                         .collect(Collectors.toList());
-                    
+
                     System.out.println("Filtering pages for admin. personalDeptIdsAsLongs: " + personalDeptIdsAsLongs);
                     pageDTOS = pageDTOS.stream().filter(page -> {
-                        boolean isScorecard = "Standard_View".equalsIgnoreCase(page.getPageType()) || "Scorecardview".equalsIgnoreCase(page.getPageType());
+                        boolean isScorecard = isScorecardPage(page);
                         if (isScorecard) {
                             if (page.getDeptId() != null) {
                                 return personalDeptIdsAsLongs.contains(page.getDeptId().longValue());
@@ -236,21 +256,20 @@ public class PageController {
                 com.estrat.backend.db.bean.Employee empCheck = new com.estrat.backend.db.bean.Employee();
                 empCheck.setEmpId(empId);
                 boolean isAdmin = this.employeeService.checkRole(empCheck);
-                
+
                 if (isAdmin) {
                     List<Long> personalDeptList = new ArrayList<>(this.departmentDetailsService.getDeptList(empId));
                     EmployeeProfilePo empProfilepo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
                     if (Objects.nonNull(empProfilepo) && Objects.nonNull(empProfilepo.getDeptId())) {
                         personalDeptList.add(empProfilepo.getDeptId().getId());
                     }
-                    
+
                     List<Long> personalDeptIdsAsLongs = personalDeptList.stream()
                         .filter(Objects::nonNull)
                         .map(n -> ((Number)n).longValue())
                         .collect(Collectors.toList());
-
                     pageDTOS = pageDTOS.stream().filter(page -> {
-                        boolean isScorecard = "Standard_View".equalsIgnoreCase(page.getPageType()) || "Scorecardview".equalsIgnoreCase(page.getPageType());
+                        boolean isScorecard = isScorecardPage(page);
                         if (isScorecard) {
                             if (page.getDeptId() != null) {
                                 return personalDeptIdsAsLongs.contains(page.getDeptId().longValue());
@@ -303,8 +322,14 @@ public class PageController {
     }
 
     @GetMapping(value={"/getDefaultPage"})
-    public ResponseEntity<PageDTO> getDefaultPage(@RequestParam(value="pageType") String pageType) {
-        return new ResponseEntity((Object)this.pageService.getDefaultPage(UserThreadLocal.get(), pageType), HttpStatus.OK);
+    public Mono<ResponseEntity<PageDTO>> getDefaultPage(@RequestParam(value="pageType") String pageType, ServerWebExchange exchange) {
+        return this.withRequestContext(exchange, () -> {
+            String empId = UserThreadLocal.get();
+            if (org.apache.commons.lang3.StringUtils.isBlank(empId)) {
+                return new ResponseEntity<PageDTO>((PageDTO) null, HttpStatus.OK);
+            }
+            return new ResponseEntity<PageDTO>(this.pageService.getDefaultPage(empId, pageType), HttpStatus.OK);
+        });
     }
 
     @GetMapping(value={"/emp/checkDetails"})
@@ -389,6 +414,18 @@ public class PageController {
             return new ResponseEntity(pageDTOS, HttpStatus.OK);
         }
         return new ResponseEntity(Collections.emptyList(), HttpStatus.OK);
+    }
+
+    private boolean isScorecardPage(PageDTO page) {
+        String pt = page.getPageType();
+        String gt = page.getGroupType();
+        if (pt != null) {
+            if ("Standard_View".equalsIgnoreCase(pt)) return true;
+            if ("Scorecardview".equalsIgnoreCase(pt)) return true;
+            if ("scorecard".equalsIgnoreCase(pt)) return true;
+            if ("scorecard dashboard".equalsIgnoreCase(pt)) return true;
+        }
+        return gt != null && "measure".equalsIgnoreCase(gt);
     }
 
     public void updateOrgTracker(Long id, Long whoIsID, String status) {

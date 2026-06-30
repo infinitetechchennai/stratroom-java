@@ -172,7 +172,9 @@ public class DepartmentDetailsService {
     public List<DeptDetails> findAllByOrgId(long orgId) {
         List<DepartmentDetails> dbList = null;
         ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(orgId);
-        if (controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
+        if (controlPanelGeneral != null
+                && controlPanelGeneral.getImplementationType() != null
+                && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
             List ids = this.departmentChartMapping.getAllDepartmentByOrgId(Long.valueOf(orgId), 0);
             dbList = this.detailsRepository.findAll(ids);
         } else {
@@ -257,6 +259,9 @@ public class DepartmentDetailsService {
         List<DeptDetails> result = new ArrayList();
         boolean checkstatus = false;
         EmployeeProfilePo employeeProfilePo = this.employeeService.getEmployeeProfile(Long.valueOf(empId));
+        if (employeeProfilePo == null) {
+            return new ArrayList<>();
+        }
         UserDTO userRoleManagement = this.userRoleManagementService.findById(Long.valueOf(employeeProfilePo.getEmpId()));
         if (datePeriod != null && !datePeriod.isEmpty()) {
             DepartmentChartMapping department;
@@ -414,18 +419,36 @@ public class DepartmentDetailsService {
         List<DepartmentDetails> dbList = new ArrayList();
         List<DeptDetails> result = new ArrayList();
         ArrayList deptIdList = new ArrayList();
-        List userDeptMapping = this.userDeptMappingRepository.findAllByIdEmpId(Long.valueOf(UserThreadLocal.get()));
+        String empIdRaw = UserThreadLocal.get();
+        if (empIdRaw == null || empIdRaw.isBlank()) {
+            empIdRaw = UserThreadLocal.get("SUPER_USER_ID");
+        }
+        if (empIdRaw == null || empIdRaw.isBlank()) {
+            return new ArrayList<>();
+        }
+        long empId = Long.parseLong(empIdRaw.trim());
+        List userDeptMapping = this.userDeptMappingRepository.findAllByIdEmpId(Long.valueOf(empId));
         Long departmentId = 0L;
         if (Objects.nonNull(userDeptMapping)) {
-            List departmentMapping = this.departmentOwnerMapping.getOwnerList(Long.valueOf(UserThreadLocal.get()));
+            List departmentMapping = this.departmentOwnerMapping.getOwnerList(Long.valueOf(empId));
             if (Objects.nonNull(departmentMapping) && departmentMapping.size() > 0) {
                 departmentId = ((DeptMultipleOwnersMapping)departmentMapping.get(0)).getDeptId();
             } else {
                 List<EmployeeDepartmentMapping> empDeptMappings = this.employeeDepartmentMapping.findByEmpId(
-                        Long.valueOf(UserThreadLocal.get()).longValue(), "Active");
+                        empId, "Active");
                 if (empDeptMappings != null && !empDeptMappings.isEmpty()) {
                     departmentId = empDeptMappings.get(0).getDeptId();
                 }
+            }
+        }
+        if (departmentId == 0L) {
+            try {
+                EmployeeProfilePo profile = this.employeeService.getEmployeeProfile(empId);
+                if (profile != null && profile.getDeptId() != null) {
+                    departmentId = profile.getDeptId().getId();
+                }
+            } catch (Exception ignored) {
+                // fall through
             }
         }
         List<Long> deptIds = new ArrayList();
@@ -444,6 +467,14 @@ public class DepartmentDetailsService {
                 return dep;
             }).collect(Collectors.toList());
             return result;
+        }
+        try {
+            String orgIdRaw = UserThreadLocal.get("USER_ORG_ID");
+            if (orgIdRaw != null && !orgIdRaw.isBlank()) {
+                return this.findAllByOrgId(Long.parseLong(orgIdRaw.trim()));
+            }
+        } catch (Exception ignored) {
+            // fall through
         }
         return new ArrayList<DeptDetails>();
     }

@@ -315,6 +315,21 @@ public class EmployeeDAO {
         return null;
     }
 
+    public Employee getEmployeeIDByFullName(String firstName, String lastName, long organizationId) {
+        List<EmployeeProfilePo> empList;
+        if (organizationId != 0L) {
+            OrgDetails details = new OrgDetails();
+            details.setId(organizationId);
+            empList = this.employeeProfilePoRepo.findByFirstNameAndLastNameAndStatusAndOrgId(firstName, lastName, "Active", details);
+        } else {
+            empList = this.employeeProfilePoRepo.findByFirstNameAndLastNameAndStatus(firstName, lastName, "Active");
+        }
+        if (!empList.isEmpty()) {
+            return new Employee(empList.get(0));
+        }
+        return null;
+    }
+
     public List<Employee> getEmployeeChildList(Long empId) {
         List<EmployeeProfilePo> poList = this.employeeProfilePoRepo.findAll(empId.longValue(), "Active");
         List<Employee> employees = new ArrayList<>();

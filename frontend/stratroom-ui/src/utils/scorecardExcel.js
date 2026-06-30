@@ -73,19 +73,61 @@ export function exportScorecardToExcel(scorecardData, scorecardName = 'Scorecard
   XLSX.writeFile(wb, `${fname}.xlsx`)
 }
 
-// Parse an uploaded scorecard Excel into [{ kpiId, actual, target }] for import.
-// Only rows with a KPI ID and at least one of Actual/Target changed are returned.
+// Parse an uploaded scorecard Excel into rows for actuals import.
+// Supports the scorecard template (KPI ID + Actual Field + Target Field) and
+// the org ETL file (STRATROOM node key + per-period Actual/Target columns).
 export async function parseScorecardExcel(file) {
   const buf = await file.arrayBuffer()
   const wb = XLSX.read(buf, { type: 'array' })
   const ws = wb.Sheets[wb.SheetNames[0]]
   const rows = XLSX.utils.sheet_to_json(ws, { defval: '' })
-  return rows
-    .filter((r) => String(r['KPI ID'] || '').trim() !== '')
-    .map((r) => ({
-      kpiId: String(r['KPI ID']).trim(),
-      actual: r['Actual Field'],
-      target: r['Target Field'],
-    }))
-    .filter((r) => r.actual !== '' || r.target !== '')
+  const parsed = []
+
+  for (const r of rows) {
+    const nodeKey = detectNodeKey(r)
+    const kpiId = col(r, 'KPI ID', 'Kpi ID', 'KPIID', 'KPI Code', 'KPI CODE') || nodeKey
+    if (!kpiId) continue
+
+    const actual = col(r, 'Actual Field', 'Actual', 'ACTUAL', 'actual')
+    const target = col(r, 'Target Field', 'Target', 'TARGET', 'target')
+    if (!hasImportValue(actual) && !hasImportValue(target)) continue
+
+    parsed.push({
+      kpiId,
+      nodeKey: nodeKey || undefined,
+      actual,
+      target,
+      periodStart: col(r, 'Period Start', 'period_start', 'PeriodStart', 'Start Date'),
+      periodEnd: col(r, 'Period End', 'period_end', 'PeriodEnd', 'End Date'),
+    })
+  }
+  return parsed
+}
+
+function hasImportValue(v) {
+  return v !== '' && v != null && String(v).trim() !== ''
+}
+
+function detectNodeKey(row) {
+  const explicit = col(row, 'Node Key', 'NODE_KEY', 'node_key', 'NodeKey', 'KPI Node', 'NODE KEY')
+  if (explicit) return explicit
+  for (const val of Object.values(row)) {
+    const s = String(val ?? '').trim()
+    if (/^STRATROOM-/i.test(s)) return s
+  }
+  return ''
+}
+
+function col(row, ...names) {
+  for (const name of names) {
+    const v = row[name]
+    if (v != null && String(v).trim() !== '') return String(v).trim()
+  }
+  const normTargets = names.map((n) => n.toLowerCase().replace(/[\s_-]/g, ''))
+  for (const [key, val] of Object.entries(row)) {
+    if (val == null || String(val).trim() === '') continue
+    const nk = key.toLowerCase().replace(/[\s_-]/g, '')
+    if (normTargets.includes(nk)) return String(val).trim()
+  }
+  return ''
 }

@@ -2,10 +2,7 @@ import axios from 'axios'
 
 const axiosClient = axios.create({
   baseURL: '/',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  timeout: 30000
+  timeout: 30000,
 })
 
 function readSessionProfile() {
@@ -24,6 +21,10 @@ function readSessionProfile() {
 
 function isEncryptedUserInfo(value) {
   return typeof value === 'string' && value.startsWith('ENC(')
+}
+
+function isFormDataBody(data) {
+  return typeof FormData !== 'undefined' && data instanceof FormData
 }
 
 /** Mirrors stratroom-web RequestSessionUtil / CommonHttpClientInterceptor headers. */
@@ -47,8 +48,6 @@ function applyStratroomSessionHeaders(config) {
     config.headers.LOGGED_IN_DEPT_ID_FIELD = String(deptId)
   }
 
-  // populateActual() on backend calls datePeriod.split("-") — NPEs if header is absent.
-  // Fall back to full current year so the backend parses a valid date range.
   const datePeriod = localStorage.getItem('customperiod') || (() => {
     const y = new Date().getFullYear()
     return `01/01/${y}-12/31/${y}`
@@ -59,14 +58,24 @@ function applyStratroomSessionHeaders(config) {
 }
 
 function applyAuthHeaders(config) {
+  config.headers = axios.AxiosHeaders.from(config.headers ?? {})
+
   const token = localStorage.getItem('accessToken')
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+    config.headers.set('Authorization', `Bearer ${token}`)
   }
   const userInfo = localStorage.getItem('userInfo')
   if (isEncryptedUserInfo(userInfo)) {
-    config.headers.USER_INFO = userInfo
+    config.headers.set('USER_INFO', userInfo)
   }
+
+  if (isFormDataBody(config.data)) {
+    // Browser must set multipart boundary — never force application/json.
+    config.headers.delete('Content-Type')
+  } else if (!config.headers.get('Content-Type')) {
+    config.headers.set('Content-Type', 'application/json')
+  }
+
   return applyStratroomSessionHeaders(config)
 }
 

@@ -287,7 +287,9 @@ public class EmployeeService {
     public Employee getEmployeeByOrg(EmployeeDTO employeeDTO) {
         Employee employee = this.employeeDAO.getEmployee(employeeDTO);
         EmployeeCredentialsPo credentialsPo = this.employeeDAO.getEmployeeCredentials(employeeDTO.getEmployeeId());
-        employee.setPassword(credentialsPo.getPassword());
+        if (credentialsPo != null) {
+            employee.setPassword(credentialsPo.getPassword());
+        }
         return employee;
     }
 
@@ -305,7 +307,8 @@ public class EmployeeService {
             }
         }
         this.userRoleManagementService.saveUserRoleManagement(employee, "Delete");
-        this.orgTrackerService.deleteOrgTrack(employee, Long.valueOf(UserThreadLocal.get()));
+        String _utl310 = UserThreadLocal.get(); long _utlVal310 = (_utl310 != null && !"null".equals(_utl310)) ? Long.parseLong(_utl310) : 0L;
+        this.orgTrackerService.deleteOrgTrack(employee, _utlVal310);
         this.auditService.deleteAudit("User", employee.getOrgDetails().getOrgId(), employee.getEmpId(), "Organisation Deleted");
         this.auditService.deleteAudit("User", employee.getOrgDetails().getOrgId(), employee.getEmpId(), "User Inactive");
         this.employeeDAO.removeEmployeeCredentials((long)Integer.valueOf(employeeID).intValue());
@@ -326,7 +329,7 @@ public class EmployeeService {
 
     public void removeOrgStructureDetails(String employeeID) {
         OrgStructureDetails orgStructureDetails = this.orgStructureDetailsRepository.findByMapping(Long.valueOf(employeeID).longValue(), "Active");
-        if (orgStructureDetails != null) {
+        if (orgStructureDetails != null) {  
             orgStructureDetails.setStatus("InActive");
             orgStructureDetails.setEndDate(new Date());
             orgStructureDetails.setUpdatedTime(LocalDateTime.now());
@@ -342,7 +345,8 @@ public class EmployeeService {
         this.cacheUtil.removeEmployeeCache((Object)currentParentEmp.getParentEmpId());
         currentParentEmp.setParentEmpId(employee.getParentEmpId());
         this.employeeDAO.updateParentEmpID(currentParentEmp.getEmpId(), employee.getParentEmpId());
-        this.orgTrackerService.updateOrgTrack(currentParentEmp, Long.valueOf(UserThreadLocal.get()));
+        String _utl347 = UserThreadLocal.get(); long _utlVal347 = (_utl347 != null && !"null".equals(_utl347)) ? Long.parseLong(_utl347) : 0L;
+        this.orgTrackerService.updateOrgTrack(currentParentEmp, _utlVal347);
         this.updateChildTracker(Long.valueOf(employee.getEmpId()), oldparent, Long.valueOf(employee.getParentEmpId()), "Employee");
         this.auditService.updateSuperAudit("User", employee.getSuperCreatedBy(), currentParentEmp.getOrgDetails().getOrgId(), employee.getEmpId(), "User Modified");
         this.cacheUtil.removeEmployeeCache((Object)employee.getEmpId());
@@ -350,34 +354,94 @@ public class EmployeeService {
         return true;
     }
 
+    // public Employee getEmployeeList(EmployeeDTO employeeDTO) {
+    //     boolean superUserStatus = false;
+    //     Employee employee = this.getEmployeeByOrg(employeeDTO);
+    //     if (this.checkRole(employee)) {
+    //         superUserStatus = true;
+    //         Employee employeeRes = this.getSuperUserEmployeeHierarchyList(employee);
+    //         if (employeeRes != null) {
+    //             employeeRes.setParentEmpId(0L);
+    //             employee = employeeRes;
+    //             employee = this.getEmployeeHierarchyList(employee);
+    //         } else {
+    //             employee = this.getEmployeeHierarchyList(employee);
+    //         }
+    //     } else {
+    //         if (!superUserStatus && !this.checkOrgAccess(employee)) {
+    //             employee.setMessage("no OrgStructure Access");
+    //         }
+    //         employee = this.getEmployeeHierarchyList(employee);
+    //     }
+    //     if (superUserStatus && employee.getParentEmpId() != 0L) {
+    //         employeeDTO.setEmployeeId(employee.getParentEmpId());
+    //         Employee parentEmployee = this.getEmployee(employeeDTO);
+    //         employee = this.buildParentObject(parentEmployee, employee);
+    //     if (employee.getParentEmpId() != 0L) {
+    //         long superUser = this.userRoleManagementService.superUserId();
+    //         if (this.checkRole(employee)) {
+    //             employeeDTO.setEmployeeId(employee.getParentEmpId());
+    //             Employee parentEmployee2 = this.getEmployee(employeeDTO);
+    //             employee = this.buildParentObject(parentEmployee, employee);
+    //         } else if (employee.getParentEmpId() != superUser) {
+    //             employeeDTO.setEmployeeId(employee.getParentEmpId());
+    //             Employee parentEmployee3 = this.getEmployee(employeeDTO);
+    //             employee = this.buildParentObjectStoppingAtSuperUser(parentEmployee, employee, superUser);
+    //         } else {
+    //             // Logged-in user reports to the system super-user account — hide that node.
+    //             employee.setParentEmpId(0L);
+    //         }
+    //     }
+    //     this.log.debug((Object)"employeeList populated into cache");
+    //     return employee;
+    // }
+    // }
+
+
     public Employee getEmployeeList(EmployeeDTO employeeDTO) {
-        boolean superUserStatus = false;
-        Employee employee = this.getEmployeeByOrg(employeeDTO);
-        if (this.checkRole(employee)) {
-            superUserStatus = true;
-            Employee employeeRes = this.getSuperUserEmployeeHierarchyList(employee);
-            if (employeeRes != null) {
-                employeeRes.setParentEmpId(0L);
-                employee = employeeRes;
-                employee = this.getEmployeeHierarchyList(employee);
-            } else {
-                employee = this.getEmployeeHierarchyList(employee);
-            }
+    boolean superUserStatus = false;
+    Employee employee = this.getEmployeeByOrg(employeeDTO);
+    if (this.checkRole(employee)) {
+        superUserStatus = true;
+        Employee employeeRes = this.getSuperUserEmployeeHierarchyList(employee);
+        if (employeeRes != null) {
+            employeeRes.setParentEmpId(0L);
+            employee = employeeRes;
+            employee = this.getEmployeeHierarchyList(employee);
         } else {
-            if (!superUserStatus && !this.checkOrgAccess(employee)) {
-                employee.setMessage("no OrgStructure Access");
-            }
             employee = this.getEmployeeHierarchyList(employee);
         }
-        if (superUserStatus && employee.getParentEmpId() != 0L) {
-            employeeDTO.setEmployeeId(employee.getParentEmpId());
-            Employee parentEmployee = this.getEmployee(employeeDTO);
-            employee = this.buildParentObject(parentEmployee, employee);
+    } else {
+        if (!superUserStatus && !this.checkOrgAccess(employee)) {
+            employee.setMessage("no OrgStructure Access");
         }
-        this.log.debug((Object)"employeeList populated into cache");
-        return employee;
+        employee = this.getEmployeeHierarchyList(employee);
     }
 
+    if (superUserStatus && employee.getParentEmpId() != 0L) {
+        employeeDTO.setEmployeeId(employee.getParentEmpId());
+        Employee parentEmployee = this.getEmployee(employeeDTO);
+        employee = this.buildParentObject(parentEmployee, employee);
+    }  // ← THIS closing brace was missing
+
+    if (employee.getParentEmpId() != 0L) {
+        long superUser = this.userRoleManagementService.superUserId();
+        if (this.checkRole(employee)) {
+            employeeDTO.setEmployeeId(employee.getParentEmpId());
+            Employee parentEmployee2 = this.getEmployee(employeeDTO);
+            employee = this.buildParentObject(parentEmployee2, employee);
+        } else if (employee.getParentEmpId() != superUser) {
+            employeeDTO.setEmployeeId(employee.getParentEmpId());
+            Employee parentEmployee3 = this.getEmployee(employeeDTO);
+            employee = this.buildParentObjectStoppingAtSuperUser(parentEmployee3, employee, superUser);
+        } else {
+            employee.setParentEmpId(0L);
+        }
+    }
+
+    this.log.debug((Object)"employeeList populated into cache");
+    return employee;
+}
     // Rebuilds the org hierarchy exactly as it stood on :asOf, using the temporal rows in
     // org_structure_details (start_date/end_date). Employees who have since been deleted or
     // moved are restored to their position on that date. Returns the visible root (the
@@ -458,7 +522,7 @@ public class EmployeeService {
     public boolean checkRole(Employee employee) {
         UserDTO userRoleManagement;
         boolean status = false;
-        if (employee.getEmpId() != 0L && (userRoleManagement = this.userRoleManagementService.findById(Long.valueOf(employee.getEmpId()))) != null && (userRoleManagement.getUserRole().equalsIgnoreCase("Super User") || userRoleManagement.getUserRole().equalsIgnoreCase("Admin"))) {
+        if (employee.getEmpId() != 0L && (userRoleManagement = this.userRoleManagementService.findById(Long.valueOf(employee.getEmpId()))) != null && userRoleManagement.getUserRole() != null && ("Super User".equalsIgnoreCase(userRoleManagement.getUserRole()) || "Admin".equalsIgnoreCase(userRoleManagement.getUserRole()))) {
             status = true;
         }
         return status;
@@ -555,6 +619,37 @@ public class EmployeeService {
 
     public Employee getEmployeeIDByEmail(String emailAddress) {
         return this.employeeDAO.getEmployeeIDByEmail(emailAddress);
+    }
+
+    /**
+     * Resolves an employee for bulk user import — profile by email first, then credentials
+     * (covers rows where credentials exist but profile email lookup missed).
+     */
+    public Employee resolveEmployeeForImport(String emailAddress) {
+        if (StringUtils.isEmpty(emailAddress)) {
+            return null;
+        }
+        String email = emailAddress.trim();
+        Employee employee = this.getEmployeeIDByEmail(email);
+        if (employee != null) {
+            return employee;
+        }
+        java.util.Optional<EmployeeCredentialsPo> cred = this.employeeCredentialsPoRepo
+                .findByUserNameOrEmailAddressAndStatus(email, email, "Active");
+        if (!cred.isPresent()) {
+            cred = this.employeeCredentialsPoRepo.findByUserNameOrEmailAddressAndStatus(email, email, "InActive");
+        }
+        if (cred.isPresent()) {
+            java.util.Optional<EmployeeProfilePo> profile = this.employeeProfilePoRepo.findById(cred.get().getEmpId());
+            if (profile.isPresent()) {
+                return new Employee(profile.get());
+            }
+        }
+        return null;
+    }
+
+    public Employee getEmployeeIDByFullName(String firstName, String lastName, long orgId) {
+        return this.employeeDAO.getEmployeeIDByFullName(firstName, lastName, orgId);
     }
 
     public EmployeeResponseDTO createEmployee(Employee employee, String type) throws InputValidationException {
@@ -761,6 +856,17 @@ public class EmployeeService {
 
     private void populateDepartmentFromRequest(Employee employee) {
         DeptDetails departmentDetails = null;
+        if (employee.getOrgDetails() != null
+                && employee.getDeptUniqueId() != null
+                && !employee.getDeptUniqueId().isEmpty()) {
+            DepartmentDetails byUniqueId = this.departmentDetailsRepository.findByDeptUniqueId(
+                    employee.getDeptUniqueId(), employee.getOrgDetails().getOrgId(), "Active");
+            if (byUniqueId != null) {
+                employee.setDeptDetails(new DeptDetails(byUniqueId));
+                employee.setDepartment(byUniqueId.getName());
+                return;
+            }
+        }
         if (employee.getDeptDetails() != null && employee.getDeptDetails().getName() != "") {
             if (employee.getDeptDetails().getDeptID() != null && employee.getDeptDetails().getDeptID() != "") {
                 departmentDetails = this.getDepartmentDetailsByDeptUniqueId(employee.getDeptDetails().getDeptID(), Long.valueOf(employee.getOrgDetails().getOrgId()));
@@ -989,6 +1095,34 @@ public class EmployeeService {
         return result;
     }
 
+    /** Like buildParentObject but does not surface the org system super-user / super-admin node. */
+    private Employee buildParentObjectStoppingAtSuperUser(Employee parentEmployee, Employee childEmployee, long superUserId) {
+        // Never surface the super-admin / org root account (the seeded "amira@superadmin.com",
+        // whose parent_emp_id = 0). When the next parent up is that root — or the configured
+        // super-user id — stop climbing and make the child the visible top of the chart.
+        //
+        // The org root is identified by parent_emp_id = 0 rather than by role: mid-level managers
+        // can also carry a "Super Admin"/"Super User" role, and the userAccess=0 row that
+        // superUserId() relies on may be missing in the data (leaving superUserId() == 0), so the
+        // root link is the only reliable signal.
+        if (parentEmployee == null
+                || parentEmployee.getParentEmpId() == 0L
+                || (superUserId != 0L && parentEmployee.getEmpId() == superUserId)) {
+            childEmployee.setParentEmpId(0L);
+            return childEmployee;
+        }
+        parentEmployee.setCanMaintain(false);
+        parentEmployee.setReporteeList(Arrays.asList(childEmployee));
+        parentEmployee.setScoreCardLandingUrl("");
+        parentEmployee.setInitiativeLandingUrl("");
+        parentEmployee.setKpiLandingUrl("");
+        parentEmployee.setAppraisalUrl("");
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmployeeId(parentEmployee.getParentEmpId());
+        Employee currentParentEmployee = this.getEmployee(employeeDTO);
+        return this.buildParentObjectStoppingAtSuperUser(currentParentEmployee, parentEmployee, superUserId);
+    }
+
     private Employee getEmployeeHierarchyList(Employee employee) {
         employee.setScoreCardLandingUrl(this.pagesLinkDetailsService.getDefaultPageURL(String.valueOf(employee.getEmpId()), "SCORECARD"));
         employee.setInitiativeLandingUrl(this.pagesLinkDetailsService.getDefaultPageURL(String.valueOf(employee.getEmpId()), "INITIATIVE"));
@@ -1152,17 +1286,20 @@ public class EmployeeService {
             }
             List<String> designationList = new ArrayList();
             Long superUser = this.userRoleManagementService.superUserId();
-            designationList = name != null && StringUtils.isNotEmpty((CharSequence)name) ? this.employeeProfilePoRepo.findAllFirstNameListString(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), "%" + name + "%", firstDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), secondDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), superUser.longValue()) : this.employeeProfilePoRepo.findAllFirstNameListString(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), firstDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), secondDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), superUser.longValue());
+        String _orgStr1289 = UserThreadLocal.get("USER_ORG_ID"); long _orgId1289 = (_orgStr1289 != null && !"null".equals(_orgStr1289)) ? Long.parseLong(_orgStr1289) : 1L;
+            designationList = name != null && StringUtils.isNotEmpty((CharSequence)name) ? this.employeeProfilePoRepo.findAllFirstNameListString(_orgId1289, "%" + name + "%", firstDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), secondDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), superUser.longValue()) : this.employeeProfilePoRepo.findAllFirstNameListString(_orgId1289, firstDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), secondDate.toInstant().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(), superUser.longValue());
+
             if (designationList.isEmpty()) {
                 return new ArrayList<String>();
             }
             return designationList;
         }
         Long superUser = this.userRoleManagementService.superUserId();
+        String _orgStr1297 = UserThreadLocal.get("USER_ORG_ID"); long _orgId1297 = (_orgStr1297 != null && !"null".equals(_orgStr1297)) ? Long.parseLong(_orgStr1297) : 1L;
         if (name != null && StringUtils.isNotEmpty((CharSequence)name)) {
-            return this.employeeProfilePoRepo.findAllFirstNameListNoStatusString(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), "%" + name + "%", superUser.longValue());
+            return this.employeeProfilePoRepo.findAllFirstNameListNoStatusString(_orgId1297, "%" + name + "%", superUser.longValue());
         }
-        return this.employeeProfilePoRepo.findAllFirstNameListNoStatusString(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue(), superUser.longValue());
+        return this.employeeProfilePoRepo.findAllFirstNameListNoStatusString(_orgId1297, superUser.longValue());
     }
 
     /*
@@ -1581,9 +1718,10 @@ public class EmployeeService {
                 this.saveUserDeptMapping(Long.valueOf(employeeProfilePo.getEmpId()), response.getDeptId());
             }
         }
-        this.auditService.saveSuperAudit("Organisation", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "Department Created");
+        String _auditId1716 = UserThreadLocal.get(); long _auditLong1716 = (_auditId1716 != null && !"null".equals(_auditId1716)) ? Long.parseLong(_auditId1716) : 0L;
+        this.auditService.saveSuperAudit("Organisation", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), _auditLong1716, "Department Created");
         this.updateChildTracker(departmentChartDTO.getDeptId(), null, departmentChartDTO.getDeptParentId(), "Department");
-        this.deptTrackerService.saveDeptTrack(response, Long.valueOf(UserThreadLocal.get()));
+        this.deptTrackerService.saveDeptTrack(response, _auditLong1716);
         return response;
     }
 
@@ -1699,8 +1837,9 @@ public class EmployeeService {
                 this.saveUserDeptMapping(Long.valueOf(employeeProfilePo.getEmpId()), response.getDeptId());
             }
         }
-        this.auditService.updateSuperAudit("Organisation", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "Department Modified");
-        this.deptTrackerService.updateDeptTrack(response, Long.valueOf(UserThreadLocal.get()));
+        String _auditId1834 = UserThreadLocal.get(); long _auditLong1834 = (_auditId1834 != null && !"null".equals(_auditId1834)) ? Long.parseLong(_auditId1834) : 0L;
+        this.auditService.updateSuperAudit("Organisation", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), _auditLong1834, "Department Modified");
+        this.deptTrackerService.updateDeptTrack(response, _auditLong1834);
         return response;
     }
 
@@ -1733,12 +1872,55 @@ public class EmployeeService {
         return employeeResponseDTO;
     }
 
-    public void createBulkDeptMapping(DeptImportDTO deptImportDTO, String createdBy) {
-        EmployeeProfilePo ownerProfile;
+    public boolean createBulkDeptMapping(DeptImportDTO deptImportDTO, String createdBy) {
+        EmployeeProfilePo ownerProfile = null;
         DepartmentDetails departmentDetails;
         boolean status = false;
         Long oldParent = null;
+        if (StringUtils.isBlank(createdBy) || "null".equals(createdBy) || "0".equals(createdBy)) {
+            // UserThreadLocal doesn't work in WebFlux reactive threads — look up admin from DB
+            String threadLocalId = UserThreadLocal.get();
+            if (threadLocalId != null && !"null".equals(threadLocalId) && !"0".equals(threadLocalId)) {
+                createdBy = threadLocalId;
+            }
+        }
+        if (StringUtils.isBlank(createdBy) || "null".equals(createdBy) || "0".equals(createdBy)) {
+            // Last resort: find first admin/active employee as system user
+            try {
+                java.util.List<com.estrat.backend.db.bean.po.EmployeeProfilePo> admins =
+                    this.employeeProfilePoRepo.findAll();
+                for (com.estrat.backend.db.bean.po.EmployeeProfilePo ep : admins) {
+                    if (ep.getEmpId() > 0) {
+                        createdBy = String.valueOf(ep.getEmpId());
+                        break;
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+        if (StringUtils.isBlank(createdBy) || "null".equals(createdBy)) {
+            createdBy = "1";
+        }
         OrganizationDetails organizationDetails = this.getOrgDetails(deptImportDTO.getOrgName());
+        if (organizationDetails == null) {
+            // org name from Excel didn't match — fall back to the creator's org
+            com.estrat.backend.db.bean.po.EmployeeProfilePo creatorProfile =
+                this.employeeProfilePoRepo.findById(Long.valueOf(createdBy)).orElse(null);
+            if (creatorProfile != null && creatorProfile.getOrgId() != null) {
+                OrgDetails fallback = this.orgDetailsRepository.findById(creatorProfile.getOrgId().getId()).orElse(null);
+                if (fallback != null) {
+                    organizationDetails = new OrganizationDetails(fallback);
+                }
+            }
+            if (organizationDetails == null) {
+                // last resort: first org in DB
+                java.util.List<OrgDetails> all = this.orgDetailsRepository.findAll();
+                if (!all.isEmpty()) organizationDetails = new OrganizationDetails(all.get(0));
+            }
+        }
+        if (organizationDetails == null) {
+            this.log.error("createBulkDeptMapping: cannot resolve org for '" + deptImportDTO.getOrgName() + "', skipping dept " + deptImportDTO.getDeptID());
+            return false;
+        }
         DepartmentChartDTO departmentChartDTO = new DepartmentChartDTO();
         departmentChartDTO.setActive(0);
         departmentChartDTO.setCreatedBy(Long.valueOf(createdBy).longValue());
@@ -1771,27 +1953,43 @@ public class EmployeeService {
             departmentChartDTO.setDeptUniqueId(departmentDetails.getDeptUniqueID());
             status = true;
         }
-        if (deptImportDTO.getParentDeptID() != null) {
-            departmentChartDTO.setDeptParentId(Long.valueOf(this.getDepartmentDetailsByDeptUniqueId(deptImportDTO.getParentDeptID(), Long.valueOf(organizationDetails.getOrgId())).getId()));
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(deptImportDTO.getParentDeptID())) {
+            DeptDetails parentDept = this.getDepartmentDetailsByDeptUniqueId(
+                    deptImportDTO.getParentDeptID(), Long.valueOf(organizationDetails.getOrgId()));
+            if (parentDept != null) {
+                departmentChartDTO.setDeptParentId(Long.valueOf(parentDept.getId()));
+            } else {
+                this.log.warn("createBulkDeptMapping: parent dept '" + deptImportDTO.getParentDeptID()
+                        + "' not found for '" + deptImportDTO.getDeptID() + "', using root");
+                departmentChartDTO.setDeptParentId(Long.valueOf(0L));
+            }
         } else {
             departmentChartDTO.setDeptParentId(Long.valueOf(0L));
         }
-        if (deptImportDTO.getEmailAddress() != null && (ownerProfile = this.employeeProfilePoRepo.findByEmail(deptImportDTO.getEmailAddress(), organizationDetails.getOrgId(), "Active")) != null) {
+        ownerProfile = this.resolveImportEmployeeProfile(
+                deptImportDTO.getEmailAddress(), deptImportDTO.getOwnerName(), organizationDetails.getOrgId());
+        if (ownerProfile != null) {
             departmentChartDTO.setOwner(Long.valueOf(ownerProfile.getEmpId()));
             this.saveRemoveOwner(departmentChartDTO.getOwner());
             ownerProfile.setDeptId(departmentDetails);
             ownerProfile.setDepartment(departmentDetails.getName());
             this.employeeProfilePoRepo.save(ownerProfile);
         }
-        this.updateDeptMap(departmentChartDTO, deptImportDTO.getMember());
+        String memberEmail = deptImportDTO.getMember();
+        if (memberEmail != null && !memberEmail.isEmpty() && !memberEmail.contains("@")) {
+            EmployeeProfilePo memberProfile = this.resolveImportEmployeeProfile(null, memberEmail, organizationDetails.getOrgId());
+            memberEmail = memberProfile != null ? memberProfile.getEmailAddress() : null;
+        }
+        this.updateDeptMap(departmentChartDTO, memberEmail);
         if (status) {
-            this.auditService.saveSuperAudit("User", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "Department Created");
-            this.deptTrackerService.saveOrUpdateDeptTrack(departmentChartDTO, Long.valueOf(UserThreadLocal.get()));
+            this.auditService.saveSuperAudit("User", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(createdBy).longValue(), "Department Created");
+            this.deptTrackerService.saveOrUpdateDeptTrack(departmentChartDTO, Long.valueOf(createdBy));
         } else {
-            this.auditService.updateSuperAudit("User", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "Department Updated");
-            this.deptTrackerService.saveOrUpdateDeptTrack(departmentChartDTO, Long.valueOf(UserThreadLocal.get()));
+            this.auditService.updateSuperAudit("User", departmentChartDTO.getSuperCreatedBy(), departmentChartDTO.getDeptId().longValue(), Long.valueOf(createdBy).longValue(), "Department Updated");
+            this.deptTrackerService.saveOrUpdateDeptTrack(departmentChartDTO, Long.valueOf(createdBy));
         }
         this.updateChildTracker(departmentChartDTO.getDeptId(), oldParent, departmentChartDTO.getDeptParentId(), "Department");
+        return true;
     }
 
     private void updateDeptMap(DepartmentChartDTO departmentChartDTO, String emailList) {
@@ -1842,6 +2040,56 @@ public class EmployeeService {
         if (response.getOwner() != null && departmentChart.getOwner() == null) {
             departmentChart.setOwner(response.getOwner());
         }
+    }
+
+    /**
+     * Resolves an employee for org/dept Excel import by email or display name.
+     * Uses first+last name when available so "James Harrington" does not collide with other James rows.
+     */
+    private EmployeeProfilePo resolveImportEmployeeProfile(String emailAddress, String displayName, long orgId) {
+        if (emailAddress != null && !emailAddress.isEmpty()) {
+            String email = emailAddress.trim();
+            if (email.contains("@")) {
+                return this.employeeProfilePoRepo.findByEmail(email, orgId, "Active");
+            }
+        }
+        if (displayName == null || displayName.isEmpty()) {
+            return null;
+        }
+        String name = displayName.trim();
+        if (name.contains("@")) {
+            return this.employeeProfilePoRepo.findByEmail(name, orgId, "Active");
+        }
+        OrgDetails org = new OrgDetails();
+        org.setId(orgId);
+        String[] parts = name.split("\\s+");
+        if (parts.length >= 2) {
+            String firstName = parts[0];
+            String lastName = String.join(" ", java.util.Arrays.copyOfRange(parts, 1, parts.length));
+            List<EmployeeProfilePo> fullNameMatches =
+                    this.employeeProfilePoRepo.findByFirstNameAndLastNameAndStatusAndOrgId(firstName, lastName, "Active", org);
+            if (fullNameMatches != null && !fullNameMatches.isEmpty()) {
+                if (fullNameMatches.size() > 1) {
+                    this.log.warn("[Org Import] multiple employees named '" + name + "' in org_id=" + orgId
+                            + " — using emp_id=" + fullNameMatches.get(0).getEmpId());
+                }
+                return fullNameMatches.get(0);
+            }
+            // Full name provided but no match — skip owner (dept-first import: link after Users file).
+            this.log.debug("[Org Import] owner '" + name + "' not found in org_id=" + orgId
+                    + " — skipping until employee exists");
+            return null;
+        }
+        List<EmployeeProfilePo> firstNameMatches =
+                this.employeeProfilePoRepo.findByFirstNameAndStatusAndOrgId(parts[0], "Active", org);
+        if (firstNameMatches != null && !firstNameMatches.isEmpty()) {
+            if (firstNameMatches.size() > 1) {
+                this.log.warn("[Org Import] ambiguous first name '" + parts[0] + "' (" + firstNameMatches.size()
+                        + " matches) in org_id=" + orgId + " — using emp_id=" + firstNameMatches.get(0).getEmpId());
+            }
+            return firstNameMatches.get(0);
+        }
+        return null;
     }
 
     public Employee findProfileByName(String firstName, Long orgId) {
@@ -1896,8 +2144,13 @@ public class EmployeeService {
 
     public void updateChildTracker(Long childId, Long oldParent, Long newParent, String type) {
         List childTrackerresult;
-        String orgId = UserThreadLocal.get((String)"USER_ORG_ID");
-        String empId = UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID");
+        String orgIdStr = UserThreadLocal.get((String)"USER_ORG_ID");
+        String empIdStr = UserThreadLocal.get((String)"LOGGED_IN_EMPLOYEE_ID");
+        long orgId = 0L;
+        long empId = 0L;
+        try { if (orgIdStr != null && !"null".equals(orgIdStr)) orgId = Long.parseLong(orgIdStr); } catch (Exception ignored) {}
+        try { if (empIdStr != null && !"null".equals(empIdStr)) empId = Long.parseLong(empIdStr); } catch (Exception ignored) {}
+
         if (oldParent != null && (childTrackerresult = this.childTrackerRepository.findByListParentwoEndDate(oldParent, childId)) != null && childTrackerresult.size() > 0) {
             this.childTrackerRepository.updateParentwoEndDate(oldParent, childId);
         }
@@ -1906,8 +2159,8 @@ public class EmployeeService {
             childTracker_new.setChildId(childId);
             childTracker_new.setType(type);
             childTracker_new.setCreatedTime(LocalDateTime.now());
-            childTracker_new.setCreatedBy(Long.valueOf(Long.parseLong(empId)));
-            childTracker_new.setOrgId(Long.valueOf(Long.parseLong(orgId)));
+            childTracker_new.setCreatedBy(empId);
+            childTracker_new.setOrgId(orgId);
             childTracker_new.setParentId(newParent);
             childTracker_new.setFromDate(new Date());
             this.childTrackerRepository.save(childTracker_new);
@@ -1933,10 +2186,18 @@ public class EmployeeService {
     }
 
     public Long superUserDeptId() {
-        EmployeeProfilePo employeeProfilePo = (EmployeeProfilePo)this.employeeProfilePoRepo.getOne(this.userRoleManagementService.superUserId());
-        if (employeeProfilePo != null && employeeProfilePo.getDepartment() != null) {
-            return this.departmentDetailsRepository.findByDeptUniqueId(employeeProfilePo.getDeptId().getDeptUniqueID(), employeeProfilePo.getOrgId().getId(), "Active").getId();
-        }
+        long sid = this.userRoleManagementService.superUserId();
+        if (sid <= 0) return 0L;
+        try {
+            EmployeeProfilePo employeeProfilePo = this.employeeProfilePoRepo.findById(sid).orElse(null);
+            if (employeeProfilePo != null && employeeProfilePo.getDeptId() != null) {
+                DepartmentDetails departmentDetails = this.departmentDetailsRepository.findByDeptUniqueId(
+                        employeeProfilePo.getDeptId().getDeptUniqueID(), employeeProfilePo.getOrgId().getId(), "Active");
+                if (departmentDetails != null) {
+                    return departmentDetails.getId();
+                }
+            }
+        } catch (Exception ignored) {}
         return 0L;
     }
 
@@ -2204,7 +2465,9 @@ public class EmployeeService {
     public Employee getProfileDetails(EmployeeDTO employeeDTO) {
         Employee employee = this.employeeDAO.getEmployee(employeeDTO);
         EmployeeCredentialsPo credentialsPo = this.employeeDAO.getEmployeeCredentials(employeeDTO.getEmployeeId());
-        employee.setPassword(credentialsPo.getPassword());
+        if (credentialsPo != null) {
+            employee.setPassword(credentialsPo.getPassword());
+        }
         employee.setUserRoleName(this.userRoleManagementService.getUserRole(employee.getEmpId()));
         UserRoleManagement userRoleManagement = this.userRoleManagementRepository.findByID(Long.valueOf(employee.getEmpId()));
         if (userRoleManagement != null) {
@@ -2230,7 +2493,9 @@ public class EmployeeService {
         }
         Employee employee = this.employeeDAO.getEmployee(employeeDTO);
         EmployeeCredentialsPo credentialsPo = this.employeeDAO.getEmployeeCredentialsWithNoStatus(Long.valueOf(employeeDTO.getEmployeeId()));
-        employee.setPassword(credentialsPo.getPassword());
+        if (credentialsPo != null) {
+            employee.setPassword(credentialsPo.getPassword());
+        }
         this.log.debug((Object)"getEmployee populated into cache");
         this.dbCache.put((Object)employeeDTO.getEmployeeId(), (Object)employee, "dbCache");
         employee.setUserRoleName(this.userRoleManagementService.getUserRole(employee.getEmpId()));

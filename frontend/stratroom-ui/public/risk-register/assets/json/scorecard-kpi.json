@@ -1,0 +1,102 @@
+[
+	{
+		"pageTitle": "KPI",
+		"userName": "Sajin",
+		"period": "2026-03-01 to 2026-03-22",
+		"id": "890",
+		"title": "Customer Satisfaction Score (CSAT) ",
+		"kpiDetails": {
+			"kpiName": "Customer Satisfaction Score (CSAT)",
+			"alignedPerspective": "Customer",
+			"alignmentObjectives": "Improve Overall Customer Experience",
+			"owner": "John Doe",
+			"currentActual": "85%",
+			"target": "90%",
+			"trend": "Up"
+		},
+		"configuration": {
+			"reportingFrequency": "Monthly",
+			"measurementFrequency": "Monthly",
+			"kpiType": "Leading",
+			"polarity": "Higher is Better",
+			"performance": "94.4%",
+			"contribution": "High",
+			"weightPercent": "15%",
+			"subWeight": "5%"
+		},
+		"dataTableTitle": "Data Table",
+		"dataTable": [
+			{
+				"period": "JAN 2025",
+				"actual": 0.00081,
+				"target": 0.0016,
+				"gap": -0.00083,
+				"ytd": 0
+			},
+			{
+				"period": "FEB 2025",
+				"actual": 0.00081,
+				"target": 0.0016,
+				"gap": -0.00083,
+				"ytd": 0
+			},
+			{
+				"period": "MAR 2025",
+				"actual": 0.00081,
+				"target": 0.0016,
+				"gap": -0.00083,
+				"ytd": 0
+			},
+			{
+				"period": "APR 2025",
+				"actual": 0.00081,
+				"target": 0.0016,
+				"gap": -0.00083,
+				"ytd": 0
+			},
+			{
+				"period": "MAY 2025",
+				"actual": 0.00081,
+				"target": 0.0016,
+				"gap": -0.00083,
+				"ytd": 0
+			},
+			{
+				"period": "JUN 2025",
+				"actual": 0.00081,
+				"target": 0.0016,
+				"gap": -0.00083,
+				"ytd": 0
+			},
+			{
+				"period": "JUL 2025",
+				"actual": 0.00081,
+				"target": 0.0016,
+				"gap": -0.00083,
+				"ytd": 0
+			}
+		],
+		"strategicInitiativesTitle": "Influencing Strategic Initiatives",
+		"strategicInitiatives": [
+			{
+				"initiativesName": "To strengthen engineering/technical execution, road safety and quality management",
+				"progress": "26%"
+			},
+			{
+				"initiativesName": "To strengthen engineering/technical execution, road safety and quality management",
+				"progress": "26%"
+			},
+			{
+				"initiativesName": "To strengthen engineering/technical execution, road safety and quality management",
+				"progress": "26%"
+			}
+		],
+		"successCriteriaTitle": "Success Criteria",
+		"successCriteria": {
+			"description": "To strengthen engineering/technical execution, road safety and quality management",
+			"risks": 1072,
+			"supportNeeded": "Additional budget for safety training programs",
+			"remarks": "26%"
+		}
+	}
+]

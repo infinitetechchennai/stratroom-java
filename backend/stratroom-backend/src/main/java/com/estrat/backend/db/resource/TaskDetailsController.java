@@ -222,7 +222,9 @@ public class TaskDetailsController {
     }
 
     @GetMapping(value={"/retrieveTaskStatusCount/{empId}"})
-    public ResponseEntity<TaskStatusResponseDTO> retrieveTaskStatusCount(@PathVariable(value="empId") Long empId, @RequestParam(value="dateRange") String dateRange) throws RequestException {
+    public ResponseEntity<TaskStatusResponseDTO> retrieveTaskStatusCount(
+            @PathVariable(value="empId") Long empId,
+            @RequestParam(value="dateRange", required=false, defaultValue="") String dateRange) throws RequestException {
         List<TaskCategorysDTO> taskDTOList = this.taskDetailsService.findAll(empId.longValue(), dateRange, null);
         TaskStatusResponseDTO responce = this.taskDetailsService.buildTaskStatusResponse(taskDTOList);
         return new ResponseEntity<>(responce, HttpStatus.OK);

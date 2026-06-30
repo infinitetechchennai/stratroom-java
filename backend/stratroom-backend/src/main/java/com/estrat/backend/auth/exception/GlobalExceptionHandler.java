@@ -27,6 +27,7 @@ import com.estrat.backend.auth.exception.ExceptionLogHelper;
 import com.estrat.backend.auth.exception.RequestException;
 import com.estrat.backend.auth.exception.RestServiceClientException;
 import com.estrat.backend.auth.exception.RestServiceException;
+import com.estrat.backend.db.exception.InputValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,15 @@ public class GlobalExceptionHandler {
         errorDTO.setErrorCode(exception.getErrorCode());
         ResponseEntity entity = new ResponseEntity((Object)errorDTO, HttpStatus.FORBIDDEN);
         return entity;
+    }
+
+    @ExceptionHandler(value={InputValidationException.class})
+    @ResponseBody
+    public ResponseEntity<ErrorDTO> handle(InputValidationException exception) {
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setException(exception.getMessage());
+        errorDTO.setErrorCode("IV001");
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value={RequestException.class})

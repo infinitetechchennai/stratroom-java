@@ -590,12 +590,15 @@ public class RiskDetailsService {
 
     public List<RiskDTO> findAllByDeptId(long deptId) {
         var dbList = this.riskDetailsRepository.findAllByDeptId(Long.valueOf(deptId), 0);
-        List<RiskDTO> kpiList = dbList.stream().map(dbValue -> {
+        return dbList.stream().map(dbValue -> {
             RiskDTO riskDTO = new RiskDTO(dbValue, false);
-            riskDTO.setPageName(dbValue.getPageId().getPageName());
+            try {
+                this.riskUtil.populateAddtionalDetails(riskDTO, false);
+            } catch (Exception ex) {
+                this.log.warn("Risk dept list populate skipped for risk {}: {}", dbValue.getId(), ex.getMessage());
+            }
             return riskDTO;
         }).collect(Collectors.toList());
-        return kpiList;
     }
 
     public void saveSetDate() {
@@ -1080,40 +1083,64 @@ public class RiskDetailsService {
 
     public List<RiskDTO> findAllRiskDashboardBYDeptId(long deptId) {
         var dbList = this.riskDetailsRepository.findAllByDeptId(Long.valueOf(deptId), 0);
-        List<RiskDTO> kpiList = dbList.stream().map(dbValue -> {
-            RiskDTO riskDTO = new RiskDTO(dbValue, true);
-            riskDTO.setPageName(dbValue.getPageId().getPageName());
+        return dbList.stream().map(dbValue -> {
+            RiskDTO riskDTO = new RiskDTO(dbValue, false);
+            try {
+                this.riskUtil.populateAddtionalDetails(riskDTO, true);
+            } catch (Exception ex) {
+                this.log.warn("Risk dashboard populate skipped for risk {}: {}", dbValue.getId(), ex.getMessage());
+            }
             return riskDTO;
         }).collect(Collectors.toList());
-        return kpiList;
+    }
+
+    public Map<String, Integer> buildLikelihoodHeatmapCounts(List<RiskDTO> riskList) {
+        HashMap<String, Integer> likelihoodCount = new HashMap<String, Integer>();
+        if (riskList == null) {
+            return likelihoodCount;
+        }
+        for (RiskDTO risk : riskList) {
+            if (risk == null || risk.getRiskCauseAndConsequenceList() == null) continue;
+            for (var causes : risk.getRiskCauseAndConsequenceList()) {
+                if (causes == null || causes.getConsequenceList() == null) continue;
+                for (var consequence : causes.getConsequenceList()) {
+                    if (consequence == null || consequence.getConsequenceValue() == null) continue;
+                    Object scoreObj = consequence.getConsequenceValue().get("score");
+                    if (scoreObj == null) continue;
+                    String cellId = scoreObj.toString().trim();
+                    if (cellId.isEmpty() || "UNKNOWN".equalsIgnoreCase(cellId)) continue;
+                    likelihoodCount.put(cellId, likelihoodCount.getOrDefault(cellId, 0) + 1);
+                }
+            }
+        }
+        return likelihoodCount;
     }
 
     public RiskDashBoardResponseDTO buildRiskDashboard(List<RiskDTO> riskList) {
         HashMap<String, Integer> categoryCount = new HashMap<String, Integer>();
         HashMap<String, Integer> statusCount = new HashMap<String, Integer>();
-        HashMap likelihoodCount = new HashMap();
         HashMap<String, Integer> treatmentCount = new HashMap<String, Integer>();
         Long tottreatment = 0L;
         Long totMonitoring = 0L;
         Long totplans = 0L;
+        if (riskList == null) {
+            riskList = Collections.emptyList();
+        }
         for (RiskDTO risk : riskList) {
             if (risk == null || risk.getRiskValue() == null) continue;
             String category = (String)risk.getRiskValue().get("riskcategory");
             category = category == null || category.trim().isEmpty() ? "UNKNOWN" : category;
             categoryCount.put(category, categoryCount.getOrDefault(category, 0) + 1);
-            String status = risk.getRiskValue().get("riskStatus").toString();
-            status = status == null || status.trim().isEmpty() ? "UNKNOWN" : status;
+            Object statusObj = risk.getRiskValue().get("riskStatus");
+            String status = statusObj == null ? "UNKNOWN" : statusObj.toString();
+            status = status.trim().isEmpty() ? "UNKNOWN" : status;
             statusCount.put(status, statusCount.getOrDefault(status, 0) + 1);
             if (risk.getRiskTreatmentList() != null) {
-                System.out.println("enter in treeatment is non null");
                 for (RiskPlanDTO treatment : risk.getRiskTreatmentList()) {
-                    System.out.println("treatment :: " + treatment);
                     if (treatment == null || treatment.getRiskPlanValue() == null) continue;
                     String action = (String)treatment.getRiskPlanValue().get("action");
-                    System.out.println("action :: " + action);
                     action = action == null || action.trim().isEmpty() ? "UNKNOWN" : action;
                     treatmentCount.put(action, treatmentCount.getOrDefault(action, 0) + 1);
-                    System.out.println("treatmentCount :: " + treatmentCount);
                 }
             }
             tottreatment = tottreatment + (long)(risk.getRiskTreatmentList() != null ? risk.getRiskTreatmentList().size() : 0);
@@ -1121,7 +1148,7 @@ public class RiskDetailsService {
             totplans = totplans + (long)(risk.getRiskPlanList() != null ? risk.getRiskPlanList().size() : 0);
         }
         RiskDashBoardResponseDTO response = new RiskDashBoardResponseDTO();
-        response.setTotalRisk(riskList != null ? (long)riskList.size() : 0L);
+        response.setTotalRisk((long)riskList.size());
         response.setTotalMonitoring(totMonitoring.longValue());
         response.setTotalTreatment(tottreatment.longValue());
         response.setTotalPlan(totplans.longValue());
@@ -1130,6 +1157,7 @@ public class RiskDetailsService {
         response.setCategoryCount(categoryCount);
         response.setStatusCount(statusCount);
         response.setTreatmentSrategyCount(treatmentCount);
+        response.setLikelihoodCount(this.buildLikelihoodHeatmapCounts(riskList));
         return response;
     }
 }

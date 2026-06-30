@@ -2,14 +2,17 @@ package com.estrat.backend.db.scv2;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -25,10 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScorecardCrudService {
 
     private final JdbcTemplate jdbc;
+    private final KpiImportKeyResolver kpiImportKeyResolver;
 
     @Autowired
-    public ScorecardCrudService(JdbcTemplate jdbc) {
+    public ScorecardCrudService(JdbcTemplate jdbc, KpiImportKeyResolver kpiImportKeyResolver) {
         this.jdbc = jdbc;
+        this.kpiImportKeyResolver = kpiImportKeyResolver;
     }
 
     @PostConstruct
@@ -54,6 +59,8 @@ public class ScorecardCrudService {
         // scoring direction HIGHER/LOWER/TARGET/RANGE used by AchievementCalculator).
         try { jdbc.execute("ALTER TABLE sc_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN indicator_type TEXT"); } catch (Exception ignore) {}
+        // Add target_value to sub_kpi_history so values-file imports can store targets per period
+        try { jdbc.execute("ALTER TABLE sc_sub_kpi_history ADD COLUMN target_value NUMERIC"); } catch (Exception ignore) {}
     }
 
     // ---------------- SCORECARD ----------------
@@ -440,66 +447,330 @@ public class ScorecardCrudService {
     @Transactional
     public Map<String, Object> importActuals(Long pageId, String dateRange, List<Map<String, Object>> rows) {
         Map<String, Object> result = new HashMap<>();
-        int updated = 0;
-        int skipped = 0;
+        int kpiUpdated = 0, subKpiUpdated = 0, skipped = 0, unmatched = 0;
         if (rows == null || rows.isEmpty()) {
-            result.put("updated", 0);
-            result.put("skipped", 0);
+            result.put("updated", 0); result.put("skipped", 0); result.put("unmatched", 0);
             return result;
         }
         LocalDate[] range = parseRange(dateRange);
-        String periodStart = range[0].toString();
-        String periodEnd = range[1].toString();
+        String defaultPeriodStart = range[0].toString();
+        String defaultPeriodEnd   = range[1].toString();
 
+        // Load KPI codes for THIS scorecard (page-scoped)
         List<Map<String, Object>> sc = jdbc.queryForList(
                 "SELECT id FROM sc_scorecards WHERE page_id = ? AND is_active = true AND is_deleted = false ORDER BY id LIMIT 1",
                 pageId);
-        if (sc.isEmpty()) {
-            result.put("error", "No scorecard found for page " + pageId);
-            result.put("updated", 0);
-            result.put("skipped", rows.size());
-            return result;
-        }
-        Long scorecardId = ((Number) sc.get(0).get("id")).longValue();
-
-        List<Map<String, Object>> kpiRows = jdbc.queryForList(
-                "SELECT k.id, k.code FROM sc_kpis k "
-                        + "JOIN sc_objectives o ON k.objective_id = o.id "
-                        + "JOIN sc_perspectives p ON o.perspective_id = p.id "
-                        + "WHERE p.scorecard_id = ? AND k.is_deleted = false",
-                scorecardId);
-        Map<String, Long> codeToId = new HashMap<>();
-        for (Map<String, Object> kr : kpiRows) {
-            Object code = kr.get("code");
-            if (code != null) {
-                codeToId.put(code.toString().trim(), ((Number) kr.get("id")).longValue());
-            }
+        Map<String, Long> kpiCodeToId = new HashMap<>();
+        if (!sc.isEmpty()) {
+            Long scorecardId = ((Number) sc.get(0).get("id")).longValue();
+            kpiCodeToId = loadCodeToIdMap(scorecardId);
         }
 
+        // Also load ALL SubKPI codes globally (SubKPIs are always identified by their own unique code)
+        Map<String, Long> subKpiCodeToId = new HashMap<>();
+        jdbc.queryForList("SELECT id, code FROM sc_sub_kpis WHERE code IS NOT NULL")
+            .forEach(r -> {
+                String c = r.get("code") != null ? r.get("code").toString().trim() : null;
+                if (c != null && !c.isEmpty()) subKpiCodeToId.put(c, ((Number) r.get("id")).longValue());
+            });
+
+        List<HistoryUpsert> kpiUpserts = new ArrayList<>();
         for (Map<String, Object> row : rows) {
-            Object codeObj = row.get("kpiId");
-            Long kpiId = codeObj == null ? null : codeToId.get(codeObj.toString().trim());
-            BigDecimal actual = parseNumber(row.get("actual"));
-            BigDecimal target = parseNumber(row.get("target"));
-            if (kpiId == null || (actual == null && target == null)) {
-                skipped++;
+            BigDecimal actual = parseNumber(firstPresent(row, "actual", "Actual Field", "Actual", "ACTUAL"));
+            BigDecimal target = parseNumber(firstPresent(row, "target", "Target Field", "Target", "TARGET"));
+            if (actual == null && target == null) { skipped++; continue; }
+
+            // Period: support "Period" (values file), "periodStart", "Period Start", "period_start"
+            Object periodStrObj = firstPresent(row, "Period", "period", "periodStart", "Period Start", "period_start");
+            String periodStr   = periodStrObj != null ? periodStrObj.toString() : null;
+            String periodStart = parseRowDate(periodStr, defaultPeriodStart);
+            String frequency   = firstNonBlank(row, "Frequency", "frequency", "Measurement Frequency");
+            Object periodEndObj = firstPresent(row, "periodEnd", "Period End", "period_end");
+            String periodEndRaw = periodEndObj != null ? periodEndObj.toString() : null;
+            String periodEnd;
+            if (periodEndRaw != null && !periodEndRaw.isBlank()) {
+                periodEnd = parseRowDate(periodEndRaw, defaultPeriodEnd);
+            } else {
+                // Calculate from frequency when not explicitly provided
+                periodEnd = calcPeriodEnd(periodStart, frequency);
+            }
+
+            // ---- SubKPI row? (has SubKPI ID column) ----
+            String subKpiCode = firstNonBlank(row, "SubKPI ID", "Sub KPI ID", "SUBKPIID", "subKpiId");
+            if (subKpiCode != null && !subKpiCode.isBlank()) {
+                Long subKpiId = subKpiCodeToId.get(subKpiCode.trim());
+                if (subKpiId == null) {
+                    unmatched++; continue;
+                }
+                jdbc.update(
+                    "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value, target_value) "
+                    + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
+                    + "ON CONFLICT (sub_kpi_id, period_start, period_end) DO UPDATE SET "
+                    + "actual_value = COALESCE(EXCLUDED.actual_value, sc_sub_kpi_history.actual_value), "
+                    + "target_value = COALESCE(EXCLUDED.target_value, sc_sub_kpi_history.target_value), "
+                    + "calculated_at = NOW()",
+                    subKpiId, periodStart, periodEnd, actual, target);
+                subKpiUpdated++;
                 continue;
             }
-            jdbc.update(
-                    "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value, target_value) "
-                            + "VALUES (?,cast(? as date),cast(? as date),?,?) "
-                            + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET "
-                            + "actual_value = COALESCE(EXCLUDED.actual_value, sc_kpi_history.actual_value), "
-                            + "target_value = COALESCE(EXCLUDED.target_value, sc_kpi_history.target_value), "
-                            + "calculated_at = NOW()",
-                    kpiId, periodStart, periodEnd, actual, target);
-            updated++;
+
+            // ---- KPI row (no SubKPI ID — match by KPI ID / node key) ----
+            String lookupKey = firstNonBlank(row, "kpiId", "nodeKey", "kpiCode", "KPI ID", "KPI ID ");
+            Long kpiId = kpiImportKeyResolver.resolveDbId(lookupKey, kpiCodeToId);
+            if (kpiId == null) { unmatched++; skipped++; continue; }
+            kpiUpserts.add(new HistoryUpsert(kpiId, periodStart, periodEnd, actual, target));
         }
-        result.put("updated", updated);
+
+        batchUpsertHistory(kpiUpserts);
+        kpiUpdated = kpiUpserts.size();
+
+        int total = kpiUpdated + subKpiUpdated;
+        result.put("updated", total);
+        result.put("kpiRowsUpdated", kpiUpdated);
+        result.put("subKpiRowsUpdated", subKpiUpdated);
         result.put("skipped", skipped);
-        result.put("periodStart", periodStart);
-        result.put("periodEnd", periodEnd);
+        result.put("unmatched", unmatched);
+        result.put("matchedKpis", kpiCodeToId.size());
+        result.put("matchedSubKpis", subKpiCodeToId.size());
+        result.put("periodStart", defaultPeriodStart);
+        result.put("periodEnd", defaultPeriodEnd);
+        if (total == 0 && unmatched > 0) {
+            result.put("message",
+                    "No rows matched. Check that KPI IDs and SubKPI IDs in your file match the codes in the database. "
+                    + "Sample KPI codes on this page: " + sampleCodes(kpiCodeToId)
+                    + ". SubKPIs matched globally (" + subKpiCodeToId.size() + " in DB).");
+        }
         return result;
+    }
+
+    /**
+     * Imports Target + Actual values from the values/actuals Excel file format.
+     * Each row has: KPI ID, SubKPI ID, Period (date), Target, Actual, Frequency.
+     * Looks up SubKPIs by code and upserts into sc_sub_kpi_history + sc_kpi_history.
+     *
+     * Values file columns: Department ID, Scorecard, Perspective ID, Perspective,
+     *   Objective ID, Objective, KPI ID, KPI Name, ..., SubKPI ID, SubKPI Name,
+     *   SubKPI Weight, Frequency, Data Type, Period, Target, Actual
+     */
+    @Transactional
+    public Map<String, Object> importValuesFile(List<Map<String, Object>> rows) {
+        int kpiUpdated = 0, subKpiUpdated = 0, unmatched = 0, skipped = 0;
+
+        // Build code->id maps by scanning the whole database once (all KPIs + SubKPIs)
+        Map<String, Long> kpiCodeToId = new HashMap<>();
+        jdbc.queryForList("SELECT id, code FROM sc_kpis WHERE code IS NOT NULL AND is_deleted = false")
+            .forEach(r -> {
+                String c = r.get("code") != null ? r.get("code").toString().trim() : null;
+                if (c != null && !c.isEmpty()) kpiCodeToId.put(c, ((Number) r.get("id")).longValue());
+            });
+
+        Map<String, Long> subKpiCodeToId = new HashMap<>();
+        jdbc.queryForList("SELECT id, code FROM sc_sub_kpis WHERE code IS NOT NULL")
+            .forEach(r -> {
+                String c = r.get("code") != null ? r.get("code").toString().trim() : null;
+                if (c != null && !c.isEmpty()) subKpiCodeToId.put(c, ((Number) r.get("id")).longValue());
+            });
+
+        for (Map<String, Object> row : rows) {
+            String kpiCode    = firstNonBlank(row, "KPI ID", "KPIID", "Kpi ID");
+            String subKpiCode = firstNonBlank(row, "SubKPI ID", "Sub KPI ID", "SUBKPIID");
+            String periodStr  = firstNonBlank(row, "Period", "period", "Period Start", "PeriodStart");
+            String frequency  = firstNonBlank(row, "Frequency", "frequency", "Measurement Frequency");
+            BigDecimal target = parseNumber(firstPresent(row, "Target", "TARGET", "target"));
+            BigDecimal actual = parseNumber(firstPresent(row, "Actual", "ACTUAL", "actual"));
+
+            if (target == null && actual == null) { skipped++; continue; }
+            if (periodStr == null || periodStr.isBlank()) { skipped++; continue; }
+
+            String periodStart = parseRowDate(periodStr, null);
+            if (periodStart == null) { skipped++; continue; }
+            String periodEnd = calcPeriodEnd(periodStart, frequency);
+
+            // ---- SubKPI history ----
+            if (subKpiCode != null && !subKpiCode.isBlank()) {
+                Long subKpiId = subKpiCodeToId.get(subKpiCode.trim());
+                if (subKpiId == null) {
+                    unmatched++;
+                } else {
+                    jdbc.update(
+                        "INSERT INTO sc_sub_kpi_history (sub_kpi_id, period_start, period_end, actual_value, target_value) "
+                        + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
+                        + "ON CONFLICT (sub_kpi_id, period_start, period_end) DO UPDATE SET "
+                        + "actual_value = COALESCE(EXCLUDED.actual_value, sc_sub_kpi_history.actual_value), "
+                        + "target_value = COALESCE(EXCLUDED.target_value, sc_sub_kpi_history.target_value), "
+                        + "calculated_at = NOW()",
+                        subKpiId, periodStart, periodEnd, actual, target);
+                    subKpiUpdated++;
+                }
+            }
+
+            // ---- KPI history ----
+            if (kpiCode != null && !kpiCode.isBlank()) {
+                Long kpiId = kpiCodeToId.get(kpiCode.trim());
+                if (kpiId != null) {
+                    jdbc.update(
+                        "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value, target_value) "
+                        + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
+                        + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET "
+                        + "actual_value = COALESCE(EXCLUDED.actual_value, sc_kpi_history.actual_value), "
+                        + "target_value = COALESCE(EXCLUDED.target_value, sc_kpi_history.target_value), "
+                        + "calculated_at = NOW()",
+                        kpiId, periodStart, periodEnd, actual, target);
+                    kpiUpdated++;
+                }
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("kpiRowsUpdated", kpiUpdated);
+        result.put("subKpiRowsUpdated", subKpiUpdated);
+        result.put("unmatched", unmatched);
+        result.put("skipped", skipped);
+        result.put("totalRows", rows.size());
+        return result;
+    }
+
+    /** Calculate period_end from period_start + frequency. */
+    private static String calcPeriodEnd(String periodStart, String frequency) {
+        try {
+            LocalDate d = LocalDate.parse(periodStart);
+            if (frequency != null) {
+                String f = frequency.toLowerCase();
+                if (f.contains("annual") || f.contains("year")) return d.plusMonths(12).minusDays(1).toString();
+                if (f.contains("quarter"))                        return d.plusMonths(3).minusDays(1).toString();
+                if (f.contains("semi"))                           return d.plusMonths(6).minusDays(1).toString();
+            }
+            // Default: Monthly
+            return d.plusMonths(1).minusDays(1).toString();
+        } catch (Exception e) {
+            return periodStart;
+        }
+    }
+
+    // private Map<String, Long> loadCodeToIdMap(Long scorecardId) {
+    //     List<Map<String, Object>> kpiRows = jdbc.queryForList(
+    //             "SELECT k.id, k.code FROM sc_kpis k "
+    //                     + "JOIN sc_objectives o ON k.objective_id = o.id "
+    //                     + "JOIN sc_perspectives p ON o.perspective_id = p.id "
+    //                     + "WHERE p.scorecard_id = ? AND k.is_deleted = false",
+    //             scorecardId);
+    //     Map<String, Long> codeToId = new HashMap<>();
+    //     for (Map<String, Object> kr : kpiRows) {
+    //         Object code = kr.get("code");
+    //         if (code == null) {
+    //             continue;
+    //         }
+    //         jdbc.update(
+    //                 "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value, target_value) "
+    //                         + "VALUES (?,cast(? as date),cast(? as date),?,?) "
+    //                         + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET "
+    //                         + "actual_value = COALESCE(EXCLUDED.actual_value, sc_kpi_history.actual_value), "
+    //                         + "target_value = COALESCE(EXCLUDED.target_value, sc_kpi_history.target_value), "
+    //                         + "calculated_at = NOW()",
+    //                 kpiId, periodStart, periodEnd, actual, target);
+    //         updated++;
+    //         String trimmed = code.toString().trim();
+    //         codeToId.putIfAbsent(trimmed, ((Number) kr.get("id")).longValue());
+    //         String normalized = KpiImportKeyResolver.normalizeKpiCode(trimmed);
+    //         if (!normalized.equals(trimmed)) {
+    //             codeToId.putIfAbsent(normalized, ((Number) kr.get("id")).longValue());
+    //         }
+    //     }
+    //     return codeToId;
+    // }
+
+    private Map<String, Long> loadCodeToIdMap(Long scorecardId) {
+    List<Map<String, Object>> kpiRows = jdbc.queryForList(
+            "SELECT k.id, k.code FROM sc_kpis k "
+                    + "JOIN sc_objectives o ON k.objective_id = o.id "
+                    + "JOIN sc_perspectives p ON o.perspective_id = p.id "
+                    + "WHERE p.scorecard_id = ? AND k.is_deleted = false",
+            scorecardId);
+    Map<String, Long> codeToId = new HashMap<>();
+    for (Map<String, Object> kr : kpiRows) {
+        Object code = kr.get("code");
+        if (code == null) {
+            continue;
+        }
+        // jdbc.update(                          // ← DELETE from here
+        //         "INSERT INTO sc_kpi_history...",
+        //         kpiId, periodStart, periodEnd, actual, target);
+        // updated++;                            // ← to here (these 4 lines)
+        String trimmed = code.toString().trim();
+        codeToId.putIfAbsent(trimmed, ((Number) kr.get("id")).longValue());
+        String normalized = KpiImportKeyResolver.normalizeKpiCode(trimmed);
+        if (!normalized.equals(trimmed)) {
+            codeToId.putIfAbsent(normalized, ((Number) kr.get("id")).longValue());
+        }
+    }
+    return codeToId;
+}
+
+    private void batchUpsertHistory(List<HistoryUpsert> upserts) {
+        if (upserts.isEmpty()) {
+            return;
+        }
+        final String sql =
+                "INSERT INTO sc_kpi_history (kpi_id, period_start, period_end, actual_value, target_value) "
+                        + "VALUES (?,CAST(? AS DATE),CAST(? AS DATE),?,?) "
+                        + "ON CONFLICT (kpi_id, period_start, period_end) DO UPDATE SET "
+                        + "actual_value = COALESCE(EXCLUDED.actual_value, sc_kpi_history.actual_value), "
+                        + "target_value = COALESCE(EXCLUDED.target_value, sc_kpi_history.target_value), "
+                        + "calculated_at = NOW()";
+        final int batchSize = 250;
+        for (int offset = 0; offset < upserts.size(); offset += batchSize) {
+            int end = Math.min(offset + batchSize, upserts.size());
+            List<HistoryUpsert> slice = upserts.subList(offset, end);
+            jdbc.batchUpdate(sql, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    HistoryUpsert u = slice.get(i);
+                    ps.setLong(1, u.kpiId());
+                    ps.setString(2, u.periodStart());
+                    ps.setString(3, u.periodEnd());
+                    ps.setObject(4, u.actual());
+                    ps.setObject(5, u.target());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return slice.size();
+                }
+            });
+        }
+    }
+
+    private record HistoryUpsert(Long kpiId, String periodStart, String periodEnd, BigDecimal actual, BigDecimal target) {}
+
+    private static String sampleCodes(Map<String, Long> codeToId) {
+        return codeToId.keySet().stream().limit(3).reduce((a, b) -> a + ", " + b).orElse("see exported template");
+    }
+
+    private static String firstNonBlank(Map<String, Object> row, String... keys) {
+        for (String key : keys) {
+            Object v = row.get(key);
+            if (v != null && !v.toString().isBlank()) {
+                return v.toString().trim();
+            }
+        }
+        return null;
+    }
+
+    private static Object firstPresent(Map<String, Object> row, String... keys) {
+        for (String key : keys) {
+            if (row.containsKey(key) && row.get(key) != null && !"".equals(row.get(key))) {
+                return row.get(key);
+            }
+        }
+        return null;
+    }
+
+    private String parseRowDate(Object raw, String fallback) {
+        if (raw == null || raw.toString().isBlank()) {
+            return fallback;
+        }
+        LocalDate parsed = parseOne(raw.toString().trim(), null);
+        return parsed != null ? parsed.toString() : fallback;
     }
 
     private static LocalDate[] parseRange(String dateRange) {
@@ -518,7 +789,8 @@ public class ScorecardCrudService {
     private static LocalDate parseOne(String s, LocalDate fallback) {
         for (DateTimeFormatter f : new DateTimeFormatter[]{
                 DateTimeFormatter.ofPattern("MM/dd/yyyy"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd")}) {
+                DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+                DateTimeFormatter.ofPattern("MMM d, yyyy", java.util.Locale.ENGLISH)}) {
             try {
                 return LocalDate.parse(s, f);
             } catch (Exception ignore) {

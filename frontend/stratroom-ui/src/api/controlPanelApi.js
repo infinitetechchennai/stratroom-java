@@ -1,8 +1,5 @@
 import axiosClient from './axiosClient'
 
-// Control Panel API layer (consolidated backend /api). Headers (USER_ORG_ID,
-// LOGGED_IN_EMPLOYEE_ID …) are injected by axiosClient.
-
 export function getOrgId() {
   try {
     const p = JSON.parse(localStorage.getItem('profile') || '{}')
@@ -12,11 +9,29 @@ export function getOrgId() {
   }
 }
 
+export function getEmpId() {
+  try {
+    const p = JSON.parse(localStorage.getItem('profile') || '{}')
+    return p?.empId ?? p?.id ?? null
+  } catch {
+    return null
+  }
+}
+
+// ---- Permissions ----
+
+export const getModulePermissions = async (empId, moduleName) => {
+  const res = await axiosClient.get(
+    `/api/user/modulePermissions/${empId}?moduleName=${encodeURIComponent(moduleName)}`
+  )
+  return res.data
+}
+
 // ---- General Settings ----
 
 export const getGeneralSettings = async (orgId) => {
   const res = await axiosClient.get(`/api/generalSettingList/${orgId}`)
-  return res.data // List<ControlPanelGeneralDTO>
+  return res.data
 }
 
 export const createGeneralSetting = async (dto) => {
@@ -28,6 +43,22 @@ export const updateGeneralSetting = async (dto) => {
   const res = await axiosClient.put('/api/generalSetting', dto)
   return res.data
 }
+
+export async function loadGeneralSettingRow(orgId) {
+  const list = await getGeneralSettings(orgId)
+  const dto = Array.isArray(list) ? list[0] : list
+  return dto ? { ...dto, orgId: dto.orgId ?? orgId } : { orgId, generalSettingValue: {} }
+}
+
+export async function patchGeneralSetting(orgId, patchGsv, baseDto = null) {
+  const dto = baseDto || await loadGeneralSettingRow(orgId)
+  const generalSettingValue = { ...(dto.generalSettingValue || {}), ...patchGsv }
+  const payload = { ...dto, orgId, generalSettingValue }
+  if (dto.id) return updateGeneralSetting(payload)
+  return createGeneralSetting(payload)
+}
+
+export const getCurrencyList = async () => (await axiosClient.get('/api/currencyList')).data
 
 // ---- Theme ----
 
@@ -50,8 +81,10 @@ export const updateSecurity = async (dto) => (await axiosClient.put('/api/contro
 // ---- Workflow ----
 
 export const getWorkflows = async () => (await axiosClient.get('/api/retriveWorkFlow')).data
+export const getWorkflowById = async (id) => (await axiosClient.get(`/api/retriveWorkFlow/${id}`)).data
 export const saveWorkflow = async (dto) => (await axiosClient.post('/api/saveWorkFlow', dto)).data
 export const updateWorkflow = async (dto) => (await axiosClient.put('/api/updateWorkFlow', dto)).data
+export const deleteWorkflow = async (id) => (await axiosClient.delete(`/api/deleteWorkFlow/${id}`)).data
 
 // ---- Scorecard Settings (Custom Performance) ----
 
@@ -65,6 +98,8 @@ export const saveCustomPerformance = async (dto) => {
   return res.data
 }
 
+// ---- Risk Settings ----
+
 export const getRiskSettingsDetails = async () => {
   const res = await axiosClient.get('/api/customPerformance/riskdetails')
   return res.data
@@ -72,5 +107,24 @@ export const getRiskSettingsDetails = async () => {
 
 export const saveRiskSettings = async (dto) => {
   const res = await axiosClient.post('/api/customPerformance/risk', dto)
+  return res.data
+}
+
+export const getRiskOptionList = async () => (await axiosClient.get('/api/riskoptionlist')).data
+
+// ---- License / Backup ----
+
+export const getLicenseDetails = async () => {
+  const res = await axiosClient.get('/api/licenseDetails')
+  return res.data
+}
+
+export const getRestorePaths = async (orgId) => {
+  const res = await axiosClient.get('/api/restorePath', { params: { orgId: String(orgId) } })
+  return res.data
+}
+
+export const runScriptRestore = async (path, orgId) => {
+  const res = await axiosClient.get('/api/scriptrestore', { params: { path, orgId: String(orgId) } })
   return res.data
 }

@@ -61,6 +61,9 @@ import com.estrat.backend.db.dto.EmployeePreferencesDTO;
 import com.estrat.backend.db.dto.EmployeeResponseDTO;
 import com.estrat.backend.db.dto.FindDTO;
 import com.estrat.backend.db.dto.LicenseResponseDTO;
+import com.estrat.backend.db.dto.LicenseModuleDTO;
+import com.estrat.backend.db.dto.ModuleDTO;
+import com.estrat.backend.db.dto.OrgLicenseResponseDTO;
 import com.estrat.backend.db.exception.InputValidationException;
 import com.estrat.backend.db.exception.RequestException;
 import com.estrat.backend.db.resource.util.CacheUtil;
@@ -69,10 +72,15 @@ import com.estrat.backend.db.service.DeptTrackerService;
 import com.estrat.backend.db.service.EmployeeService;
 import com.estrat.backend.db.service.DbLicenseService;
 import com.estrat.backend.db.service.OrgTrackerService;
+import com.estrat.backend.db.service.RoleService;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -96,6 +104,8 @@ public class DataServiceController {
     private EmployeeService employeeService;
     @Autowired
     private DbLicenseService licenseService;
+    @Autowired
+    private RoleService roleService;
     @Autowired
     private DepartmentDetailsService departmentDetailsService;
     @Autowired
@@ -212,58 +222,117 @@ public class DataServiceController {
     public boolean creatBulkeEmployee(@RequestBody List<Employee> employees, HttpServletRequest request) throws InputValidationException {
         HashMap<String, Employee> parentMap = new HashMap<String, Employee>();
         String loggedInEmpId = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+        int created = 0, updated = 0, skipped = 0, failed = 0;
+        this.log.info("[User Import] received " + employees.size() + " employees, loggedInEmpId=" + loggedInEmpId);
         for (Employee employee : employees) {
-            Employee employeeObj;
-            if (this.employeeService.checkUserExist(employee.getEmailAddress()) || employee.getOrgDetails() == null && employee.getParentEmpId() == 0L) {
-                this.log.error("Employee skipped " + employee.getEmailAddress() + "with Org Details " + employee.getOrgDetails());
-                if (StringUtils.isNotEmpty((CharSequence)employee.getEmailAddress()) && (employeeObj = this.employeeService.getEmployeeIDByEmail(employee.getEmailAddress())) != null) {
-                    employee.setEmpId(employeeObj.getEmpId());
-                    employee.setOrgDetails(employeeObj.getOrgDetails());
-                    employee.setParentEmail(employee.getParentEmployeeName());
-                    parentMap.put(String.valueOf(employeeObj.getEmpId()), employee);
-                    continue;
-                }
-            }
-            if (StringUtils.isNotEmpty((CharSequence)employee.getNewEmailAddress()) && (employeeObj = this.employeeService.getEmployeeIDByEmail(employee.getNewEmailAddress())) != null) {
-                employee.setEmpId(employeeObj.getEmpId());
-                employee.setOrgDetails(employeeObj.getOrgDetails());
-                employee.setParentEmail(employee.getParentEmployeeName());
-                parentMap.put(String.valueOf(employeeObj.getEmpId()), employee);
+            String email = employee.getEmailAddress();
+            if (StringUtils.isEmpty((CharSequence)email)) {
+                skipped++;
+                this.log.warn("[User Import] skipping row without email");
                 continue;
             }
-            EmployeeResponseDTO employeeResponseDTO = this.employeeService.createEmployee(employee, "import");
-            employee.setEmpId(employeeResponseDTO.getEmployeeId());
-            employee.setParentEmail(employee.getParentEmployeeName());
-            parentMap.put(String.valueOf(employeeResponseDTO.getEmployeeId()), employee);
+            try {
+                Employee existing = this.employeeService.resolveEmployeeForImport(email);
+                if (existing == null && StringUtils.isNotEmpty((CharSequence)employee.getNewEmailAddress())) {
+                    existing = this.employeeService.resolveEmployeeForImport(employee.getNewEmailAddress());
+                }
+                if (existing != null) {
+                    this.enqueueBulkImportEmployee(parentMap, employee, existing);
+                    updated++;
+                    continue;
+                }
+                EmployeeResponseDTO employeeResponseDTO = this.employeeService.createEmployee(employee, "import");
+                employee.setEmpId(employeeResponseDTO.getEmployeeId());
+                employee.setParentEmail(employee.getParentEmployeeName());
+                parentMap.put(String.valueOf(employeeResponseDTO.getEmployeeId()), employee);
+                created++;
+            } catch (InputValidationException ex) {
+                if (ex.getMessage() != null && ex.getMessage().toLowerCase().contains("already exist")) {
+                    Employee existing = this.employeeService.resolveEmployeeForImport(email);
+                    if (existing != null) {
+                        this.enqueueBulkImportEmployee(parentMap, employee, existing);
+                        updated++;
+                        continue;
+                    }
+                }
+                failed++;
+                this.log.error("[User Import] failed email=" + email + ": " + ex.getMessage());
+            } catch (Exception ex) {
+                failed++;
+                this.log.error("[User Import] failed email=" + email + ": " + ex.getMessage());
+            }
         }
         if (parentMap != null && !parentMap.isEmpty()) {
             for (String key : parentMap.keySet()) {
-                Employee updateEmployee = (Employee)parentMap.get(key);
-                if (Objects.nonNull(updateEmployee.getOrgDetails()) && updateEmployee.getOrgDetails().getName() != null) {
-                    OrganizationDetails orgDetails = this.employeeService.getOrgDetails(updateEmployee.getOrgDetails().getName());
-                    if (Objects.nonNull(orgDetails)) {
-                        updateEmployee.setOrgDetails(orgDetails);
+                try {
+                    Employee updateEmployee = (Employee)parentMap.get(key);
+                    if (Objects.nonNull(updateEmployee.getOrgDetails()) && updateEmployee.getOrgDetails().getName() != null) {
+                        OrganizationDetails orgDetails = this.employeeService.getOrgDetails(updateEmployee.getOrgDetails().getName());
+                        if (Objects.nonNull(orgDetails)) {
+                            updateEmployee.setOrgDetails(orgDetails);
+                        }
                     }
+                    if (StringUtils.isNotEmpty((CharSequence)updateEmployee.getParentEmail())) {
+                        String parentRef = updateEmployee.getParentEmail().trim();
+                        Employee parentEmployee;
+                        if (parentRef.contains("@")) {
+                            parentEmployee = this.employeeService.resolveEmployeeForImport(parentRef);
+                            if (parentEmployee == null) {
+                                parentEmployee = this.employeeService.getEmployeeIDByEmail(parentRef);
+                            }
+                        } else {
+                            long orgId = Objects.nonNull(updateEmployee.getOrgDetails()) ? updateEmployee.getOrgDetails().getOrgId() : 0L;
+                            String[] parts = parentRef.split("\\s+", 2);
+                            if (parts.length == 2) {
+                                parentEmployee = this.employeeService.getEmployeeIDByFullName(parts[0], parts[1], orgId);
+                                if (parentEmployee == null) {
+                                    parentEmployee = this.employeeService.getEmployeeId(parts[0], orgId);
+                                }
+                            } else {
+                                parentEmployee = this.employeeService.getEmployeeId(parts[0], orgId);
+                            }
+                        }
+                        long resolvedParentId = parentEmployee != null ? parentEmployee.getEmpId() : 0L;
+                        if (resolvedParentId == 0L) {
+                            resolvedParentId = this.employeeService.superUserId();
+                            this.log.warn("[Import] parent '" + parentRef + "' for " + updateEmployee.getEmailAddress() + " not found -> falling back to superUser empId=" + resolvedParentId);
+                        } else {
+                            this.log.info("[Import] parent lookup for " + updateEmployee.getEmailAddress() + " -> parentRef='" + parentRef + "' resolved to empId=" + resolvedParentId);
+                        }
+                        updateEmployee.setParentEmpId(resolvedParentId);
+                    } else {
+                        long rootParent = this.employeeService.superUserId();
+                        this.log.info("[Import] no parent for " + updateEmployee.getEmailAddress() + " -> assigned to superUser empId=" + rootParent);
+                        updateEmployee.setParentEmpId(rootParent);
+                    }
+                    if (StringUtils.isNotEmpty((CharSequence)updateEmployee.getNewEmailAddress())) {
+                        updateEmployee.setEmailAddress(updateEmployee.getNewEmailAddress());
+                    }
+                    this.employeeService.updateEmployee(updateEmployee, "import");
+                } catch (Exception ex) {
+                    failed++;
+                    this.log.error("[User Import] update pass failed for empId=" + key + ": " + ex.getMessage());
                 }
-                if (StringUtils.isNotEmpty((CharSequence)updateEmployee.getParentEmail())) {
-                    Employee parentEmployee = this.employeeService.getEmployeeIDByEmail(updateEmployee.getParentEmail());
-                    long resolvedParentId = parentEmployee != null ? parentEmployee.getEmpId() : 0L;
-                    this.log.info("[Import] parent lookup for " + updateEmployee.getEmailAddress() + " -> parentEmail='" + updateEmployee.getParentEmail() + "' resolved to empId=" + resolvedParentId);
-                    updateEmployee.setParentEmpId(resolvedParentId);
-                } else {
-                    long rootParent = this.employeeService.superUserId();
-                    this.log.info("[Import] no parentEmail for " + updateEmployee.getEmailAddress() + " -> assigned to superUser empId=" + rootParent);
-                    updateEmployee.setParentEmpId(rootParent);
-                }
-                if (StringUtils.isNotEmpty((CharSequence)updateEmployee.getNewEmailAddress())) {
-                    updateEmployee.setEmailAddress(updateEmployee.getNewEmailAddress());
-                }
-                this.employeeService.updateEmployee(updateEmployee, "import");
             }
         }
+        this.log.info("[User Import] done — created=" + created + " updated=" + updated + " skipped=" + skipped + " failed=" + failed);
         this.log.debug("logged in employeeID " + loggedInEmpId);
-        this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        if (loggedInEmpId != null && !"null".equals(loggedInEmpId) && !loggedInEmpId.isBlank()) {
+            this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        }
+        if (created == 0 && updated == 0 && failed > 0) {
+            throw new InputValidationException("Import failed: " + failed + " user row(s) could not be imported. If you re-import the same file, clear duplicate users first or contact support.");
+        }
         return true;
+    }
+
+    private void enqueueBulkImportEmployee(HashMap<String, Employee> parentMap, Employee incoming, Employee existing) {
+        incoming.setEmpId(existing.getEmpId());
+        if (existing.getOrgDetails() != null) {
+            incoming.setOrgDetails(existing.getOrgDetails());
+        }
+        incoming.setParentEmail(incoming.getParentEmployeeName());
+        parentMap.put(String.valueOf(existing.getEmpId()), incoming);
     }
 
     @ResponseBody
@@ -361,6 +430,47 @@ public class DataServiceController {
         return new ResponseEntity<>(this.licenseService.validateLicense(), HttpStatus.OK);
     }
 
+    @GetMapping(value={"/licenseDetails"})
+    public ResponseEntity<OrgLicenseResponseDTO> licenseDetails() {
+        OrgLicenseResponseDTO response = new OrgLicenseResponseDTO();
+        List<ModuleDTO> allModules = this.roleService.getModuleList();
+        try {
+            LicenseResponseDTO license = this.licenseService.validateLicense();
+            response.setValidationSuccess(license.isValidationSuccess());
+            response.setValidationMesssage(license.getValidationMesssage());
+            response.setExpiryDate(license.getExpiryDate());
+            response.setTotalAllowedUsers(license.getTotalAllowedUsers());
+            response.setOrganization(license.getOrganization());
+            response.setDeviceList(license.getDeviceList());
+            List<String> licensed = license.getModuleList() != null ? license.getModuleList() : Collections.emptyList();
+            response.setModuleList(this.buildLicensedModuleList(allModules, licensed));
+        } catch (Exception e) {
+            this.log.error("licenseDetails failed", e);
+            response.setValidationSuccess(false);
+            response.setValidationMesssage("Could not read license: " + e.getMessage());
+            response.setModuleList(this.buildLicensedModuleList(allModules, Collections.emptyList()));
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private List<LicenseModuleDTO> buildLicensedModuleList(List<ModuleDTO> allModules, List<String> licensedNames) {
+        Set<String> seen = new LinkedHashSet<>();
+        List<LicenseModuleDTO> modules = new ArrayList<>();
+        for (ModuleDTO module : allModules) {
+            String name = module.getModuleName();
+            if (name == null || !seen.add(name)) {
+                continue;
+            }
+            LicenseModuleDTO dto = new LicenseModuleDTO();
+            dto.setModuleId(module.getModuleId());
+            dto.setModuleName(name);
+            dto.setTagName(module.getTagName());
+            dto.setEnabled(licensedNames.contains(name));
+            modules.add(dto);
+        }
+        return modules;
+    }
+
     @ResponseBody
     @RequestMapping(value={"/organizationList"}, method={RequestMethod.GET})
     public List<OrganizationDetails> organizationList() {
@@ -438,12 +548,30 @@ public class DataServiceController {
     @RequestMapping(value={"/createBulkDeptMapping"}, method={RequestMethod.POST})
     public boolean createBulkDeptMapping(@RequestBody List<DeptImportDTO> deptImportDTOList, HttpServletRequest request) throws InputValidationException {
         String loggedInEmpId = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+        int imported = 0, skipped = 0;
+        this.log.info("[Org Import] received {} departments, loggedInEmpId={}", deptImportDTOList.size(), loggedInEmpId);
         for (DeptImportDTO deptImportDTO : deptImportDTOList) {
-            if (deptImportDTO.getOrgName().isEmpty() || deptImportDTO.getDeptID().isEmpty()) continue;
-            this.employeeService.createBulkDeptMapping(deptImportDTO, loggedInEmpId);
+            if (deptImportDTO.getOrgName() == null || deptImportDTO.getOrgName().isEmpty() || deptImportDTO.getDeptID() == null || deptImportDTO.getDeptID().isEmpty()) {
+                this.log.warn("[Org Import] skipping row — missing orgName or deptID: {}", deptImportDTO.getDeptName());
+                skipped++; continue;
+            }
+            this.log.info("[Org Import] processing deptID={} deptName={} parentDeptID={} ownerName={} emailAddress={}",
+                    deptImportDTO.getDeptID(), deptImportDTO.getDeptName(), deptImportDTO.getParentDeptID(),
+                    deptImportDTO.getOwnerName(), deptImportDTO.getEmailAddress());
+            try {
+                if (this.employeeService.createBulkDeptMapping(deptImportDTO, loggedInEmpId)) imported++; else skipped++;
+            } catch (Exception ex) {
+                skipped++;
+                this.log.error("[Org Import] failed deptID={} deptName={}: {}", deptImportDTO.getDeptID(), deptImportDTO.getDeptName(), ex.getMessage());
+            }
         }
-        this.log.debug("logged in employeeID " + loggedInEmpId);
-        this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        this.log.info("[Org Import] done — imported={} skipped={}", imported, skipped);
+        if (loggedInEmpId != null && !"null".equals(loggedInEmpId)) {
+            this.cacheUtil.removeEmployeeCache(loggedInEmpId);
+        }
+        if (imported == 0 && skipped > 0) {
+            throw new InputValidationException("Import failed: 0 of " + skipped + " departments could be imported. Check that the Organization name in the Excel matches the system ('" + (deptImportDTOList.isEmpty() ? "" : deptImportDTOList.get(0).getOrgName()) + "').");
+        }
         return true;
     }
 

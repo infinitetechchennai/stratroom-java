@@ -35,6 +35,7 @@ import com.estrat.backend.db.cache.DBCache;
 import com.estrat.backend.db.dao.KPIDAO;
 import com.estrat.backend.db.dao.SubKPIRepository;
 import com.estrat.backend.db.dto.EmployeeDTO;
+import com.estrat.backend.db.dto.KPIResponseDTO;
 import com.estrat.backend.db.dto.ObjectivesDTO;
 import com.estrat.backend.db.dto.ScoreCardResponseDTO;
 import com.estrat.backend.db.dto.SubKPIDTO;
@@ -42,7 +43,9 @@ import com.estrat.backend.db.generators.NodeKeyGenerators;
 import com.estrat.backend.db.service.EmployeeService;
 import com.estrat.backend.db.service.KPIService;
 import com.estrat.backend.db.service.ObjectivesService;
+import com.estrat.backend.db.service.PerformanceContractService;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -70,6 +73,8 @@ public class SubKPIService {
     private DBCache dbCache;
     @Autowired
     private ObjectivesService objectivesService;
+    @Autowired
+    private PerformanceContractService performanceContractService;
 
     public Optional<SubKPI> findById(long id) {
         return this.subKPIRepository.findByIdAndActive(Long.valueOf(id), 0);
@@ -179,6 +184,28 @@ public class SubKPIService {
     public List<SubKPIDTO> retrieveSubKpiEntryDataList(long scoreCardId) {
         List<SubKPI> dbList = this.subKPIRepository.findSubKPIByScorecardId(Long.valueOf(scoreCardId), 0);
         return dbList.stream().map(dbValue -> new SubKPIDTO(dbValue)).collect(Collectors.toList());
+    }
+
+    public KPIResponseDTO retrievePerformanceFormData(long scoreCardId) {
+        KPIResponseDTO response = new KPIResponseDTO();
+        List<SubKPIDTO> subList = this.retrieveSubKpiEntryDataList(scoreCardId);
+        for (SubKPIDTO sub : subList) {
+            try {
+                sub.setSubKPIEntrysDTO(this.performanceContractService.findBysubKPIEntryId(sub.getId()));
+            } catch (Exception e) {
+                this.logger.warn("Could not load sub-KPI entry for {}", sub.getId(), e);
+            }
+        }
+        response.setSubkpidtoList(subList);
+        HashMap<String, Object> values = new HashMap<>();
+        try {
+            values.put("performanceContract", this.performanceContractService.findByPerformanceScoreCardId(scoreCardId));
+        } catch (Exception e) {
+            values.put("performanceContract", new com.estrat.backend.db.dto.PerformanceContractDTO());
+            this.logger.warn("Could not load performance contract for scorecard {}", scoreCardId, e);
+        }
+        response.setValues(values);
+        return response;
     }
 }
 

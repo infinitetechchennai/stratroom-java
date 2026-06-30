@@ -34,8 +34,10 @@ extends JpaRepository<UserRoleManagement, Long> {
     @Query(value="SELECT u FROM UserRoleManagement u WHERE u.orgId =:orgId AND u.active =:active AND  u.emailAddress =:email")
     public Optional<UserRoleManagement> findByEmail(@Param(value="orgId") Long var1, @Param(value="email") String var2, @Param(value="active") int var3);
 
+    // Returns Long (not primitive long) so a no-row result yields null instead of triggering
+    // Spring's AopInvocationException when there is no super-user configured for the org.
     @Query(value="SELECT u.empId FROM UserRoleManagement u WHERE u.orgId =:orgId AND u.active =:active AND u.userAccess =:userAccess")
-    public long findByID(@Param(value="orgId") Long var1, @Param(value="active") int var2, @Param(value="userAccess") int var3);
+    public Long findByID(@Param(value="orgId") Long var1, @Param(value="active") int var2, @Param(value="userAccess") int var3);
 
     @Query(value="SELECT u FROM UserRoleManagement u WHERE u.empId =:empId AND u.status=:status AND u.active =:active")
     public UserRoleManagement findBy(@Param(value="empId") Long var1, @Param(value="status") String var2, @Param(value="active") int var3);

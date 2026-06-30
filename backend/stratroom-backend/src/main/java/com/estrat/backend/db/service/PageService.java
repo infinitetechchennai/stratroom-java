@@ -166,11 +166,13 @@ public class PageService {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setEmployeeId(empId);
         Employee employee = this.employeeService.getProfileDetails(employeeDTO);
-        List<PagesDetails> dbList = null;
-        List<PageDTO> pageDTOList = null;
+        List<PagesDetails> dbList = new ArrayList<>();
         Long orgId = employee.getOrgDetails() != null ? employee.getOrgDetails().getOrgId() : 1L;
         ControlPanelGeneralDTO controlPanelGeneralDTO = this.generalService.findByOrgId(orgId);
-        if (controlPanelGeneralDTO.getImplementationType() != null && controlPanelGeneralDTO.getImplementationType().equalsIgnoreCase("Department")) {
+        boolean deptMode = controlPanelGeneralDTO != null
+                && controlPanelGeneralDTO.getImplementationType() != null
+                && controlPanelGeneralDTO.getImplementationType().equalsIgnoreCase("Department");
+        if (deptMode) {
             if (employee.getDeptDetails() != null) {
                 List idList = this.departmentMappingRepository.departmentByEmployeeIdList(employee.getDeptDetails().getId(), "Active");
                 idList.add(empId);
@@ -183,9 +185,25 @@ public class PageService {
                 }
             }
         } else {
-            dbList = this.pageRepository.findAllByEmpId(Long.valueOf(empId), 0);
+            dbList.addAll(this.pageRepository.findAllByEmpId(Long.valueOf(empId), 0));
+            if (employee.getDeptDetails() != null) {
+                this.mergePages(dbList, this.pageRepository.findAllByDeptId(employee.getDeptDetails().getId(), 0));
+            }
+            Employee adminCheck = new Employee();
+            adminCheck.setEmpId(empId);
+            if (this.employeeService.checkRole(adminCheck)) {
+                List<Long> allDepts = this.departmentChartMappingRepo.getAllDepartmentByOrgId(orgId, 0);
+                if (allDepts != null && !allDepts.isEmpty()) {
+                    this.mergePages(dbList, this.pageRepository.findAllByDeptList(allDepts, 0));
+                }
+            }
         }
-        pageDTOList = !dbList.isEmpty() ? dbList.stream().map(dbValue -> new PageDTO(dbValue)).collect(Collectors.toList()) : new ArrayList<PageDTO>();
+        if (dbList == null) {
+            dbList = new ArrayList<>();
+        }
+        List<PageDTO> pageDTOList = !dbList.isEmpty()
+                ? dbList.stream().map(dbValue -> new PageDTO(dbValue)).collect(Collectors.toList())
+                : new ArrayList<>();
         if (!pageDTOList.isEmpty()) {
             for (PageDTO pageDTO : pageDTOList) {
                 HomePagePreferences homePagePreferences = this.homePagePreferenceRepository.findPreferences(pageDTO.getCreatedBy(), pageDTO.getPageName());
@@ -194,6 +212,19 @@ public class PageService {
             }
         }
         return pageDTOList;
+    }
+
+    private void mergePages(List<PagesDetails> target, List<PagesDetails> extra) {
+        if (extra == null || extra.isEmpty()) {
+            return;
+        }
+        java.util.Set<Long> seen = target.stream().map(PagesDetails::getId).collect(Collectors.toSet());
+        for (PagesDetails page : extra) {
+            if (page != null && !seen.contains(page.getId())) {
+                target.add(page);
+                seen.add(page.getId());
+            }
+        }
     }
 
     public List<PageDTO> findAll(long empId, String pageType) {

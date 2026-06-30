@@ -311,9 +311,14 @@ public class DeptTrackerService {
     }
 
     public void populateAdditionalDept(OrgTrackerDTO orgTrackerDTO, String type, DepartmentChartMapping departmentChartMapping) {
-        DepartmentDetails departmentDetails = (DepartmentDetails)this.departmentDetailsRepository.findById(orgTrackerDTO.getDeptId()).get();
+        Optional<DepartmentDetails> departmentDetailsOpt = this.departmentDetailsRepository.findById(orgTrackerDTO.getDeptId());
+        if (!departmentDetailsOpt.isPresent()) {
+            return;
+        }
+        DepartmentDetails departmentDetails = departmentDetailsOpt.get();
         if (orgTrackerDTO.getParentId() != 0L) {
-            orgTrackerDTO.setParentName(((DepartmentDetails)this.departmentDetailsRepository.findById(orgTrackerDTO.getParentId()).get()).getName());
+            Optional<DepartmentDetails> parentDept = this.departmentDetailsRepository.findById(orgTrackerDTO.getParentId());
+            parentDept.ifPresent(dept -> orgTrackerDTO.setParentName(dept.getName()));
         }
         if (departmentDetails != null) {
             Optional employeeProfilePo;
@@ -348,7 +353,9 @@ public class DeptTrackerService {
             EmployeeProfilePo employeeProfilePo = this.employeeService.getEmployeeProfile(whoIsID);
             ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(employeeProfilePo.getOrgId().getId());
             DepartmentChartMapping departmentChart = this.departmentChartMappingRepository.getOne(((PagesDetails)pagesDetails.get()).getDeptId());
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
                 DeptTracker deptTracker = new DeptTracker();
                 deptTracker.setActive(0);
                 deptTracker.setCreatedTime(LocalDateTime.now());
@@ -384,7 +391,9 @@ public class DeptTrackerService {
             if (((PagesDetails)pagesDetails.get()).getDeptId() != 0L) {
                 departmentChart = this.departmentChartMappingRepository.getOne(((PagesDetails)pagesDetails.get()).getDeptId());
             }
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
                 DeptTracker findTracker = null;
                 findTracker = departmentChart != null ? this.deptTrackerRepository.findBy(departmentChart.getDeptId().longValue(), departmentChart.getDeptParentId().longValue(), pageId.longValue(), 0) : this.deptTrackerRepository.findBy(Long.valueOf(0L).longValue(), Long.valueOf(0L).longValue(), pageId.longValue(), 0);
                 if (findTracker == null) {
@@ -438,7 +447,9 @@ public class DeptTrackerService {
             if (((PagesDetails)pagesDetails.get()).getDeptId() != 0L) {
                 departmentChart = this.departmentChartMappingRepository.getOne(((PagesDetails)pagesDetails.get()).getDeptId());
             }
-            if (controlPanelGeneral != null && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
+            if (controlPanelGeneral != null
+                    && controlPanelGeneral.getImplementationType() != null
+                    && controlPanelGeneral.getImplementationType().equalsIgnoreCase("Department")) {
                 DeptTracker findTracker = null;
                 findTracker = departmentChart != null ? this.deptTrackerRepository.findBy(departmentChart.getDeptId().longValue(), departmentChart.getDeptParentId().longValue(), pageId.longValue(), 0) : this.deptTrackerRepository.findBy(Long.valueOf(0L).longValue(), Long.valueOf(0L).longValue(), pageId.longValue(), 0);
                 if (findTracker == null) {

@@ -1,0 +1,15 @@
+Name,Last Name,Email Address,Department ID,Designation,Location,Phone no,Manager
+Cameron,Saunders,cameron.saunders@company.com,EXE-001,Chief Executive Officer,Head Office,,
+Gayle,Pearson,gayle.pearson@company.com,EXE-001,Non-Executive Director,Head Office,,Cameron Saunders
+Andrew,Davidson,andrew.davidson@company.com,EXE-001,Non-Executive Director,Head Office,,Gayle Pearson
+Laura,Rodriguez,laura.rodriguez@company.com,EXE-002,Director - Corporate Strategy,Head Office,,Cameron Saunders
+Maria,Garcia,maria.garcia@company.com,EXE-003,Director - Governance,Head Office,,Cameron Saunders
+Robert,Johnson,robert.johnson@company.com,EXE-004,Director - Planning,Head Office,,Cameron Saunders
+James,Smith,james.smith@company.com,EXE-005,Director - Administration,Head Office,,Cameron Saunders
+James,Rodriguez,james.rodriguez@company.com,FIN-001,Chief Financial Officer,Head Office,,Cameron Saunders
+Maria,Martinez,maria.martinez@company.com,FIN-001,VP - Finance,Head Office,,James Rodriguez
+Michael,Brown,michael.brown@company.com,HR-001,VP - HR & Administration,Head Office,,Cameron Saunders
+David,Hernandez,david.hernandez@company.com,IT-001,Chief Technology Officer,Head Office,,Cameron Saunders
+Steven,Miller,steven.miller@company.com,IT-002,Software Engineer,Head Office,,David Hernandez
+David,Smith,david.smith@company.com,MKT-001,Manager - Sales & Marketing,Head Office,,Robert Johnson
+Robert,Brown,robert.brown@company.com,SLS-001,Manager - Sales,Head Office,,Robert Johnson

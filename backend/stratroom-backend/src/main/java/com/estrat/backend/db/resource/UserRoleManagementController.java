@@ -84,6 +84,13 @@ public class UserRoleManagementController {
         return new ResponseEntity((Object)this.userRoleManagementService.getUserList(findDTO), HttpStatus.OK);
     }
 
+    @GetMapping(value={"/userList/org/{orgId}"})
+    public ResponseEntity<List<UserDTO>> getUserListByOrg(@PathVariable(value="orgId") Long orgId) {
+        FindDTO findDTO = new FindDTO();
+        findDTO.setOrgId(orgId);
+        return new ResponseEntity((Object)this.userRoleManagementService.getUserList(findDTO), HttpStatus.OK);
+    }
+
     @GetMapping(value={"/searchUser"})
     public ResponseEntity<List<UserDTO>> searchUser(@RequestBody FindDTO findDTO, HttpServletRequest request) throws RequestException {
         return new ResponseEntity((Object)this.userRoleManagementService.getSearchUserList(findDTO), HttpStatus.OK);
@@ -92,12 +99,23 @@ public class UserRoleManagementController {
     @PostMapping(value={"/createBulkUser"})
     public ResponseEntity<Boolean> createBulkUser(@RequestBody List<UserDTO> userDTOList, HttpServletRequest request) throws InputValidationException {
         CountDownLatch latch = new CountDownLatch(userDTOList.size());
+        String loggedInHeader = request.getHeader("LOGGED_IN_EMPLOYEE_ID");
+        Long loggedInEmpId = 0L;
+        if (loggedInHeader != null && !"null".equals(loggedInHeader)) {
+            try {
+                loggedInEmpId = Long.valueOf(loggedInHeader);
+            } catch (NumberFormatException ignored) {}
+        }
+        final Long finalLoggedInEmpId = loggedInEmpId;
         for (UserDTO userDTO : userDTOList) {
             this.taskExecutor.execute(() -> {
                 try {
                     if (!userDTO.getUserRole().equalsIgnoreCase("Super User")) {
-                        this.userRoleManagementService.createBulkUser(userDTO, Long.valueOf(request.getHeader("LOGGED_IN_EMPLOYEE_ID")));
+                        this.userRoleManagementService.createBulkUser(userDTO, finalLoggedInEmpId);
                     }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
                 }
                 finally {
                     latch.countDown();

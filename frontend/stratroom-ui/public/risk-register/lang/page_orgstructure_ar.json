@@ -1,0 +1,65 @@
+{
+    "page": {
+        "orgstructure": {
+            "title": "هيكل المنظمة",
+            "create_orgstructure": "إنشاء هيكل المنظمة",
+            "edit_orgstructure": "تعديل هيكل المنظمة",
+            "delete_confirmation": "هل تريد الحذف فعلاً؟",
+            "file_upload": "رفع ملف",
+            "orgstructure_list": "قائمة هيكل المنظمة",
+            "orgstructure_list_items": {
+                "name": "الاسم",
+                "department": "القسم"
+            },
+            "form_items": {
+                "attachment": "مرفق",
+                "department": "القسم",
+                "department_id": "معرف القسم",
+                "owner": "المالك",
+                "email": "البريد الإلكتروني",
+                "members": "الأعضاء",
+                "scorecard": "بطاقة الأداء",
+                "initiative": "مبادرة",
+                "kpi": "مؤشر الأداء الرئيسي",
+                "risk": "مخاطر",
+                "upload": "رفع",
+                "validation": "التحقق",
+                "import": "استيراد",
+                "import_category": "فئة الاستيراد",
+                "upload_file": "رفع ملف",
+                "choose_file": "اختر ملفًا أو اسحب هنا.",
+                "supported_file_types": "أنواع الملفات المدعومة (jpeg,pdf,pptx,xlsx,docx)",
+                "file_size_limit": "حد حجم الملف 10MB",
+                "no_file_chosen": "لم يتم اختيار ملف",
+                "search": "بحث",
+                "row": "صف",
+                "status": "حالة",
+                "message": "رسالة",
+                "error": "خطأ"
+            },
+            "organisation_tracker": "متتبع المنظمة",
+            "organisation_tracker_list": {
+                "ceo": "الرئيس التنفيذي",
+                "zimra": "زيمرا",
+                "customer_services": "خدمات العملاء",
+                "marketing": "التسويق",
+                "operations": "العمليات",
+                "project_services": "خدمات المشاريع",
+                "Product": "المنتج",
+                "compliance": "الامتثال",
+                "india": "الهند",
+                "kenya": "كينيا",
+                "south_africa": "جنوب أفريقيا"
+            },
+            "organisation_tracker_items": {
+                "parent": "الأصل",
+                "owner": "المالك",
+                "department": "القسم",
+                "email": "البريد الإلكتروني",
+                "pages": "الصفحات",
+                "from_date": "من تاريخ",
+                "to_date": "إلى تاريخ"
+            }
+        }
+    }
+}

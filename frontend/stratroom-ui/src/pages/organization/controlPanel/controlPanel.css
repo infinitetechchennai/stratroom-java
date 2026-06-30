@@ -1,0 +1,120 @@
+.control-panel-page {
+  padding: 18px 24px 40px;
+  min-height: 100vh;
+  background: var(--shell-bg, #f4f5f9);
+  color: var(--shell-text, #0b1437);
+}
+
+.control-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--shell-text, #0b1437);
+  margin-bottom: 16px;
+}
+
+.control-panel-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.control-panel-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.control-panel-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 22px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  min-height: 96px;
+  border: 1px solid var(--shell-border, #e2e8f0);
+  background: var(--shell-tab-bg, #eef0f4);
+  color: var(--shell-muted, #475569);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.control-panel-tab.active {
+  border-color: var(--primary, #2c2f6b);
+  background: var(--primary, #2c2f6b);
+  color: #fff;
+}
+
+.cp-settings-card {
+  background: var(--shell-surface, #fff);
+  border-radius: 10px;
+  border: 1px solid var(--shell-border, #e7e9f0);
+  overflow: hidden;
+}
+
+.cp-settings-card-header {
+  background: var(--primary, #2c2f6b);
+  color: #fff;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.cp-settings-card-body {
+  padding: 22px;
+}
+
+.cp-settings-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 0 22px 18px;
+}
+
+.cp-save-btn {
+  background: var(--primary, #2c2f6b);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 26px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cp-save-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.cp-field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--shell-muted, #475569);
+  margin-bottom: 6px;
+}
+
+.cp-field-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--shell-border, #d9dde7);
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: var(--shell-text, #0b1437);
+  background: var(--shell-input-bg, #fff);
+  outline: none;
+}
+
+.cp-hint {
+  font-size: 12px;
+  color: var(--shell-muted, #64748b);
+}

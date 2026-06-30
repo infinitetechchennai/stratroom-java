@@ -1,0 +1,15 @@
+# Exposes the frontend service to the outside world via a LoadBalancer (or NodePort if LB is unavailable).
+# Since Nginx proxies /api/ to the backend internally, exposing just the frontend is usually sufficient.
+apiVersion: v1
+kind: Service
+metadata:
+  name: stratroom-loadbalancer
+  namespace: stratroom-prod
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

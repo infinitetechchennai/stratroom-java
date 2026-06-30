@@ -1,0 +1,100 @@
+// Initiatives Dashboard Styles
+
+// ─── INITIATIVE CARDS ───
+.init-card {
+  background: var(--stratroom-body-bg);
+  border: 1px solid var(--stratroom-border-color);
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: box-shadow .15s, transform .2s ease;
+  
+  &:hover { 
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1); 
+    transform: translateY(-2px);
+  }
+  &.active { 
+    outline: 2px solid var(--stratroom-primary, #2980b9);
+    outline-offset: 2px;
+  }
+  
+  .init-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+  .init-id { 
+    font-size: 10px; font-weight: 700; color: #888; 
+    background: #f0f0f0; border-radius: 3px; padding: 2px 6px; 
+  }
+  .init-name { font-size: 13px; font-weight: 700; color: var(--stratroom-body-color); margin-bottom: 4px; }
+  .init-owner { font-size: 11px; color: #888; margin-bottom: 10px; }
+  
+  .init-prog-bg { width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-bottom: 6px; }
+  .init-prog-fill { height: 6px; border-radius: 3px; }
+  .init-prog-row { display: flex; justify-content: space-between; font-size: 11px; color: #555; margin-bottom: 10px; }
+  
+  .init-counts { display: flex; gap: 8px; margin-top: 8px; }
+  .count-badge { font-size: 10px; font-weight: 600; border-radius: 3px; padding: 2px 6px; }
+}
+
+// ─── PILLS ───
+// These are reusable and might be generic but keeping them here since they match the design.
+.pill-purple { background: #f5eeff; color: #9b59b6; }
+
+// ─── HIERARCHY TREE ───
+.tree-panel { 
+  background: var(--stratroom-body-bg); 
+  border: 1px solid var(--stratroom-border-color); 
+  border-radius: 10px; 
+  padding: 18px 20px; 
+  margin-bottom: 20px; 
+  animation: fadeInPanel 0.35s ease forwards;
+}
+
+.tree-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.tree-title { font-size: 14px; font-weight: 700; color: var(--stratroom-body-color); }
+
+.tree-node { 
+  display: flex; align-items: center; padding: 7px 10px; border-radius: 5px; margin-bottom: 3px; cursor: pointer; 
+  transition: background 0.15s;
+  &:hover { background: var(--stratroom-secondary-bg, #f8f8ff); }
+}
+.tree-indent { display: inline-block; }
+.tree-icon { 
+  width: 16px; height: 16px; border-radius: 3px; display: flex; align-items: center; 
+  justify-content: center; font-size: 9px; font-weight: 700; color: #fff; margin-right: 8px; flex-shrink: 0; 
+}
+.tree-label { font-size: 12px; font-weight: 600; color: var(--stratroom-body-color); flex: 1; }
+.tree-sublabel { font-size: 11px; color: #888; margin-left: 8px; }
+.tree-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.tree-bar-bg { width: 60px; height: 5px; background: #eee; border-radius: 3px; }
+.tree-bar-fill { height: 5px; border-radius: 3px; }
+.tree-pct { font-size: 10px; color: #888; min-width: 30px; text-align: right; }
+.tree-date { font-size: 10px; color: #888; min-width: 70px; }
+
+// ─── GANTT TIMELINE ───
+.gantt-card { 
+  background: var(--stratroom-body-bg); 
+  border: 1px solid var(--stratroom-border-color); 
+  border-radius: 10px; padding: 18px 20px; margin-bottom: 20px; 
+}
+.gantt-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 14px; }
+.gantt-table { width: 100%; }
+.gantt-row { display: flex; align-items: center; border-bottom: 1px solid var(--stratroom-border-color); padding: 7px 0; }
+.gantt-label { width: 180px; font-size: 12px; color: var(--stratroom-body-color); flex-shrink: 0; }
+.gantt-track { flex: 1; height: 22px; background: #f5f5f5; border-radius: 3px; position: relative; }
+.gantt-bar { 
+  position: absolute; height: 100%; border-radius: 3px; display: flex; align-items: center; 
+  padding-left: 6px; font-size: 10px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; 
+}
+.gantt-milestone { 
+  position: absolute; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; 
+  background: #e74c3c; border-radius: 50%; 
+}
+.gantt-months { display: flex; padding: 4px 0 8px 180px; }
+.gantt-month { flex: 1; text-align: center; font-size: 10px; color: #888; font-weight: 600; }
+
+// ─── MILESTONE REGISTER (Supplemental) ───
+.ms-card { 
+  background: var(--stratroom-body-bg); 
+  border: 1px solid var(--stratroom-border-color); 
+  border-radius: 10px; padding: 18px 20px; margin-bottom: 20px; 
+}
+.ms-title { font-size: 14px; font-weight: 700; color: var(--stratroom-body-color); margin-bottom: 12px; }

@@ -1,0 +1,289 @@
+/* ── Expand chevron ── */
+.chevron-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 4px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    transition: background .1s, color .1s;
+}
+
+.chevron-btn:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.chevron-btn svg {
+    width: 14px;
+    height: 14px;
+    transition: transform .2s;
+}
+
+.chevron-btn:not(.collapsed) svg,
+.chevron-btn.open svg {
+    transform: rotate(90deg);
+}
+
+/* ── Expanded panel ── */
+tr.expanded-panel-row td {
+    padding: 0 !important;
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.panel-inner {
+    padding: 12px 16px 16px;
+    background: rgba(var(--stratroom-body-color-rgb), .02);
+
+}
+
+/* ── Tabs ── */
+.tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 12px;
+    list-style: none;
+    padding-left: 0;
+}
+
+.tab-btn {
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color .15s;
+    margin-bottom: -1px;
+}
+
+.tab-btn:hover {
+    color: #334155;
+}
+
+.tab-btn.active {
+    color: var(--stratroom-primary);
+    border-bottom-color: var(--stratroom-primary);
+}
+
+.tab-count {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 9px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(var(--stratroom-body-color-rgb), .1);
+    color: rgba(var(--stratroom-body-color-rgb), 1);
+}
+
+.tab-btn.active .tab-count {
+    background: rgba(var(--stratroom-primary-rgb), .2);
+    color: rgba(var(--stratroom-primary-rgb), 1);
+}
+
+/* ── View toggle + Add btn ── */
+.sub-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.subtoolbar-title {
+    margin-bottom: 0px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 3px;
+}
+
+.toolbar-actions .action-btn .btn-icon {
+    display: flex;
+    height: 28px;
+    width: 28px;
+    aspect-ratio: 1;
+    justify-content: center;
+    align-items: center;
+    padding: 0.25rem;
+    text-decoration: none;
+    font-size: 11px;
+    line-height: 1;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.toolbar-actions .action-btn {
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+    margin: 0;
+    background:
+        color-mix(in srgb, var(--stratroom-primary-contrast) 95%, var(--stratroom-primary));
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.toolbar-actions .action-btn .btn-icon:hover {
+
+    --stratroom-btn-hover-color: var(--stratroom-primary);
+    --stratroom-btn-hover-bg: var(--stratroom-white);
+    --stratroom-btn-hover-border-color: var(--stratroom-white);
+    color: var(--stratroom-btn-hover-color);
+    background-color: var(--stratroom-btn-hover-bg);
+    border-color: var(--stratroom-btn-hover-border-color);
+    box-shadow: 0 1px 4px rgba(var(--stratroom-black-rgb), 0.08);
+}
+
+.toolbar-actions .action-btn .btn-icon.active {
+    --stratroom-btn-hover-color: var(--stratroom-primary);
+    --stratroom-btn-hover-bg: var(--stratroom-white);
+    --stratroom-btn-hover-border-color: var(--stratroom-white);
+    color: var(--stratroom-btn-hover-color);
+    background-color: var(--stratroom-btn-hover-bg);
+    border-color: var(--stratroom-btn-hover-border-color);
+    box-shadow: 0 2px 8px rgba(var(--stratroom-primary-rgb), 0.22), 0 0 0 1.5px rgba(var(--stratroom-primary-rgb), 0.15);
+}
+
+.btn-add-sub {
+    margin-left: auto;
+    background: rgba(var(--stratroom-primary-rgb), 1);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background .15s;
+}
+
+.btn-add-sub:hover {
+    background: #0891b2;
+}
+
+/* ── Sub-initiative table ── */
+.sub-table-wrap {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.sub-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sub-table thead th {
+    padding: 8px 10px;
+    background: #f8fafc;
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.sub-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background .1s;
+}
+
+.sub-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.sub-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.sub-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    background: #ecfeff;
+    color: #0e7490;
+    border: 1px solid #a5f3fc;
+    white-space: nowrap;
+}
+
+.sub-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sub-name-text {
+    font-weight: 500;
+    color: #374151;
+}
+
+/* ── Assignee avatars ── */
+.avatars {
+    display: flex;
+}
+
+.avatar-small {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    font-size: 8px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -5px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.avatar-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ── Empty state ── */
+.empty {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12px;
+    padding: 24px;
+}

@@ -87,6 +87,8 @@ import com.estrat.backend.db.dto.RiskEventNameCountDto;
 import com.estrat.backend.db.dto.RiskOptionsDto;
 import com.estrat.backend.db.dto.RiskResponseDTO;
 import com.estrat.backend.db.exception.RequestException;
+import com.estrat.backend.db.resource.util.RiskExportUtil;
+import com.estrat.backend.db.resource.util.RiskImportUtil;
 import com.estrat.backend.db.resource.util.RiskUtil;
 import com.estrat.backend.db.resource.util.UserThreadLocal;
 import com.estrat.backend.db.service.ApproversHistoryService;
@@ -104,13 +106,16 @@ import com.estrat.backend.db.service.UserRoleManagementService;
 import com.estrat.backend.db.service.WorkflowStagingService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.estrat.backend.reactive.ReactiveMultipartSupport;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -118,16 +123,24 @@ import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.Part;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @RestController
 public class RiskDetailController {
@@ -171,6 +184,8 @@ public class RiskDetailController {
     private RiskDetailsHistoryRepository riskDetailsHistoryRepository;
     @Autowired
     private RiskEventHistoryRepository riskEventHistoryRepository;
+    @Autowired
+    private RiskImportUtil riskImportUtil;
 
     @PostMapping(value={"/risk"})
     public ResponseEntity<RiskResponseDTO> saveRiskDetails(@RequestBody RiskDTO riskDTO, HttpServletRequest request) throws RequestException {
@@ -714,10 +729,63 @@ public class RiskDetailController {
     }
 
     @GetMapping(value={"/riskDashBoardData"})
-    public ResponseEntity<RiskDashBoardResponseDTO> riskDashBoardDataDeptId(@RequestParam(value="deptId", required=false) Long deptId) throws RequestException {
-        List<RiskDTO> responseRiskDTOList = this.riskDetailsService.findAllRiskDashboardBYDeptId(deptId.longValue());
-        RiskDashBoardResponseDTO dashboardDTO = this.riskDetailsService.buildRiskDashboard(responseRiskDTOList);
-        return new ResponseEntity((Object)dashboardDTO, HttpStatus.OK);
+    public Mono<ResponseEntity<RiskDashBoardResponseDTO>> riskDashBoardDataDeptId(@RequestParam(value="deptId", required=false) Long deptId) {
+        return Mono.fromCallable(() -> {
+            if (deptId == null || deptId == 0L) {
+                return new ResponseEntity<>(this.riskDetailsService.buildRiskDashboard(Collections.emptyList()), HttpStatus.OK);
+            }
+            List<RiskDTO> responseRiskDTOList = this.riskDetailsService.findAllRiskDashboardBYDeptId(deptId.longValue());
+            RiskDashBoardResponseDTO dashboardDTO = this.riskDetailsService.buildRiskDashboard(responseRiskDTOList);
+            return new ResponseEntity<>(dashboardDTO, HttpStatus.OK);
+        }).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    @GetMapping(value={"/downloadRiskDetails/{empId}"})
+    public ResponseEntity<ByteArrayResource> downloadRiskDetails(
+            @PathVariable(value="empId") long empId,
+            @RequestParam(value="pageId", required=false) String pageId,
+            @RequestParam(value="dateRange", required=false) String dateRange) throws RequestException {
+        List<RiskDTO> risks = this.riskDetailsService.findAll(empId, pageId, dateRange, false);
+        return RiskExportUtil.writeCsv(risks);
+    }
+
+    @RequestMapping(value={"/saveBulkRiskDetails"}, method={RequestMethod.POST}, consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Mono<ResponseEntity<Map<String, Object>>> saveBulkRiskDetails(
+            ServerWebExchange exchange,
+            @RequestParam(value="type", required=false) String type) {
+        Map<String, String> requestContext = new HashMap<>(UserThreadLocal.getHeaders());
+        return exchange.getMultipartData()
+                .flatMap(parts -> {
+                    Part uploaded = ReactiveMultipartSupport.findUploadedPart(parts, "riskData");
+                    if (uploaded == null) {
+                        return Mono.empty();
+                    }
+                    return ReactiveMultipartSupport.readPart(uploaded)
+                            .flatMap(file -> Mono.fromCallable(() -> {
+                                UserThreadLocal.set(requestContext);
+                                try {
+                                    return this.riskImportUtil.importRisk(
+                                            file.openStream(),
+                                            type,
+                                            file.filename());
+                                } finally {
+                                    UserThreadLocal.set(null);
+                                }
+                            }).subscribeOn(Schedulers.boundedElastic()));
+                })
+                .map(body -> new ResponseEntity<>(body, HttpStatus.OK))
+                .switchIfEmpty(Mono.fromSupplier(() -> {
+                    Map<String, Object> body = new HashMap<>();
+                    body.put("message", "No file uploaded");
+                    body.put("result", "Not-Success");
+                    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+                }))
+                .onErrorResume(e -> {
+                    Map<String, Object> body = new HashMap<>();
+                    body.put("message", e.getMessage() != null ? e.getMessage() : "Risk import failed");
+                    body.put("result", "Not-Success");
+                    return Mono.just(new ResponseEntity<>(body, HttpStatus.OK));
+                });
     }
 }
 

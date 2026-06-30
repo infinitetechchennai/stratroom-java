@@ -1,0 +1,137 @@
+name: Build, Push, and Deploy
+
+on:
+  push:
+    branches:
+      - main # Automatically trigger on push to main branch
+
+env:
+  REGISTRY: ghcr.io
+  # github.repository returns username/repo (e.g. kalee/stratroom-java)
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to create tags
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for version bumping
+
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: patch # E.g. v1.0.0 -> v1.0.1
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Backend
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend
+          tags: |
+            type=raw,value=latest
+            type=raw,value=${{ steps.tag_version.outputs.new_tag }}
+
+      - name: Build and push Backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.backend
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+
+      - name: Extract metadata (tags, labels) for License Service
+        id: meta-license
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-licenseservice
+          tags: |
+            type=raw,value=latest
+            type=raw,value=${{ steps.tag_version.outputs.new_tag }}
+
+      - name: Build and push License Service image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.licenseservice
+          push: true
+          tags: ${{ steps.meta-license.outputs.tags }}
+          labels: ${{ steps.meta-license.outputs.labels }}
+
+      - name: Extract metadata (tags, labels) for Frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend
+          tags: |
+            type=raw,value=latest
+            type=raw,value=${{ steps.tag_version.outputs.new_tag }}
+
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.frontend
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+
+      - name: Inject Secrets into K8s Manifests
+        run: |
+          envsubst < k8s/secrets.yaml > k8s/secrets-injected.yaml
+          mv k8s/secrets-injected.yaml k8s/secrets.yaml
+        env:
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JASYPT_PASSWORD: ${{ secrets.JASYPT_PASSWORD }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+      - name: Copy K8s manifests to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "k8s/*"
+          target: "/opt/stratroom-deploy"
+          strip_components: 1
+
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            export PATH=$PATH:/usr/local/bin
+            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+            echo "Deploying new version ${{ steps.tag_version.outputs.new_tag }}..."
+            
+            # Ensure namespace exists
+            kubectl apply -f /opt/stratroom-deploy/namespace.yaml
+            
+            # Apply all K8s manifests that were just copied (no source code!)
+            kubectl apply -f /opt/stratroom-deploy/
+            
+            # Force Kubernetes to pull the new 'latest' images
+            kubectl rollout restart deployment backend -n stratroom-prod
+            kubectl rollout restart deployment frontend -n stratroom-prod
+            kubectl rollout restart deployment licenseservice -n stratroom-prod

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,14 +55,18 @@ public class ComplianceDetailsService {
             ComplianceAreaDTO taskDto = new ComplianceAreaDTO(dbValue);
             this.populateImpactDesc(taskDto, dateRange, pageId);
             return taskDto;
-        }).filter(dto -> dto.getComplainsDetailsList() != null && !dto.getComplainsDetailsList().isEmpty()).collect(Collectors.toList());
+        }).collect(Collectors.toList());
         return complainList;
     }
 
     public void populateImpactDesc(ComplianceAreaDTO complianceAreaDTO, String dateRange, String pageId) {
         List<ComplianceDetails> complain = new ArrayList<>();
         if (complianceAreaDTO.getId() != 0L) {
-            complain = this.complianceDetailsRepository.findAllByPageId(complianceAreaDTO.getId(), Long.valueOf(pageId).longValue());
+            if (StringUtils.isNotBlank(pageId)) {
+                complain = this.complianceDetailsRepository.findAllByPageId(complianceAreaDTO.getId(), Long.parseLong(pageId.trim()));
+            } else {
+                complain = this.complianceDetailsRepository.findAllByAreaId(complianceAreaDTO.getId());
+            }
             List<ComplianceDetailsDTO> complainList = complain.stream().map(dbValue -> {
                 ComplianceDetailsDTO taskDto = new ComplianceDetailsDTO(dbValue);
                 ComplianceDetailsAttachment complainceAttachment = this.complainceAttachmentRepository.findAllByComplainDetailId(Long.valueOf(taskDto.getId()));

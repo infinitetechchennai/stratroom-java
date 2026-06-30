@@ -59,12 +59,12 @@
 }
 
 .moduleBtn.open {
-  background: rgba(136,59,113,0.25);
+  background: color-mix(in srgb, var(--primary, #883b71) 25%, transparent);
   color: #fff;
 }
 
 .activeModule > .moduleBtn {
-  background: rgba(136,59,113,0.35);
+  background: color-mix(in srgb, var(--primary, #883b71) 35%, transparent);
   color: #fff;
 }
 
@@ -88,7 +88,7 @@
   margin: 0;
   padding: 2px 0 4px 0;
   background: rgba(0,0,0,0.2);
-  border-left: 2px solid rgba(136,59,113,0.5);
+  border-left: 2px solid color-mix(in srgb, var(--primary, #883b71) 50%, transparent);
   margin-left: 12px;
   border-radius: 0 0 4px 4px;
 }
@@ -121,6 +121,6 @@
 }
 
 .pinIcon {
-  color: #883b71;
+  color: var(--primary, #883b71);
   flex-shrink: 0;
 }

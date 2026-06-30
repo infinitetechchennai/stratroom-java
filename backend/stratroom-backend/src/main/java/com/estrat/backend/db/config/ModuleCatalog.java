@@ -1,0 +1,102 @@
+package com.estrat.backend.db.config;
+
+/**
+ * Global module/tag catalog aligned with orgstructurev2.sql {@code module_details}.
+ * Reference data only — no org-specific or user business rows.
+ */
+public final class ModuleCatalog {
+
+    private ModuleCatalog() {
+    }
+
+    /** [module_name, tag_name] — tag_name may be null (e.g. StrategyMap). */
+    public static final String[][] ENTRIES = {
+            {"Organization", "Organisation"},
+            {"Scorecard", "Scorecard"},
+            {"Scorecard", "Perspective"},
+            {"Scorecard", "Objective"},
+            {"Scorecard", "KPI"},
+            {"Scorecard", "Comments"},
+            {"Scorecard", "KPI View"},
+            {"Scorecard", "Formula Register"},
+            {"Initiatives & Projects", "Initiatives"},
+            {"Initiatives & Projects", "Sub Initiatives"},
+            {"Initiatives & Projects", "Activities"},
+            {"Initiatives & Projects", "Milestones"},
+            {"Initiatives & Projects", "Comments"},
+            {"Risk", "Risk"},
+            {"Risk", "Cause"},
+            {"Risk", "Consequence"},
+            {"Risk", "Plan"},
+            {"Risk", "Action"},
+            {"Risk", "Comments"},
+            {"SWOT", "SWOT"},
+            {"SWOT", "Actions"},
+            {"SWOT", "Recommendations"},
+            {"SWOT", "Attachments"},
+            {"SWOT", "Comments"},
+            {"PESTEL", "PESTEL"},
+            {"PESTEL", "Actions"},
+            {"PESTEL", "Recommendations"},
+            {"PESTEL", "Attachments"},
+            {"PESTEL", "Comments"},
+            {"Meetings", "Meeting"},
+            {"Meetings", "Actions"},
+            {"Meetings", "Recommendations"},
+            {"Meetings", "Attachments"},
+            {"Meetings", "Comments"},
+            {"My Space", "Goals"},
+            {"My Space", "Attachments"},
+            {"My Space", "Comments"},
+            {"Strategy Formulation", "Formulation"},
+            {"Strategy Formulation", "Perspective"},
+            {"Strategy Formulation", "Objective"},
+            {"Strategy Formulation", "KPI"},
+            {"Project Formulation", "Formulation"},
+            {"Project Formulation", "Initiatives"},
+            {"Project Formulation", "Sub Initiatives"},
+            {"Project Formulation", "Activities"},
+            {"Project Formulation", "Milestones"},
+            {"Risk Formulation", "Formulation"},
+            {"Risk Formulation", "Risk"},
+            {"Risk Formulation", "Cause"},
+            {"Risk Formulation", "Consequence"},
+            {"Risk Formulation", "Plan"},
+            {"Risk Formulation", "Action"},
+            {"Cockpit", "Text"},
+            {"Cockpit", "Table"},
+            {"Cockpit", "Charts"},
+            {"Charts", "Charts"},
+            {"Charts", "Drilldown Charts"},
+            {"Data Sources", "Manual"},
+            {"Data Sources", "Excel"},
+            {"Data Sources", "Others"},
+            {"Template", "Standard BSC"},
+            {"Template", "Excel"},
+            {"Audit Trail", "Page"},
+            {"Audit Trail", "Save"},
+            {"Control Panel", "General"},
+            {"Control Panel", "Theme"},
+            {"Control Panel", "Licence"},
+            {"Control Panel", "Notifications"},
+            {"Control Panel", "Security"},
+            {"Control Panel", "Scheduler"},
+            {"Control Panel", "Device"},
+            {"Control Panel", "Backup & Restore"},
+            {"Control Panel", "Scorecard"},
+            {"User Management", "User"},
+            {"User Management", "Role"},
+            {"Org Tracker", "Org Tracker"},
+            {"StrategyMap", null},
+            {"Control Panel", "Risk"},
+            {"Scorecard", "ScorecardView"},
+            {"Risk", "Event"},
+            {"Risk", "Budget"},
+            {"Initiatives & Projects", "Attachments"},
+            {"Initiatives & Projects", "Tasks"},
+    };
+
+    public static final String[] DEFAULT_ROLE_NAMES = {
+            "Super User", "Admin", "Owner", "User"
+    };
+}

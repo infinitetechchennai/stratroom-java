@@ -1,29 +1,38 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import { Navigate } from 'react-router-dom'
 import {
   Settings, Palette, KeyRound, Bell, ShieldCheck, CalendarClock,
   MonitorSmartphone, DatabaseBackup, BarChart3, Target, AlertTriangle, Workflow,
 } from 'lucide-react'
-import {
-  getOrgId, getGeneralSettings, createGeneralSetting, updateGeneralSetting,
-  getCustomPerformanceDetails, saveCustomPerformance
-} from '../../api/controlPanelApi'
+import { TABS } from './controlPanel/constants'
+import { useControlPanelPermissions } from './controlPanel/useControlPanelPermissions'
+import { GeneralSettingsTab } from './controlPanel/GeneralSettingsTab'
+import { LicenseSettingsTab, DeviceSettingsTab, OkrInfoTab } from './controlPanel/LicenseDeviceTabs'
+import { ThemeSettingsTab, SecuritySettingsTab } from './controlPanel/ThemeSecurityTabs'
+import { NotificationSettingsTab, SchedulerSettingsTab, BackupSettingsTab } from './controlPanel/NotificationSchedulerBackupTabs'
+import { ScorecardSettingsTab, RiskSettingsTab } from './controlPanel/ScorecardRiskTabs'
+import { WorkflowSettingsTab } from './controlPanel/WorkflowSettingsTab'
+import './controlPanel/controlPanel.css'
 
-const NAVY = '#2c2f6b'
+const ICONS = {
+  Settings, Palette, KeyRound, Bell, ShieldCheck, CalendarClock,
+  MonitorSmartphone, DatabaseBackup, BarChart3, Target, AlertTriangle, Workflow,
+}
 
-const TABS = [
-  { key: 'general', label: 'General', Icon: Settings },
-  { key: 'themes', label: 'Themes', Icon: Palette },
-  { key: 'license', label: 'License', Icon: KeyRound },
-  { key: 'notification', label: 'Notification', Icon: Bell },
-  { key: 'security', label: 'Security', Icon: ShieldCheck },
-  { key: 'scheduler', label: 'Scheduler', Icon: CalendarClock },
-  { key: 'device', label: 'Device', Icon: MonitorSmartphone },
-  { key: 'backup', label: 'Backup & Restore', Icon: DatabaseBackup },
-  { key: 'scorecard', label: 'Scorecard', Icon: BarChart3 },
-  { key: 'okr', label: 'OKR', Icon: Target },
-  { key: 'risk', label: 'Risk', Icon: AlertTriangle },
-  { key: 'workflow', label: 'Workflow Setting', Icon: Workflow },
-]
+// const TABS = [
+//   { key: 'general', label: 'General', Icon: Settings },
+//   { key: 'themes', label: 'Themes', Icon: Palette },
+//   { key: 'license', label: 'License', Icon: KeyRound },
+//   { key: 'notification', label: 'Notification', Icon: Bell },
+//   { key: 'security', label: 'Security', Icon: ShieldCheck },
+//   { key: 'scheduler', label: 'Scheduler', Icon: CalendarClock },
+//   { key: 'device', label: 'Device', Icon: MonitorSmartphone },
+//   { key: 'backup', label: 'Backup & Restore', Icon: DatabaseBackup },
+//   { key: 'scorecard', label: 'Scorecard', Icon: BarChart3 },
+//   { key: 'okr', label: 'OKR', Icon: Target },
+//   { key: 'risk', label: 'Risk', Icon: AlertTriangle },
+//   { key: 'workflow', label: 'Workflow Setting', Icon: Workflow },
+// ]
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const CURRENCY_VIEWS = ['Actuals', 'Thousands (K)', 'Milions (M)', 'Billions (B)']
@@ -45,49 +54,93 @@ const TIMEZONES = [
   '(GMT+05:30) India Standard Time',
   '(GMT+08:00) China Standard Time',
 ]
+function usePrimaryColor() {
+  const [primary, setPrimary] = useState(
+    () => getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#2c2f6b'
+  )
+  useEffect(() => {
+    const sync = (e) => {
+      const c = e?.detail?.themeColor
+        || getComputedStyle(document.documentElement).getPropertyValue('--primary').trim()
+      if (c) setPrimary(c)
+    }
+    window.addEventListener('stratroom-theme-changed', sync)
+    return () => window.removeEventListener('stratroom-theme-changed', sync)
+  }, [])
+  return primary
+}
 
 export default function Controlpanel() {
+  const { loading, canAccessPage, canViewTab, canEditTab } = useControlPanelPermissions()
+  const primary = usePrimaryColor()
+  const visibleTabs = useMemo(
+    () => TABS.filter((t) => canViewTab(t.key)),
+    [canViewTab]
+  )
   const [activeTab, setActiveTab] = useState('general')
 
+  useEffect(() => {
+    if (visibleTabs.length && !visibleTabs.some((t) => t.key === activeTab)) {
+      setActiveTab(visibleTabs[0].key)
+    }
+  }, [visibleTabs, activeTab])
+
+  if (loading) {
+    return (
+      <div className="control-panel-page" style={{ padding: 40, color: 'var(--shell-muted)' }}>
+        Loading control panel…
+      </div>
+    )
+  }
+
+  if (!canAccessPage) {
+    return <Navigate to="/" replace />
+  }
+
+  const renderTab = () => {
+    const canEdit = canEditTab(activeTab)
+    switch (activeTab) {
+      case 'general': return <GeneralSettingsTab canEdit={canEdit} />
+      case 'themes': return <ThemeSettingsTab canEdit={canEdit} />
+      case 'license': return <LicenseSettingsTab />
+      case 'notification': return <NotificationSettingsTab canEdit={canEdit} />
+      case 'security': return <SecuritySettingsTab canEdit={canEdit} />
+      case 'scheduler': return <SchedulerSettingsTab canEdit={canEdit} />
+      case 'device': return <DeviceSettingsTab />
+      case 'backup': return <BackupSettingsTab canEdit={canEdit} />
+      case 'scorecard': return <ScorecardSettingsTab canEdit={canEdit} />
+      case 'okr': return <OkrInfoTab />
+      case 'risk': return <RiskSettingsTab canEdit={canEdit} />
+      case 'workflow': return <WorkflowSettingsTab canEdit={canEdit} />
+      default: return null
+    }
+  }
+
   return (
-    <div style={{ padding: '18px 24px 40px', background: '#f4f5f9', minHeight: '100vh' }}>
-      <h4 style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 18, fontWeight: 700, color: '#0b1437', marginBottom: 16 }}>
-        <Settings size={20} color={NAVY} /> CONTROL PANEL
+    <div className="control-panel-page">
+      <h4 className="control-panel-title">
+        <Settings size={20} color={primary} /> CONTROL PANEL
       </h4>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 18, alignItems: 'start' }}>
-        {/* Left tab grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          {TABS.map(({ key, label, Icon }) => {
+      <div className="control-panel-grid">
+        <div className="control-panel-tabs">
+          {visibleTabs.map(({ key, label, icon }) => {
+            const Icon = ICONS[icon]
             const active = activeTab === key
             return (
               <button
                 key={key}
                 type="button"
+                className={`control-panel-tab${active ? ' active' : ''}`}
                 onClick={() => setActiveTab(key)}
-                style={{
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8,
-                  padding: '22px 8px', borderRadius: 10, cursor: 'pointer', minHeight: 96,
-                  border: active ? `1px solid ${NAVY}` : '1px solid #e2e8f0',
-                  background: active ? NAVY : '#eef0f4',
-                  color: active ? '#fff' : '#475569',
-                }}
               >
                 <Icon size={22} />
-                <span style={{ fontSize: 13, fontWeight: 600 }}>{label}</span>
+                <span>{label}</span>
               </button>
             )
           })}
         </div>
-
-        {/* Right content */}
-        <div>
-          {activeTab === 'general'
-            ? <GeneralSettings />
-            : activeTab === 'scorecard'
-            ? <ScorecardSettingsUI />
-            : <PlaceholderTab title={TABS.find(t => t.key === activeTab)?.label} />}
-        </div>
+        <div>{renderTab()}</div>
       </div>
     </div>
   )
@@ -319,9 +372,9 @@ function ScorecardSettingsUI() {
       // Backend returns stringified JSON in the response map or directly
       let data = {}
       if (resp && typeof resp === 'string') {
-        try { data = JSON.parse(resp) } catch (e) {}
+        try { data = JSON.parse(resp) } catch (e) { }
       } else if (resp && resp.customValue) {
-        try { data = JSON.parse(resp.customValue) } catch (e) {}
+        try { data = JSON.parse(resp.customValue) } catch (e) { }
       } else if (resp) {
         data = resp
       }
@@ -453,7 +506,7 @@ function ScorecardSettingsUI() {
 
   return (
     <SettingsCard title="Scorecard" onSave={save} saving={saving} message={message}>
-      
+
       {/* Scorecard Fields */}
       <div style={SECTION_TITLE}>Scorecard Fields</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
@@ -488,13 +541,13 @@ function ScorecardSettingsUI() {
               <Select value={form.thresholdType} onChange={set('thresholdType')} options={['Five Status', 'Three Status']} />
             </Field>
           </div>
-          
+
           <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginTop: 16 }}>
             {[{ k: 't1', c: '#dc2626' }, { k: 't2', c: '#ef4444' }, { k: 't3', c: '#fbbf24' }, { k: 't4', c: '#4ade80' }, { k: 't5', c: '#16a34a' }].map((item, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <input 
-                  type="text" 
-                  value={form[item.k]} 
+                <input
+                  type="text"
+                  value={form[item.k]}
                   onChange={(e) => setForm(f => ({ ...f, [item.k]: e.target.value }))}
                   style={{ width: 60, padding: '6px 12px', border: '1px solid #d9dde7', borderRadius: 4, textAlign: 'center', fontSize: 13 }}
                 />
@@ -509,7 +562,7 @@ function ScorecardSettingsUI() {
 
       {/* KPI View Settings */}
       <div style={{ fontSize: 15, fontWeight: 700, color: '#0b1437', marginBottom: 16 }}>Kpi View Settings</div>
-      
+
       <div style={SECTION_TITLE}>Data tables Fields</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
         <Checkbox label="Actual" checked={form.tblActual} onChange={check('tblActual')} />

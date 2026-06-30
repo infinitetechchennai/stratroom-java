@@ -43,6 +43,7 @@
  */
 package com.estrat.backend.db.service;
 
+import com.estrat.backend.db.config.ModuleCatalog;
 import com.estrat.backend.db.bean.Employee;
 import com.estrat.backend.db.bean.po.EmployeeProfilePo;
 import com.estrat.backend.db.bean.po.ModuleDetailsPo;
@@ -184,15 +185,16 @@ public class RoleService {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setEmployeeId(empId.longValue());
         Employee employee = this.employeeService.getEmployee(employeeDTO);
+        long orgId = (employee != null && employee.getOrgDetails() != null) ? employee.getOrgDetails().getOrgId() : 1L;
         List<RoleDetailsPo> roleDetails = null;
         if (type.equalsIgnoreCase("DEFAULT")) {
-            List check = this.roleRepository.getRoleList(employee.getOrgDetails().getOrgId(), 0);
-            if (check.isEmpty()) {
-                this.saveUserRole(Long.valueOf(employee.getOrgDetails().getOrgId()), Long.valueOf(employee.getEmpId()));
+            List check = this.roleRepository.getRoleList(orgId, 0);
+            if (check.isEmpty() && employee != null && employee.getEmpId() != 0) {
+                this.saveUserRole(orgId, Long.valueOf(employee.getEmpId()));
             }
-            roleDetails = this.roleRepository.getRoleList(employee.getOrgDetails().getOrgId(), 0);
+            roleDetails = this.roleRepository.getRoleList(orgId, 0);
         } else {
-            roleDetails = this.roleRepository.getRoleList(employee.getOrgDetails().getOrgId(), 1);
+            roleDetails = this.roleRepository.getRoleList(orgId, 1);
         }
         if (CollectionUtils.isNotEmpty((Collection)roleDetails)) {
             return roleDetails.stream().map(role -> {
@@ -266,6 +268,32 @@ public class RoleService {
             roleDetailPo.setOrgId(orgId);
             RoleDetailsPo roleDetailsPo = (RoleDetailsPo)this.roleRepository.save(roleDetailPo);
             this.updateModuleDetailsAndPrivileges(roleDetailsPo, roleDTO);
+        }
+    }
+
+    /**
+     * Idempotent repair for dev/migrated DBs: creates any missing default roles and
+     * backfills module_privilege_mapping when a role exists but has no mappings.
+     */
+    public void ensureDefaultRoleTemplates(Long orgId, Long empId) {
+        for (String roleName : ModuleCatalog.DEFAULT_ROLE_NAMES) {
+            Optional<RoleDetailsPo> existing = this.roleRepository.findByRoleName(orgId, roleName, 0);
+            RoleDetailsPo role;
+            if (existing.isPresent()) {
+                role = existing.get();
+                if (CollectionUtils.isNotEmpty(this.modulePrivilegeMappingRepo.findBy(role.getRoleId()))) {
+                    continue;
+                }
+                this.logger.info("Backfilling privilege mappings for org_id={} role={}", orgId, roleName);
+            } else {
+                RoleDTO roleDTO = this.getRoleDTO(roleName, empId);
+                RoleDetailsPo roleDetailPo = new RoleDetailsPo(roleDTO);
+                roleDetailPo.setOrgId(orgId);
+                role = (RoleDetailsPo)this.roleRepository.save(roleDetailPo);
+                this.logger.info("Created default role org_id={} role={}", orgId, roleName);
+            }
+            RoleDTO template = this.getRoleDTO(roleName, empId);
+            this.updateModuleDetailsAndPrivileges(role, template);
         }
     }
 
@@ -411,7 +439,9 @@ public class RoleService {
             }
             finalPrivMap.put(roleDetailsPo.getRoleName(), finalMap);
         }
-        if (finalPrivMap.containsKey("Super User")) {
+        if (finalPrivMap.containsKey("Super Admin")) {
+            result.put(moduleName, finalPrivMap.get("Super Admin"));
+        } else if (finalPrivMap.containsKey("Super User")) {
             result.put(moduleName, finalPrivMap.get("Super User"));
         } else if (finalPrivMap.containsKey("Admin")) {
             result.put(moduleName, finalPrivMap.get("Admin"));
@@ -647,8 +677,9 @@ public class RoleService {
 
     public Map<String, Object> getCustomRoles() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        List mapList = this.privilegeMappingDAO.getDefaultRoles(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")));
-        mapList.addAll(this.privilegeMappingDAO.getCustomRoles(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID"))));
+        String _orgStrRoles = UserThreadLocal.get("USER_ORG_ID"); long _orgIdRoles = (_orgStrRoles != null && !"null".equals(_orgStrRoles)) ? Long.parseLong(_orgStrRoles) : 1L;
+        List mapList = this.privilegeMappingDAO.getDefaultRoles(_orgIdRoles);
+        mapList.addAll(this.privilegeMappingDAO.getCustomRoles(_orgIdRoles));
         map.put("defaultRoles", mapList);
         return map;
     }

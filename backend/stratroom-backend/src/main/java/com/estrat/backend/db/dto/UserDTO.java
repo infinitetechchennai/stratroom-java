@@ -48,6 +48,7 @@ public class UserDTO {
         this.orgId = userRoleManagement.getOrgId() != null ? userRoleManagement.getOrgId() : 0L;
         this.name = userRoleManagement.getName();
         this.userRole = userRoleManagement.getRole();
+        this.departments = userRoleManagement.getDepartment();
         if (userRoleManagement.getProfileImage() != null) {
             this.profileImage = userRoleManagement.getProfileImage();
         }

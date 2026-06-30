@@ -29,6 +29,7 @@ package com.estrat.backend.db.resource;
 
 import com.estrat.backend.db.bean.po.SubKPI;
 import com.estrat.backend.db.dto.EmployeeDTO;
+import com.estrat.backend.db.dto.KPIResponseDTO;
 import com.estrat.backend.db.dto.ScoreCardResponseDTO;
 import com.estrat.backend.db.dto.SubKPIDTO;
 import com.estrat.backend.db.resource.util.KPIUtil;
@@ -125,9 +126,16 @@ public class SubKPIController {
     }
 
     @GetMapping(value={"/subkpiEntryList/{scorecardId}"})
-    public ResponseEntity<List<SubKPIDTO>> subKpiEntryList(@PathVariable String scorecardId, @RequestParam(value="ownerFlag", required=false) String ownerFlag) {
-        boolean flag = ownerFlag != null ? Boolean.valueOf(ownerFlag) : false;
-        return new ResponseEntity((Object)this.subKpiService.retrieveSubKpiEntryDataList(Long.valueOf(scorecardId).longValue()), HttpStatus.OK);
+    public ResponseEntity<?> subKpiEntryList(
+            @PathVariable String scorecardId,
+            @RequestParam(value="employeeView", required=false) String employeeView,
+            @RequestParam(value="ownerFlag", required=false) String ownerFlag) {
+        long id = Long.parseLong(scorecardId);
+        if (employeeView != null && Boolean.parseBoolean(employeeView)) {
+            return new ResponseEntity((Object)this.subKpiService.retrievePerformanceFormData(id), HttpStatus.OK);
+        }
+        boolean flag = ownerFlag != null && Boolean.parseBoolean(ownerFlag);
+        return new ResponseEntity((Object)this.subKpiService.retrieveSubKpiEntryDataList(id), HttpStatus.OK);
     }
 }
 

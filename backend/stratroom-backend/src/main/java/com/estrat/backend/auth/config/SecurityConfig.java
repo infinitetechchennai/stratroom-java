@@ -2,27 +2,22 @@ package com.estrat.backend.auth.config;
 
 import com.estrat.backend.auth.encryption.EncryptionProvider;
 import com.estrat.backend.auth.encryption.JasyptEncryptionProvider;
-import com.estrat.backend.auth.exception.RequestException;
 import com.estrat.backend.auth.jwt.JwtTokenUtil;
-import jakarta.servlet.Filter;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
 public class SecurityConfig {
 
     @Value("${spring.application.name:authservice}")
@@ -40,7 +35,8 @@ public class SecurityConfig {
 
     @Bean
     public EncryptionProvider encryptionProvider() {
-        return new JasyptEncryptionProvider(embeddedTomcatConfig.getJasyptAlgorithm(), embeddedTomcatConfig.getJasyptPasssword());
+        return new JasyptEncryptionProvider(
+                embeddedTomcatConfig.getJasyptAlgorithm(), embeddedTomcatConfig.getJasyptPasssword());
     }
 
     @Bean
@@ -54,40 +50,34 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        JWTOAuthTokenWebFilter jwtFilter = new JWTOAuthTokenWebFilter(jwtTokenUtil(), encryptionProvider());
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration authConfig) throws Exception {
-        JWTOAuthTokenFilter filter = new JWTOAuthTokenFilter();
-        filter.setJwtTokenUtil(jwtTokenUtil());
-        filter.setAuthenticationManager(authConfig.getAuthenticationManager());
-        filter.setEncryptionProvider(encryptionProvider());
-
-        http.addFilterBefore((Filter) filter, UsernamePasswordAuthenticationFilter.class);
-        http.cors(cors -> cors.and());
-        http.csrf(csrf -> csrf.disable());
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/generateToken", "/validateToken", "/preAuditTrail", "/loginTheme",
-                        "/v3/api-docs", "/v3/api-docs/**",
-                        "/swagger-resources/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**")
+        http.csrf(ServerHttpSecurity.CsrfSpec::disable);
+        http.cors(cors -> cors.disable());
+        http.httpBasic(ServerHttpSecurity.HttpBasicSpec::disable);
+        http.formLogin(ServerHttpSecurity.FormLoginSpec::disable);
+        // Return a bare 401 (no "WWW-Authenticate: Basic" challenge) so browsers don't pop up
+        // the native sign-in dialog; the SPA handles 401s by refreshing the token / redirecting.
+        http.exceptionHandling(ex -> ex.authenticationEntryPoint(
+                new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)));
+        http.authorizeExchange(exchanges -> exchanges
+                .pathMatchers(
+                        "/login",
+                        "/generateToken",
+                        "/validateToken",
+                        "/preAuditTrail",
+                        "/loginTheme",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/webjars/**")
                 .permitAll()
-                .anyRequest().hasAuthority("ROLE_USER")
-        );
+                .anyExchange()
+                .hasAuthority("ROLE_USER"));
+        http.addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers(
-                "/login",
-                "/generateToken",
-                "/v3/api-docs",
-                "/swagger-resources/**",
-                "/swagger-ui/**",
-                "/swagger-ui.html",
-                "/webjars/**"
-        );
     }
 }

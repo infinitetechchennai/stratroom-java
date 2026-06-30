@@ -28,8 +28,19 @@ extends JpaRepository<EmployeeDepartmentMapping, Long> {
     @Query(value="SELECT c FROM EmployeeDepartmentMapping c WHERE  c.deptId=:deptId and c.status=:status")
     public List<EmployeeDepartmentMapping> departmentByEmployeeList(@Param(value="deptId") long var1, @Param(value="status") String var3);
 
-    @Query(value="SELECT c FROM EmployeeDepartmentMapping c WHERE   c.empId=:empId and c.deptId=:deptId and c.status=:status")
-    public Optional<EmployeeDepartmentMapping> findByEmpIDAndDeptId(@Param(value="empId") long var1, @Param(value="deptId") long var3, @Param(value="status") String var5);
+    @Query(value="SELECT c FROM EmployeeDepartmentMapping c WHERE   c.empId=:empId and c.deptId=:deptId and c.status=:status ORDER BY c.id DESC")
+    public List<EmployeeDepartmentMapping> findAllByEmpIDAndDeptId(@Param(value="empId") long var1, @Param(value="deptId") long var3, @Param(value="status") String var5);
+
+    /**
+     * Returns a single active mapping for the (empId, deptId) pair. Historically this was a
+     * unique-result JPQL query, but duplicate active rows exist in legacy data (e.g. the same
+     * employee mapped to a department twice). A unique query throws NonUniqueResultException and
+     * breaks user saves, so we tolerate duplicates here and return the most recent row.
+     */
+    default Optional<EmployeeDepartmentMapping> findByEmpIDAndDeptId(long empId, long deptId, String status) {
+        List<EmployeeDepartmentMapping> rows = this.findAllByEmpIDAndDeptId(empId, deptId, status);
+        return rows.isEmpty() ? Optional.empty() : Optional.of(rows.get(0));
+    }
 
     @Query(value="SELECT c FROM EmployeeDepartmentMapping c WHERE  c.empId=:empId  ")
     public List<EmployeeDepartmentMapping> findByEmpId(@Param(value="empId") long var1);

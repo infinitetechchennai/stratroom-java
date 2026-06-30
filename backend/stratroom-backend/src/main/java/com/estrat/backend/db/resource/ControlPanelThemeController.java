@@ -96,21 +96,34 @@ public class ControlPanelThemeController {
 
     private void updateTheme(ControlPanelThemeDTO controlPanelThemeDTO) {
         Optional controlPanelTheme = this.controlPanelThemeService.findById(controlPanelThemeDTO.getOrgId());
+        long actorId = resolveActorId();
         if (controlPanelTheme.isPresent()) {
             ControlPanelThemeDTO controlPanelThemeDTO1 = new ControlPanelThemeDTO((ControlPanelTheme)controlPanelTheme.get());
             if (controlPanelThemeDTO1.getLoginLogo() != null && !controlPanelThemeDTO1.getLoginLogo().equals(controlPanelThemeDTO.getLoginLogo())) {
-                this.auditService.saveAudit("Control Panel", controlPanelThemeDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Logo Uploaded");
+                this.auditService.saveAudit("Control Panel", controlPanelThemeDTO.getOrgId(), actorId, "Logo Uploaded");
             }
             if (controlPanelThemeDTO1.getLoginTheme() != null && !controlPanelThemeDTO1.getLoginTheme().isEmpty() && !controlPanelThemeDTO1.getLoginTheme().equals(controlPanelThemeDTO.getLoginTheme())) {
-                this.auditService.saveAudit("Control Panel", controlPanelThemeDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Login Image Uploaded");
+                this.auditService.saveAudit("Control Panel", controlPanelThemeDTO.getOrgId(), actorId, "Login Image Uploaded");
             }
             if (controlPanelThemeDTO1.getThemeColor() != null && !controlPanelThemeDTO1.getThemeColor().equals(controlPanelThemeDTO.getThemeColor())) {
-                this.auditService.updateAudit("Control Panel", controlPanelThemeDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Branding Color Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelThemeDTO.getOrgId(), actorId, "Branding Color Modified");
             }
             if (controlPanelThemeDTO1.getThemeName() != null && !controlPanelThemeDTO1.getThemeName().equals(controlPanelThemeDTO.getThemeName())) {
-                this.auditService.updateAudit("Control Panel", controlPanelThemeDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Branding Theam Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelThemeDTO.getOrgId(), actorId, "Branding Theam Modified");
             }
         }
+    }
+
+    private long resolveActorId() {
+        String emp = UserThreadLocal.get();
+        if (emp != null && !emp.isEmpty()) {
+            try {
+                return Long.parseLong(emp);
+            } catch (NumberFormatException ignored) {
+                return 0L;
+            }
+        }
+        return 0L;
     }
 }
 

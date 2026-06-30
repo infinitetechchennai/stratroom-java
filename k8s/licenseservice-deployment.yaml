@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: licenseservice
+  namespace: stratroom-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: licenseservice
+  template:
+    metadata:
+      labels:
+        app: licenseservice
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: licenseservice
+        image: ghcr.io/infinitetechchennai/stratroom-java-licenseservice:latest
+        imagePullPolicy: Always
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://postgres:5432/stratroomlicense
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: stratroom-secrets
+              key: DB_USERNAME
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: stratroom-secrets
+              key: DB_PASSWORD
+        - name: LOGGING_LEVEL_ROOT
+          value: ERROR
+        ports:
+        - containerPort: 9080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: licenseservice
+  namespace: stratroom-prod
+spec:
+  selector:
+    app: licenseservice
+  ports:
+    - protocol: TCP
+      port: 9080
+      targetPort: 9080

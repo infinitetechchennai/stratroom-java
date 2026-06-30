@@ -34,6 +34,7 @@ import com.estrat.backend.db.bean.po.RiskCauseAndConsequence;
 import com.estrat.backend.db.bean.po.RiskComments;
 import com.estrat.backend.db.bean.po.RiskPlan;
 import com.estrat.backend.db.dto.RiskDTO;
+import com.estrat.backend.db.config.LongStringJpaConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +43,7 @@ import java.util.Date;
 import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -110,6 +112,7 @@ public class RiskDetails {
     private Date raisedDate;
     @Column(name="completed_date")
     private Date completedDate;
+    @Convert(converter = LongStringJpaConverter.class)
     @Column(name="department_id")
     private Long departmentId;
 
