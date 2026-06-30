@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { parseDateRange, getMonthCount, generatePeriodBoundary } from '../../utils/dateUtils';
 import { useAuth } from '../../context/AuthContext';
 import { getDisplayName, getInitials } from '../organization/landingPageUtils';
 import {
@@ -97,11 +98,12 @@ export default function MyFormsPage() {
     const [loadingKpis, setLoadingKpis] = useState(false);
 
     const [perfPeriod, setPerfPeriod] = useState('M');
-    const [dailyData, setDailyData] = useState(Array.from({ length: 1 }, () => ({ actual: '', target: '' })));
-    const [monthlyData, setMonthlyData] = useState(Array.from({ length: 12 }, () => ({ actual: '', target: '' })));
-    const [quarterlyData, setQuarterlyData] = useState(Array.from({ length: 4 }, () => ({ actual: '', target: '' })));
-    const [halfYearlyData, setHalfYearlyData] = useState(Array.from({ length: 2 }, () => ({ actual: '', target: '' })));
-    const [annualData, setAnnualData] = useState(Array.from({ length: 1 }, () => ({ actual: '', target: '' })));
+    const [dailyData, setDailyData] = useState([]);
+    const [monthlyData, setMonthlyData] = useState([]);
+    const [quarterlyData, setQuarterlyData] = useState([]);
+    const [halfYearlyData, setHalfYearlyData] = useState([]);
+    const [annualData, setAnnualData] = useState([]);
+    const [periodStart, setPeriodStart] = useState(new Date(new Date().getFullYear(), 0, 1));
 
     const handleDataChange = (period, index, field, value) => {
         if (period === 'D') {
@@ -237,47 +239,60 @@ export default function MyFormsPage() {
                 hist = await getKpiHistory(selectedKpiId, getDateRange());
             }
 
-            // Reset arrays
-            const mData = Array.from({ length: 12 }, () => ({ actual: '', target: '' }));
-            const qData = Array.from({ length: 4 }, () => ({ actual: '', target: '' }));
-            const hyData = Array.from({ length: 2 }, () => ({ actual: '', target: '' }));
-            let aData = { actual: '', target: '' };
+            const { start, end } = parseDateRange(fields.startEndDate);
+            
+            if (!start || !end) {
+                showToast('Invalid or missing Date Range. Cannot generate performance grids.', 'error');
+                return;
+            }
+            setPeriodStart(start);
 
-            const year = new Date().getFullYear();
+            const mCount = getMonthCount(start, end);
+            if (mCount <= 0) {
+                showToast('Date range is zero or negative. Check KPI configuration.', 'error');
+                return;
+            }
+            
+            const mData = Array.from({ length: mCount }, () => ({ actual: '', target: '' }));
+            const qData = Array.from({ length: Math.ceil(mCount / 3) }, () => ({ actual: '', target: '' }));
+            const hyData = Array.from({ length: Math.ceil(mCount / 6) }, () => ({ actual: '', target: '' }));
+            const aData = Array.from({ length: (end.getFullYear() - start.getFullYear() + 1) }, () => ({ actual: '', target: '' }));
+            
+            // Calculate total days for daily data
+            const dCount = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            const dData = Array.from({ length: Math.min(dCount, 366) }, () => ({ actual: '', target: '' })); // Cap at 1 year for daily to prevent browser crash
 
             hist.forEach(h => {
-                const start = new Date(h.period_start);
-                const end = new Date(h.period_end);
+                const hStart = new Date(h.period_start);
                 const actual = h.actual_value != null ? h.actual_value : '';
                 const target = fields.target || '';
-
-                // Monthly mapping
-                if (start.getDate() === 1 && end.getDate() >= 28 && end.getDate() <= 31 && start.getMonth() === end.getMonth()) {
-                    mData[start.getMonth()] = { actual, target };
-                }
-                // Quarterly mapping
-                else if (start.getDate() === 1 && (end.getMonth() - start.getMonth() === 2)) {
-                    qData[Math.floor(start.getMonth() / 3)] = { actual, target };
-                }
-                // Half-yearly mapping
-                else if (start.getDate() === 1 && (end.getMonth() - start.getMonth() === 5)) {
-                    hyData[Math.floor(start.getMonth() / 6)] = { actual, target };
-                }
-                // Annual mapping
-                else if (start.getDate() === 1 && start.getMonth() === 0 && end.getDate() === 31 && end.getMonth() === 11) {
-                    aData = { actual, target };
-                }
+                
+                const idxM = (hStart.getFullYear() - start.getFullYear()) * 12 + hStart.getMonth() - start.getMonth();
+                if (idxM >= 0 && idxM < mData.length) mData[idxM] = { actual, target };
+                
+                const idxQ = Math.floor(idxM / 3);
+                if (idxQ >= 0 && idxQ < qData.length) qData[idxQ] = { actual, target };
+                
+                const idxH = Math.floor(idxM / 6);
+                if (idxH >= 0 && idxH < hyData.length) hyData[idxH] = { actual, target };
+                
+                const idxA = hStart.getFullYear() - start.getFullYear();
+                if (idxA >= 0 && idxA < aData.length) aData[idxA] = { actual, target };
+                
+                const idxD = Math.floor((hStart - start) / (1000 * 60 * 60 * 24));
+                if (idxD >= 0 && idxD < dData.length) dData[idxD] = { actual, target };
             });
 
             setMonthlyData(mData);
             setQuarterlyData(qData);
             setHalfYearlyData(hyData);
-            setAnnualData([aData]);
+            setAnnualData(aData);
+            setDailyData(dData);
         } catch (error) {
             console.error(error);
             showToast('Failed to load history.', 'error');
         }
-    }, [selectedKpiId, selectedSubKpiId]);
+    }, [selectedKpiId, selectedSubKpiId, fields.startEndDate, fields.target]);
 
     useEffect(() => {
         loadHistory();
@@ -296,54 +311,55 @@ export default function MyFormsPage() {
         if (!selectedKpiId) return showToast('Please select a KPI first.', 'error');
         setSaving(true);
         try {
-            const year = new Date().getFullYear();
             const pad = (n) => String(n).padStart(2, '0');
             const getLastDay = (y, m) => new Date(y, m + 1, 0).getDate();
-
             let actuals = [];
 
             if (perfPeriod === "D") {
                 dailyData.forEach((data, index) => {
-                    const today = new Date();
+                    const d = new Date(periodStart);
+                    d.setDate(d.getDate() + index);
                     actuals.push({
-                        periodStart: `${year}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`,
-                        periodEnd: `${year}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`,
+                        periodStart: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+                        periodEnd: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
                         actualValue: data.actual === '' ? null : Number(data.actual)
                     });
                 });
             } else if (perfPeriod === "M") {
                 monthlyData.forEach((data, index) => {
+                    const d = generatePeriodBoundary(periodStart, index);
                     actuals.push({
-                        periodStart: `${year}-${pad(index + 1)}-01`,
-                        periodEnd: `${year}-${pad(index + 1)}-${pad(getLastDay(year, index))}`,
+                        periodStart: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-01`,
+                        periodEnd: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(getLastDay(d.getFullYear(), d.getMonth()))}`,
                         actualValue: data.actual === '' ? null : Number(data.actual)
                     });
                 });
             } else if (perfPeriod === "Q") {
                 quarterlyData.forEach((data, index) => {
-                    const startMonth = index * 3;
-                    const endMonth = startMonth + 2;
+                    const d = generatePeriodBoundary(periodStart, index * 3);
                     actuals.push({
-                        periodStart: `${year}-${pad(startMonth + 1)}-01`,
-                        periodEnd: `${year}-${pad(endMonth + 1)}-${pad(getLastDay(year, endMonth))}`,
+                        periodStart: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-01`,
+                        periodEnd: `${d.getFullYear()}-${pad(d.getMonth() + 3)}-${pad(getLastDay(d.getFullYear(), d.getMonth() + 2))}`,
                         actualValue: data.actual === '' ? null : Number(data.actual)
                     });
                 });
             } else if (perfPeriod === "HY") {
                 halfYearlyData.forEach((data, index) => {
-                    const startMonth = index * 6;
-                    const endMonth = startMonth + 5;
+                    const d = generatePeriodBoundary(periodStart, index * 6);
                     actuals.push({
-                        periodStart: `${year}-${pad(startMonth + 1)}-01`,
-                        periodEnd: `${year}-${pad(endMonth + 1)}-${pad(getLastDay(year, endMonth))}`,
+                        periodStart: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-01`,
+                        periodEnd: `${d.getFullYear()}-${pad(d.getMonth() + 6)}-${pad(getLastDay(d.getFullYear(), d.getMonth() + 5))}`,
                         actualValue: data.actual === '' ? null : Number(data.actual)
                     });
                 });
             } else if (perfPeriod === "A") {
-                actuals.push({
-                    periodStart: `${year}-01-01`,
-                    periodEnd: `${year}-12-31`,
-                    actualValue: annualData.actual === '' ? null : Number(annualData.actual)
+                annualData.forEach((data, index) => {
+                    const d = generatePeriodBoundary(periodStart, index * 12);
+                    actuals.push({
+                        periodStart: `${d.getFullYear()}-01-01`,
+                        periodEnd: `${d.getFullYear()}-12-31`,
+                        actualValue: data.actual === '' ? null : Number(data.actual)
+                    });
                 });
             }
 
@@ -409,7 +425,6 @@ export default function MyFormsPage() {
                                     <div className="g-col-12 d-flex justify-content-between flex-wrap align-items-center gap-2">
                                         <div className="user-card ">
                                             <div className="user-image user-image-lg overflow-hidden">
-                                                {/* <img src="assets/images/user/user7.jpg" alt="George" width="48" height="48" /> */}
                                                 <span className="img-initial">{initials}</span>
                                             </div>
                                             <div className="user-text d-flex flex-column">
@@ -433,14 +448,10 @@ export default function MyFormsPage() {
                                         </div>
                                     </div>
                                     <div className="g-col-12">
-
-
                                         <div className="form-group">
                                             <label className="form-label">Scorecard</label>
-                                            <select className="form-select select-dropdown" value={selectedPageId} onChange={e => setSelectedPageId(e.target.value)}>
-                                                <option value="" disabled hidden>
-                                                    {pages.length === 0 ? 'No Scorecards found' : 'Select Scorecard'}
-                                                </option>
+                                            <select className="form-select select-dropdown" data-placeholder="Select Scorecard" value={selectedPageId} onChange={e => setSelectedPageId(e.target.value)}>
+                                                <option value="" disabled hidden>Select Scorecard</option>
                                                 {pages.map(p => (
                                                     <option key={p.id || p.pageId} value={p.id || p.pageId}>
                                                         {p.name || p.pageName || `Page ${p.id || p.pageId}`}
@@ -452,31 +463,24 @@ export default function MyFormsPage() {
                                     <div className="g-col-12">
                                         <div className="form-group">
                                             <label className="form-label">Measures</label>
-                                            <select className="form-select select-dropdown" value={selectedKpiId} onChange={e => setSelectedKpiId(e.target.value)} disabled={!selectedPageId || loadingKpis}>
-                                                <option value="" disabled hidden>
-                                                    {loadingKpis ? 'Loading…' : (selectedPageId && filteredKpis.length === 0 ? 'No record found' : 'Select Measure')}
-                                                </option>
+                                            <select className="form-select select-dropdown" data-placeholder="Select Measures" value={selectedKpiId} onChange={e => setSelectedKpiId(e.target.value)} disabled={!selectedPageId || loadingKpis}>
+                                                <option value="" disabled hidden>Select Measures</option>
                                                 {filteredKpis.map(k => (
                                                     <option key={k.id} value={k.id}>{k.name}</option>
                                                 ))}
                                             </select>
                                         </div>
                                     </div>
-
-
-
-
                                     <div className="g-col-12 g-col-lg-6">
                                         <div className="form-group">
                                             <label className="form-label">Sub Measures</label>
-                                            <select className="form-select select-dropdown" value={selectedSubKpiId} onChange={e => setSelectedSubKpiId(e.target.value)} disabled={!selectedKpiId || subKpis.length === 0}>
+                                            <select className="form-select select-dropdown" data-placeholder="Select Sub Measures" value={selectedSubKpiId} onChange={e => setSelectedSubKpiId(e.target.value)} disabled={!selectedKpiId || subKpis.length === 0}>
                                                 <option value="" disabled hidden>Select Sub Measures</option>
                                                 {subKpis.map(s => (
                                                     <option key={s.id} value={s.id}>
                                                         {s.subKpiValue?.subMeasureName || s.name || `Sub Measure ${s.id}`}
                                                     </option>
                                                 ))}
-
                                             </select>
                                         </div>
                                     </div>
@@ -498,18 +502,14 @@ export default function MyFormsPage() {
                                             <input type="text" className="form-control" placeholder="Measurement Frequency" readOnly value={fields.measurementFrequency} />
                                         </div>
                                     </div>
-                                    {/* Only show grid if lowest level is selected */}
-                                    {((!selectedKpiId) || (subKpis.length > 0 && !selectedSubKpiId)) ? null : (
-                                        <>
-                                            {/* Performance Data */}
-                                            <div className="g-col-12">
-                                                {/* <div className="performance-section-title">PERFORMANCE DATA — ACTUAL & TARGET</div> */}
 
-                                                {/* Daily Section */}
-                                                <div id="perf-section-D" className="perf-period-section" style={{ display: perfPeriod === "D" ? "block" : "none" }}>
+                                    {((!selectedKpiId) || (subKpis.length > 0 && !selectedSubKpiId)) ? null : (
+                                        <div className="g-col-12">
+                                            {perfPeriod === 'D' && (
+                                                <div id="perf-section-D" className="perf-period-section">
                                                     <div className="performance-head mb-3">
                                                         <h4 className="title text-muted">Daily Performance Data</h4>
-                                                        <div className="legend-container">
+                                                        <div className="performance-legend">
                                                             <div className="legend-item">
                                                                 <div className="legend-box actual"></div>
                                                                 <span>Actual</span>
@@ -525,31 +525,36 @@ export default function MyFormsPage() {
                                                             <div className="perf-column">
                                                                 <div className="perf-table-row perf-header">
                                                                     <div className="perf-cell">DAY</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-green)" }}>ACTUAL</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-red)" }}>TARGET</div>
+                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-green)' }}>ACTUAL</div>
+                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-red)' }}>TARGET</div>
                                                                 </div>
-                                                                {dailyData.map((data, index) => (
-                                                                    <div className="perf-table-row" key={index}>
-                                                                        <div className="perf-cell perf-month">Daily</div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('D', index, 'actual', e.target.value)} />
+                                                                {dailyData.map((data, index) => {
+                                                                    const d = new Date(periodStart);
+                                                                    d.setDate(d.getDate() + index);
+                                                                    const label = `Day ${index + 1}`;
+                                                                    return (
+                                                                        <div className="perf-table-row" key={index}>
+                                                                            <div className="perf-cell perf-month">{label}</div>
+                                                                            <div className="perf-cell perf-input-cell">
+                                                                                <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('D', index, 'actual', e.target.value)} />
+                                                                            </div>
+                                                                            <div className="perf-cell perf-input-cell">
+                                                                                <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                                            </div>
                                                                         </div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
-                                                                        </div>
-                                                                    </div>
-                                                                ))}
+                                                                    );
+                                                                })}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            )}
 
-
-                                                {/* Monthly Section */}
-                                                <div id="perf-section-M" className="perf-period-section" style={{ display: perfPeriod === "M" ? "block" : "none" }}>
+                                            {perfPeriod === 'M' && (
+                                                <div id="perf-section-M" className="perf-period-section">
                                                     <div className="performance-head mb-3">
-                                                        <h4 className="title">MONTHLY PERFORMANCE DATA</h4>
-                                                        <div className="legend-container">
+                                                        <h4 className="title text-muted">Monthly Performance Data</h4>
+                                                        <div className="performance-legend">
                                                             <div className="legend-item">
                                                                 <div className="legend-box actual"></div>
                                                                 <span>Actual</span>
@@ -562,52 +567,80 @@ export default function MyFormsPage() {
                                                     </div>
                                                     <div className="performance-data-container">
                                                         <div className="perf-grid">
-                                                            <div className="perf-column">
-                                                                <div className="perf-table-row perf-header">
-                                                                    <div className="perf-cell">MONTH</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-green)" }}>ACTUAL</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-red)" }}>TARGET</div>
-                                                                </div>
-                                                                {monthlyData.slice(0, 6).map((data, index) => (
-                                                                    <div className="perf-table-row" key={index}>
-                                                                        <div className="perf-cell perf-month">{['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][index]}</div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('M', index, 'actual', e.target.value)} />
+                                                            {(() => {
+                                                                const mid = Math.ceil(monthlyData.length / 2);
+                                                                const leftHalf = monthlyData.slice(0, mid);
+                                                                const rightHalf = monthlyData.slice(mid);
+                                                                return (
+                                                                    <>
+                                                                        <div className="perf-column perf-column-separator">
+                                                                            <div className="perf-table-row perf-header">
+                                                                                <div className="perf-cell">MONTH</div>
+                                                                                <div className="perf-cell" style={{ color: 'var(--stratroom-green)' }}>ACTUAL</div>
+                                                                                <div className="perf-cell" style={{ color: 'var(--stratroom-red)' }}>TARGET</div>
+                                                                            </div>
+                                                                            {leftHalf.map((data, idx) => {
+                                                                                const d = generatePeriodBoundary(periodStart, idx);
+                                                                                const label = d.toLocaleString('default', { month: 'short' });
+                                                                                return (
+                                                                                    <div className="perf-table-row" key={idx}>
+                                                                                        <div className="perf-cell perf-month">{label}</div>
+                                                                                        <div className="perf-cell perf-input-cell">
+                                                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('M', idx, 'actual', e.target.value)} />
+                                                                                        </div>
+                                                                                        <div className="perf-cell perf-input-cell">
+                                                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                );
+                                                                            })}
                                                                         </div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
-                                                                        </div>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                            <div className="perf-column">
-                                                                <div className="perf-table-row perf-header">
-                                                                    <div className="perf-cell">MONTH</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-green)" }}>ACTUAL</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-red)" }}>TARGET</div>
-                                                                </div>
-                                                                {monthlyData.slice(6, 12).map((data, index) => (
-                                                                    <div className="perf-table-row" key={index + 6}>
-                                                                        <div className="perf-cell perf-month">{['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][index]}</div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('M', index + 6, 'actual', e.target.value)} />
-                                                                        </div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
-                                                                        </div>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
+                                                                        {rightHalf.length > 0 && (
+                                                                            <div className="perf-column">
+                                                                                <div className="perf-table-row perf-header">
+                                                                                    <div className="perf-cell">MONTH</div>
+                                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-green)' }}>ACTUAL</div>
+                                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-red)' }}>TARGET</div>
+                                                                                </div>
+                                                                                {rightHalf.map((data, idx) => {
+                                                                                    const realIdx = idx + mid;
+                                                                                    const d = generatePeriodBoundary(periodStart, realIdx);
+                                                                                    const label = d.toLocaleString('default', { month: 'short' });
+                                                                                    return (
+                                                                                        <div className="perf-table-row" key={realIdx}>
+                                                                                            <div className="perf-cell perf-month">{label}</div>
+                                                                                            <div className="perf-cell perf-input-cell">
+                                                                                                <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('M', realIdx, 'actual', e.target.value)} />
+                                                                                            </div>
+                                                                                            <div className="perf-cell perf-input-cell">
+                                                                                                <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    );
+                                                                                })}
+                                                                            </div>
+                                                                        )}
+                                                                    </>
+                                                                );
+                                                            })()}
                                                         </div>
                                                     </div>
                                                 </div>
+                                            )}
 
-                                                <div id="perf-section-Q" className="perf-period-section" style={{ display: perfPeriod === "Q" ? "block" : "none" }}>
+                                            {perfPeriod === 'Q' && (
+                                                <div id="perf-section-Q" className="perf-period-section">
                                                     <div className="performance-head mb-3">
-                                                        <h4 className="title">QUARTERLY PERFORMANCE DATA</h4>
-                                                        <div className="legend-container">
-                                                            <div className="legend-item"><div className="legend-box actual"></div><span>Actual</span></div>
-                                                            <div className="legend-item"><div className="legend-box target"></div><span>Target</span></div>
+                                                        <h4 className="title text-muted">Quarterly Performance Data</h4>
+                                                        <div className="performance-legend">
+                                                            <div className="legend-item">
+                                                                <div className="legend-box actual"></div>
+                                                                <span>Actual</span>
+                                                            </div>
+                                                            <div className="legend-item">
+                                                                <div className="legend-box target"></div>
+                                                                <span>Target</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div className="performance-data-container">
@@ -615,63 +648,89 @@ export default function MyFormsPage() {
                                                             <div className="perf-column">
                                                                 <div className="perf-table-row perf-header">
                                                                     <div className="perf-cell">QUARTER</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-green)" }}>ACTUAL</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-red)" }}>TARGET</div>
+                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-green)' }}>ACTUAL</div>
+                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-red)' }}>TARGET</div>
                                                                 </div>
-                                                                {quarterlyData.map((data, index) => (
-                                                                    <div className="perf-table-row" key={index}>
-                                                                        <div className="perf-cell perf-month">{['Q1', 'Q2', 'Q3', 'Q4'][index]}</div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('Q', index, 'actual', e.target.value)} />
+                                                                {quarterlyData.map((data, index) => {
+                                                                    const d = generatePeriodBoundary(periodStart, index * 3);
+                                                                    const quarter = Math.floor(d.getMonth() / 3) + 1;
+                                                                    const label = `Q${quarter}`;
+                                                                    return (
+                                                                        <div className="perf-table-row" key={index}>
+                                                                            <div className="perf-cell perf-month">{label}</div>
+                                                                            <div className="perf-cell perf-input-cell">
+                                                                                <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('Q', index, 'actual', e.target.value)} />
+                                                                            </div>
+                                                                            <div className="perf-cell perf-input-cell">
+                                                                                <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                                            </div>
                                                                         </div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
-                                                                        </div>
-                                                                    </div>
-                                                                ))}
+                                                                    );
+                                                                })}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            )}
 
-                                                <div id="perf-section-HY" className="perf-period-section" style={{ display: perfPeriod === "HY" ? "block" : "none" }}>
+                                            {perfPeriod === 'HY' && (
+                                                <div id="perf-section-HY" className="perf-period-section">
                                                     <div className="performance-head mb-3">
-                                                        <h4 className="title">HALF-YEARLY PERFORMANCE DATA</h4>
-                                                        <div className="legend-container">
-                                                            <div className="legend-item"><div className="legend-box actual"></div><span>Actual</span></div>
-                                                            <div className="legend-item"><div className="legend-box target"></div><span>Target</span></div>
+                                                        <h4 className="title text-muted">Half-Yearly Performance Data</h4>
+                                                        <div className="performance-legend">
+                                                            <div className="legend-item">
+                                                                <div className="legend-box actual"></div>
+                                                                <span>Actual</span>
+                                                            </div>
+                                                            <div className="legend-item">
+                                                                <div className="legend-box target"></div>
+                                                                <span>Target</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div className="performance-data-container">
                                                         <div className="perf-grid single-column">
                                                             <div className="perf-column">
                                                                 <div className="perf-table-row perf-header">
-                                                                    <div className="perf-cell">HALF-YEAR</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-green)" }}>ACTUAL</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-red)" }}>TARGET</div>
+                                                                    <div className="perf-cell text-nowrap">HALF YEAR</div>
+                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-green)' }}>ACTUAL</div>
+                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-red)' }}>TARGET</div>
                                                                 </div>
-                                                                {halfYearlyData.map((data, index) => (
-                                                                    <div className="perf-table-row" key={index}>
-                                                                        <div className="perf-cell perf-month">{['H1', 'H2'][index]}</div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('HY', index, 'actual', e.target.value)} />
+                                                                {halfYearlyData.map((data, index) => {
+                                                                    const d = generatePeriodBoundary(periodStart, index * 6);
+                                                                    const half = Math.floor(d.getMonth() / 6) + 1;
+                                                                    const label = `H${half}`;
+                                                                    return (
+                                                                        <div className="perf-table-row" key={index}>
+                                                                            <div className="perf-cell perf-month">{label}</div>
+                                                                            <div className="perf-cell perf-input-cell">
+                                                                                <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('HY', index, 'actual', e.target.value)} />
+                                                                            </div>
+                                                                            <div className="perf-cell perf-input-cell">
+                                                                                <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                                            </div>
                                                                         </div>
-                                                                        <div className="perf-cell perf-input-cell">
-                                                                            <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
-                                                                        </div>
-                                                                    </div>
-                                                                ))}
+                                                                    );
+                                                                })}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            )}
 
-                                                <div id="perf-section-A" className="perf-period-section" style={{ display: perfPeriod === "A" ? "block" : "none" }}>
+                                            {perfPeriod === 'A' && (
+                                                <div id="perf-section-A" className="perf-period-section">
                                                     <div className="performance-head mb-3">
-                                                        <h4 className="title">ANNUAL PERFORMANCE DATA</h4>
-                                                        <div className="legend-container">
-                                                            <div className="legend-item"><div className="legend-box actual"></div><span>Actual</span></div>
-                                                            <div className="legend-item"><div className="legend-box target"></div><span>Target</span></div>
+                                                        <h4 className="title text-muted">Annual Performance Data</h4>
+                                                        <div className="performance-legend">
+                                                            <div className="legend-item">
+                                                                <div className="legend-box actual"></div>
+                                                                <span>Actual</span>
+                                                            </div>
+                                                            <div className="legend-item">
+                                                                <div className="legend-box target"></div>
+                                                                <span>Target</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div className="performance-data-container">
@@ -679,38 +738,36 @@ export default function MyFormsPage() {
                                                             <div className="perf-column">
                                                                 <div className="perf-table-row perf-header">
                                                                     <div className="perf-cell">YEAR</div>
-                                                                    <div className="perf-cell" style={{ color: "var(--stratroom-green)" }}>ACTUAL</div>
+                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-green)' }}>ACTUAL</div>
+                                                                    <div className="perf-cell" style={{ color: 'var(--stratroom-red)' }}>TARGET</div>
                                                                 </div>
-                                                                <div className="perf-cell" style={{ color: "var(--stratroom-red)" }}>TARGET</div>
+                                                                {annualData.map((data, index) => {
+                                                                    const d = generatePeriodBoundary(periodStart, index * 12);
+                                                                    const label = d.getFullYear().toString();
+                                                                    return (
+                                                                        <div className="perf-table-row" key={index}>
+                                                                            <div className="perf-cell perf-month">{label}</div>
+                                                                            <div className="perf-cell perf-input-cell">
+                                                                                <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('A', index, 'actual', e.target.value)} />
+                                                                            </div>
+                                                                            <div className="perf-cell perf-input-cell">
+                                                                                <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                })}
                                                             </div>
-                                                            {annualData.map((data, index) => (
-                                                                <div className="perf-table-row" key={index}>
-                                                                    <div className="perf-cell perf-month">Annual</div>
-                                                                    <div className="perf-cell perf-input-cell">
-                                                                        <input type="number" className="form-control perf-input-actual" value={data.actual} onChange={e => handleDataChange('A', index, 'actual', e.target.value)} />
-                                                                    </div>
-                                                                    <div className="perf-cell perf-input-cell">
-                                                                        <input type="number" className="form-control perf-input-target" readOnly value={data.target || fields.target} />
-                                                                    </div>
-                                                                </div>
-                                                            ))}
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-
-
-                                        </>
-
-
+                                            )}
+                                        </div>
                                     )}
-
 
                                     <div className="g-col-12 g-col-lg-6">
                                         <div className="form-group">
                                             <label className="form-label">Start / End Date</label>
-                                            <input type="text" id="dateRangePicker" className="form-control"
-                                                placeholder="Select Date Range" readOnly value={fields.startEndDate} />
+                                            <input type="text" id="dateRangePicker" className="form-control" placeholder="Select Date Range" readOnly value={fields.startEndDate} />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-lg-6">
@@ -728,8 +785,7 @@ export default function MyFormsPage() {
                                     <div className="g-col-12">
                                         <div className="form-group">
                                             <label className="form-label">Comment</label>
-                                            <textarea className="form-control browser-default" placeholder="Comment"
-                                                rows="2" value={fields.comment} onChange={e => setFields(prev => ({ ...prev, comment: e.target.value }))}></textarea>
+                                            <textarea className="form-control browser-default" placeholder="Comment" rows="2" value={fields.comment} onChange={e => setFields(prev => ({ ...prev, comment: e.target.value }))}></textarea>
                                         </div>
                                     </div>
                                     <div className="g-col-12">
@@ -737,8 +793,7 @@ export default function MyFormsPage() {
                                             <label className="form-label">Upload</label>
                                             <div className="attachment-upload">
                                                 <div className="input-group mb-1">
-                                                    <input type="file" className="form-control" id="inputGroupFile02"
-                                                        accept=".pdf,.ppt,.jpeg,.xlsx,.doc,.docx" onChange={e => setFile(e.target.files[0])} />
+                                                    <input type="file" className="form-control" id="inputGroupFile02" accept=".pdf,.ppt,.jpeg,.xlsx,.doc,.docx" onChange={e => setFile(e.target.files[0])} />
                                                 </div>
                                                 <div className="mb-3 form-text">Supported file type (jpeg,pdf,pptx,xlsx,docx)</div>
                                             </div>
@@ -756,7 +811,6 @@ export default function MyFormsPage() {
                     </form>
                 </div>
             </main>
-
         </>
     );
 }
