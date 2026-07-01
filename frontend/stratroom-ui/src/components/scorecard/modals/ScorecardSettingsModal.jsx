@@ -147,14 +147,20 @@ export const ScorecardSettingsModal = ({ scorecardData }) => {
                     }
                 };
                 await saveCustomPerformance(dto);
+                // Refresh context settings first and wait for it to complete
                 if (refreshSettings) await refreshSettings();
             }
             
+            // Close modal first
             const modalEl = document.getElementById('add-settings-modal');
             if (modalEl && window.bootstrap) {
                 const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
                 if (modalInstance) modalInstance.hide();
             }
+            // Wait a tick for React to flush the new settings state before reloading
+            // scorecard data - this prevents the race condition where the table renders
+            // with stale column visibility settings
+            await new Promise(resolve => setTimeout(resolve, 100));
             if (reload) await reload();
         } catch (err) {
             console.error('Failed to update settings:', err);

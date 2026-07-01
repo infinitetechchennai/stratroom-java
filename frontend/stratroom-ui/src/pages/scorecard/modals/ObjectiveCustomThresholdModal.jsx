@@ -190,8 +190,8 @@ const ObjectiveCustomThresholdModal = () => {
                       &lt;=
                     </button>
                   </div>
-                  <div className="row">
-                    <div className="col-md-4">
+                  <div className="row" style={{ display: 'flex', flexWrap: 'nowrap', gap: '15px' }}>
+                    <div style={{ flex: 1 }}>
                       <div className="panel panel-primary" id="result_panel">
                         <div className="panel-heading">
                           <h6 className="panel-title">Fields and measures:</h6>
@@ -215,7 +215,7 @@ const ObjectiveCustomThresholdModal = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-4">
+                    <div style={{ flex: 1 }}>
                       <div className="panel panel-primary" id="result_panel1">
                         <div className="panel-heading">
                           <h6 className="panel-title">Functions:</h6>
@@ -268,7 +268,7 @@ const ObjectiveCustomThresholdModal = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-4">
+                    <div style={{ flex: 1 }}>
                       <div className="panel panel-primary objectiveformuladynamicdesc" id="result_panel1">
                         <div className="panel-heading">
                           <h6 className="panel-title">Function Description:</h6>

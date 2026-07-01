@@ -210,6 +210,9 @@ public class ScoreCardImportService {
                     v2Kpi.put("displayOrder", kpiOrder++);
                     // KPI Performance column holds the performance formula text
                     v2Kpi.put("formula", cell(kFirstRow, "KPI Performance", "KPIPerformance", "KPI performance"));
+                    v2Kpi.put("actualFormula", cell(kFirstRow, "KPI Formula", "KPIFormula"));
+                    v2Kpi.put("owner", cell(kFirstRow, "Owner"));
+                    v2Kpi.put("dataSource", cell(kFirstRow, "Data Source", "DataSource"));
                     // YTD column: only populate if the cell actually contains a value
                     String ytdVal = cell(kFirstRow, "YTD", "ytd");
                     if (ytdVal != null && !ytdVal.isBlank()) {
@@ -240,6 +243,10 @@ public class ScoreCardImportService {
                         v2SubKpi.put("indicatorType", cell(subRow, "SubKPIType", "SubKPI Type"));
                         v2SubKpi.put("direction", "HIGHER");
                         v2SubKpi.put("displayOrder", subKpiOrder++);
+                        v2SubKpi.put("formula", cell(subRow, "SubKPI Performance", "SubKPIPerformance"));
+                        v2SubKpi.put("actualFormula", cell(subRow, "SubKPI Formula", "SubKPIFormula"));
+                        v2SubKpi.put("description", cell(subRow, "SubKPI Description"));
+                        v2SubKpi.put("measurementFrequency", cell(subRow, "SubMeasurement Frequency", "Sub Measurement Frequency"));
                         scorecardCrudService.createSubKpi(v2SubKpi);
                         log.info("  → SubKPI '{}' under KPI '{}'", skName, kEntry.getKey());
                     }

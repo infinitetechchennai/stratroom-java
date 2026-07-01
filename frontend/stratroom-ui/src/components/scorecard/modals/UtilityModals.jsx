@@ -273,15 +273,7 @@ export const KpiStoryCardModal = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="row">
-                                        <label htmlFor="staticEmail" className="col-md-3 col-form-label">Target Audience</label>
-                                        <div className="col-md-9 col-form-text">
-                                            <div className="d-flex flex-wrap gap-2">
-                                                <span className="badge rounded-pill label-bg-dark">Existing customers</span>
-                                                <span className="badge rounded-pill label-bg-dark">B2B clients looking for long-term partnerships</span>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                     <div className="row">
                                         <label htmlFor="staticEmail" className="col-md-3 col-form-label">Current Actual</label>
                                         <div className="col-md-9 col-form-text">
@@ -306,18 +298,7 @@ export const KpiStoryCardModal = () => {
                                         </div>
                                     </div>
 
-                                    <div className="row">
-                                        <label htmlFor="staticEmail" className="col-md-3 col-form-label">Strategic Initiatives</label>
-                                        <div className="col-md-9 col-form-text">
-                                            <div className="d-flex flex-wrap gap-2">
-                                                <span className="badge rounded-pill label-bg-dark">Sales Strategies: Campaigns to upsell and cross-sell to existing customers</span>
-                                                <span className="badge rounded-pill label-bg-dark">Cost Optimization: Reduce operational expenses by 5</span>
-                                                <span className="badge rounded-pill label-bg-dark">Customer Retention: Implement a customer loyalty program</span>
-                                                <span className="badge rounded-pill label-bg-dark">Pricing Strategy: Review and adjust pricing strategy to better align with market trends</span>
-                                                <span className="badge rounded-pill label-bg-dark">New Revenue Streams: Explore new revenue streams</span>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                     <div className="row">
                                         <label htmlFor="staticEmail" className="col-md-3 col-form-label">Timelines</label>
                                         <div className="col-md-9 col-form-text">
@@ -338,29 +319,7 @@ export const KpiStoryCardModal = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="row">
-                                        <label htmlFor="staticEmail" className="col-md-3 col-form-label">Success Criteria</label>
-                                        <div className="col-md-9 col-form-text">
-                                            <div className="d-flex flex-wrap gap-2">
-                                                <span className="badge rounded-pill label-bg-dark">Sales Strategies: Campaigns to upsell and cross-sell to existing customers</span>
-                                                <span className="badge rounded-pill label-bg-dark">Cost Optimization: Reduce operational expenses by 5</span>
-                                                <span className="badge rounded-pill label-bg-dark">Achieving a 15% increase in net revenue (from $2M to $2.3M).</span>
-                                                <span className="badge rounded-pill label-bg-dark">Maintaining or improving profit margins despite potential cost increases.</span>
-                                                <span className="badge rounded-pill label-bg-dark">Customer retention rate improves by 10% over the quarter.</span>
-                                                <span className="badge rounded-pill label-bg-dark">Identifying and launching at least one new revenue stream with measurable impact.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <label htmlFor="staticEmail" className="col-md-3 col-form-label">Risks</label>
-                                        <div className="col-md-9 col-form-text">
-                                            <div className="d-flex flex-wrap gap-2">
-                                                <span className="badge rounded-pill label-bg-dark">Uncertainty in market conditions affecting performance.</span>
-                                                <span className="badge rounded-pill label-bg-dark">Difficulty in cutting costs without impacting the quality of service or product.</span>
-                                                <span className="badge rounded-pill label-bg-dark">Customer resistance to new pricing strategies or upsell offers.</span>
-                                            </div>
-                                        </div>
-                                    </div>
+
 
                                     <div className="row">
                                         <label htmlFor="supportNeeded" className="col-md-3 col-form-label">Support Needed</label>

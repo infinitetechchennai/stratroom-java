@@ -641,7 +641,15 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             },
             openViewSubKpi: async (id) => {
                 window._viewSubKpiId = id;
-                const set = (elId, v) => { const el = document.getElementById(elId); if (el) { if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') el.value = v ?? ''; else el.textContent = v ?? ''; } };
+                const set = (elId, v) => { 
+                    const el = document.getElementById(elId); 
+                    if (el) { 
+                        if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+                            el.value = v ?? ''; 
+                            if (window.$) $(el).trigger('change');
+                        } else el.textContent = v ?? ''; 
+                    } 
+                };
                 const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
                 const fmtDate = (v) => {
                     if (!v) return '-';
@@ -650,7 +658,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 };
 
                 // Clear fields
-                ['vskpiName', 'vskpiDescription', 'vskpiPolarity', 'vskpiMeasurementFrequency', 'vskpiOwner', 'vskpiPerformance', 'vskpiType', 'vskpiWeight', 'vskpiStatus', 'vskpiActual', 'vskpiYtd'].forEach(elId => set(elId, ''));
+                ['vskpiName', 'vskpiDescription', 'vskpiPolarity', 'vskpiMeasurementFrequency', 'vskpiOwner', 'vskpiDataSource', 'vskpiPerformance', 'vskpiType', 'vskpiWeight', 'vskpiStatus', 'vskpiActual', 'vskpiYtd'].forEach(elId => set(elId, ''));
                 ['vskpiCreatedBy', 'vskpiModifiedBy', 'vskpiCreatedDate', 'vskpiModifiedDate'].forEach(elId => setText(elId, '-'));
 
                 try {
@@ -661,6 +669,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vskpiPolarity', sk.indicator_type || '');
                         set('vskpiMeasurementFrequency', sk.measurement_frequency || '');
                         set('vskpiOwner', sk.owner || '');
+                        set('vskpiDataSource', sk.data_source || '');
                         set('vskpiPerformance', sk.formula || '');
                         set('vskpiActual', sk.actual_formula || '');
                         set('vskpiYtd', sk.ytd_formula || '');
