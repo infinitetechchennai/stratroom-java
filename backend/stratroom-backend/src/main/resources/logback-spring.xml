@@ -18,7 +18,7 @@
         </filter>
         
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n%ex</pattern>
         </encoder>
         
         <!-- Automatically creates a new file every day and keeps the last 30 days -->

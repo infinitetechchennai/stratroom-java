@@ -89,6 +89,7 @@ public class ScoreCardImportService {
         // DUPLICATE CHECK: if a scorecard with the same name already exists for this department,
         // delete it (cascade removes all perspectives / objectives / KPIs / SubKPIs) so that
         // re-uploading the same Excel file replaces the old data instead of duplicating it.
+        Long existingPageId = null;
         try {
             List<Map<String, Object>> existing = jdbcTemplate.queryForList(
                     "SELECT id, page_id FROM sc_scorecards WHERE department_id = ? AND name = ?",
@@ -96,12 +97,10 @@ public class ScoreCardImportService {
             for (Map<String, Object> old : existing) {
                 long oldId = ((Number) old.get("id")).longValue();
                 scorecardCrudService.deleteScorecard(oldId); // cascades to sc_perspectives/objectives/kpis/sub_kpis
-                // Also remove the orphaned page_details row so the nav menu stays clean
+                
                 Object oldPageId = old.get("page_id");
                 if (oldPageId != null) {
-                    try {
-                        jdbcTemplate.update("DELETE FROM page_details WHERE id = ?", ((Number) oldPageId).longValue());
-                    } catch (Exception ignore) { /* page may already be gone */ }
+                    existingPageId = ((Number) oldPageId).longValue();
                 }
                 log.info("Removed existing scorecard id={} (name='{}', dept={}) before re-import", oldId, scorecardName, deptUniqueId);
             }
@@ -109,20 +108,35 @@ public class ScoreCardImportService {
             log.warn("Could not check/remove existing scorecard for dept={} name='{}': {}", deptUniqueId, scorecardName, e.getMessage());
         }
 
-        PagesDetails page = new PagesDetails();
-        page.setPageName(scorecardName);
-        page.setPageType("Standard_View");
-        page.setGroupType("Measure");
-        page.setActive(0);
-        page.setDeptId(deptIdLong);
-        page.setCreatedBy(empId);
-        page.setUpdatedBy(empId);
-        page.setCreatedTime(LocalDateTime.now());
-        page.setUpdatedTime(LocalDateTime.now());
-        page.setDefaultPage("N");
+        // Also check if a legacy page_details row exists for this exact name and department
+        if (existingPageId == null) {
+            try {
+                List<Map<String, Object>> legacyPages = jdbcTemplate.queryForList(
+                    "SELECT id FROM page_details WHERE dept_id = ? AND page_name = ? AND page_type = 'Standard_View' ORDER BY id DESC LIMIT 1",
+                    deptIdLong, scorecardName);
+                if (!legacyPages.isEmpty()) {
+                    existingPageId = ((Number) legacyPages.get(0).get("id")).longValue();
+                }
+            } catch (Exception ignore) {}
+        }
 
-        ScoreCardResponseDTO savedPage = pageService.save(page);
-        Long pageId = savedPage.getPageDTO() != null ? savedPage.getPageDTO().getId() : null;
+        Long pageId = existingPageId;
+        if (pageId == null) {
+            PagesDetails page = new PagesDetails();
+            page.setPageName(scorecardName);
+            page.setPageType("Standard_View");
+            page.setGroupType("Measure");
+            page.setActive(0);
+            page.setDeptId(deptIdLong);
+            page.setCreatedBy(empId);
+            page.setUpdatedBy(empId);
+            page.setCreatedTime(LocalDateTime.now());
+            page.setUpdatedTime(LocalDateTime.now());
+            page.setDefaultPage("N");
+
+            ScoreCardResponseDTO savedPage = pageService.save(page);
+            pageId = savedPage.getPageDTO() != null ? savedPage.getPageDTO().getId() : null;
+        }
 
         Map<String, Object> v2Scorecard = new HashMap<>();
         v2Scorecard.put("pageId", pageId);
@@ -217,6 +231,24 @@ public class ScoreCardImportService {
                     String ytdVal = cell(kFirstRow, "YTD", "ytd");
                     if (ytdVal != null && !ytdVal.isBlank()) {
                         v2Kpi.put("ytdFormula", ytdVal);
+                    }
+                    // Threshold band values: Red / Amber / Green columns
+                    String redVal   = cell(kFirstRow, "Red",   "RED",   "Red Threshold");
+                    String amberVal = cell(kFirstRow, "Amber", "AMBER", "Amber Threshold", "Yellow", "YELLOW");
+                    String greenVal = cell(kFirstRow, "Green", "GREEN", "Green Threshold");
+                    if (redVal != null || amberVal != null || greenVal != null) {
+                        StringBuilder sb = new StringBuilder("[");
+                        sb.append(redVal   != null && !redVal.isBlank()   ? redVal   : "0").append(",");
+                        sb.append(amberVal != null && !amberVal.isBlank() ? amberVal : "0").append(",");
+                        sb.append(greenVal != null && !greenVal.isBlank() ? greenVal : "0");
+                        sb.append("]");
+                        v2Kpi.put("thresholds", sb.toString());
+                        v2Kpi.put("classificationType", "THREE_COLOR");
+                    }
+                    // Status column: Manual / Weighted
+                    String statusVal = cell(kFirstRow, "Status", "STATUS", "KPI Status");
+                    if (statusVal != null && !statusVal.isBlank()) {
+                        v2Kpi.put("status", statusVal);
                     }
                     long v2KpiId = scorecardCrudService.createKpi(v2Kpi);
                     log.info("Imported KPI '{}' (id={}) under objective '{}'", kEntry.getKey(), v2KpiId, oEntry.getKey());

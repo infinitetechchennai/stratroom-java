@@ -208,7 +208,7 @@ public class ScorecardCrudService {
                         + "max_target, data_type, currency_code, weight, measurement_frequency, "
                         + "null_handling, achievement_cap, classification_type, formula, actual_formula, "
                         + "ytd_formula, display_order, created_by, updated_by, created_at, updated_at, "
-                        + "contribution, sub_weight, data_source, owner, thresholds, indicator_type "
+                        + "contribution, sub_weight, data_source, owner, thresholds, indicator_type, status "
                         + "FROM sc_kpis WHERE id = ?", id);
         return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
     }
@@ -219,8 +219,8 @@ public class ScorecardCrudService {
                 "INSERT INTO sc_kpis (objective_id, code, name, description, polarity, target_value, min_target, "
                         + "max_target, data_type, currency_code, weight, measurement_frequency, null_handling, "
                         + "achievement_cap, classification_type, display_order, formula, actual_formula, ytd_formula, "
-                        + "created_by, updated_by, contribution, sub_weight, data_source, owner, thresholds, indicator_type) "
-                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "created_by, updated_by, contribution, sub_weight, data_source, owner, thresholds, indicator_type, status) "
+                        + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "objectiveId", 0L), str(b, "code", null), str(b, "name", "KPI"), str(b, "description", null),
                 // polarity = scoring direction (HIGHER/LOWER/TARGET/RANGE); Lead/Lag goes to indicator_type
                 str(b, "direction", "HIGHER"), dec(b, "targetValue", BigDecimal.ZERO), decOrNull(b, "minTarget"),
@@ -231,7 +231,8 @@ public class ScorecardCrudService {
                 str(b, "actualFormula", null), str(b, "ytdFormula", null),
                 str(b, "createdByName", null), str(b, "createdByName", null),
                 decOrNull(b, "contribution"), decOrNull(b, "subWeight"), str(b, "dataSource", null),
-                str(b, "owner", null), str(b, "thresholds", null), str(b, "indicatorType", null));
+                str(b, "owner", null), str(b, "thresholds", null), str(b, "indicatorType", null),
+                str(b, "status", null));
     }
 
     @Transactional
@@ -243,7 +244,7 @@ public class ScorecardCrudService {
                 "SELECT name, description, polarity, target_value, min_target, max_target, data_type, "
                         + "currency_code, weight, measurement_frequency, null_handling, achievement_cap, "
                         + "classification_type, display_order, formula, actual_formula, ytd_formula, created_by, "
-                        + "contribution, sub_weight, data_source, owner, thresholds, indicator_type "
+                        + "contribution, sub_weight, data_source, owner, thresholds, indicator_type, status "
                         + "FROM sc_kpis WHERE id = ?", id);
         Map<String, Object> ex = exRows.isEmpty() ? java.util.Collections.emptyMap() : exRows.get(0);
         Integer exDisplay = ex.get("display_order") == null ? 0 : ((Number) ex.get("display_order")).intValue();
@@ -252,7 +253,7 @@ public class ScorecardCrudService {
                         + "data_type=?, currency_code=?, weight=?, measurement_frequency=?, null_handling=?, "
                         + "achievement_cap=?, classification_type=?, display_order=?, formula=?, "
                         + "actual_formula=?, ytd_formula=?, updated_by=?, contribution=?, sub_weight=?, "
-                        + "data_source=?, owner=?, thresholds=?, indicator_type=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
+                        + "data_source=?, owner=?, thresholds=?, indicator_type=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?",
                 str(b, "name", (String) ex.get("name")),
                 str(b, "description", (String) ex.get("description")),
                 str(b, "direction", (String) ex.get("polarity")),
@@ -270,13 +271,14 @@ public class ScorecardCrudService {
                 str(b, "formula", (String) ex.get("formula")),
                 str(b, "actualFormula", (String) ex.get("actual_formula")),
                 str(b, "ytdFormula", (String) ex.get("ytd_formula")),
-                str(b, "updatedByName", (String) ex.get("created_by")),
+                str(b, "updatedByName", null),
                 dec(b, "contribution", (BigDecimal) ex.get("contribution")),
                 dec(b, "subWeight", (BigDecimal) ex.get("sub_weight")),
                 str(b, "dataSource", (String) ex.get("data_source")),
                 str(b, "owner", (String) ex.get("owner")),
                 str(b, "thresholds", (String) ex.get("thresholds")),
-                str(b, "indicatorType", (String) ex.get("indicator_type")), id) > 0;
+                str(b, "indicatorType", (String) ex.get("indicator_type")),
+                str(b, "status", (String) ex.get("status")), id) > 0;
     }
 
     @Transactional
@@ -757,9 +759,9 @@ public class ScorecardCrudService {
             LocalDate d = LocalDate.parse(periodStart);
             if (frequency != null) {
                 String f = frequency.toLowerCase();
-                if (f.contains("annual") || f.contains("year")) return d.plusMonths(12).minusDays(1).toString();
-                if (f.contains("quarter"))                        return d.plusMonths(3).minusDays(1).toString();
-                if (f.contains("semi"))                           return d.plusMonths(6).minusDays(1).toString();
+                if (f.contains("annual") || (f.contains("year") && !f.contains("half"))) return d.plusMonths(12).minusDays(1).toString();
+                if (f.contains("quarter")) return d.plusMonths(3).minusDays(1).toString();
+                if (f.contains("semi") || f.contains("half")) return d.plusMonths(6).minusDays(1).toString();
             }
             // Default: Monthly
             return d.plusMonths(1).minusDays(1).toString();

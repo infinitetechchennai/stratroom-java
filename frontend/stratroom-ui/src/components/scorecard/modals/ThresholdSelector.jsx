@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 
 export const ThresholdSelector = ({ idPrefix, defaultThreshold = "option_3", disabled = false }) => {
     const [thresholdCount, setThresholdCount] = useState(defaultThreshold);
 
+    // Allow external code (e.g. ScorecardPage) to push a value into this component
+    // even when the select is disabled (native change events are blocked on disabled elements).
+    useEffect(() => {
+        const handler = (e) => {
+            if (e.detail?.prefix === idPrefix) {
+                setThresholdCount(e.detail.value);
+            }
+        };
+        window.addEventListener('thresholdExternalSet', handler);
+        return () => window.removeEventListener('thresholdExternalSet', handler);
+    }, [idPrefix]);
+
     return (
         <div className="grid gap-3">
             <div className="g-col-12">
-                <select 
-                    name={`${idPrefix}Threshold`} 
+                <select
+                    name={`${idPrefix}Threshold`}
                     id={`${idPrefix}Threshold`}
                     className={`form-select select-dropdown-add-kpi`}
-                    data-placeholder="Select Threshold" 
+                    data-placeholder="Select Threshold"
                     value={thresholdCount}
                     onChange={(e) => setThresholdCount(e.target.value)}
                     disabled={disabled}

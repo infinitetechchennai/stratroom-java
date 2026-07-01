@@ -77,16 +77,19 @@ const collectBands = (prefix) => {
 };
 
 // Populate the ThresholdSelector (controlled dropdown + band inputs) from saved data.
-// The dropdown is React-controlled, so set it via the native setter + change event so
-// the component re-renders the right number of band inputs before we fill them.
+// Uses both the native change event (for non-disabled selects) and a custom event
+// 'thresholdExternalSet' (for disabled view-mode selects where React blocks native events).
 const setThreshold = (prefix, classificationType, thresholdsJson) => {
+    const option = classificationType === 'FIVE_COLOR' ? 'option_4' : 'option_3';
+    // Try native setter first (works for non-disabled selects in Add/Edit modals)
     const sel = document.getElementById(`${prefix}Threshold`);
     if (sel) {
-        const option = classificationType === 'FIVE_COLOR' ? 'option_4' : 'option_3';
         const setter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, 'value')?.set;
         if (setter) setter.call(sel, option); else sel.value = option;
         sel.dispatchEvent(new Event('change', { bubbles: true }));
     }
+    // Also dispatch custom event so disabled ThresholdSelectors (view modals) update via React state
+    window.dispatchEvent(new CustomEvent('thresholdExternalSet', { detail: { prefix, value: option } }));
     let bands = [];
     try { bands = JSON.parse(thresholdsJson || '[]'); } catch { bands = []; }
     setTimeout(() => {
@@ -94,7 +97,7 @@ const setThreshold = (prefix, classificationType, thresholdsJson) => {
             const el = document.getElementById(`option1color${i + 1}_${prefix}`);
             if (el) el.value = b ?? '';
         });
-    }, 0);
+    }, 50);
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -117,9 +120,9 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
     useEffect(() => {
         let lastOpenedModal = null;
         const kpiSettingsModals = document.querySelectorAll('.kpi_setting');
-        const handleKpiSettingShow = function () { 
+        const handleKpiSettingShow = function () {
             if (!this.id.includes('calculator') && this.id !== 'kpi_formula_popup') {
-                lastOpenedModal = this; 
+                lastOpenedModal = this;
             }
         };
         kpiSettingsModals.forEach(m => m.addEventListener('show.bs.modal', handleKpiSettingShow));
@@ -471,7 +474,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
                 };
                 ['eskpiName', 'eskpiDescription', 'eskpiWeight', 'eskpiContribution',
-                 'eskpiPerformance', 'eskpiActual', 'eskpiYtd'].forEach(elId => set(elId, ''));
+                    'eskpiPerformance', 'eskpiActual', 'eskpiYtd'].forEach(elId => set(elId, ''));
                 ['eskpiCreatedBy', 'eskpiModifiedBy', 'eskpiCreatedDate', 'eskpiModifiedDate'].forEach(elId => setText(elId, '-'));
                 try {
                     const sk = await getSubKpiById(id);
@@ -506,7 +509,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 window._editKpiId = id;
                 const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
                 ['ekpiId', 'ekpiName', 'ekpiDescription', 'ekpiWeight', 'ekpiContribution', 'ekipSubWeight',
-                 'ekpiActual', 'ekpiPerformance', 'ekpiYearToDate'].forEach(elId => set(elId, ''));
+                    'ekpiActual', 'ekpiPerformance', 'ekpiYearToDate'].forEach(elId => set(elId, ''));
                 try {
                     const kpi = await getKpiById(id);
                     if (kpi && kpi.id) {
@@ -559,13 +562,13 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     const d = new Date(v);
                     return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
                 };
-                
+
                 // Clear fields
                 ['vpid', 'vpName', 'vpDescription', 'vpOwner', 'vpPerformance', 'vpWeight', 'vpSubWeight', 'vpStatus'].forEach(elId => set(elId, ''));
                 ['vpCreatedBy', 'vpModifiedBy', 'vpCreatedDate', 'vpModifiedDate'].forEach(elId => setText(elId, '-'));
                 set('vpStartDate', '');
                 set('vpEndDate', '');
-                
+
                 try {
                     const p = await getPerspectiveById(id);
                     if (p && p.id) {
@@ -573,15 +576,15 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vpName', p.name);
                         set('vpDescription', p.description);
                         set('vpOwner', p.owner || '');
-                        
+
                         if (p.start_date) set('vpStartDate', p.start_date.split('T')[0]);
                         if (p.end_date) set('vpEndDate', p.end_date.split('T')[0]);
-                        
+
                         set('vpPerformance', p.formula || '');
                         set('vpWeight', p.weight);
                         set('vpSubWeight', p.sub_weight);
                         set('vpStatus', p.status || '');
-                        
+
                         setText('vpCreatedBy', p.created_by);
                         setText('vpModifiedBy', p.updated_by);
                         setText('vpCreatedDate', fmtDate(p.created_at));
@@ -603,13 +606,13 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     const d = new Date(v);
                     return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
                 };
-                
+
                 // Clear fields
                 ['vodID', 'vodName', 'vodDescription', 'vodOwner', 'vodPerformance', 'vodWeight', 'vodSubWeight', 'vodStatus'].forEach(elId => set(elId, ''));
                 ['vodCreatedBy', 'vodModifiedBy', 'vodCreatedDate', 'vodModifiedDate'].forEach(elId => setText(elId, '-'));
                 set('vodStartDate', '');
                 set('vodEndDate', '');
-                
+
                 try {
                     const o = await getObjectiveById(id);
                     if (o && o.id) {
@@ -617,15 +620,15 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vodName', o.name);
                         set('vodDescription', o.description);
                         set('vodOwner', o.owner || '');
-                        
+
                         if (o.start_date) set('vodStartDate', o.start_date.split('T')[0]);
                         if (o.end_date) set('vodEndDate', o.end_date.split('T')[0]);
-                        
+
                         set('vodPerformance', o.formula || '');
                         set('vodWeight', o.weight);
                         set('vodSubWeight', o.sub_weight);
                         set('vodStatus', o.status || '');
-                        
+
                         setText('vodCreatedBy', o.created_by);
                         setText('vodModifiedBy', o.updated_by);
                         setText('vodCreatedDate', fmtDate(o.created_at));
@@ -641,9 +644,9 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
             },
             openViewSubKpi: async (id) => {
                 window._viewSubKpiId = id;
-                const set = (elId, v) => { 
-                    const el = document.getElementById(elId); 
-                    if (el) { 
+                const set = (elId, v) => {
+                    const el = document.getElementById(elId);
+                    if (el) {
                         if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
                             if (el.tagName === 'SELECT' && v) {
                                 // If the value isn't in the dropdown, add it temporarily so it can be selected
@@ -658,10 +661,10 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                                     el.appendChild(opt);
                                 }
                             }
-                            el.value = v ?? ''; 
+                            el.value = v ?? '';
                             if (window.$) $(el).trigger('change');
-                        } else el.textContent = v ?? ''; 
-                    } 
+                        } else el.textContent = v ?? '';
+                    }
                 };
                 const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
                 const fmtDate = (v) => {
@@ -689,8 +692,10 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vskpiType', sk.data_type || '');
                         set('vskpiWeight', sk.weight);
                         set('vskpiStatus', sk.status || '');
-
-                        setText('vskpiCreatedBy', sk.created_by);
+                        // Populate threshold color bands for view modal
+                        setThreshold('vskpi', sk.classification_type, sk.thresholds);
+                        // Created By = owner name (created_by column not stored on sub-kpi)
+                        setText('vskpiCreatedBy', sk.owner);
                         setText('vskpiModifiedBy', sk.updated_by);
                         setText('vskpiCreatedDate', fmtDate(sk.created_at));
                         setText('vskpiModifiedDate', fmtDate(sk.updated_at));
@@ -704,7 +709,27 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                 }
             },
             openViewKpi: async (id) => {
-                const set = (elId, v) => { const el = document.getElementById(elId); if (el) el.value = v ?? ''; };
+                // Smart set: for dropdowns, if the DB value is not in the option list,
+                // add a temporary option so the value is always visible.
+                const set = (elId, v) => {
+                    const el = document.getElementById(elId);
+                    if (el) {
+                        if (el.tagName === 'SELECT' && v) {
+                            let exists = false;
+                            for (let i = 0; i < el.options.length; i++) {
+                                if (el.options[i].value === v) { exists = true; break; }
+                            }
+                            if (!exists) {
+                                const opt = document.createElement('option');
+                                opt.value = v;
+                                opt.textContent = v;
+                                el.appendChild(opt);
+                            }
+                        }
+                        el.value = v ?? '';
+                        if (window.$) $(el).trigger('change');
+                    }
+                };
                 const setText = (elId, v) => { const el = document.getElementById(elId); if (el) el.textContent = v || '-'; };
                 const fmtDate = (v) => {
                     if (!v) return '-';
@@ -712,7 +737,7 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
                 };
                 ['vkpiName', 'vkpiDescription', 'vkpiWeight', 'vkpiContribution', 'vkipSubWeight',
-                 'vkpiActual', 'vkpiPerformance', 'vkpiYearToDate'].forEach(elId => set(elId, ''));
+                    'vkpiActual', 'vkpiPerformance', 'vkpiYearToDate', 'vkpiStatus'].forEach(elId => set(elId, ''));
                 ['vkpiCreatedBy', 'vkpiModifiedBy', 'vkpiCreatedDate', 'vkpiModifiedDate'].forEach(elId => setText(elId, '-'));
                 try {
                     const kpi = await getKpiById(id);
@@ -723,21 +748,18 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                         set('vkpiPerformance', kpi.formula || '');
                         set('vkpiActual', kpi.actual_formula || '');
                         set('vkpiYearToDate', kpi.ytd_formula || '');
-                        const polEl = document.getElementById('vkpiPolarity');
-                        if (polEl && kpi.indicator_type) polEl.value = kpi.indicator_type;
-                        const freqEl = document.getElementById('vkpiMeasurementFrequency');
-                        if (freqEl && kpi.measurement_frequency) freqEl.value = kpi.measurement_frequency;
+                        set('vkpiPolarity', kpi.indicator_type || '');
+                        set('vkpiMeasurementFrequency', kpi.measurement_frequency || '');
                         set('vkpiContribution', kpi.contribution);
                         set('vkipSubWeight', kpi.sub_weight);
                         set('vkpiCurrency', kpi.currency_code);
-                        const dsEl = document.getElementById('vkpiDataSource');
-                        if (dsEl && kpi.data_source) dsEl.value = kpi.data_source;
-                        const typeEl = document.getElementById('vkpiType');
-                        if (typeEl && kpi.data_type) typeEl.value = kpi.data_type;
-                        const ownEl = document.getElementById('vkpiOwner');
-                        if (ownEl && kpi.owner) ownEl.value = kpi.owner;
+                        set('vkpiDataSource', kpi.data_source || '');
+                        set('vkpiType', kpi.data_type || '');
+                        set('vkpiOwner', kpi.owner || '');
+                        set('vkpiStatus', kpi.status || '');
                         setThreshold('vkpi', kpi.classification_type, kpi.thresholds);
-                        setText('vkpiCreatedBy', kpi.created_by);
+                        // Created By = owner name (created_by column is not stored on import)
+                        setText('vkpiCreatedBy', kpi.owner);
                         setText('vkpiModifiedBy', kpi.updated_by);
                         setText('vkpiCreatedDate', fmtDate(kpi.created_at));
                         setText('vkpiModifiedDate', fmtDate(kpi.updated_at));
@@ -942,7 +964,7 @@ const ScorecardPage = ({ pageId: pageIdProp }) => {
     // Persist the pageId so the KPI sidebar (on the KPI story card page) can
     // load the same scorecard hierarchy without needing a separate API.
     useEffect(() => {
-      if (pageId) localStorage.setItem('scorecardPageId', pageId);
+        if (pageId) localStorage.setItem('scorecardPageId', pageId);
     }, [pageId]);
 
     const USE_SAMPLE_FALLBACK = false;

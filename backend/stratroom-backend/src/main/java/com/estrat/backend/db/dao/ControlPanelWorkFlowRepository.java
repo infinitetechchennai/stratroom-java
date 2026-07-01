@@ -16,10 +16,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.repository.query.Param;
+
 @Repository
 public interface ControlPanelWorkFlowRepository
 extends JpaRepository<ControlPanelWorkFlow, Long> {
     @Query(value="SELECT w FROM ControlPanelWorkFlow w WHERE w.type = :type AND w.department = :departmentId")
-    public List<ControlPanelWorkFlow> findWorkflowsByTypeAndDepartment(String var1, Long var2);
+    public List<ControlPanelWorkFlow> findWorkflowsByTypeAndDepartment(@Param("type") String type, @Param("departmentId") Long departmentId);
 }
 
