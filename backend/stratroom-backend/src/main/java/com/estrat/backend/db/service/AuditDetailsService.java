@@ -213,6 +213,13 @@ public class AuditDetailsService {
                 auditDTO.setUserName(((EmployeeProfilePo)profilePo.get()).getFirstName());
             }
         }
+        
+        if ("User".equalsIgnoreCase(auditDTO.getType()) && auditDTO.getTypeId() > 0) {
+            Optional targetOpt = this.profilePoRepo.findById(auditDTO.getTypeId());
+            if (targetOpt.isPresent()) {
+                auditDTO.setType("User - " + ((EmployeeProfilePo)targetOpt.get()).getFirstName());
+            }
+        }
     }
 
     public List<String> getAuditTrailActionList() {
@@ -325,11 +332,13 @@ public class AuditDetailsService {
     }
 
     public String getIpAddress() {
-        if (UserThreadLocal.get() != null) {
-            Optional address = this.ipAddressRepo.findById(Long.valueOf(UserThreadLocal.get()));
+        String userIdStr = UserThreadLocal.get();
+        if (StringUtils.isNotBlank(userIdStr) && StringUtils.isNumeric(userIdStr)) {
+            Optional address = this.ipAddressRepo.findById(Long.valueOf(userIdStr));
             if (address.isPresent()) {
-                if (StringUtils.isNotEmpty((CharSequence)UserThreadLocal.get((String)"SUPER_USER_ID"))) {
-                    Optional check = this.ipAddressRepo.findById(Long.valueOf(UserThreadLocal.get((String)"SUPER_USER_ID")));
+                String superUserIdStr = UserThreadLocal.get("SUPER_USER_ID");
+                if (StringUtils.isNotBlank(superUserIdStr) && StringUtils.isNumeric(superUserIdStr)) {
+                    Optional check = this.ipAddressRepo.findById(Long.valueOf(superUserIdStr));
                     if (!check.isPresent()) {
                         return ((IpAddress)address.get()).getIpAddress();
                     }
@@ -343,14 +352,15 @@ public class AuditDetailsService {
                 }
                 return ((IpAddress)address.get()).getIpAddress();
             }
-            if (StringUtils.isNotEmpty((CharSequence)UserThreadLocal.get((String)"SUPER_USER_ID"))) {
-                Optional check = this.ipAddressRepo.findById(Long.valueOf(UserThreadLocal.get((String)"SUPER_USER_ID")));
+            String superUserIdStr = UserThreadLocal.get("SUPER_USER_ID");
+            if (StringUtils.isNotBlank(superUserIdStr) && StringUtils.isNumeric(superUserIdStr)) {
+                Optional check = this.ipAddressRepo.findById(Long.valueOf(superUserIdStr));
                 if (!check.isPresent()) {
                     return null;
                 }
                 IpAddress ipAddress = new IpAddress();
                 ipAddress.setIpAddress(((IpAddress)check.get()).getIpAddress());
-                ipAddress.setEmpId(Long.valueOf(UserThreadLocal.get()).longValue());
+                ipAddress.setEmpId(Long.valueOf(userIdStr).longValue());
                 ipAddress.setOrgId(((IpAddress)check.get()).getOrgId());
                 IpAddress result = (IpAddress)this.ipAddressRepo.save(ipAddress);
                 return result.getIpAddress();

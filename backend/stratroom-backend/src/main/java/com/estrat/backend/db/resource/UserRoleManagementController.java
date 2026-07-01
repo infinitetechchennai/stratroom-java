@@ -28,6 +28,7 @@ import com.estrat.backend.db.dto.UserDTO;
 import com.estrat.backend.db.exception.InputValidationException;
 import com.estrat.backend.db.exception.RequestException;
 import com.estrat.backend.db.service.UserRoleManagementService;
+import com.estrat.backend.db.service.ControlPanelGeneralService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -42,12 +43,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.ByteArrayResource;
+import com.estrat.backend.db.resource.util.UserExportUtil;
+import com.estrat.backend.db.resource.util.UserImportUtil;
 
 @RestController
 public class UserRoleManagementController {
     @Autowired
     protected UserRoleManagementService userRoleManagementService;
+    @Autowired
+    protected ControlPanelGeneralService controlPanelGeneralService;
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
 
@@ -64,8 +72,8 @@ public class UserRoleManagementController {
     }
 
     @DeleteMapping(value={"/userRole/{id}"})
-    public ResponseEntity<Boolean> removeUserRole(@PathVariable(value="id") Long id, HttpServletRequest request) throws RequestException {
-        this.userRoleManagementService.removeUserRole(id);
+    public ResponseEntity<Boolean> removeUserRole(@PathVariable(value="id") Long id, @org.springframework.web.bind.annotation.RequestHeader(value = "LOGGED_IN_EMPLOYEE_ID", required = false) String loggedInEmpId, HttpServletRequest request) throws RequestException {
+        this.userRoleManagementService.removeUserRole(id, loggedInEmpId);
         return new ResponseEntity((Object)true, HttpStatus.OK);
     }
 
@@ -129,6 +137,35 @@ public class UserRoleManagementController {
             Thread.currentThread().interrupt();
         }
         return new ResponseEntity((Object)true, HttpStatus.OK);
+    }
+
+    @GetMapping(value={"/userList/export/org/{orgId}"})
+    public ResponseEntity<ByteArrayResource> exportUserListByOrg(@PathVariable(value="orgId") Long orgId) {
+        FindDTO findDTO = new FindDTO();
+        findDTO.setOrgId(orgId);
+        List<UserDTO> users = this.userRoleManagementService.getUserList(findDTO);
+        String orgName = "";
+        try {
+            com.estrat.backend.db.dto.ControlPanelGeneralDTO cp = this.controlPanelGeneralService.findByOrgId(orgId);
+            if (cp != null && cp.getSiteName() != null) {
+                orgName = cp.getSiteName();
+            }
+        } catch (Exception e) {}
+        return UserExportUtil.writeCsv(users, orgName);
+    }
+
+    @PostMapping(value={"/userList/import/org/{orgId}"})
+    public ResponseEntity<Boolean> importUserListByOrg(@PathVariable(value="orgId") Long orgId, @RequestParam("file") MultipartFile file) {
+        try {
+            List<UserDTO> users = UserImportUtil.parseCsv(file, orgId);
+            for (UserDTO user : users) {
+                this.userRoleManagementService.updateUserRole(user);
+            }
+            return new ResponseEntity((Object)true, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity((Object)false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
 

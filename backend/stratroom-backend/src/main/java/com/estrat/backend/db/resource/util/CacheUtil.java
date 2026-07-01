@@ -53,12 +53,15 @@ public class CacheUtil {
 
     public void removeEmployeeCache(Object empId) {
         String orgId = UserThreadLocal.get((String)"USER_ORG_ID");
-        this.dbCache.remove((Object)(orgId + "_orgEmployeeList"), "dbCache");
-        this.dbCache.remove(empId, "dbCache");
-        this.dbCache.remove(empId, "dbCache");
-        this.dbCache.remove((Object)(empId + "_reporteeList"), "dbCache");
-        this.dbCache.remove((Object)(empId + "_allReporteeList"), "dbCache");
-        this.dbCache.remove((Object)(empId + "_parentEmployeeList"), "dbCache");
+        if (orgId != null) {
+            this.dbCache.remove((Object)(orgId + "_orgEmployeeList"), "dbCache");
+        }
+        if (empId != null && !empId.toString().equals("null") && !empId.toString().trim().isEmpty()) {
+            this.dbCache.remove(empId, "dbCache");
+            this.dbCache.remove((Object)(empId + "_reporteeList"), "dbCache");
+            this.dbCache.remove((Object)(empId + "_allReporteeList"), "dbCache");
+            this.dbCache.remove((Object)(empId + "_parentEmployeeList"), "dbCache");
+        }
     }
 }
 

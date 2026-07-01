@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +42,35 @@ public class ControlPanelGeneralService {
     @Autowired
     protected ControlPanelCustomRepository controlPanelCustomRepository;
 
+    @Transactional
     public ControlPanelResponseDTO save(ControlPanelGeneral controlPanelGeneral) {
-        ControlPanelGeneral controlPanelGeneralResponse = (ControlPanelGeneral)this.controlPanelGeneralRepository.save(controlPanelGeneral);
+        ControlPanelGeneral existing = this.controlPanelGeneralRepository.findById(controlPanelGeneral.getOrgId()).orElse(null);
+        ControlPanelGeneral controlPanelGeneralResponse;
+        if (existing == null) {
+            controlPanelGeneralResponse = (ControlPanelGeneral)this.controlPanelGeneralRepository.save(controlPanelGeneral);
+        } else {
+            existing.setSiteName(controlPanelGeneral.getSiteName());
+            existing.setSiteLanguage(controlPanelGeneral.getSiteLanguage());
+            existing.setAdminEmailId(controlPanelGeneral.getAdminEmailId());
+            existing.setCurrencyType(controlPanelGeneral.getCurrencyType());
+            existing.setCalendarYear(controlPanelGeneral.getCalendarYear());
+            existing.setTimeZone(controlPanelGeneral.getTimeZone());
+            existing.setUpdatedBy(controlPanelGeneral.getUpdatedBy());
+            existing.setUpdatedTime(controlPanelGeneral.getUpdatedTime());
+            existing.setDepartment(controlPanelGeneral.getDepartment());
+            existing.setCurrencyView(controlPanelGeneral.getCurrencyView());
+            existing.setDepartmentId(controlPanelGeneral.getDepartmentId());
+            existing.setDefaultDatePeriod(controlPanelGeneral.getDefaultDatePeriod());
+            existing.setImplementation(controlPanelGeneral.getImplementation());
+            existing.setImplementationType(controlPanelGeneral.getImplementationType());
+            existing.setStartMonth(controlPanelGeneral.getStartMonth());
+            existing.setEndMonth(controlPanelGeneral.getEndMonth());
+            if (controlPanelGeneral.getGeneralSettingValue() != null) {
+                existing.setGeneralSettingValue(controlPanelGeneral.getGeneralSettingValue());
+            }
+            controlPanelGeneralResponse = (ControlPanelGeneral)this.controlPanelGeneralRepository.save(existing);
+        }
+        
         ControlPanelResponseDTO responseDTO = new ControlPanelResponseDTO();
         responseDTO.setFlag(true);
         ControlPanelGeneralDTO controlPanelGeneralDTO = new ControlPanelGeneralDTO(controlPanelGeneralResponse);
@@ -50,15 +78,33 @@ public class ControlPanelGeneralService {
         return responseDTO;
     }
 
+    @Transactional
     public ControlPanelResponseDTO saveCustomPerformance(ControlPanelCustomPerformance controlPanelCustomPerformance) {
-        ControlPanelCustomPerformance controlPanelGeneralResponse = (ControlPanelCustomPerformance)this.controlPanelCustomRepository.save(controlPanelCustomPerformance);
+        ControlPanelCustomPerformance existing = this.controlPanelCustomRepository.findById(controlPanelCustomPerformance.getOrgId()).orElse(null);
+        ControlPanelCustomPerformance controlPanelGeneralResponse;
+        if (existing == null) {
+            controlPanelGeneralResponse = (ControlPanelCustomPerformance)this.controlPanelCustomRepository.save(controlPanelCustomPerformance);
+        } else {
+            if (controlPanelCustomPerformance.getCustomValue() != null) {
+                existing.setCustomValue(controlPanelCustomPerformance.getCustomValue());
+            }
+            if (controlPanelCustomPerformance.getRisksetting() != null) {
+                existing.setRisksetting(controlPanelCustomPerformance.getRisksetting());
+            }
+            existing.setUpdatedBy(controlPanelCustomPerformance.getUpdatedBy());
+            existing.setUpdatedTime(controlPanelCustomPerformance.getUpdatedTime());
+            controlPanelGeneralResponse = (ControlPanelCustomPerformance)this.controlPanelCustomRepository.save(existing);
+        }
+
         ObjectMapper mapper = new ObjectMapper();
         CustomPerformance customPerformance = null;
         try {
-            customPerformance = new CustomPerformance((Map)mapper.readValue(controlPanelGeneralResponse.getCustomValue(), HashMap.class));
+            if (controlPanelGeneralResponse.getCustomValue() != null && !controlPanelGeneralResponse.getCustomValue().isBlank()) {
+                customPerformance = new CustomPerformance((Map)mapper.readValue(controlPanelGeneralResponse.getCustomValue(), HashMap.class));
+            }
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            // ignore
         }
         ControlPanelResponseDTO responseDTO = new ControlPanelResponseDTO();
         responseDTO.setCustomPerformance(customPerformance);

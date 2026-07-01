@@ -100,7 +100,7 @@ public class OrgTrackerService {
         }
     }
 
-    public void saveOrUpdateAtImportTrack(Employee employee, Long whoIsID) {
+    public void saveOrUpdateAtImportTrack(Employee employee, Long whoIsID, String actionStr) {
         Boolean status = true;
         Boolean statusCheck = false;
         OrgTracker findTracker = this.orgTrackerRepository.findBy(employee.getEmpId(), employee.getParentEmpId(), 0);
@@ -130,14 +130,14 @@ public class OrgTrackerService {
             if (statusCheck.booleanValue()) {
                 orgTracker.setType("Add");
             } else {
-                orgTracker.setType("Update");
+                orgTracker.setType(actionStr);
             }
             orgTracker.setStartDate(new Date());
             this.orgTrackerRepository.save(orgTracker);
         }
     }
 
-    public void updateOrgTrack(Employee employee, Long whoIsID) {
+    public void updateOrgTrack(Employee employee, Long whoIsID, String actionStr) {
         OrgTracker findTracker = this.orgTrackerRepository.findBy(employee.getEmpId(), employee.getParentEmpId(), 0);
         if (findTracker == null) {
             List<OrgTracker> checkTrackerList = this.orgTrackerRepository.findByNoPageNameList(employee.getEmpId(), 0);
@@ -159,7 +159,7 @@ public class OrgTrackerService {
         orgTracker.setOrgId(Long.valueOf(employee.getOrgDetails().getOrgId()));
         orgTracker.setParentId(Long.valueOf(employee.getParentEmpId()));
         orgTracker.setRemoveOrAddUserId(whoIsID);
-        orgTracker.setType("Update");
+        orgTracker.setType(actionStr);
         orgTracker.setStartDate(new Date());
         this.orgTrackerRepository.save(orgTracker);
     }
@@ -215,6 +215,7 @@ public class OrgTrackerService {
             }).collect(Collectors.toList());
             trackerDTOList.addAll(trackerDTOS);
         }
+        trackerDTOList.sort(java.util.Comparator.comparing(OrgTrackerDTO::getId).reversed());
         return trackerDTOList;
     }
 
@@ -256,6 +257,7 @@ public class OrgTrackerService {
                 trackerDTOList.addAll(trackerDTOS);
             }
         }
+        trackerDTOList.sort(java.util.Comparator.comparing(OrgTrackerDTO::getId).reversed());
         return trackerDTOList;
     }
 
@@ -424,6 +426,7 @@ public class OrgTrackerService {
             }).collect(Collectors.toList());
             trackerDTOList.addAll(trackerDTOS);
         }
+        trackerDTOList.sort(java.util.Comparator.comparing(OrgTrackerDTO::getId).reversed());
         return trackerDTOList;
     }
 }

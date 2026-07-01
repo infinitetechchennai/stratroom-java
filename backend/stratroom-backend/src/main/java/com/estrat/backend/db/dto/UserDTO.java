@@ -34,11 +34,12 @@ public class UserDTO {
     private Long updatedBy;
     private int userAccess = 1;
     private String userCategory;
-    private String userType;
+    public String userType;
     private String userUniqId;
     public List<DeptDetails> departmentList;
     public String deptValue;
     public Long roleId;
+    private Long parentEmpId;
 
     public UserDTO() {
     }
@@ -268,5 +269,12 @@ public class UserDTO {
     public void setUserUniqId(String userUniqId) {
         this.userUniqId = userUniqId;
     }
-}
 
+    public Long getParentEmpId() {
+        return parentEmpId;
+    }
+
+    public void setParentEmpId(Long parentEmpId) {
+        this.parentEmpId = parentEmpId;
+    }
+}

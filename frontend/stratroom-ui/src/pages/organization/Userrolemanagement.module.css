@@ -444,7 +444,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
   padding: 20px;
 }
 .modal {
@@ -513,12 +513,14 @@
 }
 
 .deptPicker {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  align-content: start;
+  gap: 2px 14px;
   max-height: 180px;
   overflow-y: auto;
-  padding: 6px;
+  padding: 8px;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   background: #fff;
@@ -531,9 +533,8 @@
   flex-direction: row;
   align-items: center;
   gap: 8px;
-  width: 100%;
   margin: 0;
-  padding: 6px 8px;
+  padding: 6px;
   font-size: 13px;
   font-weight: 400;
   color: #374151;

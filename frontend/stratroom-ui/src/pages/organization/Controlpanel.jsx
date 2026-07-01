@@ -80,10 +80,11 @@ export default function Controlpanel() {
   const [activeTab, setActiveTab] = useState('general')
 
   useEffect(() => {
+    if (loading) return
     if (visibleTabs.length && !visibleTabs.some((t) => t.key === activeTab)) {
       setActiveTab(visibleTabs[0].key)
     }
-  }, [visibleTabs, activeTab])
+  }, [visibleTabs, activeTab, loading])
 
   if (loading) {
     return (

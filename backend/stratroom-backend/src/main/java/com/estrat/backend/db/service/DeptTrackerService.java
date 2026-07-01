@@ -269,6 +269,7 @@ public class DeptTrackerService {
                 trackerDTOList.addAll(trackerDTOSs);
             }
         }
+        trackerDTOList.sort(java.util.Comparator.comparing(OrgTrackerDTO::getId).reversed());
         return trackerDTOList;
     }
 
@@ -307,6 +308,7 @@ public class DeptTrackerService {
             }).collect(Collectors.toList());
             trackerDTOList.addAll(trackerDTOSs);
         }
+        trackerDTOList.sort(java.util.Comparator.comparing(OrgTrackerDTO::getId).reversed());
         return trackerDTOList;
     }
 
@@ -533,6 +535,7 @@ public class DeptTrackerService {
                 trackerDTOList.addAll(trackerDTOSs);
             }
         }
+        trackerDTOList.sort(java.util.Comparator.comparing(OrgTrackerDTO::getId).reversed());
         return trackerDTOList;
     }
 }

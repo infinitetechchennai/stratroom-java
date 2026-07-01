@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import axiosClient from '../../api/axiosClient'
 import styles from './Userrolemanagement.module.css'
@@ -110,6 +110,43 @@ export default function Userrolemanagement() {
     }
   }
 
+  const handleExport = async () => {
+    if (!orgId) return
+    try {
+      const res = await axiosClient.get(`/api/userList/export/org/${orgId}`, { responseType: 'blob' })
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'users-export.csv')
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    } catch {
+      alert('Failed to export users.')
+    }
+  }
+
+  const fileInputRef = useRef(null)
+  const handleImport = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file || !orgId) return
+    const formData = new FormData()
+    formData.append('file', file)
+    setLoading(true)
+    try {
+      await axiosClient.post(`/api/userList/import/org/${orgId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      alert('Users imported successfully!')
+      fetchUsers()
+    } catch {
+      alert('Failed to import users. Please verify your CSV format.')
+    } finally {
+      setLoading(false)
+      if (e.target) e.target.value = ''
+    }
+  }
+
   const filteredUsers = searchTerm
     ? users.filter(u =>
         (u.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -130,8 +167,9 @@ export default function Userrolemanagement() {
         </div>
         <div className={styles.headerRight}>
           <button className={styles.iconBtn} onClick={() => { setEditUser(null); setShowAddModal(true) }} title="Add User"><PlusIcon /></button>
-          <button className={styles.iconBtn} title="Export"><DownloadIcon /></button>
-          <button className={styles.iconBtn} title="Import"><UploadIcon /></button>
+          <button className={styles.iconBtn} title="Export" onClick={handleExport}><DownloadIcon /></button>
+          <button className={styles.iconBtn} title="Import" onClick={() => fileInputRef.current?.click()}><UploadIcon /></button>
+          <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept=".csv" onChange={handleImport} />
         </div>
       </div>
 
@@ -191,6 +229,7 @@ export default function Userrolemanagement() {
           user={editUser}
           orgId={orgId}
           empId={empId}
+          users={users}
           onSave={handleSaveUser}
           onClose={() => { setShowAddModal(false); setEditUser(null) }}
         />
@@ -557,7 +596,7 @@ function PermissionTable({ defaultRoles, customRoles, loading, searchTerm }) {
 }
 
 // ── Add / Edit User Modal ────────────────────────────────────────────────────
-function UserModal({ user, orgId, empId, onSave, onClose }) {
+function UserModal({ user, orgId, empId, users = [], onSave, onClose }) {
   const initialDeptIds = (user?.departmentList || []).map(d => String(d.id)).filter(Boolean)
   const [form, setForm] = useState({
     userId: user?.userId || 0,
@@ -570,7 +609,9 @@ function UserModal({ user, orgId, empId, onSave, onClose }) {
     status: user?.status || 'Active',
     orgId: orgId || 0,
     deptIds: initialDeptIds.join(','),
+    parentEmpId: user?.parentEmpId || 0,
   })
+  const [isExternal, setIsExternal] = useState(form.userCategory === 'external')
   const [roles, setRoles] = useState([])
   const [departments, setDepartments] = useState([])
   const [selectedDeptIds, setSelectedDeptIds] = useState(initialDeptIds)
@@ -588,6 +629,13 @@ function UserModal({ user, orgId, empId, onSave, onClose }) {
       .then(r => setDepartments(Array.isArray(r.data) ? r.data : []))
       .catch(() => setDepartments([]))
   }, [orgId])
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [])
 
   useEffect(() => {
     if (!roles.length || form.roleId) return
@@ -610,7 +658,12 @@ function UserModal({ user, orgId, empId, onSave, onClose }) {
   }
 
   const handleSave = () => {
-    onSave({ ...form, deptIds: selectedDeptIds.join(',') })
+    const payload = { ...form, deptIds: selectedDeptIds.join(',') }
+    if (!isExternal) {
+      payload.userCategory = 'internal'
+      payload.userType = 'employees'
+    }
+    onSave(payload)
   }
 
   return (
@@ -649,36 +702,58 @@ function UserModal({ user, orgId, empId, onSave, onClose }) {
               </select>
             </label>
             <label>
-              Status
-              <select value={form.status} onChange={e => set('status', e.target.value)}>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-            </label>
-            <label>
-              User Category
-              <select
-                value={form.userCategory}
-                onChange={e => setForm(f => ({ ...f, userCategory: e.target.value, userType: '' }))}>
-                <option value="">Select category</option>
-                <option value="internal">Internal</option>
-                <option value="external">External</option>
-              </select>
-            </label>
-            <label>
-              User Type
-              <select
-                value={form.userType}
-                onChange={e => set('userType', e.target.value)}
-                disabled={!form.userCategory}>
-                <option value="">Select type</option>
-                {typeOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.text}</option>
+              Reports To
+              <select value={form.parentEmpId} onChange={e => set('parentEmpId', Number(e.target.value))}>
+                <option value={0}>None</option>
+                {users.filter(u => u.userId !== form.userId).map(u => (
+                  <option key={u.userId} value={u.userId}>{u.name} {u.emailAddress ? `(${u.emailAddress})` : ''}</option>
                 ))}
               </select>
             </label>
-            <label className={styles.fullWidth}>
-              Department
+            
+            {!!user && (
+              <label>
+                Status
+                <select value={form.status} onChange={e => set('status', e.target.value)}>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </label>
+            )}
+
+            <label style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px', cursor: 'pointer', textTransform: 'none', color: '#4b5563', fontSize: '14px', gridColumn: '1 / -1' }}>
+              <input type="checkbox" checked={isExternal} onChange={e => setIsExternal(e.target.checked)} style={{ width: '16px', height: '16px' }} />
+              This is an external user (Vendor, Auditor, etc.)
+            </label>
+
+            {isExternal && (
+              <>
+                <label>
+                  User Category
+                  <select
+                    value={form.userCategory}
+                    onChange={e => setForm(f => ({ ...f, userCategory: e.target.value, userType: '' }))}>
+                    <option value="">Select category</option>
+                    <option value="internal">Internal</option>
+                    <option value="external">External</option>
+                  </select>
+                </label>
+                <label>
+                  User Type
+                  <select
+                    value={form.userType}
+                    onChange={e => set('userType', e.target.value)}
+                    disabled={!form.userCategory}>
+                    <option value="">Select type</option>
+                    {typeOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.text}</option>
+                    ))}
+                  </select>
+                </label>
+              </>
+            )}
+            <div className={styles.fullWidth} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '.04em' }}>Department</span>
               <div className={styles.deptPicker}>
                 {departments.length === 0 && <span className={styles.deptEmpty}>No departments available</span>}
                 {departments.map(d => (
@@ -692,7 +767,7 @@ function UserModal({ user, orgId, empId, onSave, onClose }) {
                   </label>
                 ))}
               </div>
-            </label>
+            </div>
           </div>
         </div>
         <div className={styles.modalFooter}>
@@ -706,6 +781,13 @@ function UserModal({ user, orgId, empId, onSave, onClose }) {
 
 // ── View User Modal ──────────────────────────────────────────────────────────
 function ViewModal({ user, onClose }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [])
+
   const deptName = user.departmentList?.length
     ? user.departmentList.map(d => d.name || d.deptName || '').filter(Boolean).join(', ')
     : (user.departments || '—')

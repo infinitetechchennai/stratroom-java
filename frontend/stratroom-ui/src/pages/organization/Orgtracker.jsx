@@ -191,15 +191,6 @@ export default function Orgtracker() {
                       <ChevronIcon className={`${styles.chevron} ${isExpanded ? styles.chevronOpen : ''}`} />
                       <span>{name}</span>
                     </button>
-                    {!isActive && isSuperUser && (
-                      <button
-                        className={styles.deleteBtn}
-                        onClick={() => handleDeleteClick(item)}
-                        title="Delete"
-                      >
-                        <TrashIcon />
-                      </button>
-                    )}
                   </div>
 
                   {isExpanded && (

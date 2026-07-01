@@ -1046,7 +1046,6 @@ function TrackerView() {
                   <th style={th}>Reports To</th>
                   <th style={th}>From</th>
                   <th style={th}>To</th>
-                  <th style={th}></th>
                 </tr>
               </thead>
               <tbody>
@@ -1061,16 +1060,6 @@ function TrackerView() {
                     <td style={td}>{r.parentName || '—'}</td>
                     <td style={td}>{r.fromDate || '—'}</td>
                     <td style={td}>{r.toDate || '—'}</td>
-                    <td style={{ ...td, textAlign: 'end' }}>
-                      <button
-                        type="button"
-                        onClick={() => handleClear(r.id)}
-                        title="Clear this entry"
-                        style={{ border: '1px solid #fecaca', background: '#fef2f2', color: '#dc2626', borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer' }}
-                      >
-                        Clear
-                      </button>
-                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -112,6 +112,8 @@ public class UserRoleManagementService {
     protected DeptMultipleOwnersMappingRepository multipleOwnersMappingRepository;
     @Autowired
     protected DepartmentDetailsService departmentDetailsService;
+    @Autowired
+    protected com.estrat.backend.db.service.OrgTrackerService orgTrackerService;
 
     // Transactional so the session stays open while reading the lazy RoleDetailsPo proxy
     // (roleRepository.getOne -> getRoleName) and persisting the new user in one unit of work.
@@ -142,6 +144,14 @@ public class UserRoleManagementService {
         } else {
             profilePo = profilePo_exist;
             this.updateProfile(employeeProfilePo, profilePo);
+        }
+        com.estrat.backend.db.bean.Employee empForTracker = new com.estrat.backend.db.bean.Employee(profilePo);
+        String threadLocalId = UserThreadLocal.get();
+        Long whoIsID = org.apache.commons.lang3.StringUtils.isNotEmpty(threadLocalId) ? Long.valueOf(threadLocalId) : 0L;
+        if (status) {
+            this.orgTrackerService.saveOrgTrack(empForTracker, whoIsID);
+        } else {
+            this.orgTrackerService.updateOrgTrack(empForTracker, whoIsID, "Update");
         }
         EmployeeCredentialsPo employeeCredentialsPo = new EmployeeCredentialsPo();
         employeeCredentialsPo.setDeptId(profilePo.getDeptId());
@@ -214,6 +224,7 @@ public class UserRoleManagementService {
         updateProfile.setPhoneNumber(employeeProfilePo.getPhoneNumber());
         updateProfile.setStatus(employeeProfilePo.getStatus());
         updateProfile.setProfileImage(employeeProfilePo.getProfileImage());
+        updateProfile.setParentEmpId(employeeProfilePo.getParentEmpId());
         updateProfile.setUpdatedDate(LocalDateTime.now());
         updateProfile.setCreateVia(employeeProfilePo.getCreateVia());
         this.profilePoRepo.saveAndFlush(updateProfile);
@@ -252,6 +263,11 @@ public class UserRoleManagementService {
                 if (profile.getDepartment() != null && !profile.getDepartment().isBlank()) {
                     userDTO.setDepartments(profile.getDepartment());
                 }
+                userDTO.setParentEmpId(profile.getParentEmpId());
+            });
+        } else {
+            this.profilePoRepo.findById(userDTO.getUserId()).ifPresent(profile -> {
+                userDTO.setParentEmpId(profile.getParentEmpId());
             });
         }
         return userDTO;
@@ -329,6 +345,14 @@ public class UserRoleManagementService {
         } else {
             profilePo = profilePo_exist;
             this.updateProfile(employeeProfilePo, profilePo);
+        }
+        com.estrat.backend.db.bean.Employee empForTracker = new com.estrat.backend.db.bean.Employee(profilePo);
+        String threadLocalId_track = UserThreadLocal.get();
+        Long whoIsID_track = org.apache.commons.lang3.StringUtils.isNotEmpty(threadLocalId_track) ? Long.valueOf(threadLocalId_track) : 0L;
+        if (profilePo_exist == null) {
+            this.orgTrackerService.saveOrgTrack(empForTracker, whoIsID_track);
+        } else {
+            this.orgTrackerService.updateOrgTrack(empForTracker, whoIsID_track, "Update");
         }
         UserRoleManagement userroleManagement = this.userRoleManagementRepository.findByID(Long.valueOf(userDTO.getUserId()));
         String threadLocalId = UserThreadLocal.get();
@@ -451,19 +475,32 @@ public class UserRoleManagementService {
     }
 
     public void removeUserRole(Long id) {
+        removeUserRole(id, UserThreadLocal.get());
+    }
+
+    public void removeUserRole(Long id, String loggedInEmpId) {
         UserRoleManagement userRoleManagement = this.userRoleManagementRepository.findByID(id);
-        EmployeeProfilePo employeeProfilePo = (EmployeeProfilePo)this.profilePoRepo.getOne(id);
-        employeeProfilePo.setStatus("InActive");
-        this.profilePoRepo.save(employeeProfilePo);
-        this.userDeptMappingRepository.deleteAll((Iterable)this.userDeptMappingRepository.findAllByIdEmpId(Long.valueOf(employeeProfilePo.getEmpId())));
+        EmployeeProfilePo employeeProfilePo = (EmployeeProfilePo)this.profilePoRepo.findById(id).orElse(null);
+        if (employeeProfilePo != null) {
+            employeeProfilePo.setStatus("InActive");
+            this.profilePoRepo.save(employeeProfilePo);
+            this.userDeptMappingRepository.deleteAll((Iterable)this.userDeptMappingRepository.findAllByIdEmpId(Long.valueOf(employeeProfilePo.getEmpId())));
+        }
         EmployeeCredentialsPo employeeCredentialsPo = this.employeeDAO.getEmployeeCredentialsWithNoStatus(id);
-        employeeCredentialsPo.setStatus("InActive");
-        this.employeeDAO.updateEmployeeCredentials(employeeCredentialsPo);
-        userRoleManagement.setActive(1);
+        if (employeeCredentialsPo != null) {
+            employeeCredentialsPo.setStatus("InActive");
+            this.employeeDAO.updateEmployeeCredentials(employeeCredentialsPo);
+        }
+        if (userRoleManagement != null) {
+            userRoleManagement.setActive(1);
+            this.userRoleManagementRepository.save(userRoleManagement);
+        }
         this.deleteOwnerMapping(id);
-        this.roleusermappingrepo.deleterolemap(Long.valueOf(employeeProfilePo.getUserRole()), Long.valueOf(employeeProfilePo.getEmpId()));
-        this.auditService.saveAudit("User", id.longValue(), Long.valueOf(UserThreadLocal.get()).longValue(), "User Deleted");
-        this.userRoleManagementRepository.save(userRoleManagement);
+        if (employeeProfilePo != null) {
+            this.roleusermappingrepo.deleterolemap(Long.valueOf(employeeProfilePo.getUserRole()), Long.valueOf(employeeProfilePo.getEmpId()));
+        }
+        long auditUserId = (loggedInEmpId != null && !loggedInEmpId.isEmpty()) ? Long.parseLong(loggedInEmpId) : 0L;
+        this.auditService.saveAudit("User", id.longValue(), auditUserId, "User Deleted");
     }
 
     public UserDTO findById(Long id) {
@@ -471,6 +508,9 @@ public class UserRoleManagementService {
         if (userRoleManagement != null) {
             UserDTO response = new UserDTO(userRoleManagement);
             response.setDepartmentList(new ArrayList(this.updateDeptList(Long.valueOf(response.getUserId()))));
+            this.profilePoRepo.findById(id).ifPresent(profile -> {
+                response.setParentEmpId(profile.getParentEmpId());
+            });
             enrichDepartmentsForPrivilegedUser(response);
             return response;
         }

@@ -139,6 +139,7 @@ implements Serializable {
         this.empCategory = employeeProfilePo.getUserCategory();
         this.empType = employeeProfilePo.getUserType();
         this.empUniqId = employeeProfilePo.getUserUniqId();
+        this.parentEmpId = employeeProfilePo.getParentEmpId();
     }
 
     public String getDepartment() {

@@ -936,6 +936,19 @@ public class EmployeeService {
 
     public EmployeeResponseDTO updateEmployee(Employee employee, String type) {
         this.cacheUtil.removeEmployeeCache((Object)employee.getEmpId());
+        
+        EmployeeProfilePo existing = this.employeeProfilePoRepo.findById(employee.getEmpId()).orElse(null);
+        String actionStr = "Update";
+        if (existing != null) {
+            List<String> changes = new ArrayList<>();
+            if (!Objects.equals(existing.getTitle(), employee.getTitle())) changes.add("Designation");
+            if (!Objects.equals(existing.getParentEmpId(), employee.getParentEmpId())) changes.add("Reports To");
+            if (!Objects.equals(existing.getDepartment(), employee.getDepartment())) changes.add("Department");
+            if (!changes.isEmpty()) {
+                actionStr = "Updated " + String.join(", ", changes);
+            }
+        }
+        
         this.updateMandatoryFields(employee, "Active");
         this.populateDepartmentFromRequest(employee);
         OrgDetails savedOrgDetails = this.orgDetailsRepository.findById(employee.getOrgDetails().getOrgId())
@@ -975,9 +988,9 @@ public class EmployeeService {
         }
         employeeResponseDTO.setUpdateFlag(true);
         if (type.equalsIgnoreCase("import")) {
-            this.orgTrackerService.saveOrUpdateAtImportTrack(employee, Long.valueOf(this.safeActorId()));
+            this.orgTrackerService.saveOrUpdateAtImportTrack(employee, Long.valueOf(this.safeActorId()), actionStr);
         } else {
-            this.orgTrackerService.updateOrgTrack(employee, Long.valueOf(this.safeActorId()));
+            this.orgTrackerService.updateOrgTrack(employee, Long.valueOf(this.safeActorId()), actionStr);
         }
         this.userRoleManagementService.saveUserRoleManagement(employee, "Update");
         this.cacheUtil.removeEmployeeCache((Object)employee.getParentEmpId());

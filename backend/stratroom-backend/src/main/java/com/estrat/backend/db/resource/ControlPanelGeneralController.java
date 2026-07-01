@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -249,61 +250,71 @@ public class ControlPanelGeneralController {
         return new ResponseEntity(fileList, HttpStatus.OK);
     }
 
+    private long getLoggedInUserId() {
+        try {
+            String v = UserThreadLocal.get();
+            if (v != null && !v.isEmpty() && !v.equalsIgnoreCase("null")) {
+                return Long.parseLong(v);
+            }
+        } catch (Exception ignored) {
+        }
+        return 0L;
+    }
+
     private void updateAuditDetails(ControlPanelGeneralDTO controlPanelGeneralDTO) {
         if (controlPanelGeneralDTO.getOrgId() > 0L) {
             ControlPanelGeneralDTO controlPanelGeneral = this.controlPanelGeneralService.findByOrgId(controlPanelGeneralDTO.getOrgId());
             if (controlPanelGeneral != null) {
                 if (controlPanelGeneral.getSiteName() != null && !controlPanelGeneral.getSiteName().equalsIgnoreCase(controlPanelGeneralDTO.getSiteName())) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Site Name Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Site Name Modified");
                 }
                 if (controlPanelGeneral.getSiteLanguage() != null && !controlPanelGeneral.getSiteLanguage().equalsIgnoreCase(controlPanelGeneralDTO.getSiteLanguage())) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Site Language Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Site Language Modified");
                 }
                 if (controlPanelGeneral.getAdminEmailId() != null && !controlPanelGeneral.getAdminEmailId().equalsIgnoreCase(controlPanelGeneralDTO.getAdminEmailId())) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Admin Email ID Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Admin Email ID Modified");
                 }
                 if (controlPanelGeneral.getCurrencyView() != null && !controlPanelGeneral.getCurrencyView().equalsIgnoreCase(controlPanelGeneralDTO.getCurrencyView())) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Currency Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Currency Modified");
                 }
                 if (controlPanelGeneral.getStartMonth() != null && !controlPanelGeneral.getStartMonth().equalsIgnoreCase(controlPanelGeneralDTO.getStartMonth())) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Calendar Year Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Calendar Year Modified");
                 }
                 if (controlPanelGeneral.getDefaultDatePeriod() != null && !controlPanelGeneral.getDefaultDatePeriod().equalsIgnoreCase(controlPanelGeneralDTO.getDefaultDatePeriod())) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Calendar Default View Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Calendar Default View Modified");
                 }
-                if (controlPanelGeneral.getGeneralSettingValue().get("notification") != controlPanelGeneralDTO.getGeneralSettingValue().get("notification")) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Notification Modified");
+                if (controlPanelGeneral.getGeneralSettingValue() != null && controlPanelGeneralDTO.getGeneralSettingValue() != null) {
+                    if (!Objects.equals(controlPanelGeneral.getGeneralSettingValue().get("notification"), controlPanelGeneralDTO.getGeneralSettingValue().get("notification"))) {
+                        this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Notification Modified");
+                    }
                 }
                 if (controlPanelGeneral.getTimeZone() != null && !controlPanelGeneral.getTimeZone().equalsIgnoreCase(controlPanelGeneralDTO.getTimeZone())) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Time Zone Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Time Zone Modified");
                 }
                 if (controlPanelGeneral.getCurrencyType() != null && !controlPanelGeneral.getCurrencyType().equalsIgnoreCase(controlPanelGeneralDTO.getCurrencyType())) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Currency Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), this.getLoggedInUserId(), "Currency Modified");
                 }
             } else {
                 if (controlPanelGeneralDTO.getSiteName() != null) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Site Name Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Site Name Modified");
                 }
                 if (controlPanelGeneralDTO.getSiteLanguage() != null) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Site Language Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Site Language Modified");
                 }
                 if (controlPanelGeneralDTO.getAdminEmailId() != null) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Admin Email ID Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Admin Email ID Modified");
                 }
                 if (controlPanelGeneralDTO.getCurrencyType() != null) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Currency Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Currency Modified");
                 }
                 if (controlPanelGeneralDTO.getCalendarYear() != null) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Calendar Year Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Calendar Year Modified");
                 }
                 if (controlPanelGeneralDTO.getDefaultDatePeriod() != null) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Calendar Default View Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Calendar Default View Modified");
                 }
                 if (controlPanelGeneralDTO.getTimeZone() != null) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Time Zone Modified");
-                }
-                if (controlPanelGeneralDTO.getTimeZone() != null) {
-                    this.auditService.updateAudit("Control Panel", controlPanelGeneral.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Time Zone Modified");
+                    this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Time Zone Modified");
                 }
             }
         }
@@ -313,34 +324,34 @@ public class ControlPanelGeneralController {
         Map controlPanelGeneral = this.controlPanelGeneralService.findCustomPerformance(Long.valueOf(UserThreadLocal.get((String)"USER_ORG_ID")).longValue());
         if (controlPanelGeneralDTO.getGeneralSettingValue() != null) {
             if (controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("Aggregation") && controlPanelGeneralDTO.getGeneralSettingValue().containsKey("aggregation")) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Aggregation Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Aggregation Modified");
             }
             if (controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("Performance") && controlPanelGeneralDTO.getGeneralSettingValue().containsKey("performance")) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Default Performance Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Default Performance Modified");
             }
             if (controlPanelGeneralDTO.getGeneralSettingValue().containsKey("aggregationType") && controlPanelGeneral != null && controlPanelGeneral.get("aggregationType") != null && !controlPanelGeneral.get("aggregationType").toString().equals(controlPanelGeneralDTO.getGeneralSettingValue().get("aggregationType").toString())) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Aggregation Type Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Aggregation Type Modified");
             }
             if (controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("customPerformance") && controlPanelGeneralDTO.getGeneralSettingValue().containsKey("customPerformance")) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Custom Performance Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Custom Performance Modified");
             }
             if (controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("yearToDate") && controlPanelGeneralDTO.getGeneralSettingValue().containsKey("yearToDate")) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "YTD Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "YTD Modified");
             }
             if (!(!controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("Scorecard Field Modified") || controlPanelGeneralDTO.getGeneralSettingValue().get("scorecardactual").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("scorecardbudget").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("scorecardforecast").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("scorecardrisk").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("scorecardscore").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("scorecardtarget").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("scorecardtrend").toString().equalsIgnoreCase("false"))) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Scorecard Field Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Scorecard Field Modified");
             }
             if (!(!controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("KPI Data Table Fields Modified") || controlPanelGeneralDTO.getGeneralSettingValue().get("datatableactual").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("datatableannualtarget").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("datatablegap").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("datatabletarget").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("datatableytd").toString().equalsIgnoreCase("false"))) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "KPI Data Table Fields Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "KPI Data Table Fields Modified");
             }
             if (!(!controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("KPI Data Drill Down Fields Modified") || controlPanelGeneralDTO.getGeneralSettingValue().get("drilltableactual").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("drilltablegap").toString().equalsIgnoreCase("false") && controlPanelGeneralDTO.getGeneralSettingValue().get("drilltabletarget").toString().equalsIgnoreCase("false"))) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "KPI Data Drill Down Fields Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "KPI Data Drill Down Fields Modified");
             }
             if (controlPanelGeneralDTO.getGeneralSettingValue().get("audittrailtype").toString().equalsIgnoreCase("KPI Schedule Form") && (controlPanelGeneralDTO.getGeneralSettingValue().containsKey("openformon") || controlPanelGeneralDTO.getGeneralSettingValue().containsKey("closeformon"))) {
-                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "KPI Form Schedule Modified");
+                this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "KPI Form Schedule Modified");
             }
         } else if (controlPanelGeneralDTO.getRisksetting() != null) {
-            this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), Long.valueOf(UserThreadLocal.get()).longValue(), "Risk Setting");
+            this.auditService.updateAudit("Control Panel", controlPanelGeneralDTO.getOrgId(), this.getLoggedInUserId(), "Risk Setting");
         }
     }
 
