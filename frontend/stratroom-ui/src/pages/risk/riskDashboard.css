@@ -105,25 +105,25 @@
 .tile-value { font-size: 28px; font-weight: 800; margin: 2px 0; }
 .tile-note { font-size: 12px; color: #75809a; }
 
-.row { display: grid; gap: 18px; margin-bottom: 18px; }
-.row.two { grid-template-columns: 1.5fr 1fr; }
-.row.three { grid-template-columns: 1fr 1fr 1fr; }
+.rd-root .row { display: grid; gap: 18px; margin-bottom: 18px; }
+.rd-root .row.two { grid-template-columns: 1.5fr 1fr; }
+.rd-root .row.three { grid-template-columns: 1fr 1fr 1fr; }
 @media (max-width: 1100px) {
   .tiles, .tiles-five { grid-template-columns: 1fr 1fr; }
-  .row.two, .row.three { grid-template-columns: 1fr; }
+  .rd-root .row.two, .rd-root .row.three { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .tiles, .tiles-five { grid-template-columns: 1fr; }
 }
 
-.card {
+.rd-root .card {
   background: #fff;
   border: 1px solid #e3e6ec;
   border-radius: 10px;
   padding: 16px 18px;
 }
-.card.center { display: flex; flex-direction: column; align-items: center; }
-.card-title {
+.rd-root .card.center { display: flex; flex-direction: column; align-items: center; }
+.rd-root .card-title {
   font-size: 12px;
   font-weight: 800;
   color: #16233f;
@@ -131,8 +131,8 @@
   margin-bottom: 14px;
   text-transform: uppercase;
 }
-.card-title.self { align-self: flex-start; }
-.stackcol { display: flex; flex-direction: column; gap: 18px; }
+.rd-root .card-title.self { align-self: flex-start; }
+.rd-root .stackcol { display: flex; flex-direction: column; gap: 18px; }
 
 .heatmap-grid { display: grid; gap: 6px; align-items: center; }
 .heat-col-label { font-size: 11px; color: #4b5a73; text-align: center; font-weight: 600; }
