@@ -346,7 +346,7 @@ public class EmployeeService {
         currentParentEmp.setParentEmpId(employee.getParentEmpId());
         this.employeeDAO.updateParentEmpID(currentParentEmp.getEmpId(), employee.getParentEmpId());
         String _utl347 = UserThreadLocal.get(); long _utlVal347 = (_utl347 != null && !"null".equals(_utl347)) ? Long.parseLong(_utl347) : 0L;
-        this.orgTrackerService.updateOrgTrack(currentParentEmp, _utlVal347);
+        this.orgTrackerService.updateOrgTrack(currentParentEmp, _utlVal347, "Update");
         this.updateChildTracker(Long.valueOf(employee.getEmpId()), oldparent, Long.valueOf(employee.getParentEmpId()), "Employee");
         this.auditService.updateSuperAudit("User", employee.getSuperCreatedBy(), currentParentEmp.getOrgDetails().getOrgId(), employee.getEmpId(), "User Modified");
         this.cacheUtil.removeEmployeeCache((Object)employee.getEmpId());
@@ -2276,7 +2276,7 @@ public class EmployeeService {
             this.updateDepartmentMappingDetails(employee);
         }
         employeeResponseDTO.setUpdateFlag(true);
-        this.orgTrackerService.updateOrgTrack(employee, Long.valueOf(UserThreadLocal.get()));
+        this.orgTrackerService.updateOrgTrack(employee, Long.valueOf(UserThreadLocal.get()), "Update");
         this.userRoleManagementService.saveUserRoleManagement(employee, "Update");
         this.updateChildTracker(Long.valueOf(employee.getEmpId()), null, Long.valueOf(employee.getParentEmpId()), "Employee");
         this.cacheUtil.removeEmployeeCache((Object)employee.getParentEmpId());
