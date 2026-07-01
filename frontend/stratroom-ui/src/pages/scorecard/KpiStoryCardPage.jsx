@@ -204,7 +204,7 @@ function CardHeader({ title, extra, dropdownOptions = [{ label: "View" }] }) {
   return (
     <div className="card-header">
       <div className="c-header-left">
-        <h5 className="card-title"><strong>{title}</strong></h5>
+        <h5 className="card-title"><strong className="editableTxt1">{title}</strong></h5>
       </div>
       <div className="card-actions">
         {extra}
@@ -853,26 +853,26 @@ function DataTable({ rows, currency }) {
         { label: 'View', dataToggle: 'modal', dataTarget: '#kpiDataTableModal' }, 
         { label: 'Download CSV', onClick: handleDownloadCSV }
       ]} />
-      <div className="card-body employee_div_body_box activities-box" style={{ padding: 0 }}>
+      <div className="card-body employee_div_body_box activities-box">
         <table className="table table-bordered w-100 mb-0">
           <thead className="text-center">
             <tr>
               {["PERIOD", "ACTUAL", "TARGET", "GAP", "YTD"].map((h) => (
-                <th key={h} style={S.th()}>{h}</th>
+                <th key={h}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {slice.length === 0 && (
-              <tr><td colSpan={5} style={{ ...S.td, color: "#aaa", padding: "16px" }}>No data for this period</td></tr>
+              <tr><td colSpan={5} className="text-muted p-3">No data for this period</td></tr>
             )}
             {slice.map((r, i) => (
               <tr key={i}>
-                <td style={S.td}>{r.period}</td>
-                <td style={S.td}>{fmtMoney(r.actual, currency)}</td>
-                <td style={S.td}>{fmtMoney(r.target, currency)}</td>
-                <td style={r.gap < 0 ? S.tdNeg : S.td}>{fmtMoney(r.gap, currency)}</td>
-                <td style={S.td}>{fmtMoney(r.ytd, currency)}</td>
+                <td>{r.period}</td>
+                <td>{fmtMoney(r.actual, currency)}</td>
+                <td>{fmtMoney(r.target, currency)}</td>
+                <td className={r.gap < 0 ? "text-danger" : ""}>{fmtMoney(r.gap, currency)}</td>
+                <td>{fmtMoney(r.ytd, currency)}</td>
               </tr>
             ))}
           </tbody>
@@ -1023,16 +1023,17 @@ function ActualVsTarget({ rows, currency, hideHeader = false }) {
             {icons[chartType]}
           </button>
           {showChartDropdown && (
-            <ul className="dropdown-menu dropdown-menu-end border-0 shadow d-flex flex-row p-1 show" style={{ minWidth: 'auto', gap: 4, position: 'absolute', top: '100%', right: 0 }}>
-              {['bubble', 'bar', 'line', 'area'].map(type => (
-                <li key={type}>
-                  <button type="button" className={`dropdown-item rounded ${chartType === type ? 'bg-light text-primary' : ''}`} 
+            <ul className="dropdown-menu dropdown-menu-end border-0 p-2 shadow show" id="control-view" style={{ minWidth: 'auto', position: 'absolute', top: '100%', right: 0 }}>
+              <li className="d-flex">
+                {['bubble', 'bar', 'line', 'area'].map(type => (
+                  <button key={type} type="button" className={`dropdown-item drawChart ${chartType === type ? 'active' : ''}`} 
+                    data-bs-toggle="tooltip" title={type}
                     onClick={() => { setChartType(type); setShowChartDropdown(false); }} 
-                    style={{ padding: "6px", cursor: "pointer", display: 'flex', border: 'none', background: 'transparent' }} title={type}>
+                    style={{ cursor: "pointer", display: 'flex', border: 'none', background: 'transparent' }}>
                     {icons[type]}
                   </button>
-                </li>
-              ))}
+                ))}
+              </li>
             </ul>
           )}
         </div>
@@ -1224,22 +1225,26 @@ function DataDrillPanel({ series }) {
 
   return (
     <div className="card custom-card table-card h-100">
-      <div className="card-header" style={{ background: "#ffffff", borderBottom: "1px solid #ddd", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 15px" }}>
-        <h5 className="card-title" style={{ color: "#333", margin: 0, fontSize: "15px", fontWeight: 700 }}>Data Drill</h5>
-        <div className="dropdown">
-          <button className="btn btn-sm btn-icon" style={{ background: "#eee", border: "1px solid #ccc", padding: "2px 6px" }} type="button" data-bs-toggle="dropdown" aria-expanded="false">
-             <img width="16" height="16" src="/images/menu-dot-vertical-i.svg" onError={(e) => { e.target.style.display='none' }} style={{ filter: "brightness(0)" }} />
-          </button>
+      <div className="card-header">
+        <div className="c-header-left">
+          <h5 className="card-title">Data Drill</h5>
+        </div>
+        <div className="card-actions">
+          <div className="dropdown">
+            <button className="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+               <img width="16" height="16" src="/images/menu-dot-vertical-i.svg" onError={(e) => { e.target.style.display='none' }} />
+            </button>
           <ul className="dropdown-menu dropdown-menu-end border-0 shadow">
             <li><a className="dropdown-item" href="#!" onClick={e => e.preventDefault()} data-bs-toggle="modal" data-bs-target="#viewdataDrillModal">View</a></li>
             <li><a className="dropdown-item" href="#" onClick={handleDownloadExcel}>Download Excel</a></li>
           </ul>
         </div>
+        </div>
       </div>
       {measures.length === 0 ? (
         <div className="card-body"><EmptyRow>No drill-down data for this period</EmptyRow></div>
       ) : (
-        <div className="card-body employee_div_body_box activities-box" style={{ padding: 0 }}>
+        <div className="card-body employee_div_body_box activities-box">
           <div style={{ overflowX: "auto" }}>
             <table className="table table-bordered w-100 mb-0" style={{ fontSize: 12 }}>
               <thead>
@@ -1450,21 +1455,21 @@ export default function KpiStoryCardPage() {
                         </div>
                       </div>
                       <h5 className="card-title me-auto">
-                        <strong>{loading ? "Loading KPI…" : kpiName}</strong>
+                        <strong className="editableTxt1">{loading ? "Loading KPI…" : kpiName}</strong>
                       </h5>
                     </div>
                     <div className="card-actions justify-content-end">
                       <span className="btn btn-sm btn-icon" onClick={() => setIsViewOnly(false)} data-bs-toggle="modal" data-bs-target="#kpi-des-modal">
-                        <i className="fas fa-pencil-alt" title="Edit" />
+                        <i className="fas fa-pencil-alt title_edit_icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" />
                       </span>
                       <span className="btn btn-sm btn-icon" data-bs-toggle="modal" data-bs-target="#fileupload-modal" onClick={() => setEditingFile(null)}>
-                        <i className="fas fa-paperclip" title="File Upload" />
+                        <i className="fas fa-paperclip title_edit_icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="File Upload" />
                       </span>
                       
                       {/* View Options Dropdown (Eye icon) */}
                       <div className="dropdown d-inline-block">
-                        <span className="btn btn-sm btn-icon" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" style={{ cursor: 'pointer' }}>
-                          <i className="fas fa-eye" title="View" />
+                        <span className="btn btn-sm btn-icon" id="popoverFilter" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" style={{ cursor: 'pointer' }}>
+                          <i className="fas fa-eye title_edit_icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View" />
                         </span>
                         <div className="dropdown-menu dropdown-menu-end shadow p-3" style={{ minWidth: 200, border: 'none', borderRadius: 8 }}>
                           <div className="d-flex justify-content-between align-items-center mb-2">
@@ -1622,38 +1627,34 @@ export default function KpiStoryCardPage() {
               </div>
             )}
 
-            {/* ── BOTTOM PANELS (FLEX GRID) ── */}
-            <div className="col-12">
-              <div className="d-flex flex-wrap gap-2 align-items-stretch">
-                {/* ── MY INITIATIVE ── */}
-                {viewFilters.myinitiative && (
-                  <div className="myinitiative" style={{ flex: '1 1 calc(33.333% - 1rem)', minWidth: 300 }}>
-                    <InitiativePanel initiatives={initiatives} />
-                  </div>
-                )}
+            {/* ── BOTTOM PANELS ── */}
+            {/* ── MY INITIATIVE ── */}
+            {viewFilters.myinitiative && (
+              <div className="col-lg-4 col-md-6 myinitiative">
+                <InitiativePanel initiatives={initiatives} />
+              </div>
+            )}
 
                 {/* ── RISKS ── */}
                 {viewFilters.risks && (
-                  <div className="risks" style={{ flex: '1 1 calc(33.333% - 1rem)', minWidth: 300 }}>
+                  <div className="col-lg-4 col-md-6 risks">
                     <RisksPanel risks={risks} />
                   </div>
                 )}
 
                 {/* ── COMMENTS ── */}
                 {viewFilters.comments && (
-                  <div className="comments-show" style={{ flex: '1 1 calc(33.333% - 1rem)', minWidth: 300 }}>
+                  <div className="col-lg-4 col-md-6 comments-show">
                     <CommentsPanel comments={comments} onAdd={handleAddComment} />
                   </div>
                 )}
 
                 {/* ── FILES ── */}
                 {viewFilters.files && (
-                  <div className="files" style={{ flex: '1 1 calc(33.333% - 1rem)', minWidth: 300 }}>
+                  <div className="col-lg-4 col-md-6 files">
                     <FilesPanel files={files} onEditFile={setEditingFile} />
                   </div>
                 )}
-              </div>
-            </div>
 
           </div>
         </div>
