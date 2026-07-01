@@ -369,17 +369,13 @@ export const SubKpiViewModal = () => {
                                     <div className="g-col-12 g-col-md-4">
                                         <div className="form-group">
                                             <label htmlFor="vskpiOwner" className="form-label">Owner</label>
-                                            <OwnerSelect id="vskpiOwner" className="form-select select-dropdown-view-subkpi" />
+                                            <input type="text" className="form-control" id="vskpiOwner" readOnly />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-4">
                                         <div className="form-group">
                                             <label htmlFor="vskpiDataSource" className="form-label">Data Source</label>
-                                            <select name="vskpiDataSource" className="form-select select-dropdown-view-subkpi" data-placeholder="Select Data Source" defaultValue="">
-                                                <option value="" disabled>Select Data Source</option>
-                                                <option value="Manual">Manual</option>
-                                                <option value="Source">Source</option>
-                                            </select>
+                                            <input type="text" className="form-control" id="vskpiDataSource" readOnly />
                                         </div>
                                     </div>
                                     <div className="g-col-12 g-col-md-6">

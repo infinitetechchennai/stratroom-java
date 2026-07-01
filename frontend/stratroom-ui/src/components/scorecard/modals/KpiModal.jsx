@@ -233,30 +233,7 @@ export const KpiAddModal = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="g-col-12 g-col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="akpiTargetAudience" className="form-label">Target Audience</label>
-                                            <textarea className="form-control" name="akpiTargetAudience" id="akpiTargetAudience" rows="2" placeholder="Target Audience"></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="g-col-12 g-col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="akpiSuccessCriteria" className="form-label">Success Criteria</label>
-                                            <textarea className="form-control" name="akpiSuccessCriteria" id="akpiSuccessCriteria" rows="2" placeholder="Success Criteria"></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="g-col-12 g-col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="akpiInitiatives" className="form-label">Strategic Initiatives</label>
-                                            <textarea className="form-control" name="akpiInitiatives" id="akpiInitiatives" rows="2" placeholder="Strategic Initiatives (comma separated)"></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="g-col-12 g-col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="akpiRisks" className="form-label">Risks</label>
-                                            <textarea className="form-control" name="akpiRisks" id="akpiRisks" rows="2" placeholder="Risks (comma separated)"></textarea>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -606,30 +583,7 @@ export const KpiViewModal = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="g-col-12 g-col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="vkpiTargetAudience" className="form-label">Target Audience</label>
-                                            <textarea className="form-control" name="vkpiTargetAudience" id="vkpiTargetAudience" rows="2" placeholder="Target Audience"></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="g-col-12 g-col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="vkpiSuccessCriteria" className="form-label">Success Criteria</label>
-                                            <textarea className="form-control" name="vkpiSuccessCriteria" id="vkpiSuccessCriteria" rows="2" placeholder="Success Criteria"></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="g-col-12 g-col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="vkpiInitiatives" className="form-label">Strategic Initiatives</label>
-                                            <textarea className="form-control" name="vkpiInitiatives" id="vkpiInitiatives" rows="2" placeholder="Strategic Initiatives (comma separated)"></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="g-col-12 g-col-md-6">
-                                        <div className="form-group">
-                                            <label htmlFor="vkpiRisks" className="form-label">Risks</label>
-                                            <textarea className="form-control" name="vkpiRisks" id="vkpiRisks" rows="2" placeholder="Risks (comma separated)"></textarea>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

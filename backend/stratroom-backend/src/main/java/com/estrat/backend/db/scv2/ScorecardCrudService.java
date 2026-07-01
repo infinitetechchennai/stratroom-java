@@ -61,6 +61,10 @@ public class ScorecardCrudService {
         try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN formula TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN actual_formula TEXT"); } catch (Exception ignore) {}
         try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN ytd_formula TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN description TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN measurement_frequency VARCHAR(255)"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN owner TEXT"); } catch (Exception ignore) {}
+        try { jdbc.execute("ALTER TABLE sc_sub_kpis ADD COLUMN data_source TEXT"); } catch (Exception ignore) {}
         // Add target_value to sub_kpi_history so values-file imports can store targets per period
         try { jdbc.execute("ALTER TABLE sc_sub_kpi_history ADD COLUMN target_value NUMERIC"); } catch (Exception ignore) {}
     }
@@ -285,7 +289,7 @@ public class ScorecardCrudService {
     public Map<String, Object> getSubKpi(long id) {
         List<Map<String, Object>> rows = jdbc.queryForList(
                 "SELECT id, kpi_id, code, name, target_value, polarity, weight, data_type, "
-                        + "achievement_cap, display_order, indicator_type, formula, actual_formula, ytd_formula FROM sc_sub_kpis WHERE id = ?", id);
+                        + "achievement_cap, display_order, indicator_type, formula, actual_formula, ytd_formula, description, measurement_frequency, owner, data_source FROM sc_sub_kpis WHERE id = ?", id);
         return rows.isEmpty() ? java.util.Collections.emptyMap() : rows.get(0);
     }
 
@@ -293,12 +297,13 @@ public class ScorecardCrudService {
     public long createSubKpi(Map<String, Object> b) {
         return insert(
                 "INSERT INTO sc_sub_kpis (kpi_id, code, name, target_value, polarity, weight, data_type, "
-                        + "achievement_cap, display_order, indicator_type, formula, actual_formula, ytd_formula) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "achievement_cap, display_order, indicator_type, formula, actual_formula, ytd_formula, description, measurement_frequency, owner, data_source) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 lng(b, "kpiId", 0L), str(b, "code", null), str(b, "name", "Sub-KPI"),
                 dec(b, "targetValue", BigDecimal.ZERO), str(b, "direction", "HIGHER"),
                 dec(b, "weight", BigDecimal.ONE), str(b, "dataType", "NUMBER"),
                 dec(b, "achievementCap", new BigDecimal("150")), intg(b, "displayOrder", 0),
-                str(b, "indicatorType", null), str(b, "formula", null), str(b, "actualFormula", null), str(b, "ytdFormula", null));
+                str(b, "indicatorType", null), str(b, "formula", null), str(b, "actualFormula", null), str(b, "ytdFormula", null),
+                str(b, "description", null), str(b, "measurementFrequency", null), str(b, "owner", null), str(b, "dataSource", null));
     }
 
     @Transactional
@@ -307,12 +312,12 @@ public class ScorecardCrudService {
         // caller doesn't supply keeps its current DB value instead of being reset to a default.
         List<Map<String, Object>> exRows = jdbc.queryForList(
                 "SELECT name, target_value, polarity, weight, data_type, achievement_cap, "
-                        + "display_order, indicator_type, formula, actual_formula, ytd_formula FROM sc_sub_kpis WHERE id = ?", id);
+                        + "display_order, indicator_type, formula, actual_formula, ytd_formula, description, measurement_frequency, owner, data_source FROM sc_sub_kpis WHERE id = ?", id);
         Map<String, Object> ex = exRows.isEmpty() ? java.util.Collections.emptyMap() : exRows.get(0);
         Integer exDisplay = ex.get("display_order") == null ? 0 : ((Number) ex.get("display_order")).intValue();
         return jdbc.update(
                 "UPDATE sc_sub_kpis SET name=?, target_value=?, polarity=?, weight=?, data_type=?, "
-                        + "achievement_cap=?, display_order=?, indicator_type=?, formula=?, actual_formula=?, ytd_formula=? WHERE id=?",
+                        + "achievement_cap=?, display_order=?, indicator_type=?, formula=?, actual_formula=?, ytd_formula=?, description=?, measurement_frequency=?, owner=?, data_source=? WHERE id=?",
                 str(b, "name", (String) ex.get("name")),
                 dec(b, "targetValue", (BigDecimal) ex.get("target_value")),
                 str(b, "direction", (String) ex.get("polarity")),
@@ -323,7 +328,11 @@ public class ScorecardCrudService {
                 str(b, "indicatorType", (String) ex.get("indicator_type")),
                 str(b, "formula", (String) ex.get("formula")),
                 str(b, "actualFormula", (String) ex.get("actual_formula")),
-                str(b, "ytdFormula", (String) ex.get("ytd_formula")), id) > 0;
+                str(b, "ytdFormula", (String) ex.get("ytd_formula")),
+                str(b, "description", (String) ex.get("description")),
+                str(b, "measurementFrequency", (String) ex.get("measurement_frequency")),
+                str(b, "owner", (String) ex.get("owner")),
+                str(b, "dataSource", (String) ex.get("data_source")), id) > 0;
     }
 
     @Transactional

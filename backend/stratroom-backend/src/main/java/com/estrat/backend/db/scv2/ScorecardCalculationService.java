@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class ScorecardCalculationService {
+
+    private static final Logger log = LoggerFactory.getLogger(ScorecardCalculationService.class);
 
     private final JdbcTemplate jdbc;
     private final AchievementCalculator achievementCalculator;
@@ -719,7 +723,7 @@ public class ScorecardCalculationService {
                     com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
                     ytdValue = new BigDecimal(util.applyExpression(evalYtd));
                 } catch (Exception e) {
-                    System.err.println("YTD Evaluation failed: " + evalYtd);
+                    log.debug("YTD Evaluation failed: " + evalYtd);
                 }
             }
 
@@ -798,7 +802,7 @@ public class ScorecardCalculationService {
     public Map<String, Object> subKpiStoryCard(Long subKpiId, String dateRange) {
         List<Map<String, Object>> subRows = jdbc.queryForList(
                 "SELECT sk.id, sk.name, sk.code, sk.polarity, sk.target_value, sk.weight, "
-                        + "sk.data_type, sk.achievement_cap, "
+                        + "sk.data_type, sk.achievement_cap, sk.description, sk.measurement_frequency AS sk_measurement, sk.owner, sk.data_source, sk.formula, sk.actual_formula, "
                         + "k.name AS kpi_name, k.currency_code, k.measurement_frequency, k.classification_type, k.ytd_formula, "
                         + "o.name AS objective_name, p.name AS perspective_name "
                         + "FROM sc_sub_kpis sk "
@@ -818,13 +822,18 @@ public class ScorecardCalculationService {
         Map<String, Object> value = new LinkedHashMap<>();
         value.put("name", str(sk.get("name")));
         value.put("target", formatValue(subTarget, dataType, currency));
-        value.put("kpi_measurement", str(sk.get("measurement_frequency")));
+        value.put("kpi_measurement", str(sk.get("sk_measurement")));
+        value.put("measurementFrequency", str(sk.get("sk_measurement")));
         value.put("dataType", dataType);
         value.put("currency", currency);
         value.put("threshold", str(sk.get("classification_type")));
         value.put("polarity", str(sk.get("polarity")));
         value.put("weight", str(sk.get("weight")));
-        value.put("description", "");
+        value.put("description", str(sk.get("description")));
+        value.put("owner", str(sk.get("owner")));
+        value.put("data_source", str(sk.get("data_source")));
+        value.put("actual_formula", str(sk.get("actual_formula")));
+        value.put("formula", str(sk.get("formula")));
         value.put("alignedPerspective", str(sk.get("perspective_name")));
         value.put("alignmentObjectives", str(sk.get("objective_name")));
 
@@ -880,7 +889,7 @@ public class ScorecardCalculationService {
                     com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
                     ytdValue = new BigDecimal(util.applyExpression(evalYtd));
                 } catch (Exception e) {
-                    System.err.println("YTD Evaluation failed: " + evalYtd);
+                    log.debug("YTD Evaluation failed: " + evalYtd);
                 }
             }
             
@@ -1228,7 +1237,25 @@ public class ScorecardCalculationService {
         // "[token]",
         // which previously broke single-argument calls like avg[KPI]).
         java.util.List<String[]> tokenScores = new ArrayList<>(); // [token, score]
-        for (Map<String, Object> child : childDtos) {
+        
+        java.util.Queue<Map<String, Object>> queue = new java.util.LinkedList<>(childDtos);
+        while (!queue.isEmpty()) {
+            Map<String, Object> child = queue.poll();
+            
+            // Add any sub-lists to the queue to process recursively
+            if (child.containsKey("objectiveList")) {
+                queue.addAll((List<Map<String, Object>>) child.get("objectiveList"));
+            }
+            if (child.containsKey("kpiList")) {
+                queue.addAll((List<Map<String, Object>>) child.get("kpiList"));
+            }
+            if (child.containsKey("subKpiList")) {
+                queue.addAll((List<Map<String, Object>>) child.get("subKpiList"));
+            }
+            if (child.containsKey("subMeasureList")) {
+                queue.addAll((List<Map<String, Object>>) child.get("subMeasureList"));
+            }
+
             BigDecimal score = (BigDecimal) child.get("score");
             if (score == null)
                 score = BigDecimal.ZERO;
@@ -1270,7 +1297,7 @@ public class ScorecardCalculationService {
             com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
             return new BigDecimal(util.applyExpression(evalStr));
         } catch (Exception e) {
-            System.err.println("Formula evaluation failed for " + formula + ": " + e.getMessage());
+            log.debug("Formula evaluation failed for {}: {}", formula, e.getMessage());
             return null;
         }
     }

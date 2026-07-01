@@ -46,7 +46,7 @@ export const KpiStoryCardModal = () => {
         let active = true;
         getReporteeList()
             .then((list) => { if (active && Array.isArray(list)) setOwners(list); })
-            .catch(() => {});
+            .catch(() => { });
         return () => { active = false; };
     }, []);
 
@@ -184,7 +184,7 @@ export const KpiStoryCardModal = () => {
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <label className="col-md-3 col-form-label">Success Criteria</label>
+                                        <label className="col-md-3 col-form-label"></label>
                                         <div className="col-md-9 col-form-text">
                                             <Pills value={item.successCriteria} />
                                         </div>

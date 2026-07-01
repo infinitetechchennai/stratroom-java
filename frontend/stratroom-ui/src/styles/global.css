@@ -1,5 +1,7 @@
 /* Global box-sizing — does not override Bootstrap Reboot or basic.css */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -42,8 +44,7 @@
 }
 
 /* Make formula functions and KPIs clickable in calculator modals */
-.calculator-modal .list-group-item,
-.kpi_formula_popup .list-group-item {
+.modal .panel-body .list-group .list-group-item {
   cursor: pointer;
 }
 

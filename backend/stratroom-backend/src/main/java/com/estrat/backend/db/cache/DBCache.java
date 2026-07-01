@@ -61,4 +61,3 @@ public class DBCache {
         cacheKeys.stream().map(key -> this.remove(key, "dbCache")).collect(Collectors.toList());
     }
 }
-

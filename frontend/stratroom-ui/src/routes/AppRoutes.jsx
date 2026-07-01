@@ -16,6 +16,7 @@ import Userrolemanagement from '../pages/organization/Userrolemanagement'
 import ApiCheckPage from '../pages/check/ApiCheckPage'
 import ScorecardPage from '../pages/scorecard/ScorecardPage'
 import KpiStoryCardPage from '../pages/scorecard/KpiStoryCardPage'
+
 import MyFormsPage from '../pages/my-forms/MyFormsPage'
 import ProfilePage from '../pages/profile-menu/ProfilePage'
 import PerformanceContractPage from '../pages/profile-menu/PerformanceContractPage'
@@ -88,6 +89,7 @@ export default function AppRoutes() {
         <Route path="/scorecard" element={<ScorecardPage />} />
         <Route path="/kpi-story-card" element={<KpiStoryCardPage />} />
         <Route path="/kpi-story-card/:kpiId" element={<KpiStoryCardPage />} />
+        
         <Route path="/my-forms" element={<MyFormsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/performance-contract" element={<PerformanceContractPage />} />
