@@ -723,7 +723,7 @@ public class ScorecardCalculationService {
                     com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
                     ytdValue = new BigDecimal(util.applyExpression(evalYtd));
                 } catch (Exception e) {
-                    System.err.println("YTD Evaluation failed: " + evalYtd);
+                    log.debug("YTD Evaluation failed: " + evalYtd);
                 }
             }
 
@@ -889,7 +889,7 @@ public class ScorecardCalculationService {
                     com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
                     ytdValue = new BigDecimal(util.applyExpression(evalYtd));
                 } catch (Exception e) {
-                    System.err.println("YTD Evaluation failed: " + evalYtd);
+                    log.debug("YTD Evaluation failed: " + evalYtd);
                 }
             }
             
@@ -1297,7 +1297,7 @@ public class ScorecardCalculationService {
             com.estrat.backend.scorecard.util.FormulaUtil util = new com.estrat.backend.scorecard.util.FormulaUtil();
             return new BigDecimal(util.applyExpression(evalStr));
         } catch (Exception e) {
-            log.error("Formula evaluation failed for {}: {}", formula, e.getMessage());
+            log.debug("Formula evaluation failed for {}: {}", formula, e.getMessage());
             return null;
         }
     }

@@ -64,7 +64,7 @@ export const ObjectiveRow = ({ item, parentId, index }) => {
                 </td>
                 <td width="80">{item.id}</td>
                 <td>
-                    <Link className="text-decoration-none" to={`/kpi-story-card/${item.pk || item.id}`}>{item.name}</Link>
+                    {item.name}
                 </td>
                 <td width="50" className="text-center">{item.period}</td>
                 <td width="50" className="text-center">{item.score}</td>

@@ -247,6 +247,8 @@ public class ScoreCardImportService {
                         v2SubKpi.put("actualFormula", cell(subRow, "SubKPI Formula", "SubKPIFormula"));
                         v2SubKpi.put("description", cell(subRow, "SubKPI Description"));
                         v2SubKpi.put("measurementFrequency", cell(subRow, "SubMeasurement Frequency", "Sub Measurement Frequency"));
+                        v2SubKpi.put("owner", cell(subRow, "Owner"));
+                        v2SubKpi.put("dataSource", cell(subRow, "Data Source", "DataSource"));
                         scorecardCrudService.createSubKpi(v2SubKpi);
                         log.info("  → SubKPI '{}' under KPI '{}'", skName, kEntry.getKey());
                     }

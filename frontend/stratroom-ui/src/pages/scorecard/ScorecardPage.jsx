@@ -645,6 +645,19 @@ function ScorecardPageInner({ pageId, scorecardData, liveLoading, liveError, rel
                     const el = document.getElementById(elId); 
                     if (el) { 
                         if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+                            if (el.tagName === 'SELECT' && v) {
+                                // If the value isn't in the dropdown, add it temporarily so it can be selected
+                                let exists = false;
+                                for (let i = 0; i < el.options.length; i++) {
+                                    if (el.options[i].value === v) { exists = true; break; }
+                                }
+                                if (!exists) {
+                                    const opt = document.createElement('option');
+                                    opt.value = v;
+                                    opt.textContent = v;
+                                    el.appendChild(opt);
+                                }
+                            }
                             el.value = v ?? ''; 
                             if (window.$) $(el).trigger('change');
                         } else el.textContent = v ?? ''; 
